@@ -77,3 +77,24 @@ We capture the projections to October 27th, the last day a ballot can be request
 In short: 
 
 ### Joe Biden is well under where he needs to achieve a VBM majority. 
+
+## Wait, there's more. 
+
+The above models were using optimistic assumptions - that only 50% of Democrats intend to vote by mail (polls indicate closer to 55%), whereas 18% of Republicans intend to VBM (recent polling shows this number can be as low as 11%). 
+
+* Per historical Florida data, only ~80% of VBM ballots ever get returned. 
+* Some percentage of VBM ballots get spoiled and do not count at all.
+* Joe Biden’s team has made the deliberate decision to not have a ground game due to safety reasons, and hence will not be able to make up the differential in GOTV efforts. 
+* “Souls to the Polls,” one of the key driving Democratic turnouts in North Carolina where people would go to church and then go to early voting in a group, does not apply as churches are closed. 
+
+When these other factors are considered, *Joe Biden is done…* maybe even 1984 done… but **if and only if Republicans can deliver on their Election Day and early voting GOTV efforts.** 
+
+The media will be trumpeting the mail-in voting numbers as if they are portending a doomsday scenario for Trump. You can smile and know they are in for a nasty surprise on Election Night.
+
+# Recommendations for the Trump team
+
+* **Stay on top of mail-in statistics.** Have a model turnout in mind for each state and each district, and stay on top of any deviations or funny games. 
+
+* **Double down on GOTV efforts.** Joe Biden’s nightmare scenario can happen IF AND ONLY IF the Republicans match their 2016 turnout. 
+
+* **Communicate these news to supporters.** The media will be attempting to demoralize Trump supporters with misleading statistics. Don’t let them
