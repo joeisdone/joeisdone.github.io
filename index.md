@@ -48,7 +48,7 @@ What does that mean for North Carolina ballots? Well, we can take the numbers fr
 
 First, we find out how many people in each registered party voted in 2016 [Source](https://democracync.org/wp-content/uploads/2017/05/WhoVoted2016.pdf): 
 
-![VBM breakdown 2016 vs 2020](/images/vbm-percentages.png)
+![2016 turnouts](/images/2016-turnout.png)
 
  In 2016, 1,872,593 Democrats voted in the election, compared to 1,571,730 Republicans and 1,305,330 Independents. Assuming the respective parties voted for their respective candidate at 100%, independents broke strongly for the Republicans. 
 
