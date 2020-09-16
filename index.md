@@ -6,7 +6,7 @@ Lockdowns have driven a surge in demand for mail-in voting. North Carolina’s m
 
 In 2016, Republicans had the advantage, requesting forty percent of all VBM ballots to the Democrats’ thirty-one percent. In 2020, Democrats hold a commanding advantage: having fifty-one percent of all VBMs to the Republicans’ 16 percent. The charts below show the difference:
 
-![VBM breakdown 2016 vs 2020](images/vbm-percentages.png)
+![VBM breakdown 2016 vs 2020](/images/vbm-percentages.png)
 
 *2016 vs. 2020 VBM makeup. Don’t panic. This is actually bad news for Joe.*
 
@@ -26,7 +26,21 @@ The percent of Democrats intending to vote by mail rises to 57% in battleground 
 
 Polls show that Democrats strongly believe that voting is a **health risk.**
 
-![63% of Democrats believe voting is a health risk](images/health-risk.png)
+![63% of Democrats believe voting is a health risk](/images/health-risk.png)
 
-* Sixty-three percent of Democrats believe voting is dangerous [Source](https://www.axios.com/axios-ipsos-coronavirus-index-in-person-campaigning-50124c22-1163-4a6e-b45a-af1acc7ca337.html)*
+*Sixty-three percent of Democrats believe voting is dangerous [Source](https://www.axios.com/axios-ipsos-coronavirus-index-in-person-campaigning-50124c22-1163-4a6e-b45a-af1acc7ca337.html)*
+
+Given these priors, it seems exceedingly unlikely that Democrats are inclined to go out and vote during Election Day. **Joe Biden must get the majority of Democrats to vote by mail!**
+
+So what voting methods will voters take? [Here’s what a poll says](https://tinyurl.com/y6o8jalg):
+
+![VBM breakdown 2016 vs 2020](/images/vbm-percentages.png)
+
+The surveys are consistent: 
+
+* Democrats need to have a majority to turnout by mail.
+* Joe Biden’s supporters will need close to a majority to turnout by mail.
+* Republicans need to have a majority to turnout on Election Day. 
+
+
 
