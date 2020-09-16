@@ -28,7 +28,7 @@ Polls show that Democrats strongly believe that voting is a **health risk.**
 
 ![63% of Democrats believe voting is a health risk](/images/health-risk.png)
 
-*Sixty-three percent of Democrats believe voting is dangerous [Source](https://www.axios.com/axios-ipsos-coronavirus-index-in-person-campaigning-50124c22-1163-4a6e-b45a-af1acc7ca337.html)*
+*Sixty-three percent of Democrats believe voting is dangerous* [Source](https://www.axios.com/axios-ipsos-coronavirus-index-in-person-campaigning-50124c22-1163-4a6e-b45a-af1acc7ca337.html)
 
 Given these priors, it seems exceedingly unlikely that Democrats are inclined to go out and vote during Election Day. **Joe Biden must get the majority of Democrats to vote by mail!**
 
@@ -42,5 +42,26 @@ The surveys are consistent:
 * Joe Biden’s supporters will need close to a majority to turnout by mail.
 * Republicans need to have a majority to turnout on Election Day. 
 
+# Applying this turnout model to NC VBM statistics
 
+What does that mean for North Carolina ballots? Well, we can take the numbers from 2016 and extrapolate them to figure out **target turnouts for Joe Biden** based on stated voter preferences. 
 
+First, we find out how many people in each registered party voted in 2016 [Source](https://democracync.org/wp-content/uploads/2017/05/WhoVoted2016.pdf): 
+
+![VBM breakdown 2016 vs 2020](/images/vbm-percentages.png)
+
+ In 2016, 1,872,593 Democrats voted in the election, compared to 1,571,730 Republicans and 1,305,330 Independents. Assuming the respective parties voted for their respective candidate at 100%, independents broke strongly for the Republicans. 
+
+We can use these numbers to establish target baselines for each party to reach 2016 turnout levels using stated voting by mail preferences. 
+
+|   | 2016 NC turnout | VBM % (estimate) | 2020 NC VBM target to match 2016 |
+| ------------- | ------------- | ------------- | ------------- |
+| Democrats  | 1,872,593  | 50%  | 936,296  |
+| Republicans  | 1,571,730  | 18%  | 282,911  |
+| Independents  | 1,305,330  | 33%  | 430,758  |
+
+# How are the parties tracking?
+
+Using the published reports, we can detect the linear trends and make a projection as to how the parties are currently tracking. 
+
+![VBM projections](/images/vbm-projections.png)
