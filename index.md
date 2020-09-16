@@ -34,7 +34,7 @@ Given these priors, it seems exceedingly unlikely that Democrats are inclined to
 
 So what voting methods will voters take? [Here’s what a poll says](https://tinyurl.com/y6o8jalg):
 
-![VBM breakdown 2016 vs 2020](/images/vbm-percentages.png)
+![VBM breakdown 2016 vs 2020](/images/voting-plans.png)
 
 The surveys are consistent: 
 
