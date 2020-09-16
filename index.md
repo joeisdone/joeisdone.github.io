@@ -65,3 +65,15 @@ We can use these numbers to establish target baselines for each party to reach 2
 Using the published reports, we can detect the linear trends and make a projection as to how the parties are currently tracking. 
 
 ![VBM projections](/images/vbm-projections.png)
+
+We capture the projections to October 27th, the last day a ballot can be requested, and find the following. 
+
+|   | 2020 NC VBM target to match 2016 | Currently on track for…  | Gap |
+| ------------- | ------------- | ------------- | ------------- |
+| Democrats  | 936,296  | 761,992 | -174,304 (Severely underperform) | 
+| Republicans | 282,911  | 288,630 |  +5,719 (Slightly Outperform) |
+| Independents  | 430,758  | 513,106 | +82,348 (Well Outperform) |
+
+In short: 
+
+### Joe Biden is well under where he needs to achieve a VBM majority. 
