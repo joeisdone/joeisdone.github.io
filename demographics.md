@@ -41,6 +41,13 @@ Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voter
 
 It seems that these voters are “swingy” and should be a focus for a campaign to capture. 
 
+# Recommendations for Team Trump
+
+* **Understand independents** - Understand who the new independents are better and reach out to them. 
+* **Understand the white overperformance with Biden** - White Democrats, for the most part, are carrying Biden. Some of this is from the elderly, but some of this may be from the so-called "professional class."
+* **Keep leaning into strengths.** - Biden has a strong communication shortcoming with the Black voters in general. Consider strengthening ground game efforts. 
+* **Understand the elderly better.** - The shortcoming with the elderly can be explained partially with Simpson's Paradox, but not fully. Work hard to close with the elderly, especially the independent affliated elderly.  
+  
 # The dirty data
 
 ## Party baselines
@@ -80,3 +87,40 @@ This is an effect of Simpson’s Paradox, because the majority of “crossover�
 
 ![VBM party breakdown by age](/images/vbm-age-2016.png)
 
+## Race
+
+In perhaps the most troubling sign for Democrats, Black voters are under-performing white voters when it comes to VBM registration. Given that Black voters are so heavily Democrat, and given that VBM sign-ups are disproportionately Democratic, this portends to a severe communication gap. Black voters should be closer to 30% of their 2016 VBM turnout at this point in time. 
+
+![Overall VBM by race](/images/vbm-race-pct.png)
+
+![VBM makeup by race](/images/vbm-race-makeup.png)
+
+As the graphs below show, white Democrats are performing exceptionally well in VBM turnout compared to their Black counterparts. 
+
+![VBM party breakdown by race](/images/vbm-race-parties.png)
+
+What should be particularly concerning for Biden is that Black independents are competitive with white independents, and Black republicans are outperforming white Republicans. So the split is not related to race per se - but rather *Democrats are not able to make inroads with getting Black people to sign up for VBM, for whatever reason.*
+
+## Gender
+
+In 2016, females made up 55% of absentee voters and 54.36% of overall voters. In 2020 thus far, the percentage is little changed at 54.78%. Females have a slight performance advantage compared to males. 
+
+![Overall VBM by gender](/images/vbm-gender-pct.png)
+
+The female versus male breakdown reflects party registration trends. 
+
+![VBM makeup by gender](/images/vbm-gender-makeup.png)
+
+One surprising statistic is that Democratic and independent men are *outperforming* their respective female counterparts, and Republicans the opposite. This may point to a gender gap that will be narrower than it was in 2016. 
+
+![VBM makeup by gender](/images/vbm-gender-party.png)
+
+## Ethnicity
+
+Hispanics seem to favor VBM across the board. 
+
+![Overall VBM by ethnicity](/images/vbm-ethnicity-pct.png)
+
+![VBM party by ethnicity](/images/vbm-ethnicity-parties.png)
+
+Overall, there does not appear to be an ideological split among the Hispanics; they simply seem to do better across the board. The edge does appear to be stronger among Republican and Independent Hispanics. 
