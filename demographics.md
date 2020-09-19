@@ -1,3 +1,5 @@
+[Home](https://joeisdone.github.io/)
+
 # Who’s voting?
 
 In the previous blog post at [joeisdone](http://joeisdone.github.io/), I explain why VBM analysis in 2020 is more accurately done using total voter turnout of 2016 as a comparison point. 
@@ -18,7 +20,7 @@ The biggest area of caution is around independent voters. In 2016, the independe
 
 # Who are the independents?
 
-Updated with its own section; see [Who are the independents](independents.html)
+Updated with its own section; see [Who are the independents](https://joeisdone.github.io/independents.html)
 
 # Recommendations for Team Trump
 
