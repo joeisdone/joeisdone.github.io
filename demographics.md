@@ -22,5 +22,20 @@ Of note is that independents have exceptionally competitive VBM sign-ups with De
 
 Independents famously carried Trump to victory in 2016, but are the Independents signing up to VBM the same independents as in 2016? To answer the question, I look at *which counties* independents are requesting the most ballots in as a ratio of 2016. 
 
-![Greener = higher the ratio](/images/independent-ratio.png)
+*The greener, the higher the ratio of independents relative to 2016*
+
+If you are familiar with NC, the dark green states are a mix of red and blue counties. The greenest southern and western counties are red, while the ones in the middle are dark red. But the white counties to the east are blue. What gives? 
+
+In short, the independent voters are disproportionately *new voters to North Carolina*. The correlation to a map of population changes is pretty strong: 
+
+![Population changes](/images/population-change.png)
+
+Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voters-a-2020-update/), new voters tend to be strongly unaffiliated. 
+
+> New voter registrations suggest an overall swing away from major parties and towards unaffiliated, with the greatest impact on the Democrat share of registrations. Among new registrants since the 2016 general election:
+> * 42.3% registered unaffiliated vs. 30.3% of prior registrants (+12.0 percentage points (pp))
+> * 29.9% registered Democrat vs. 38.0% of prior registrants (-8.1 pp)
+> * 26.5% registered Republican vs. 31.2% of prior registrants (-4.7 pp)
+> * 1.3% registered Libertarian, Green, or Constitutional Party vs. 0.5% of prior registrants (+0.8 pp)
+> Nearly one in every three (32%) of unaffiliated voters is a new voter since 2016 compared to 21% of Democrat voters and 22% of Republican voters.
 
