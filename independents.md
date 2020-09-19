@@ -24,7 +24,7 @@ Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voter
 
 It seems that these voters are “swingy” and should be a focus for a campaign to capture. 
 
-With that, we dive into the crosstabs. Keep in mind that the VBM independents are **expected** to exhibit a "bluer" bias, per polls showing 47% of Biden supporters wanting to vote by mail versus less than 20% of Trump supporters.
+With that, we dive into the crosstabs. Keep in mind that the VBM independents are **expected** to exhibit a "bluer" bias, per polls showing 47% of Biden supporters wanting to vote by mail versus ~20% of Trump supporters.
 
 # Age and gender
 
@@ -57,3 +57,7 @@ Surprisingly, the results seem significant. I'm not sure how to interpret them.
 Race makeup appears little changed from 2016 to 2020.
 
 ![Independent race makeup](/images/ind-race.png)
+
+# Conclusion
+
+There is no strong obvious "a-ha" motive for why Independents are overrepresented in VBM - indeed, it may not be a question of whether they are motivated as opposed to whether they are growing faster than R and D registration. They have outpaced both Democrats and Republicans in voter enrollment since 2016. Either way, the statistics do show that they are growing in influence, and thus the Trump campaign would be wise to reach out to them. 
