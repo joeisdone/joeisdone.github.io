@@ -31,7 +31,7 @@ In short, the independent voters are disproportionately *new voters to North Car
 
 ![Population changes](/images/population-change.jpg)
 
-Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voters-a-2020-update/), new voters tend to be strongly unaffiliated. 
+Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voters-a-2020-update/), new voters tend to be unaffiliated. 
 
 > New voter registrations suggest an overall swing away from major parties and towards unaffiliated, with the greatest impact on the Democrat share of registrations. Among new registrants since the 2016 general election:
 > * 42.3% registered unaffiliated vs. 30.3% of prior registrants (+12.0 percentage points (pp))
@@ -46,7 +46,7 @@ It seems that these voters are “swingy” and should be a focus for a campaign
 
 * **Understand independents** - Understand who the new independents are better and reach out to them. 
 * **Understand the white overperformance with Biden** - White Democrats, for the most part, are carrying Biden. Some of this is from the elderly, but some of this may be from the so-called "professional class."
-* **Keep leaning into strengths.** - Biden has a strong communication shortcoming with the Black voters in general. Consider strengthening ground game efforts. 
+* **Keep leaning into strengths.** - Biden has a communication shortcoming with the Black voters in general. Consider strengthening ground game efforts. 
 * **Understand the elderly better.** - The shortcoming with the elderly can be explained partially with Simpson's Paradox, but not fully. Work hard to close with the elderly, especially the independent affliated elderly.  
   
 # The dirty data
