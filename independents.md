@@ -24,7 +24,7 @@ Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voter
 
 It seems that these voters are “swingy” and should be a focus for a campaign to capture. 
 
-With that, we dive into the crosstabs. 
+With that, we dive into the crosstabs. Keep in mind that the VBM independents are **expected** to exhibit a "bluer" bias, per polls showing 47% of Biden supporters wanting to vote by mail versus less than 20% of Trump supporters.
 
 # Age and gender
 
