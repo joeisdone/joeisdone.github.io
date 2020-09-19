@@ -28,7 +28,7 @@ If you are familiar with NC, the dark green states are a mix of red and blue cou
 
 In short, the independent voters are disproportionately *new voters to North Carolina*. The correlation to a map of population changes is pretty strong: 
 
-![Population changes](/images/population-change.png)
+![Population changes](/images/population-change.jpg)
 
 Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voters-a-2020-update/), new voters tend to be strongly unaffiliated. 
 
@@ -38,4 +38,45 @@ Per [this website](https://www.ncdemography.org/2020/09/09/who-are-ncs-new-voter
 > * 26.5% registered Republican vs. 31.2% of prior registrants (-4.7 pp)
 > * 1.3% registered Libertarian, Green, or Constitutional Party vs. 0.5% of prior registrants (+0.8 pp)
 > Nearly one in every three (32%) of unaffiliated voters is a new voter since 2016 compared to 21% of Democrat voters and 22% of Republican voters.
+
+It seems that these voters are “swingy” and should be a focus for a campaign to capture. 
+
+# The dirty data
+
+## Party baselines
+
+All baselines are taken as a percentage of their respective turnout in 2016.  
+
+First, we consider current VBM ballot requests as a percentage of 2016 turnout. Across all groups, that stands at 18.65%. In reality, only about 80% of ballots will get returned if historical Florida data is to be believed. 
+
+![Overall VBM](/images/vbm-party-pct.png)
+
+Second, we consider party makeup *within* VBM ballots - how the VBM ballots are split among Republicans, Democrats, and Independents. The Democrats have a commanding edge here, as expected. 
+
+![VBM party makeup](/images/vbm-party-makeup.png)
+
+Breaking each party down by turnout as a percentage of 2016 clarifies exactly which party is outperforming and what party is underperforming as well. 
+
+![VBM by parties](/images/vbm-party-parties.png)
+
+Per the above figure, Democrats VBM ballot requests currently stand at 23.91% of their total turnout - again, this is expected since Democrats have declared a majority preference to vote by mail, while Republicans declare a majority preference to vote on Election Day. 
+
+With these in mind, we dive into the crosstabs. 
+
+## Age
+
+We start out with the worst news for Trump. People aged 65 and over are by far the biggest outperformers for VBM, presumably due to COVID-19 disproportionately affecting that demographic. 
+
+Across the board, a full 34% of the elderly are participating in VBM as a percentage of 2016 turnout. These elderly are majority Democrat, which is unusual in a demographic that is traditionally Republican. This seemingly portends to a genuine weakness for Trump. 
+
+![Overall VBM by age](/images/vbm-age-pct.png)
+![VBM makeup by age](/images/vbm-age-makeup.png)
+
+On the other hand, with a strong correlation between age and propensity to vote Republican, we should not expect Republicans to make up so much of the under-65 share. Indeed, Republicans outperform in their age bucket relative to 2016, which is unusual here. 
+
+![VBM party breakdown by age](/images/vbm-age-parties.png)
+
+This is an effect of Simpson’s Paradox, because the majority of “crossover” votes have been speculated to be within older Democrats that never changed their party registration. Compared against the percentages of elderly voters in 2016, independents stand out as the far and away winner, while Republicans are strongly outperforming among under-65’s. 
+
+![VBM party breakdown by age](/images/vbm-age-2016.png)
 
