@@ -6,6 +6,10 @@ In the previous blog post at [joeisdone](http://joeisdone.github.io/), I explain
 
 Today, we will take a deeper dive at the demographics of who’s voting. North Carolina publishes excellent detailed demographic crosstabs on who’s requested a ballot with columns such as race, ethnicity, age, gender, party affiliation, and county. This allows us to deduce with whom the enthusiasm gap is. 
 
+If you haven't read the original article [here](https://joeisdone.github.io), **do so now** before reading this page. The TL;DR is that a majority of Democrats are expected to VBM and a majority of Republicans are expected to vote on Election Day. 
+
+**All numbers here must be read with the filter that Democrats ideally need about 3x the turnout of Republicans in VBM terms.** In that sense, Democrats are underperforming in every demographic except maybe the under-65's. 
+
 # Summary
 
  Most notable is that there are strong signs that the overperformance with Democrats is partially an artifact of [Simpson’s Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox). In short, the Democrats have a registration edge with the 65+ compared with the under-65, and yet have been found to be staunch Republican voters in exit polls. 
