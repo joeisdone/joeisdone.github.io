@@ -22,6 +22,7 @@ Of note is that independents have exceptionally competitive VBM sign-ups with De
 
 Independents famously carried Trump to victory in 2016, but are the Independents signing up to VBM the same independents as in 2016? To answer the question, I look at *which counties* independents are requesting the most ballots in as a ratio of 2016. 
 
+![Independent strengths](/images/independent-ratio.jpg)
 *The greener, the higher the ratio of independents relative to 2016*
 
 If you are familiar with NC, the dark green states are a mix of red and blue counties. The greenest southern and western counties are red, while the ones in the middle are dark red. But the white counties to the east are blue. What gives? 
