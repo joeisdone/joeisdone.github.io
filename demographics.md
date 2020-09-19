@@ -114,7 +114,7 @@ The female versus male breakdown reflects party registration trends.
 
 One surprising statistic is that Democratic and independent men are *outperforming* their respective female counterparts, and Republicans the opposite. This may point to a gender gap that will be narrower than it was in 2016. 
 
-![VBM makeup by gender](/images/vbm-gender-party.png)
+![VBM makeup by gender](/images/vbm-gender-parties.png)
 
 ## Ethnicity
 
