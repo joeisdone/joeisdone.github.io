@@ -1,4 +1,4 @@
-In-depth pages: [Independents](independents.html), [Demographics](demographics.html)
+In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html)
 
 # Joe’s Yuge Strategic Misstep
 
