@@ -50,7 +50,7 @@ NC doesn't keep track of how many children independents have, but we can correla
 
 Surprisingly, the results seem significant. I'm not sure how to interpret them. 
 
-![Above or below average children](/images/ind-county-makeup.png)
+![Above or below average children](/images/ind-children.png)
 
 # Race
 
