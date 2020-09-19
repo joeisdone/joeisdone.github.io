@@ -80,13 +80,25 @@ Across the board, a full 34% of the elderly are participating in VBM as a percen
 ![Overall VBM by age](/images/vbm-age-pct.png)
 ![VBM makeup by age](/images/vbm-age-makeup.png)
 
-On the other hand, with a strong correlation between age and propensity to vote Republican, we should not expect Republicans to make up so much of the under-65 share. Indeed, Republicans outperform in their age bucket relative to 2016, which is unusual here. 
+On the other hand, we are seeing an underperformance among Republicans in the under-65 age group. However, Democrats also appear to be underperforming in this group as well. 
 
 ![VBM party breakdown by age](/images/vbm-age-parties.png)
 
 This is an effect of Simpson’s Paradox, because the majority of “crossover” votes have been speculated to be within older Democrats that never changed their party registration. Compared against the percentages of elderly voters in 2016, independents stand out as the far and away winner, while Republicans are strongly outperforming among under-65’s. 
 
 ![VBM party breakdown by age](/images/vbm-age-2016.png)
+
+### Holy Crosstabs, Batman
+
+I leave another crosstabs for white voters by age, party, and year. 
+
+These show that: 
+
+* Trump VBM performance is weakest among under-65 Republicans (as is expected). 
+* Democratic over-performance is partially an artifact of Simpson's Paradox and is minimized when analyzed by age.
+* Independents carry their strength among under-65s. 
+
+![VBM crosstabs by age, year, party](/images/vbm-age-crosstabs.png)
 
 ## Race
 
