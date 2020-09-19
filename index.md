@@ -1,3 +1,5 @@
+In-depth pages: [Independents](independents.html), [Demographics](demographics.html)
+
 # Joe’s Yuge Strategic Misstep
 
 Several states have begun releasing reports on voters who have requested vote-by-mail (VBM) ballots. North Carolina, in particular, has begun publishing a daily report [here](https://tinyurl.com/y3zha9uh). 
