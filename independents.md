@@ -28,6 +28,8 @@ With that, we dive into the crosstabs. Keep in mind that the VBM independents ar
 
 # Age and gender
 
+Independents who are signing up to VBM in 2020 are somewhat older than their 2016 cohort, as would be expected. The gender split is very close.
+
 ![2016 Party & Gender](/images/ind-2016-age-gender.png)
 ![2020 Party & Gender](/images/ind-2020-age-gender.png)
 
