@@ -86,7 +86,7 @@ These show that:
 
 ## Race
 
-In perhaps the most troubling sign for Democrats, Black voters are under-performing white voters when it comes to VBM registration. Given that Black voters are so heavily Democrat, and given that VBM sign-ups are disproportionately Democratic, this portends to a severe communication gap. Black voters should be closer to 30% of their 2016 VBM turnout at this point in time. 
+In perhaps the most troubling sign for Democrats, Black voters are under-performing white voters when it comes to VBM registration. Given that Black voters are so heavily Democrat, and given that VBM sign-ups are disproportionately Democratic, this portends to a severe communication gap. Black voters should be closer to 30% of their 2016 turnout at this point in time. 
 
 ![Overall VBM by race](/images/vbm-race-pct.png)
 
