@@ -1,3 +1,5 @@
+[Home](https://joeisdone.github.io/)
+
 # A political testimony
 
 I was an atheist almost all my adult life. This is the story of how I became a Christian. 
