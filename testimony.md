@@ -84,8 +84,6 @@ That being said, it is possible to have a government led by Christian principles
 
 He revealed the truth of her: that there exists a water where all sting of death can be removed, and that he is the Living Water. Through drinking this Water, we can be freed from the fear of death and can start living now without having to wait for some eternal reward.
 
-Today, we are again at a crossroads. People have lost sight of “life” and would rather cower in their homes indefinitely. CCP-backed propaganda, amplified by the accelerationists in the media and young socialists, have made the sting of death all too real once again. 
-
 The contrast between living in a blue state and a red state cannot be more stark. In my old blue city, I would be cowering in fear of the protests that happen daily, under strict shelter-at-home orders, and be forced to figure out how to keep my daughter's mental health thriving in a tiny apartment. 
 
 Here in the red state, we can just go out and enjoy life. My daughter goes to school and plays with friends after school everyday until sundown, the way children should. We just set a watch on her that goes off when it’s time to go home and have no concern for her safety. 
