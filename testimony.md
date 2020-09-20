@@ -50,7 +50,7 @@ The Democrats of today are interested in indoctrinating young children in the LG
 
 God made many personal things happen over the next two years, which I will not share. I’ll focus on the political part of this journey. 
 
-After taking my family to a red state, and deciding socialism conservatism was a necessary evil (so to speak) compared to the virtues of libertarianism, the only thing that kept me from being a Christian was I had to be thoroughly convinced that the zombie carpenter religion was true. 
+After taking my family to a red state, and deciding social conservatism was a necessary evil (so to speak) compared to the virtues of libertarianism, the only thing that kept me from being a Christian was I had to be thoroughly convinced that the zombie carpenter religion was true. 
 
 I met a wonderful, scientifically minded pastor who helped me push over the edge over a period of some months. 
 
