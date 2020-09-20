@@ -54,7 +54,7 @@ After taking my family to a red state, and deciding socialism conservatism was a
 
 I met a wonderful, scientifically minded pastor who helped me push over the edge over a period of some months. 
 
-* **Q hypothesis is gaslighting.** (No, not THAT Q!) The first “red pill,” so to speak, was in learning that there is exactly zero evidence of the “[Q hypothesis](https://en.wikipedia.org/wiki/Q_source)” which is 60% of what I learned in theology class. We have literally thousands of early country Gospel fragments, and none of them show the “phone game” that Q preaches. It’s almost as if the Gospels were written in their current form and shared. 
+* **Q hypothesis is gaslighting.** (No, not THAT Q!) The first “red pill,” so to speak, was in learning that there is exactly zero evidence of the “[Q hypothesis](https://en.wikipedia.org/wiki/Q_source)” which is 60% of what I learned in theology class. We have literally thousands of early dated Gospel fragments, and none of them show the “phone game” that Q preaches. It’s almost as if the Gospels were written in their current form and shared. 
 
 * **Gospels were written before the fall of Rome.** The second red pill was being convinced that the Gospels were written before 70 AD. The fall of Jerusalem was a cataclysmic event that Jesus predicted. And yet, even though the Gospel authors painstakingly point out all the prophecies Jesus fulfilled, including his own death, none of them say “and see? Jesus predicted the fall of Jerusalem!”
 
