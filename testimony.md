@@ -42,7 +42,7 @@ This is the first lesson for any Christian considering voting blue:
 
 **Evil exists within blue states**. Don’t take your red state for granted. If what I describe sounds far-fetched, it’s not. It’s reality. The Democrats today aren’t the Democrats of the 90's interested in solving poverty or homelessness or any real social issues. 
 
-The Democrats of today are interested in indoctrinating young children in the LGBT agenda and removing all barriers to hedonism by turning a blind eye to public drug use, public displays of sexuality, and even defecation. This is a cliche statement, but that is exactly what they did in my blue state! They spent their time discussing how to expose children to the concepts of a flexible gender identity, not on how to improve math scores. A vote for a Democrat is a vote for sweeping the dirt for needles and condom before you let your toddler play, as I did. 
+The Democrats of today are interested in indoctrinating young children in the LGBT agenda and removing all barriers to hedonism by turning a blind eye to public drug use, public displays of sexuality, and even defecation. This is a cliche statement, but that is exactly what they did in my blue state! They spent their time discussing how to expose children to the concepts of a flexible gender identity, not on how to improve math scores. A vote for a Democrat is a vote for sweeping the dirt for needles and condoms before you let your toddler play, as I did (and yes I found plenty of both). 
 
 # Evidence of Jesus
 
