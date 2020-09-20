@@ -1,6 +1,6 @@
 # A political testimony
 
-I was an atheist almost all my life. This is the story of how I became a Christian. 
+I was an atheist almost all my adult life. This is the story of how I became a Christian. 
 
 Like many, I grew up surrounded with people that thumped the Bible with one day and did evil the next. To me, that became proof that God did not have transformative power that the Bible claimed he had. 
 
