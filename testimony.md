@@ -40,7 +40,7 @@ Life in a red state is so much better. Oh, so much better. You don’t have to c
 
 This is the first lesson for any Christian considering voting blue: 
 
-**Evil exists within blue states**. Don’t take your red state for granted. If what I describe sounds far-fetched, it’s not. It’s reality. The Democrats today aren’t the Democrats of the 90's interested in solving poverty or homelessness or any real social issues. 
+**Evil exists within blue states**. *(I am not calling LGBT evil.)* Don’t take your red state for granted. If what I describe sounds far-fetched, it’s not. It’s reality. The Democrats today aren’t the Democrats of the 90's interested in solving poverty or homelessness or any real social issues. 
 
 The Democrats of today are interested in indoctrinating young children in the LGBT agenda and removing all barriers to hedonism by turning a blind eye to public drug use, public displays of sexuality, and even defecation. This is a cliche statement, but that is exactly what they did in my blue state! They spent their time discussing how to expose children to the concepts of a flexible gender identity, not on how to improve math scores. A vote for a Democrat is a vote for sweeping the dirt for needles and condoms before you let your toddler play, as I did (and yes I found plenty of both). 
 
@@ -98,7 +98,7 @@ With the simple “Neither do I condemn you, now go and from now on sin no more�
 
 Through “[White Fragility](https://www.theatlantic.com/ideas/archive/2020/07/dehumanizing-condescension-white-fragility/614146/?utm_source=feed),” we are being asked to repent for the sins of our ancestors, an original sin we can never cleanse ourselves of, not even in death (as even [gravesites are desecrated](https://www.nbc12.com/2020/07/02/georgia-confederate-cemetery-vandalized/)). We are being asked to live a continuous life of repentance that will never result in forgiveness. 
 
-Furthermore, the mass corporations and Democrats have proven they would rather defer to a regime that has forced imprisonment, used child slavery, and forced abortion. [Joe Biden refuses to call China an opponent](https://thefederalist.com/2020/09/18/watch-joe-biden-refuses-to-call-china-an-opponent/). Sports organizations, but [forbids “Free Hong Kong” on its customized apparel](https://www.voanews.com/east-asia-pacific/voa-news-china/nba-halts-personalizing-apparel-following-freehongkong-controversy). 
+Furthermore, the mass corporations and Democrats have proven they would rather defer to a regime that has forced imprisonment, used child slavery, and forced abortion. [Joe Biden refuses to call China an opponent](https://thefederalist.com/2020/09/18/watch-joe-biden-refuses-to-call-china-an-opponent/). Sports organizations are all-in with BLM, but [forbids “Free Hong Kong” on its customized apparel](https://www.voanews.com/east-asia-pacific/voa-news-china/nba-halts-personalizing-apparel-following-freehongkong-controversy). 
 
 ## Pursuit of Happiness
 
