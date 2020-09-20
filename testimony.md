@@ -40,7 +40,7 @@ Life in a red state is so much better. Oh, so much better. You don’t have to c
 
 This is the first lesson for any Christian considering voting blue: 
 
-*Evil exists within blue states*. Don’t take your red state for granted. If what I describe sounds far-fetched, it’s not. It’s reality. The Democrats today aren’t the Democrats of the 90's interested in solving poverty or homelessness or any real social issues. 
+**Evil exists within blue states**. Don’t take your red state for granted. If what I describe sounds far-fetched, it’s not. It’s reality. The Democrats today aren’t the Democrats of the 90's interested in solving poverty or homelessness or any real social issues. 
 
 The Democrats of today are interested in indoctrinating young children in the LGBT agenda and removing all barriers to hedonism by turning a blind eye to public drug use, public displays of sexuality, and even defecation. A vote for a Democrat is a vote for sweeping the dirt for needles and condom before you let your toddler play, as I did. 
 
