@@ -1,5 +1,9 @@
 In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html)
 
+# Now in comic format
+
+This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
+
 # Joe’s Yuge Strategic Misstep
 
 Several states have begun releasing reports on voters who have requested vote-by-mail (VBM) ballots. North Carolina, in particular, has begun publishing a daily report [here](https://tinyurl.com/y3zha9uh). 
