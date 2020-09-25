@@ -1,5 +1,7 @@
 In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html)
 
+*25-Sept update: I've been asked for an update - and the update is: the numbers here haven't changed meaningfully. I'm working on an interactive election predictor page. Stay tuned.*
+
 # Now in comic format
 
 This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
