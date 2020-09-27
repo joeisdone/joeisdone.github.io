@@ -2,13 +2,9 @@ In-depth pages: [Independents](c), [Demographics](c), [A Political Testimony](ht
 
 *25-Sept update: I've been asked for an update - and the update is: the numbers here haven't changed meaningfully. Stay tuned.*
 
-# Sept 25: Interactive Election Predictor!
+# Sept 26: Interactive Election Predictor!
 
 If you're a numbers geek, visit the [Election Predictor](https://joeisdone.github.io/predictor/) which will allow you to build your own turnout model based on 2016. 
-
-The election predictor was made using available CNN exit poll data. Adjusting the values therein will "trickle" down to individual states proportionally by that state's exit poll data. For example, if you predict that men will vote Trump by 5% more, the ratio will adjust proportionally according to how that particular state voted for Trump. 
-
-The high third party prevalence made it tricky, so I provided three options to split third-party data. I don't recommend mixing crosstabs too much - the poll data wasn't super granular in the first place, so errors will accumulate the more you mix crosstabs.
 
 # Now in comic format
 
