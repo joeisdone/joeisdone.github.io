@@ -296,6 +296,16 @@
 		});
 	}
 	
+	function undo() {
+		// have an option to undo the undo
+		const temp = stateData;
+		stateData = JSON.parse(JSON.stringify(stateDataLast));
+		stateDataLast = temp;
+		setStateColors();
+		setSliderValues();
+		$('#thirdPartyOptions').val("noop");
+	}
+	
 	// Split all values proportionally.
 	function distributeValues() {	
 
@@ -369,14 +379,18 @@
 	
 	
 	
-	var stateData = {}
+	var stateData = {};
+	
+	// The last move. 
+	var stateDataLast = {};
 	
 	// Never set anything in this!!! 
-	var ORIGINAL_DATA = {}
+	var ORIGINAL_DATA = {};
 		
 	$(document).ready(function() {
 	  $.getJSON('normalized_exit.json', function(data) {
 		stateData = data;
+		stateDataLast = JSON.parse(JSON.stringify(stateData));
 		ORIGINAL_DATA = JSON.parse(JSON.stringify(data));
 		
 		$.each(stateData['IN'], function(k, v) {
@@ -403,15 +417,21 @@
 	  $('#thirdPartyOptions').change(function() {
 		const opt = this.value;
 		if (opt === 'distributeFair') {
+			stateDataLast = JSON.parse(JSON.stringify(stateData));
 			distributeValues();
 		} else if (opt === 'distributeClinton') {
+			stateDataLast = JSON.parse(JSON.stringify(stateData));
 			distributeAllValues(false);
 		} else if (opt === 'distributeTrump') {
+			stateDataLast = JSON.parse(JSON.stringify(stateData));
 			distributeAllValues(true);
 		}
 		
 	  });
 	  
+	  $( "input" ).focusin(function() {
+	  	stateDataLast = JSON.parse(JSON.stringify(stateData));
+	  });
 	  
 	  // Gender
 	  $('#femalePct').on('input', function () {updateTurnout($(this)); });
@@ -527,6 +547,7 @@ The high third party prevalence made it tricky, so I provided three options to s
 	<option value="distributeTrump">Give all 3P votes to R</option>
 	<option value="distributeClinton">Give all 3P votes to D</option>
   </select>
+    <button id="#undo" onclick="undo();">Undo last change</button>
   </p>
 
 
