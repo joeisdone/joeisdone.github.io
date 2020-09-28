@@ -33,13 +33,27 @@
 		  top: -1px;
 		  left: 50%;
 		}
+		
+		#electoralScore {
+			display: inline-block;
+			font-size: 1.5em;
+			padding: 1em;
+			border-width: 1px;
+			border-style: solid;
+			border-color: black;
+		}
+		
+		#ClintonEV, #TrumpEV {
+			font-family: "Courier New", Courier, monospace;
+			font-weight: 900;
+		}
 
 		body {
 		  color: #444;
 		  font-family: 'Open Sans', Helvetica, sans-serif;
 		  font-weight: 300;
-		  margin: 6rem auto 1rem;
-		  max-width: 48rem;
+		  margin: 0.5rem auto 0.5rem;
+		  max-width: 64rem;
 		}
 	  
 	  
@@ -81,7 +95,7 @@
 		} else {
 			return '#0000cc'; // dark blue
 		}
-	}
+	} 
 	
 	function setBubble(range, bubble) {
 	  const val = range.value;
@@ -123,6 +137,8 @@
 	}
 	
 	function setStateColors() {
+		var trumpEV = 0;
+		var clintonEV = 0;
 		$.each(stateData, function(k, v) {
 			var shapes = $('#map').usmap('getStateShapes')
 			if (!(k in shapes)) {
@@ -144,9 +160,20 @@
 			
 			}
 					
-			var color = getColorVotes(trumpVotes, clintonVotes);
+			const color = getColorVotes(trumpVotes, clintonVotes);
+			const ev = ORIGINAL_DATA[k]['electoralVotes'];
+			if (trumpVotes > clintonVotes) {
+				trumpEV += ev;
+			} else {
+				clintonEV += ev;
+			}
+			
 			shapes[k].shape.attr({fill: color});
 		});
+		
+		$('#TrumpEV').text(trumpEV);
+		$('#ClintonEV').text(clintonEV);
+		$('#electoralScore').css('background-color', trumpEV > clintonEV ? '#ffb3b3' : '#8080ff');		
 	}
 	
 	function updateTurnout(calling) {
@@ -429,9 +456,19 @@
   <h1>Election Predictor</h1>
   <p>
 The election predictor was made using available CNN exit poll data. Adjusting the values therein will "trickle" down to individual states proportionally by that state's exit poll data. For example, if you predict that men will vote Trump by 5% more, the ratio will adjust proportionally according to how that particular state voted for Trump. 
-	</p><p>
-The high third party prevalence made it tricky, so I provided three options to split third-party (3P) data. I don't recommend mixing crosstabs too much - the poll data wasn't super granular in the first place, so errors will accumulate the more you mix crosstabs.</p>  
-    <div id="map" style="width: 930px; height: 630px; border: solid 3px red;"></div>
+	</p>
+	<p>
+The high third party prevalence made it tricky, so I provided three options to split third-party (3P) data. I don't recommend mixing crosstabs too much - the poll data wasn't super granular in the first place, so errors will accumulate the more you mix crosstabs.
+</p>  
+  <div id="map" style="width: 930px; height: 630px; border: solid 3px red;"></div>
+  <br />
+  <div id="electoralScore">
+	<b>R Electoral Votes:</b> 
+	<span id="TrumpEV"></span> <br />
+	<b>D Electoral Votes:</b> 
+	<span id="ClintonEV"></span>
+  </div>
+
   <p>Default values based on 2016 turnout. Select a crosstab to adjust values. <br />
   <small>Note: Only states with exit poll data will be updated. </small>
   </p>
