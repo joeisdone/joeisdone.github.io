@@ -7,7 +7,7 @@
 	<style>
 		.range-wrap {
 		  position: relative;
-		  margin: 0 auto 3rem;
+		  margin: 0 auto 2rem;
 		}
 		
 		.range {
@@ -37,10 +37,11 @@
 		#electoralScore {
 			display: inline-block;
 			font-size: 1.5em;
-			padding: 1em;
+			padding: 0.25em;
 			border-width: 1px;
 			border-style: solid;
 			border-color: black;
+			margin-bottom: 4px;
 		}
 		
 		#ClintonEV, #TrumpEV {
@@ -48,13 +49,39 @@
 			font-weight: 900;
 		}
 
+		* {
+		  box-sizing: border-box;
+		}
+
 		body {
 		  color: #444;
 		  font-family: 'Open Sans', Helvetica, sans-serif;
 		  font-weight: 300;
 		  margin: 0.5rem auto 0.5rem;
-		  max-width: 64rem;
+		  max-width: 80rem;
 		}
+		
+		.rcolumn {
+		  float: left;
+		  width: 67%;
+		  padding: 0px 10px;
+		}
+		
+		.lcolumn {
+		  float: left;
+		  width: 33%;
+		  padding: 0px 10px;	
+		  border-left: 1px solid black;
+		  font-size: 80%;
+		}
+
+		/* Clear floats after the columns */
+		.row:after {
+		  content: "";
+		  display: table;
+		  clear: both;
+		}
+
 	  
 	  
 	</style>
@@ -265,6 +292,7 @@
 			ORIGINAL_DATA = JSON.parse(JSON.stringify(data));
 			setStateColors();
 			setSliderValues();
+			$('#thirdPartyOptions').val("noop");
 		});
 	}
 	
@@ -362,15 +390,28 @@
 	  });
 	  
 	  $('#selectCrosstabs').change(function() {
-	    var crosstab = this.value;
+	    const crosstab = this.value;
 		//console.log(crosstab);
 		$("#selectCrosstabs option").each(function(i) {
-			var divName = $(this).val();
+			const divName = $(this).val();
 			$(divName).hide();
 		});
 		
 		$(crosstab).show();
 	  });
+	  
+	  $('#thirdPartyOptions').change(function() {
+		const opt = this.value;
+		if (opt === 'distributeFair') {
+			distributeValues();
+		} else if (opt === 'distributeClinton') {
+			distributeAllValues(false);
+		} else if (opt === 'distributeTrump') {
+			distributeAllValues(true);
+		}
+		
+	  });
+	  
 	  
 	  // Gender
 	  $('#femalePct').on('input', function () {updateTurnout($(this)); });
@@ -460,19 +501,12 @@ The election predictor was made using available CNN exit poll data. Adjusting th
 	<p>
 The high third party prevalence made it tricky, so I provided three options to split third-party (3P) data. I don't recommend mixing crosstabs too much - the poll data wasn't super granular in the first place, so errors will accumulate the more you mix crosstabs.
 </p>  
-  <div id="map" style="width: 930px; height: 630px; border: solid 3px red;"></div>
-  <br />
-  <div id="electoralScore">
-	<b>R Electoral Votes:</b> 
-	<span id="TrumpEV"></span> <br />
-	<b>D Electoral Votes:</b> 
-	<span id="ClintonEV"></span>
-  </div>
-
   <p>Default values based on 2016 turnout. Select a crosstab to adjust values. <br />
   <small>Note: Only states with exit poll data will be updated. </small>
   </p>
+
   <p>
+    <button id="#reset2016" onclick="resetValues();">Reset to 2016</button>
   <select id="selectCrosstabs">
 	<option value="#party" selected="selected">Party</option>
 	<option value="#gender">Gender</option>
@@ -480,12 +514,17 @@ The high third party prevalence made it tricky, so I provided three options to s
 	<option value="#race">Race or Ethnicity</option>	
 	<option value="#education">Education</option>
   </select>
-  <button id="#reset2016" onclick="resetValues();">Reset to 2016</button>
-  <button id="#divide2016" onclick="distributeValues();">Distribute 3P votes proportionally</button>
-  <button id="#divide2016C" onclick="distributeAllValues(false);">3P -> Clinton</button>
-  <button id="#divide2016T" onclick="distributeAllValues(true);">3P -> Trump</button>
+  <select id="thirdPartyOptions">
+	<option value="noop" selected="selected">Third party (3P) options</option>
+	<option value="distributeFair">Distribute 3P votes</option>
+	<option value="distributeTrump">Give all 3P votes to R</option>
+	<option value="distributeClinton">Give all 3P votes to D</option>
+  </select>
   </p>
-  
+
+
+   <div class="row">
+  <div class="lcolumn">  
   <div id="party" style="display: block;">
 	<div class="range-wrap">
 	  Republicans: Adjust turnout vs. 2016
@@ -801,6 +840,21 @@ The high third party prevalence made it tricky, so I provided three options to s
 		<input type="range" min="0" max="100" value="0" class="range" id="raceOPctClinton">		
 		<output class="bubble"></output>
 	</div>  
+</div>
+
+</div>
+
+   <div class="lcolumn">
+     <div id="electoralScore">
+	<b>Electoral College: R:</b> 
+	<span id="TrumpEV"></span> 
+	<b>D:</b> 
+	<span id="ClintonEV"></span>
+  </div>
+
+  <div id="map" style="width: 64em; height: 40em; border: solid 3px red;"></div>
+  </div>
+
 </div>
 
 </body>
