@@ -79,6 +79,6 @@ Again, we see with independents that the VBM requests tend to make up an older p
 
 In terms of returned ballots, independents are the youngest group. Whereas both Republicans and Democrats have fewer than 5% of their returned ballots from ages 25 and under, 7% of returned independent ballots are from voters 25 and under. Correspondingly, independents are the only party where those 65+ are not a majority of returned ballots. 
 
-At 28% return rate thus far, independents are slightly less enthused than Republicans to return the VBM ballots. They have a similar motivation to vote by mail as Democrats per polling, but I lately see large numbers of undecideds in polling party breakdowns. They remain a good group for voter outreach. 
+At 28% return rate thus far, independents are slightly less enthused than Republicans to return the VBM ballots. They have a similar motivation to vote by mail as Democrats per polling, but I lately see large numbers of undecided independents in polling crosstabs. They remain a good group for voter outreach. 
 
 Tune in tomorrow where I do an analysis of VBM returns together with voter history. 
