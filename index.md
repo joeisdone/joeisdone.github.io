@@ -1,4 +1,4 @@
-In-depth pages: [Independents](c), [Demographics](c), [A Political Testimony](https://joeisdone.github.io/testimony.html), [Contact info](https://joeisdone.github.io/CONTACT.html)
+In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html), [Contact info](https://joeisdone.github.io/CONTACT.html)
 
 *25-Sept update: I've been asked for an update - and the update is: the numbers here haven't changed meaningfully. Stay tuned.*
 
