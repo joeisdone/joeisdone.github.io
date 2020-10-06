@@ -2,7 +2,8 @@
 [Home](https://joeisdone.github.io/)
 
 # Age breakdown
-If you haven't read the original article behind this blog, please [do so now](https://joeisdone.github.io/) - or read the [comic version](https://joeisdone.github.io/comic.html).
+
+## First time visitor? Read the [comic intro](https://joeisdone.github.io/comic.html) first!
 
 ## Update for 5-Oct
 First, an update for 5 October. I don't make many updates to this blog because, among other reasons, the premises to the blog still hold true.
