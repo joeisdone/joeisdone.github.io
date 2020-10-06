@@ -40,11 +40,13 @@ Anyway... onto the age and gender deep dive.
 ![2016 Democrats by age](https://joeisdone.github.io/images/age/2016-democrat-age.png)
 
 We start off by analyzing 2016 as a comparison point. In NC, there is a big asymmetry for age and gender among Democrats - Democrats tend to be overwhelmingly women, and tend to be older. 
+
 ![2020 Democrats VBM requests by age](https://joeisdone.github.io/images/age/vbm-democrat-age.png)
 
 Democratic VBM requests are heavily female, and as expected, significantly older than the 2016 crowd in general. 
 
 One important thing to keep in mind is Simpson's Paradox - as explained in the original blog, there exists a large number of older NC voters who will *identify as Republican* but are *registered Democrat*. It is difficult to suss out if these voters are "true Democrats" or "Republicans who never changed their party affiliation."
+
 ![2020 Democrat returns by age](https://joeisdone.github.io/images/age/returned-democrat-age.png)
 
 What about VBM requests? Well, a good chunk of them (34.3%) have already been returned. But once again we see an even deeper age and gender asymmetry - the *returned ballot* makeup is overwhelmingly older, with over 50% of all returned ballots being voters 65+ and <5% from those 25 and under. 
@@ -75,6 +77,8 @@ Again, we see with independents that the VBM requests tend to make up an older p
 
 ![2020 Independent returned ballots by age](https://joeisdone.github.io/images/age/returned-independent-age.png)
 
-In terms of returned ballots, independents are the youngest group. Whereas both Republicans and Democrats have fewer than 5% of their returned ballots from ages 25 and under, 7% of returned independent ballots are from voters 25 and under. Correspondingly, independents are the only party where those 65+ are not a majority of returned ballots.
+In terms of returned ballots, independents are the youngest group. Whereas both Republicans and Democrats have fewer than 5% of their returned ballots from ages 25 and under, 7% of returned independent ballots are from voters 25 and under. Correspondingly, independents are the only party where those 65+ are not a majority of returned ballots. 
+
+At 28%, independents are slightly less enthused than Republicans to return the VBM ballots. They have a similar motivation to vote by mail as Democrats per polling, but I lately see large numbers of undecideds in polling party breakdowns. They remain a good group for voter outreach. 
 
 Tune in tomorrow where I do an analysis of VBM returns together with voter history. 
