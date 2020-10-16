@@ -18,6 +18,8 @@ In the above image, the actual numbers are the solid lines, the projections are 
 | Republicans | 282,911  | 288,630 | 305,380 | 297,737 | +9,107 (Slight outperform) |
 | Independents  | 430,758  | 513,106 | 531,316 | 509,018 | +78,260 (Well Outperform) |
 
+This equates to 36.79% of 2016 turnout for Democrats, which is well below the 50%+ claiming to vote by mail per pollsters. Where are the "missing" Democrats? That remains to be seen.
+
 Today, in-person early voting starts for North Carolina. It will take a week or so to establish trends, but in-person voting will provide the first acid test for Joe is Done. 
 
 **To match what polls claim, roughly 20% of each party in terms of 2016 turnout should be turning out for in-person early voting.**
