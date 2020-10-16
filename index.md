@@ -1,10 +1,12 @@
 In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html), [Contact info](https://joeisdone.github.io/CONTACT.html)
 
+# Oct 15: Update and voting history deep dive
+
+[See here for a belated deep dive into the voting history of those who are doing VBM.](https://joeisdone.github.io/history.html)
+
 # Oct 5: Update and Age deep dive
 
 [See here for an update, and by request, an age breakdown.](https://joeisdone.github.io/Age.html)
-
-Tomorrow, I will be doing a deep dive into the voting history of those who have turned into VBM. 
 
 # Sept 26: Interactive Election Predictor!
 
