@@ -1,3 +1,5 @@
+[Home](https://joeisdone.github.io/)
+
 # Voting History
 
 ## First time visitor? Read the [comic intro](https://joeisdone.github.io/comic.html) first!
