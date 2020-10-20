@@ -313,7 +313,10 @@
 			}
 			
 			demPct = (v + 0.0) / (totalNums[k] + 0.0);
+			demPct2016 = election2016Data[k]['clintonPct'];
+			
 			repPct = (repNums[k] + 0.0) / (totalNums[k] + 0.0);
+			repPct2016 = election2016Data[k]['trumpPct'];
 			//console.log(k + ":" + pctToString(demPct) + "-" + pctToString(repPct));
 			const splitColor = getSplitColor(repPct, demPct);
 			usfljsconfig[myid].upColor = splitColor;
@@ -327,10 +330,17 @@
 			} else if (methodType === "EarlyVoting") {
 				methodStr = "In-person votes";
 			}
+			var gap = (demPct - repPct) - (demPct2016 - repPct2016);
+			var gapDesc = gap < 0.0 ? " Advantage Trump" : "Advantage Biden";
 			usfljsconfig[myid].hover = k + "<br /><small>" + 
 				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" + 
-				methodStr + ", Republican:<b>" + v + " (" + pctToString(repPct) + ")</b><br />" + 
-				"Difference (D-R): " + pctToString(demPct - repPct) + "</small>";			
+				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" + 
+				"2020 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b><br />" + 
+				"2016 comparison: Clinton: " + pctToString(demPct2016) + " Trump: " + pctToString(repPct2016) +  "<br />" + 
+				"2016 Difference (D-R): <b>" + pctToString(demPct2016 - repPct2016) + "</b><br />" + 
+				"2020-2016 Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
+					
+				"</small>";			
 		});
 		
 	}
@@ -440,8 +450,9 @@
 </head>
 <body>
   <h1>Florida early voting statistics</h1>  
-  <small>Updated:<span id="timestamp"></span></small>
-
+  <small>Auto-updated:<span id="timestamp"></span><br />
+  <i>The data here is updated regularly every 30 minutes (computer uptime permitting).</i>
+</small>
 <span id="usfljstip"></span>
 <div id="mapwrapper">
   <div id="mapbase"><!-- V4.1 -->
@@ -612,8 +623,9 @@
 	<option value="allEarly">All party early votes</option>	
 	<option value="split">R/D split (ignores party)</option>
   </select>
-  
+  <br/>
 <div id="dataTable"></div>
+<a href="https://joeisdone.github.io/">Back to JoeIsDone</a>
 
 </body>
 </html>
