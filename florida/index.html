@@ -346,6 +346,10 @@
 	}
 
 	function doUpdate() {
+		$('#turnoutFilter').val(turnoutType);
+		$('#methodFilter').val(methodType);
+		$('#partyFilter').val(partyType);
+
 
 		// This is the easy denominator - 
 		// we just color on a gradient. 
@@ -601,6 +605,15 @@
 </div>
 
 <div class="clear"></div>
+    <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
+	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
+	<button onclick="methodType='total';turnoutType='turnout2016Clinton';partyType='DEM';doUpdate();">Compare Democrat EV vs. Clinton votes</button> - See where Democrats are turning out vs 2016.<br />
+	<button onclick="methodType='total';turnoutType='turnout2016Clinton';partyType='REP';doUpdate();">Compare Republican EV vs. Trump 2016 votes</button> - See where Republicans are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='turnout2016';partyType='NPA';doUpdate();">Compare NPA EV vs. 2016 votes</button> - See where Independents are turning out vs. 2016.<br />
+	
+	<br /><br />
+
+<b>Advanced</b><br />
   <small>Filter by vote type:</small> <select id="methodFilter">
 	<option value="total">All votes (in-person and mail)</option>
 	<option value="EarlyVoting" selected="selected">In-person early voting only</option>
