@@ -8,7 +8,7 @@ Brief update on the 'Trump has conceded NC' panic: **It's Fake News.**
 
 > “The President is going to win North Carolina and we feel very solid about it,” Trump campaign communications director Tim Murtaugh told ABC News, pointing to its grassroots effort on the ground in the state and polling that shows 42% of Democrats in the state prefer voting by mail and “if this is true, and current absentee ballot request trends continue, they are facing a historically low turnout.”
 
-I agree with the campaign manager. As of now my model predicts 35.9% Dem turnout relative to 2016, but that is based on a 7-day rolling average which has been dropping on a daily basis.
+I agree with the campaign manager. As of now my model predicts 35.9% Dem turnout relative to 2016, but that is based on a 7-day rolling average which has been dropping on a daily basis. IMO, 30% is a realistic goal at this point when all VBM is turned in. 
 
 The NC VBM *is* unusually slanted towards Dems relative to other states. But that is because older Reps in NC tend to be registered as Democrats. Here’s the proof:
 
