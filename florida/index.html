@@ -60,10 +60,10 @@
 	var partyType = "TOTAL";
 
 	// total, EarlyVoting, Mail
-	var methodType = "total"; 
+	var methodType = "EarlyVoting"; 
 
-	// turnout2016, turnout2016Clinton, turnout2016Trump
-	var turnoutType = "turnout2016";
+	// turnout2016, turnout2016Clinton, turnout2016Trump, ev, split
+	var turnoutType = "split";
 
 	// Sort object by keys... 
 	function sortByKeys(obj) {
@@ -601,6 +601,22 @@
 </div>
 
 <div class="clear"></div>
+  <small>Filter by vote type:</small> <select id="methodFilter">
+	<option value="total">All votes (in-person and mail)</option>
+	<option value="EarlyVoting" selected="selected">In-person early voting only</option>
+	<option value="Mail">Mail in votes only</option>
+  </select>
+  <br />
+  
+  <small>Denominator:</small> <select id="turnoutFilter">
+	<option value="turnout2016">2016 total votes</option>
+	<option value="turnout2016Clinton">2016 Clinton votes</option>
+	<option value="turnout2016Trump">2016 Trump votes</option>
+	<option value="allEarly">All party early votes</option>	
+	<option value="split" selected="selected">R/D split (ignores party)</option>
+  </select>
+  <br/>
+  
   <small>Filter by party:</small> <select id="partyFilter">
 	<option value="NPA">NPA (unaffliated) early votes</option>
 	<option value="REP">Republican early votes</option>
@@ -608,22 +624,6 @@
 	<option value="TOTAL" selected="selected">Early votes, all parties</option>
   </select>
   <br />
-  
-  <small>Filter by vote type:</small> <select id="methodFilter">
-	<option value="total" selected="selected">All votes (in-person and mail)</option>
-	<option value="EarlyVoting">In-person early voting only</option>
-	<option value="Mail">Mail in votes only</option>
-  </select>
-  <br />
-  
-  <small>Denominator:</small> <select id="turnoutFilter">
-	<option value="turnout2016" selected="selected">2016 total votes</option>
-	<option value="turnout2016Clinton">2016 Clinton votes</option>
-	<option value="turnout2016Trump">2016 Trump votes</option>
-	<option value="allEarly">All party early votes</option>	
-	<option value="split">R/D split (ignores party)</option>
-  </select>
-  <br/>
 <div id="dataTable"></div>
 <a href="https://joeisdone.github.io/">Back to JoeIsDone</a>
 
