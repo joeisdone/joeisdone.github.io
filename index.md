@@ -1,4 +1,12 @@
-In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html), [Contact info](https://joeisdone.github.io/CONTACT.html)
+In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [History](https://joeisdone.github.io/history.html), [Demographics](https://joeisdone.github.io/demographics.html), [A Political Testimony](https://joeisdone.github.io/testimony.html), [Contact info](https://joeisdone.github.io/CONTACT.html)
+
+This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
+
+# Oct 19: Florida live interactive EV map
+
+[See the live interactive early voting map of Florida here!](https://joeisdone.github.io/florida/)
+
+[Also: why you shouldn't panic!](https://joeisdone.github.io/panic.html)
 
 # Oct 15: Update and voting history deep dive
 
@@ -11,10 +19,6 @@ In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [
 # Sept 26: Interactive Election Predictor!
 
 If you're a numbers geek, visit the [Election Predictor](https://joeisdone.github.io/predictor/) which will allow you to build your own turnout model based on 2016. 
-
-# Now in comic format
-
-This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
 
 # Joe’s Yuge Strategic Misstep
 
