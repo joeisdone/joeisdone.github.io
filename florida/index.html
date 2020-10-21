@@ -287,9 +287,9 @@
 		const turnoutPct = pctToString((total + 0.0)/(turnout2016Total+0.0));
 		const clintonPct = pctToString((demTotal + 0.0)/(clinton2016Total+0.0));
 		const trumpPct = pctToString((repTotal + 0.0)/(trump2016Total+0.0));
-		
+		const gap = demTotal - repTotal;
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 turnout");
+		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 turnout<br />D-R gap: " + gap);
 		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes");
 		$('#countNPA').html(npaTotal + " (" + npaPct + ")");
 		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes");
