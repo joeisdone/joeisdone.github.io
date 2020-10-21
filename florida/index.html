@@ -16,6 +16,20 @@
 		  margin: 1rem;
 		  padding: 0.2rem auto 1rem;
 		}
+		table {
+		  border-collapse: collapse;
+		}
+
+		table, th, td {
+		  border: 1px solid black;
+		}
+		td {
+		  padding: 5px;
+		}
+		table {
+			margin-bottom:5px;
+		}
+
   </style>
   <script src="./jquery.min.js"></script>
   <script src="./map-config.js"></script>
@@ -247,6 +261,31 @@
 		});
 	}
 	
+	function updateTotals() {
+		// countMethod countDEM countREP countIND countTOTAL
+	    var methodText = "Vote totals (IPEV + VBM)";
+		if (methodType === "Mail") {
+			methodText = "Vote totals (VBM only)";
+		}
+		if (methodType === "EarlyVoting") {
+			methodText = "Vote totals (IPEV only)";
+		}
+		
+		const total = liveData['TOTAL']['TOTAL'][methodType];
+		const demTotal = liveData['TOTAL']['DEM'][methodType];
+		const repTotal = liveData['TOTAL']['REP'][methodType];
+		const npaTotal = liveData['TOTAL']['NPA'][methodType];
+		const repPct = pctToString((repTotal + 0.0)/(total+0.0));
+		const demPct = pctToString((demTotal + 0.0)/(total+0.0));
+		const npaPct = pctToString((npaTotal + 0.0)/(total+0.0));
+		
+		$('#countMethod').text(methodText);
+		$('#countTOTAL').text(total);
+		$('#countDEM').text(demTotal + " (" + demPct + ")");
+		$('#countNPA').text(npaTotal + " (" + npaPct + ")");
+		$('#countREP').text(repTotal + " (" + repPct + ")");
+	}
+	
 	
 	// Get denominator from county given type
 	// Possible types are: 
@@ -382,7 +421,7 @@
 /*			var test = getPercentages('REP', 'ev');
 			colorGradient('REP', test);
 */
-	
+		updateTotals();
 		$.each(counties, function(k, v) {
 			$('#' + v).mouseenter().mouseleave();
 		});
@@ -463,7 +502,22 @@
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br>
   <br/>
   When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 overall turnouts</b> (all votes, not just EV). <span style="background-color:#faffc4;">Biden is EXPECTED to lead by a ridiculous advantage.</span> This is especially true in rural areas because the map cannot measure crossover Democrat vote. In general, <span style="background-color:#adffd6;">Biden advantage within single digits is <b>excellent for Trump</b></span>. <br /><br />
-  It my recommendation that any Tweeters of this link ban people from their feed who can't read the above ☝ and can't grasp that Florida early voting has been happening for just 2 days. ️
+<table>
+	<tr>
+	<td><b><span id="countMethod"></span></b></td>
+	<td><b>Democrat</b></td>
+	<td><b>Republican</b></td>
+	<td><b>Unaffliated</b></td>
+	</tr>
+	<tr>
+	<td><span id="countTOTAL"></span></td>
+	<td><span id="countDEM"></span></td>
+	<td><span id="countREP"></span></td>
+	<td><span id="countNPA"></span></td>
+	</tr>
+</table>
+
+ ️
 </small>
 
 <span id="usfljstip"></span>
@@ -614,6 +668,7 @@
 </div>
 
 <div class="clear"></div>
+
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
 	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
 	<button onclick="methodType='total';turnoutType='turnout2016Clinton';partyType='DEM';doUpdate();">Compare Democrat EV vs. Clinton votes</button> - See where Democrats are turning out vs 2016.<br />
