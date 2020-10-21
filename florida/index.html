@@ -279,11 +279,20 @@
 		const demPct = pctToString((demTotal + 0.0)/(total+0.0));
 		const npaPct = pctToString((npaTotal + 0.0)/(total+0.0));
 		
+		//  "TOTAL" : { "trumpVotes": 4617886, "trumpPct": 0.4902, "clintonVotes": 4504975, "clintonPct": 0.4782, "total": 9420039 }}
+		const turnout2016Total = election2016Data['TOTAL']['total'];
+		const clinton2016Total = election2016Data['TOTAL']['clintonVotes'];
+		const trump2016Total = election2016Data['TOTAL']['trumpVotes'];
+		
+		const turnoutPct = pctToString((total + 0.0)/(turnout2016Total+0.0));
+		const clintonPct = pctToString((demTotal + 0.0)/(clinton2016Total+0.0));
+		const trumpPct = pctToString((repTotal + 0.0)/(trump2016Total+0.0));
+		
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').text(total);
-		$('#countDEM').text(demTotal + " (" + demPct + ")");
-		$('#countNPA').text(npaTotal + " (" + npaPct + ")");
-		$('#countREP').text(repTotal + " (" + repPct + ")");
+		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 turnout");
+		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes");
+		$('#countNPA').html(npaTotal + " (" + npaPct + ")");
+		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes");
 	}
 	
 	
