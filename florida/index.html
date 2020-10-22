@@ -399,10 +399,37 @@
 		} else {
 			return '#0000cc'; // dark blue
 		}
+	}
+	
+	function getSplitAdvantageColor(gap) {
+		const difference = gap * -1.0;
+		if (difference > 0.07) {
+			return '#cc0000'; // dark red
+		} else if (difference > 0.5) {
+			return '#ff0000'; // bright red
+		} else if (difference > 0.025) {
+			return '#ff8080'; // pinkish red
+		} else if (difference > 0.01) {
+			return '#ffb3b3'; // pinky
+		} else if (difference > 0.00) {
+			return '#ffe6e6'; // light pink
+		} else if (difference > -0.0255) {
+			return '#F2F2FF';
+		} else if (difference > -0.05) {
+			return '#e6e6ff'; // light blue
+		} else if (difference > -0.08) {
+			return '#ccccff'; // less light blue
+		} else if (difference > -0.10) {
+			return '#b3b3ff'; // medium blue
+		} else if (difference > -0.20) {
+			return '#0000ff'; // bright blue
+		} else {
+			return '#0000cc'; // dark blue
+		}
 	} 	
 	
 	// Handle split ratio separately.
-	function doSplit() {
+	function doSplit(isAdvantage) {
 		var repNums = getNumerator("REP");
 		var demNums = getNumerator("DEM");
 		var npaNums = getNumerator("NPA");
@@ -427,10 +454,6 @@
 			const npaEarlyPct = early2016Data[k]['NPApct'];
 			
 			//console.log(k + ":" + pctToString(demPct) + "-" + pctToString(repPct));
-			const splitColor = getSplitColor(repPct, demPct);
-			usfljsconfig[myid].upColor = splitColor;
-			usfljsconfig[myid].downColor = splitColor;
-			$('#' + myid).attr({fill: splitColor});
 			
 			// Fill in the hover. 
 			var methodStr = "All early votes";
@@ -439,8 +462,17 @@
 			} else if (methodType === "EarlyVoting") {
 				methodStr = "In-person votes";
 			}
+			
+			
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
 			var gapDesc = gap < 0.0 ? " Advantage Trump" : "Advantage Biden";
+			console.log(k + " " + isAdvantage + " " + gap);
+			
+			const splitColor = isAdvantage ? getSplitAdvantageColor(gap) : getSplitColor(repPct, demPct);
+			usfljsconfig[myid].upColor = splitColor;
+			usfljsconfig[myid].downColor = splitColor;
+			$('#' + myid).attr({fill: splitColor});
+
 			usfljsconfig[myid].hover = k + "<br /><small>" + 
 				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" + 
 				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" + 
@@ -486,8 +518,12 @@
 			var pct = getPercentages(partyType, "ev");
 			colorGradient(partyType, pct);		
 		}
-		else if (turnoutType === "split") {
-			doSplit();
+		else if (turnoutType.includes("split")) {
+			if (turnoutType === "split") {
+				doSplit(false);
+			} else if (turnoutType === "splitAdvantage") {
+				doSplit(true);
+			}			
 		}
 		
 /*			var test = getPercentages('REP', 'ev');
@@ -750,6 +786,7 @@
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
 	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
 	<button onclick="methodType='Mail';turnoutType='split';doUpdate();">Early votes: Mail only</button> <br />
+	<button onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();">Advantage Map</button> - NEW, shade map by advantage relative to 2016. <br /><br />	
 	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat early votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
 	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2020 Republican early votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
 	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2020 unaffliated early votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
@@ -773,6 +810,7 @@
 	<option value="turnout2016Clinton">2016 Clinton votes</option>
 	<option value="turnout2016Trump">2016 Trump votes</option>
 	<option value="allEarly">All party early votes</option>	
+	<option value="splitAdvantage">Advantage split (ignores party)</option>	
 	<option value="split" selected="selected">R/D split (ignores party)</option>
   </select>
   <br/>
