@@ -274,11 +274,14 @@
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
 	    var methodText = "Vote totals (IPEV + VBM)";
+		var methodShort = "EV";
 		if (methodType === "Mail") {
 			methodText = "Vote totals (VBM only)";
+			methodShort = "VBM";
 		}
 		if (methodType === "EarlyVoting") {
 			methodText = "Vote totals (IPEV only)";
+			methodShort = "IPEV";
 		}
 		
 		const total = liveData['TOTAL']['TOTAL'][methodType];
@@ -310,8 +313,25 @@
 		const demEarlyPct = pctToString((demTotal + 0.0)/(demEarly2016Total+0.0));
 		const npaEarlyPct = pctToString((npaTotal + 0.0)/(npaEarly2016Total+0.0));		
 		
+		const pctGap = pctToString((demTotal + 0.0)/(total+0.0) - (repTotal + 0.0)/(total+0.0));
+		const pctEarlyGap = pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)-(repEarly2016Total + 0.0)/(early2016Total+0.0));		
+		var pctPctGap = (
+			((demTotal + 0.0)/(total+0.0) - (repTotal + 0.0)/(total+0.0)) - 
+			((demEarly2016Total + 0.0)/(early2016Total+0.0)-(repEarly2016Total + 0.0)/(early2016Total+0.0)) 
+		);
+		
+		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
+		pctGapDesc += " (<span style=\"font-size:smaller;\"><a href=\"https://joeisdone.github.io/FloridaPrediction.html\">Goal: &lt;8 Biden</a></span>)";
+		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
+			pctToString((repEarly2016Total + 0.0)/(early2016Total+0.0)) + " R, Gap:" + 
+			pctEarlyGap;
+		var gap2020Desc = "2020 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
+		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
+		
+		const addendum = "<br />" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage;
+				
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap: " + gap);
+		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): " + gap + addendum);
 		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV");
 		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV");
 		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV");
