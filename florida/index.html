@@ -328,10 +328,10 @@
 		var gap2020Desc = "2020 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
 		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
 		
-		const addendum = "<br />" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage;
+		const addendum = "<br /><br />" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage;
 				
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "<br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): " + gap + addendum);
+		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
 		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV");
 		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV");
 		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV");
