@@ -500,7 +500,7 @@
 	}
 	
 	$(document).ready(function() {	  
-	  $.getJSON('https://joeisdone.github.io/json/florida.json', function(data) {
+	  $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json', function(data) {
 	  liveData = data;
 		$('#timestamp').text(liveData['TIMESTAMP']);
 		$.getJSON('https://joeisdone.github.io/json/florida2016.json', function(data2016) {
@@ -574,7 +574,7 @@
   <h1>Florida early voting statistics</h1>  
   <small>Auto-updated:<span id="timestamp"></span><br />
   
-  <i>The data here is updated regularly every 30 minutes (computer uptime permitting).<a href="http://joeisdone.github.io/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
+  <i>The data here is updated regularly every 30 minutes (computer uptime permitting).<a href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br> 
   <b>Defaults to IPEV-only view.</b> Scroll down to toggle other views.<br />
   <br/>
@@ -761,13 +761,13 @@
 	<option value="total">All votes (in-person and mail)</option>
 	<option value="EarlyVoting" selected="selected">In-person early voting only</option>
 	<option value="Mail">Mail in votes only</option>
-  </select>
+  </select>	
   <br />
   
   <small>Denominator:</small> <select id="turnoutFilter">
 	<option value="early2016TOTAL">2016 total early votes</option>
-	<option value="early2016DEM">2016 Republican early votes</option>
-	<option value="early2016REP">2016 Democrat early votes</option>
+	<option value="early2016DEM">2016 Democrat early votes</option>
+	<option value="early2016REP">2016 Republican early votes</option>
 	<option value="early2016NPA">2016 unaffliated early votes</option>
 	<option value="turnout2016">2016 total votes</option>
 	<option value="turnout2016Clinton">2016 Clinton votes</option>
