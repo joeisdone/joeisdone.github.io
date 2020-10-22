@@ -6,3 +6,4 @@ I will provide my services to any Republican in a competitive office on a volunt
 
 If interested, email me with proof of identity along with your expectations to jsmithrand016 (at) gmail (dot) com. 
   
+ 
