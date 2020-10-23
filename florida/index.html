@@ -452,9 +452,9 @@
 			const demEarlyPct = early2016Data[k]['DEMpct'];
 			const repEarlyPct = early2016Data[k]['REPpct'];
 			const npaEarlyPct = early2016Data[k]['NPApct'];
-			const partyDiff = (v - repNums[k]) * -1;
+			const partyDiff = (v - repNums[k]);
 			var partyDiffDesc = partyDiff < 0.0 ? ("" + partyDiff) : ("+" + partyDiff);
-			partyDiffDesc = " (" + partyDiffDesc + " votes)";
+			partyDiffDesc = " (" + partyDiffDesc + ")";
 			//console.log(k + ":" + pctToString(demPct) + "-" + pctToString(repPct));
 			
 			// Fill in the hover. 
