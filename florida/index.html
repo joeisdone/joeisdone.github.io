@@ -386,7 +386,7 @@
 			return '#ff8080'; // pinkish red
 		} else if (difference > 0.05) {
 			return '#ffb3b3'; // pinky
-		} else if (difference > 0.00) {
+		} else if (difference >= 0.00) {
 			return '#ffe6e6'; // light pink
 		} else if (difference > -0.05) {
 			return '#e6e6ff'; // light blue
@@ -411,7 +411,7 @@
 			return '#ff8080'; // pinkish red
 		} else if (difference > 0.01) {
 			return '#ffb3b3'; // pinky
-		} else if (difference > 0.00) {
+		} else if (difference >= 0.00) {
 			return '#ffe6e6'; // light pink
 		} else if (difference > -0.0255) {
 			return '#ffffe0';
@@ -463,10 +463,13 @@
 				methodStr = "In-person votes";
 			}
 			
-			
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
-			var gapDesc = gap < 0.0 ? " Advantage Trump" : "Advantage Biden";
-			console.log(k + " " + isAdvantage + " " + gap);
+			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Biden";
+			// raw votes 
+			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
+			gapDesc += " (";			
+			gapDesc += gap <= 0.0 ? ("+" + gapRaw) : ("" + gapRaw);
+			gapDesc += " votes)";
 			
 			const splitColor = isAdvantage ? getSplitAdvantageColor(gap) : getSplitColor(repPct, demPct);
 			usfljsconfig[myid].upColor = splitColor;
