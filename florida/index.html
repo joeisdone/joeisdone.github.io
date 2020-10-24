@@ -271,6 +271,36 @@
 		});
 	}
 	
+	// TargetSmart numbers. Don't forget to update. 
+	// 1. Go to https://targetearly.targetsmart.com/ 
+	// 2. Select View Type: State, State: FL, Demographic: Voter Score, Demographic Value: SuperVoter, 
+	// Demographic 2: Registered Party
+	const supervoterPct2016 = { "DEM" : 0.425,  "REP": 0.496, "NPA": 0.065};
+	const supervoterPct2020 = { "DEM" : 0.465,  "REP": 0.443, "NPA": 0.086};
+	var cannibalCache = {};
+	
+	function cannibalizationBlurb(party) {
+		var blurb = cannibalCache[party];
+		if (blurb) return blurb;
+	
+		// Supervoter blurbs
+		const early2016Total = early2016Data['TOTAL'][party];
+		const early2020Total = liveData['TOTAL'][party]['total'];
+		const pct2016 = supervoterPct2016[party];
+		const pct2020 = supervoterPct2020[party];
+		const supervoter2016 = Math.floor(early2016Total * pct2016);
+		const supervoter2020 = Math.floor(early2020Total * pct2020);
+		const ratio = supervoter2020/supervoter2016;
+		const color = ratio > 1.0 ? 'FFD1D1' : 'D1FFFE';
+		
+		blurb = "<br/><br />2016 EV supervoters:" + supervoter2016 + "<br />" + 
+		                 "2020 EV supervoters (est):" + supervoter2020 + "<br />" + 
+						 "Remaining EV supervoters (est):<span style=\"background-color:#" + color + ";\"><b>" + (supervoter2016 - supervoter2020) + "</span></b>";
+			
+		cannibalCache[blurb] = blurb;
+		return blurb;
+	}
+	
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
 	    var methodText = "Vote totals (IPEV + VBM)";
@@ -302,7 +332,7 @@
 		const repEarly2016Total = early2016Data['TOTAL']['REP'];
 		const demEarly2016Total = early2016Data['TOTAL']['DEM'];
 		const npaEarly2016Total = early2016Data['TOTAL']['NPA'];
-		
+				
 		const turnoutPct = pctToString((total + 0.0)/(turnout2016Total+0.0));
 		const clintonPct = pctToString((demTotal + 0.0)/(clinton2016Total+0.0));
 		const trumpPct = pctToString((repTotal + 0.0)/(trump2016Total+0.0));
@@ -329,12 +359,12 @@
 		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
 		
 		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
-				
+		
 		$('#countMethod').text(methodText);
 		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
-		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV");
-		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV");
-		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV");
+		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV" + cannibalizationBlurb('DEM'));
+		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV" + cannibalizationBlurb('NPA'));
+		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV" + cannibalizationBlurb('REP'));
 	}
 	
 	
@@ -619,7 +649,8 @@
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br> 
   <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br />
   <br/>
-  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. <span style="background-color:#faffc4;">Biden is EXPECTED to lead by a ridiculous advantage</span> because of COVID-19 pushing Democrats into VBM (<a href="https://joeisdone.github.io/comic.html">see comic</a>). In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> as Democrats are polled to split VBM 2:1. <br /><br />
+  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. <span style="background-color:#faffc4;">Biden is EXPECTED to lead by a ridiculous advantage</span> because of COVID-19 pushing Democrats into VBM (<a href="https://joeisdone.github.io/comic.html">see comic</a>). In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> as Democrats are polled to split VBM 2:1. <br />
+  <span style="font-style: italic; font-size: x-small;">Supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Voter%20Score&demo_val=Super%20Voter&state=FL&demo2=Registered%20Party">TargetSmart.</a></span><br/></br>
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
