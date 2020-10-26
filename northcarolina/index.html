@@ -185,6 +185,70 @@
 		}
 	} 	
 
+	function updateTotals(methodType, numerator, denominator) {
+		// countMethod countDEM countREP countIND countTOTAL
+	    var methodText = "Vote totals (IPEV + VBM)";
+		var methodShort = "EV";
+		if (methodType === "MAIL") {
+			methodText = "Vote totals (VBM only)";
+			methodShort = "VBM";
+		}
+		if (methodType === "IPEV") {
+			methodText = "Vote totals (IPEV only)";
+			methodShort = "IPEV";
+		}
+		
+		var total2020 = 0;
+		var repTotal2020 = 0;
+		var demTotal2020 = 0;
+		$.each(numerator, function(ignore, res) {
+			total2020 += res['total'];
+			repTotal2020 += res['Rep'];
+			demTotal2020 += res['Dem'];
+		});
+		
+		var total2016 = 0;
+		var repTotal2016 = 0;
+		var demTotal2016 = 0;
+		$.each(denominator, function(ignore, res) {
+			total2016 += res['total'];
+			repTotal2016 += res['Rep'];
+			demTotal2016 += res['Dem'];
+		});
+		
+				
+		const repPct = pctToString((repTotal2020 + 0.0)/(total2020+0.0));
+		const demPct = pctToString((demTotal2020 + 0.0)/(total2020+0.0));
+				
+		const gap = demTotal2020 - repTotal2020;
+		
+		const earlyPct = pctToString((total2020 + 0.0)/(total2016+0.0));
+		const repEarlyPct = pctToString((repTotal2020 + 0.0)/(repTotal2016+0.0));
+		const demEarlyPct = pctToString((demTotal2020 + 0.0)/(demTotal2016+0.0));
+
+		const pctGap = pctToString((demTotal2020 + 0.0)/(total2020+0.0) - (repTotal2020 + 0.0)/(total2020+0.0));
+		const pctEarlyGap = pctToString((demTotal2016 + 0.0)/(total2016+0.0)-(repTotal2016 + 0.0)/(total2016+0.0));		
+		var pctPctGap = (
+			((demTotal2020 + 0.0)/(total2020+0.0) - (repTotal2020 + 0.0)/(total2020+0.0)) - 
+			((demTotal2016 + 0.0)/(total2016+0.0)-(repTotal2016 + 0.0)/(total2016+0.0)) 
+		);
+		
+		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
+		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demTotal2016 + 0.0)/(total2016+0.0)) + " D - " + 
+			pctToString((repTotal2016 + 0.0)/(total2016+0.0)) + " R, Gap:" + 
+			pctEarlyGap;
+		var gap2020Desc = "2020 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
+		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
+		
+		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
+		
+		$('#countMethod').text(methodText);
+		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
+		$('#countDEM').html(demTotal2020 + " (" + demPct + ")");
+		$('#countREP').html(repTotal2020 + " (" + repPct + ")");
+	}
+
+
 	/** Do a split, a la Florida map. */
 	function doSplit(methodStr, numerator, denominator) {
 		$.each(numerator, function(county, results2020) {
@@ -293,11 +357,14 @@
 		const methodStr = methodFilter.length == 2 ? 'All early votes' : 
 						  methodFilter[0] == 1 ? 'Mail votes' : 'In-person votes';
 		doSplit(methodStr, countyNumerators, countyDenominators);
-		
+		const methodType = methodFilter.length == 2 ? 'EV' : 
+						  methodFilter[0] == 1 ? 'MAIL' : 'IPEV';
+		updateTotals(methodType, countyNumerators, countyDenominators);
+	
 		$.each(counties, function(k, v) {
 			$('#' + v).mouseenter().mouseleave();
 		});
-
+		
 		/*
 		$('input[type=checkbox]').each( function() {
 		
@@ -371,12 +438,15 @@
 			parentHtml += '<table>'
 						
 			$.each(encoding['bit_map'], function(attr, ignore) {
+				const checkboxId = 'numerator' + encoding.id + attr;
+				if (checkboxId === 'numeratorVoted2016False') {
+					return;
+				}
 				if ((count % 2)==0) {
 					parentHtml += '<tr>';
 				}
 				
 				parentHtml += '<td>';
-				const checkboxId = 'numerator' + encoding.id + attr;
 								
 				parentHtml += '<input type="checkbox" id="' + checkboxId + '">';
 				parentHtml += " " + encoding.readable(attr);
@@ -418,6 +488,20 @@ Currently, the only denominator is split advantage over 2016 early votes. I may 
 Alter checkboxes to enable filtering over demographics. Multiple checkboxes within a category act as inclusive operators.<br /><br />
 
 <b><span style="background-color:#faffc4;">NOTE: Not every category adds up to 100%!</span></b> (E.g., many voters do not give out demographic data.) This is why "all categories checked" will look different than "none checked." <br/><br/>
+
+<span style="font-size: larger;">Defaults to "Advantage Split" view where you see comparative advantage versus 2016.</span><br/>
+<table>
+	<tr>
+	<td><b><span id="countMethod"></span></b></td>
+	<td><b>Democrat</b></td>
+	<td><b>Republican</b></td>
+	</tr>
+	<tr>
+	<td><span id="countTOTAL"></span></td>
+	<td><span id="countDEM"></span></td>
+	<td><span id="countREP"></span></td>
+	</tr>
+</table>
 
 <span id="usncjstip"></span>
 <div id="mapwrapper">
