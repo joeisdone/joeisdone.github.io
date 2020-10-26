@@ -2,11 +2,23 @@ In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [
 
 This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
 
+# Oct 26: North Carolina interactive EV map
+
+This is not a "live" map because NC does not update its data continuously like the Florida SoS. 
+
+But the map does compress the entire North Carolina public voter history and present it as a "Split Advantage" view (per the FL map). 
+
+Have a little patience when loading - there'll be an initial load of a 4 MB file.
+
+[Browse the map here](https://joeisdone.github.io/northcarolina/)
+
 # Oct 19: Florida live interactive EV map
 
 [See the live interactive early voting map of Florida here!](https://joeisdone.github.io/florida/)
 
 [Also: why you shouldn't panic!](https://joeisdone.github.io/panic.html)
+
+[
 
 # Oct 15: Update and voting history deep dive
 
