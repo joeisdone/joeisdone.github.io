@@ -271,36 +271,49 @@
 		});
 	}
 	
-	// TargetSmart numbers. Don't forget to update. 
-	// 1. Go to https://targetearly.targetsmart.com/ 
-	// 2. Select View Type: State, State: FL, Demographic: Registered Party, Demographic Value: <Party>, 
-	// Demographic 2: Voter Score
-	const supervoterPct2016 = { "DEM" : 0.31,  "REP": 0.361, "NPA": 0.107};
-	const supervoterPct2020 = { "DEM" : 0.31,  "REP": 0.371, "NPA": 0.128};
+	// https://twitter.com/mcimaps/status/1320771662447583232
+	// Dem - 1,596,467 / GOP - 1,903,132 / NPA - 572,671
+
+	const allSupervoters = { "DEM" : 1596467,  "REP": 1903132, "NPA": 572671};
+	// Coefficient: Voted supervoters / Party's total 2020 voters
+	const supervoterPct2020 = { "DEM" : 1126305.0/2555072.0,  "REP": 1092599.0/2200418.0, "NPA": 344565.0/1262940.0};
 	var cannibalCache = {};
+	
+	// too tired to do a proper refactor. 
+	// returns [supervoter2020, supervoter2016]
+	function supervoters(party) {
+		// Supervoter blurbs		
+		const early2020Total = liveData['TOTAL'][party]['total'];
+		const pct2020 = supervoterPct2020[party];
+		return Math.floor(early2020Total * pct2020);
+	}
 	
 	function cannibalizationBlurb(party) {
 		var blurb = cannibalCache[party];
 		if (blurb) return blurb;
 	
-		// Supervoter blurbs
-		const early2016Total = early2016Data['TOTAL'][party];
-		const early2020Total = liveData['TOTAL'][party]['total'];
-		const pct2016 = supervoterPct2016[party];
-		const pct2020 = supervoterPct2020[party];
-		const supervoter2016 = Math.floor(early2016Total * pct2016);
-		const supervoter2020 = Math.floor(early2020Total * pct2020);
+		const supervoter2016 = allSupervoters[party];
+		const supervoter2020 = supervoters(party);
+		
+		const opposition = party === "DEM" ? "REP" : "DEM";
+		
+		const remaining = Math.max(0, supervoter2016-supervoter2020);
+		const remainingOpp = Math.max(0, allSupervoters[opposition]-supervoters(opposition));
+		const gap = remaining - remainingOpp;
+		
+		
 		const ratio = supervoter2020/supervoter2016;
-		const color = ratio > 1.0 ? 'FFD1D1' : 'D1FFFE';
+		const color = gap < 0.0 ? 'FFD1D1' : 'D1FFFE';		
 		
-
-		blurb = "<br/><br/><i>Supervoter estimate temporarily disabled pending changeover to total remaining supervoters.</i>";
-		
-		/*
-		blurb = "<br/><br />2016 EV supervoters:" + supervoter2016 + "<br />" + 
-		                 "2020 EV supervoters (est):" + supervoter2020 + "<br />" + 
-						 "Remaining EV supervoters (est):<span style=\"background-color:#" + color + ";\"><b>" + (supervoter2016 - supervoter2020) + "</span></b>";
-		*/
+		blurb = "<br/><br />2016 total 4/4 voters:" + supervoter2016 + "<br />" + 
+		                 "2020 4/4 voters (est):" + supervoter2020 + "<br />" + 
+						 "Remaining 4/4 voters (est):<span style=\"background-color:#D1FFFE;\"><b>" + remaining + "</span> (" + pctToString(1.0 - ratio) + ")</b><br/>";
+						 
+		if (party !== "NPA") {
+			const shortDesc = opposition === "DEM" ? "D" : "R";
+			const gapDesc = gap > 0.0 ? "+" + gap : gap;
+			blurb += "Difference with " +  shortDesc + ': <span style="font-weight: bold;background-color: #' + color + '">' + gapDesc + '<span>';
+		}
 		cannibalCache[blurb] = blurb;
 		return blurb;
 	}
@@ -654,7 +667,7 @@
   <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br /><br />
   
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px;">
-  <b>27-Oct Update:</b> <span style="background-color:#faffc4;">Seeking a source on the <i>total</i> number of FL high-propensity voters / supervoters per party</span> and will re-enable estimated remaining supervoters once done, this time using the total available pool rather than early voting pool. <b>DM on Twitter if you can find it.</b> 
+  <b>27-Oct Update:</b> <span style="background-color:#faffc4;">Supervoter estimate has been adjusted.</span></b> I couldn't find a "total" provided under TargetSmart's definition of supervoters which seems to be different than 4/4 voters, so I changed over to a linear projection from <a href="https://twitter.com/mcimaps/status/1320771662447583232">here</a>. I may scrap data directly from records if they are published. 
   <br/><br/><span style="background-color: #adffd6; font-weight:bold;">Follow <a href="https://twitter.com/DataRepublican">@DataRepublican</a> for updates to JoeIsDone.</span>
   <br /><br/>
   <span><a href="https://joeisdone.github.io/northcarolina/">Check out the North Carolina map!</a></span> - <small><i>Have some patience, there is an initial load of a 4MB file.</i></small>
@@ -663,7 +676,7 @@
   <br />
 
   When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
-  <span style="font-style: italic; font-size: x-small;">Ongoing early voting supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Registered%20Party&demo_val=Democrat&state=FL&demo2=Voter%20Score">TargetSmart.</a> 
+  <span style="font-style:italic; font-size: x-small;">Ongoing early voter 4/4 estimates derived from a linear projection of current estimated 4/4 voter ratio.<br/>
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
