@@ -273,10 +273,10 @@
 	
 	// TargetSmart numbers. Don't forget to update. 
 	// 1. Go to https://targetearly.targetsmart.com/ 
-	// 2. Select View Type: State, State: FL, Demographic: Voter Score, Demographic Value: SuperVoter, 
-	// Demographic 2: Registered Party
-	const supervoterPct2016 = { "DEM" : 0.425,  "REP": 0.496, "NPA": 0.065};
-	const supervoterPct2020 = { "DEM" : 0.449,  "REP": 0.460, "NPA": 0.085};
+	// 2. Select View Type: State, State: FL, Demographic: Registered Party, Demographic Value: <Party>, 
+	// Demographic 2: Voter Score
+	const supervoterPct2016 = { "DEM" : 0.31,  "REP": 0.361, "NPA": 0.107};
+	const supervoterPct2020 = { "DEM" : 0.31,  "REP": 0.371, "NPA": 0.128};
 	var cannibalCache = {};
 	
 	function cannibalizationBlurb(party) {
@@ -649,10 +649,17 @@
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br> 
   <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br /><br />
   
-  <span style="font-size: larger;"><a href="https://joeisdone.github.io/northcarolina/"><b>NEW:</b> Check out the North Carolina map!</a></span> - <small><i>Have some patience, there is an initial load of a 4MB file.</i></small><br /><br />
+  <div style="border: 1px solid black; padding: 5px; margin: 5px 0px;">
+  <b>27-Oct Update:</b> <a href="https://twitter.com/TwitchyTangEng">@TwitchyTangEng</a> spotted that I was using the wrong denominator for SuperVoter calculations.<br/><b>They have been corrected, hence the major shift in supervoter estimates.</b>
+  <br/><br/><span style="background-color: #adffd6; font-weight:bold;">Follow <a href="https://twitter.com/DataRepublican">@DataRepublican</a> for updates to JoeIsDone.</span>
+  <br /><br/>
+  <span style="font-size: larger;"><a href="https://joeisdone.github.io/northcarolina/">Check out the North Carolina map!</a></span> - <small><i>Have some patience, there is an initial load of a 4MB file.</i></small>
+  </div>
+  
+  <br />
 
-  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. <span style="background-color:#faffc4;">Biden is EXPECTED to lead by a ridiculous advantage</span> because of COVID-19 pushing Democrats into VBM (<a href="https://joeisdone.github.io/comic.html">see comic</a>). In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> as Democrats are polled to split VBM 2:1. <br />
-  <span style="font-style: italic; font-size: x-small;">Supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Voter%20Score&demo_val=Super%20Voter&state=FL&demo2=Registered%20Party">TargetSmart.</a> <a href="https://github.com/joeisdone/joeisdone.github.io/commit/69aecf061548fc5eef6253a22d0e1a32492ae3d1">(See code)</a> <span style="background-color:#D1FFFE;"><b>Negative numbers are possible</b></span> when Election Day (not early) supervoters start being cannibalized.</span><br/></br>
+  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
+  <span style="font-style: italic; font-size: x-small;">Supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Registered%20Party&demo_val=Democrat&state=FL&demo2=Voter%20Score">TargetSmart.</a> <a href="https://github.com/joeisdone/joeisdone.github.io/commit/69aecf061548fc5eef6253a22d0e1a32492ae3d1">(See code)</a> <span style="background-color:#D1FFFE;"><b>Negative numbers are possible</b></span> when Election Day (not early) supervoters start being cannibalized.</span><br/></br>
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
