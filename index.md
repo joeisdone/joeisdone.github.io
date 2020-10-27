@@ -2,6 +2,10 @@ In-depth pages: [Independents](https://joeisdone.github.io/independents.html), [
 
 This page now in [easier-to-understand comic format here!](https://joeisdone.github.io/comic.html)
 
+# Oct 26 (pt 2)
+
+Now on Twitter as [@DataRepublican](https://twitter.com/DataRepublican). Not sure how much Tweeting I'll be doing, as others have done well on my behalf - thanks particularly to [@larryschweikart](https://twitter.com/LarrySchweikart), [@CottoGottfried](https://twitter.com/CottoGottfried), and [athein1](https://twitter.com/athein1). 
+
 # Oct 26: North Carolina interactive EV map
 
 This is not a "live" map because NC does not update its data continuously like the Florida SoS. 
@@ -17,8 +21,6 @@ Have a little patience when loading - there'll be an initial load of a 4 MB file
 [See the live interactive early voting map of Florida here!](https://joeisdone.github.io/florida/)
 
 [Also: why you shouldn't panic!](https://joeisdone.github.io/panic.html)
-
-[
 
 # Oct 15: Update and voting history deep dive
 
