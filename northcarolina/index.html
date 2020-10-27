@@ -68,7 +68,6 @@
 	
 	// Map of county names to [mapid, encoding index]
 	var counties = {};
-	var countMap = {};
 	var encodedRows = [];
 	var queryResult = [];
 	
@@ -141,7 +140,7 @@
 			if (queryResult[i]) {
 				// Add to respective party columns. 
 				const encoded = encodedRows[i];
-				const count = countMap[encoded];
+				const count = countRows[i];
 				countyResults[COUNTY_ENCODING.extract(encoded)]['total'] += count;
 				party_encoding = PARTY_ENCODING.decode(encoded);
 				if (party_encoding == 0) {
@@ -185,6 +184,11 @@
 		}
 	} 	
 
+	const turnoutTotal2016 = 4739292;
+	const demTurnoutTotal2016 = 1872593;
+	const repTurnoutTotal2016 = 1571730;
+	const trumpTotal2016 = 2362631;
+	const clintonTotal2016 = 2189316;
 	function updateTotals(methodType, numerator, denominator) {
 		// countMethod countDEM countREP countIND countTOTAL
 	    var methodText = "Vote totals (IPEV + VBM)";
@@ -198,6 +202,8 @@
 			methodShort = "IPEV";
 		}
 		
+			//console.log("set: " + allEV2020 + " " + repAllEV2020 + " " + demAllEV2020);
+		
 		var total2020 = 0;
 		var repTotal2020 = 0;
 		var demTotal2020 = 0;
@@ -207,6 +213,10 @@
 			demTotal2020 += res['Dem'];
 		});
 		
+		const totalPct2020Desc = pctToString((total2020+0.0)/(allEV2020+0.0)) + " of all 2020 EV";
+		const repPct2020Desc = pctToString((repTotal2020+0.0)/(repAllEV2020+0.0)) + " of Republican 2020 EV";
+		const demPct2020Desc = pctToString((demTotal2020+0.0)/(demAllEV2020+0.0)) + " of Democrat 2020 EV";
+		
 		var total2016 = 0;
 		var repTotal2016 = 0;
 		var demTotal2016 = 0;
@@ -214,12 +224,18 @@
 			total2016 += res['total'];
 			repTotal2016 += res['Rep'];
 			demTotal2016 += res['Dem'];
-		});
-		
+		});		
 				
 		const repPct = pctToString((repTotal2020 + 0.0)/(total2020+0.0));
 		const demPct = pctToString((demTotal2020 + 0.0)/(total2020+0.0));
-				
+		
+		const totalTurnoutPct = pctToString((total2020 + 0.0) / (turnoutTotal2016+0.0));
+		const totalTurnoutDesc = totalTurnoutPct + " of 2016 total turnout";
+		const repTurnoutPct = pctToString((repTotal2020 + 0.0) / (repTurnoutTotal2016+0.0));
+		const repTurnoutDesc = repTurnoutPct + " of 2016 registered R turnout";
+		const demTurnoutPct = pctToString((demTotal2020 + 0.0) / (demTurnoutTotal2016+0.0));
+		const demTurnoutDesc = demTurnoutPct + " of 2016 registered D turnout";
+		
 		const gap = demTotal2020 - repTotal2020;
 		
 		const earlyPct = pctToString((total2020 + 0.0)/(total2016+0.0));
@@ -243,9 +259,9 @@
 		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
 		
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
-		$('#countDEM').html(demTotal2020 + " (" + demPct + ")");
-		$('#countREP').html(repTotal2020 + " (" + repPct + ")");
+		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b><br/>" + totalPct2020Desc + "<br/>" + totalTurnoutDesc + addendum);
+		$('#countDEM').html(demTotal2020 + " (" + demPct + ")<br />" + demPct2020Desc + "<br/>" + demTurnoutDesc);
+		$('#countREP').html(repTotal2020 + " (" + repPct + ")<br />" + repPct2020Desc + "<br/>" + repTurnoutDesc);
 	}
 
 
@@ -310,6 +326,10 @@
 		});
 	}
 	
+	var repAllEV2020 = 0;
+	var demAllEV2020 = 0;
+	var allEV2020 = 0;
+	
 	function doUpdate(checkboxId) {
 		resetHover();
 		
@@ -350,6 +370,15 @@
 		
 		// Perform query - this is advantage split only, so do method 2020
 		const countyNumerators = query(METHOD_2020_ENCODING, methodFilter, rawFilters);
+		// If this is the first time, initialize the EV numbers
+		if (allEV2020 == 0) {
+			$.each(countyNumerators, function(ignore, v) {
+				allEV2020 += v['total'];
+				repAllEV2020 += v['Rep'];
+				demAllEV2020 += v['Dem'];
+			});
+			//console.log("set: " + allEV2020 + " " + repAllEV2020 + " " + demAllEV2020);
+		}
 		
 		// Now calculate denominators. we calculate via method 2016
 		const countyDenominators = query(METHOD_2016_ENCODING, methodFilter, rawFilters);
@@ -379,14 +408,11 @@
 	}
 
 	
-    $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/northcarolina.json', function(data) {
-		countMap = data['rows'];
+    $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/northcarolina_optimized.json', function(data) {
+		encodedRows = data['rows'];
+		countRows = data['counts'];
 		$('#timestamp').text(data['timestamp']);
 		
-		$.each(countMap, function(k, ignore) {
-			encodedRows.push(parseInt(k));	
-		});
-		encodedRows.sort();
 		queryResult = new Array(encodedRows.length).fill(true);
 		
 		var sortedCounties = [];
