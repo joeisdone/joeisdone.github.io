@@ -293,10 +293,14 @@
 		const ratio = supervoter2020/supervoter2016;
 		const color = ratio > 1.0 ? 'FFD1D1' : 'D1FFFE';
 		
+
+		blurb = "<br/><br/><i>Supervoter estimate temporarily disabled pending changeover to total remaining supervoters.</i>";
+		
+		/*
 		blurb = "<br/><br />2016 EV supervoters:" + supervoter2016 + "<br />" + 
 		                 "2020 EV supervoters (est):" + supervoter2020 + "<br />" + 
 						 "Remaining EV supervoters (est):<span style=\"background-color:#" + color + ";\"><b>" + (supervoter2016 - supervoter2020) + "</span></b>";
-			
+		*/
 		cannibalCache[blurb] = blurb;
 		return blurb;
 	}
@@ -650,16 +654,16 @@
   <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br /><br />
   
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px;">
-  <b>27-Oct Update:</b> <a href="https://twitter.com/TwitchyTangEng">@TwitchyTangEng</a> spotted that I was using the wrong denominator for SuperVoter calculations.<br/><b>They have been corrected, hence the major shift in supervoter estimates.</b>
+  <b>27-Oct Update:</b> <span style="background-color:#faffc4;">Seeking a source on the <i>total</i> number of FL high-propensity voters / supervoters per party</span> and will re-enable estimated remaining supervoters once done, this time using the total available pool rather than early voting pool. <b>DM on Twitter if you can find it.</b> 
   <br/><br/><span style="background-color: #adffd6; font-weight:bold;">Follow <a href="https://twitter.com/DataRepublican">@DataRepublican</a> for updates to JoeIsDone.</span>
   <br /><br/>
-  <span style="font-size: larger;"><a href="https://joeisdone.github.io/northcarolina/">Check out the North Carolina map!</a></span> - <small><i>Have some patience, there is an initial load of a 4MB file.</i></small>
+  <span><a href="https://joeisdone.github.io/northcarolina/">Check out the North Carolina map!</a></span> - <small><i>Have some patience, there is an initial load of a 4MB file.</i></small>
   </div>
   
   <br />
 
   When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
-  <span style="font-style: italic; font-size: x-small;">Supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Registered%20Party&demo_val=Democrat&state=FL&demo2=Voter%20Score">TargetSmart.</a> <a href="https://github.com/joeisdone/joeisdone.github.io/commit/69aecf061548fc5eef6253a22d0e1a32492ae3d1">(See code)</a> <span style="background-color:#D1FFFE;"><b>Negative numbers are possible</b></span> when Election Day (not early) supervoters start being cannibalized.</span><br/></br>
+  <span style="font-style: italic; font-size: x-small;">Ongoing early voting supervoter estimates derived from <a href="https://targetearly.targetsmart.com/?view_type=State&demo=Registered%20Party&demo_val=Democrat&state=FL&demo2=Voter%20Score">TargetSmart.</a> 
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
