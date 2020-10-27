@@ -187,6 +187,7 @@
 	const turnoutTotal2016 = 4739292;
 	const demTurnoutTotal2016 = 1872593;
 	const repTurnoutTotal2016 = 1571730;
+	
 	const trumpTotal2016 = 2362631;
 	const clintonTotal2016 = 2189316;
 	function updateTotals(methodType, numerator, denominator) {
@@ -216,6 +217,19 @@
 		const totalPct2020Desc = pctToString((total2020+0.0)/(allEV2020+0.0)) + " of all 2020 EV";
 		const repPct2020Desc = pctToString((repTotal2020+0.0)/(repAllEV2020+0.0)) + " of Republican 2020 EV";
 		const demPct2020Desc = pctToString((demTotal2020+0.0)/(demAllEV2020+0.0)) + " of Democrat 2020 EV";
+
+		var total2016 = 0;
+		var repTotal2016 = 0;
+		var demTotal2016 = 0;
+		$.each(numerator, function(ignore, res) {
+			total2016 += res['total'];
+			repTotal2016 += res['Rep'];
+			demTotal2016 += res['Dem'];
+		});
+		
+		const totalPct2016Desc = pctToString((total2016+0.0)/(allEV2016+0.0)) + " of all 2016 EV";
+		const repPct2016Desc = pctToString((repTotal2016+0.0)/(repAllEV2016+0.0)) + " of Republican 2016 EV";
+		const demPct2016Desc = pctToString((demTotal2016+0.0)/(demAllEV2016+0.0)) + " of Democrat 2016 EV";
 		
 		var total2016 = 0;
 		var repTotal2016 = 0;
@@ -259,9 +273,9 @@
 		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
 		
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b><br/>" + totalPct2020Desc + "<br/>" + totalTurnoutDesc + addendum);
-		$('#countDEM').html(demTotal2020 + " (" + demPct + ")<br />" + demPct2020Desc + "<br/>" + demTurnoutDesc);
-		$('#countREP').html(repTotal2020 + " (" + repPct + ")<br />" + repPct2020Desc + "<br/>" + repTurnoutDesc);
+		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b><br/>" + totalPct2020Desc + "<br/>" + totalPct2016Desc + "<br/>" + totalTurnoutDesc + addendum);
+		$('#countDEM').html(demTotal2020 + " (" + demPct + ")<br />" + demPct2020Desc + "<br/>" + demPct2016Desc + "<br/>" + demTurnoutDesc);
+		$('#countREP').html(repTotal2020 + " (" + repPct + ")<br />" + repPct2020Desc + "<br/>" + repPct2016Desc + "<br/>" + repTurnoutDesc);
 	}
 
 
@@ -329,6 +343,10 @@
 	var repAllEV2020 = 0;
 	var demAllEV2020 = 0;
 	var allEV2020 = 0;
+
+	var repAllEV2016 = 0;
+	var demAllEV2016 = 0;
+	var allEV2016 = 0;
 	
 	function doUpdate(checkboxId) {
 		resetHover();
@@ -370,6 +388,10 @@
 		
 		// Perform query - this is advantage split only, so do method 2020
 		const countyNumerators = query(METHOD_2020_ENCODING, methodFilter, rawFilters);
+		
+		// Now calculate denominators. we calculate via method 2016
+		const countyDenominators = query(METHOD_2016_ENCODING, methodFilter, rawFilters);
+		
 		// If this is the first time, initialize the EV numbers
 		if (allEV2020 == 0) {
 			$.each(countyNumerators, function(ignore, v) {
@@ -377,11 +399,13 @@
 				repAllEV2020 += v['Rep'];
 				demAllEV2020 += v['Dem'];
 			});
+			$.each(countyDenominators, function(ignore, v) {
+				allEV2016 += v['total'];
+				repAllEV2016 += v['Rep'];
+				demAllEV2016 += v['Dem'];
+			});			
 			//console.log("set: " + allEV2020 + " " + repAllEV2020 + " " + demAllEV2020);
 		}
-		
-		// Now calculate denominators. we calculate via method 2016
-		const countyDenominators = query(METHOD_2016_ENCODING, methodFilter, rawFilters);
 				
 		const methodStr = methodFilter.length == 2 ? 'All early votes' : 
 						  methodFilter[0] == 1 ? 'Mail votes' : 'In-person votes';
@@ -438,7 +462,7 @@
 		var allHtml = '<div class="row">\n<div class="column">\n';
 		
 		// Handle the EV method separately. 
-        allHtml += '<div id="numeratorAge" class="numerator">\n';
+        allHtml += '<div id="numeratorMethod" class="numerator">\n';
         allHtml += '   <span style="font-size: larger; font-weight: bold;">Early voting method</span><br /><br />\n';
         allHtml += '    <table>';
         allHtml += '        <tr>';
