@@ -147,7 +147,7 @@
 		if ("ev" === denominatorType) {
 			denominatorStr = methodStr + ", all parties:<b>" + dVal + "</b>";
 		} else {
-			denominatorStr = "2016 ";
+			denominatorStr = denominatorType.includes("2020") ? "2020 " : "2016 ";
 			if ("trumpVotes" === denominatorType) {
 				denominatorStr += "Trump";
 			} else if ("clintonVotes" === denominatorType) {
@@ -162,10 +162,21 @@
 				denominatorStr += "Republican early";
 			} else if ("earlyTOTAL" === denominatorType) {
 				denominatorStr += "total early";
-			} else {
+			} else if ("reg2020DEM" === denominatorType) {
+				denominatorStr += "Democrat registered";
+			} else if ("reg2020REP" === denominatorType) {
+				denominatorStr += "Republican registered";
+			} else if ("reg2020NPA" === denominatorType) {
+				denominatorStr += "unaffliated registered";
+			} else if ("reg2020TOTAL" === denominatorType) {
+				denominatorStr += "registered";
+			}
+			else {
 				console.log("Unknown denominator " + denominatorType);
 			}
-			denominatorStr += " votes:<b>" + dVal + "</b>";
+			
+			denominatorStr += denominatorType.includes("reg2020") ? " active voters" : " votes";
+			denominatorStr += ":<b>" + dVal + "</b>";
 		}
 		usfljsconfig[hoverId].hover = county + "<br /><small>" + 
 			numeratorStr + "<br />" + 
@@ -415,6 +426,11 @@
 			$.each(early2016Data, function(k, v) {
 				lookup[k] = v[party];
 			});
+		} else if (type.includes("reg2020")) {
+			const party = type.replace("reg2020", "");
+			$.each(election2016Data, function(county, v) {
+				lookup[county] = v["registration2020"][party]
+			});
 		} else {
 			$.each(election2016Data, function(k, v) {
 				lookup[k] = v[type];
@@ -519,6 +535,7 @@
 			gapDesc += " (";			
 			gapDesc += gap <= 0.0 ? ("+" + gapRaw) : ("" + gapRaw);
 			gapDesc += " votes)";
+
 			
 			const splitColor = isAdvantage ? getSplitAdvantageColor(gap) : getSplitColor(repPct, demPct);
 			usfljsconfig[myid].upColor = splitColor;
@@ -566,6 +583,9 @@
 			const denomType = turnoutType.replace("2016", "");
 			pct = getPercentages(partyType, denomType);
 			colorGradient(partyType, pct);
+		} else if (turnoutType.includes("reg2020")) {
+			pct = getPercentages(partyType, turnoutType);
+			colorGradient(partyType, pct);
 		} else if (turnoutType === "allEarly") {
 			var pct = getPercentages(partyType, "ev");
 			colorGradient(partyType, pct);		
@@ -591,7 +611,7 @@
 	  $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json', function(data) {
 	  liveData = data;
 		$('#timestamp').text(liveData['TIMESTAMP']);
-		$.getJSON('https://joeisdone.github.io/json/florida2016.json', function(data2016) {
+		$.getJSON('https://joeisdone.github.io/json/florida2016_reg.json', function(data2016) {
 			election2016Data = data2016;
 			$.getJSON('https://joeisdone.github.io/json/early2016.json', function(early2016) {
 				early2016Data = early2016;
@@ -848,11 +868,18 @@
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
 	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
 	<button onclick="methodType='Mail';turnoutType='split';doUpdate();">Early votes: Mail only</button> <br />
-	<button onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();">Advantage Map</button> - NEW, shade map by advantage relative to 2016. <br /><br />	
+	<button onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();">Advantage Map</button> - RECOMMENDED, shade map by advantage relative to 2016. <br /><br />	
+	
 	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat early votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
 	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2020 Republican early votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
 	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2020 unaffliated early votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
 	<button onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();">Compare all 2020 early votes vs. 2016 early votes</button> - See where turnout is happening vs. 2016.<br /></small>
+	<br /><br />
+
+	<button onclick="methodType='total';turnoutType='reg2020DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat early votes vs. Democrat active registrations</button> - See where Democrats are turning out vs 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2020REP';partyType='REP';doUpdate();">Compare 2020 Republican early votes vs. Republican active registrations</button> - See where Republicans are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2020NPA';partyType='NPA';doUpdate();">Compare 2020 unaffliated early votes vs. unaffliated active registrations</button> - See where Independents are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2020TOTAL';partyType='TOTAL';doUpdate();">Compare all 2020 early votes vs. active voter registrations</button> - See where turnout is happening vs. 2016.<br /></small>
 	<br /><br />
 
 <b>Advanced</b><br />
@@ -864,6 +891,11 @@
   <br />
   
   <small>Denominator:</small> <select id="turnoutFilter">
+	<option value="reg2020TOTAL">2016 total early votes</option>
+	<option value="reg2020DEM">2016 Democrat early votes</option>
+	<option value="reg2020REP">2016 Republican early votes</option>
+	<option value="reg2020NPA">2016 unaffliated early votes</option>
+  
 	<option value="early2016TOTAL">2016 total early votes</option>
 	<option value="early2016DEM">2016 Democrat early votes</option>
 	<option value="early2016REP">2016 Republican early votes</option>
