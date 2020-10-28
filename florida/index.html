@@ -312,7 +312,6 @@
 		const remainingOpp = Math.max(0, allSupervoters[opposition]-supervoters(opposition));
 		const gap = remaining - remainingOpp;
 		
-		
 		const ratio = supervoter2020/supervoter2016;
 		const color = gap < 0.0 ? 'FFD1D1' : 'D1FFFE';		
 		
@@ -378,6 +377,70 @@
 			((demEarly2016Total + 0.0)/(early2016Total+0.0)-(repEarly2016Total + 0.0)/(early2016Total+0.0)) 
 		);
 		
+		// Number of NPA votes in red counties
+		var numNpaRedCounties = 0.0;
+		var numNpaBlueCounties = 0.0;
+		// Number of NPA votes if splitting proportionally between D-R ratios
+		var numNpaSplitR = 0.0;
+		var numNpaSplitD = 0.0;
+		var numNpaTotal = 0.0;
+		
+		$.each(liveData, function(county, data) {
+			if (county === "TOTAL" || county === "TIMESTAMP") return;
+			// Get the NPA total for that county and method. 
+			const npaCountyLevel = data['NPA'][methodType];
+			
+			// Get dem share for that county
+			const demCountyLevel = data['DEM'][methodType];
+			const repCountyLevel = data['REP'][methodType];
+			
+			const demCountySharePct = (demCountyLevel+0.0)/(demCountyLevel+repCountyLevel+0.0);
+			const repCountySharePct = 1.0 - demCountySharePct;
+			numNpaSplitR += repCountySharePct * npaCountyLevel;
+			numNpaSplitD += demCountySharePct * npaCountyLevel;
+			numNpaTotal += npaCountyLevel;
+		});
+		
+		const numNpaSplitRPct = pctToString(numNpaSplitR / numNpaTotal);
+		const numNpaSplitDPct = pctToString(numNpaSplitD / numNpaTotal);
+		const npaSplitGapPctRaw = (numNpaSplitD / numNpaTotal) - (numNpaSplitR / numNpaTotal);
+		const npaSplitGapPct = pctToString(npaSplitGapPctRaw);
+
+		// Get the 2016 equivalents. 
+		var numNpaSplitR2016 = 0.0;
+		var numNpaSplitD2016 = 0.0;
+		var numNpaTotal2016 = 0.0;
+		
+		$.each(early2016Data, function(county, data) {
+			if (county === "TOTAL" || county === "TIMESTAMP") return;
+			const demCountyLevel = data['DEM'];
+			const repCountyLevel = data['REP'];
+			const npaCountyLevel = data['NPA'];
+			const demCountySharePct = (demCountyLevel+0.0)/(demCountyLevel+repCountyLevel+0.0);
+			const repCountySharePct = 1.0 - demCountySharePct;
+			numNpaSplitR2016 += repCountySharePct * npaCountyLevel;
+			numNpaSplitD2016 += demCountySharePct * npaCountyLevel;
+			numNpaTotal2016 += npaCountyLevel;
+		});
+		const numNpaSplitRPct2016 = pctToString(numNpaSplitR2016 / numNpaTotal2016);
+		const numNpaSplitDPct2016 = pctToString(numNpaSplitD2016 / numNpaTotal2016);
+		const npaSplitGapPct2016Raw = (numNpaSplitD2016 / numNpaTotal2016) - (numNpaSplitR2016 / numNpaTotal2016);
+		const npaSplitGapPct2016 = pctToString(npaSplitGapPct2016Raw);
+
+		// omg, gap of gaps... 
+		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2016Raw);
+		
+		const npaSplitStr = "<div style=\"border: 1px solid #AAAAAA; margin:3px; padding:2px; font-size: smaller;\">" + 
+			  "<b>Split estimate</b><br/>" + 
+			  "<i>Estimated by proportional assignment of NPAs by county R/D share</i><br />" + 
+			  "Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" + 
+			  "Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" + 
+			  "Difference: (D-R) <b>" + Math.floor(numNpaSplitD-numNpaSplitR) + " (<span style=\"background-color:#faffc4;\">" + npaSplitGapPct + "</span>) </b><br/>" + 
+			  "2016 overall EV split: " + numNpaSplitDPct2016 + "D - " + numNpaSplitRPct2016 + "R, gap " + npaSplitGapPct2016 + 
+			  "</div>";
+			  
+		
+		
 		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
 		pctGapDesc += " (<span style=\"font-size:smaller;\"><a href=\"https://joeisdone.github.io/FloridaPrediction.html\">Goal: &lt;8 Biden</a></span>)";
 		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
@@ -391,7 +454,7 @@
 		$('#countMethod').text(methodText);
 		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
 		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV" + cannibalizationBlurb('DEM'));
-		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV" + cannibalizationBlurb('NPA'));
+		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV" + cannibalizationBlurb('NPA') + npaSplitStr);
 		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV" + cannibalizationBlurb('REP'));
 	}
 	
