@@ -282,12 +282,11 @@
 		});
 	}
 	
-	// https://twitter.com/mcimaps/status/1320771662447583232
+	// https://twitter.com/mcimaps/status/1321497127869173760
 	// Dem - 1,596,467 / GOP - 1,903,132 / NPA - 572,671
-
 	const allSupervoters = { "DEM" : 1596467,  "REP": 1903132, "NPA": 572671};
 	// Coefficient: Voted supervoters / Party's total 2020 voters
-	const supervoterPct2020 = { "DEM" : 1126305.0/2555072.0,  "REP": 1092599.0/2200418.0, "NPA": 344565.0/1262940.0};
+	const supervoterPct2020 = { "DEM" : 1217022.0/2841731.0,  "REP": 1248199.0/2723941.0, "NPA": 384801.0/1483808.0};
 	var cannibalCache = {};
 	
 	// too tired to do a proper refactor. 
@@ -442,7 +441,6 @@
 		
 		
 		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
-		pctGapDesc += " (<span style=\"font-size:smaller;\"><a href=\"https://joeisdone.github.io/FloridaPrediction.html\">Goal: &lt;8 Biden</a></span>)";
 		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
 			pctToString((repEarly2016Total + 0.0)/(early2016Total+0.0)) + " R, Gap:" + 
 			pctEarlyGap;
@@ -747,10 +745,11 @@
   
   <i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br> 
-  <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br /><br />
+  <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br />
+  <span style="background-color: #adffd6;"><a href="https://twitter.com/jakejakeny/status/1320802361447796736"><b>Watch CNBC's Jake Novak explain why this website is so important to Biden's campaign.</b></a></span> This video is a MUST see.<br/><br/>
   
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px;">
-  <b>27-Oct Update (2):</b> <span style="background-color: #adffd6;"><a href="https://twitter.com/jakejakeny/status/1320802361447796736"><b>Watch CNBC's Jake Novak explain why this website is so important to Biden's campaign.</b></a></span> This video is a MUST see.  
+  <b>28-Oct Update (2):</b>   
   <br/><br/><span style="background-color:#faffc4;">NPA 'split' estimate added to NPA totals.</span> <a href="https://twitter.com/DataRepublican/status/1321293306073108480">See explanation of how it works.</a>
   <br/><br/>Follow <a href="https://twitter.com/DataRepublican"><b>@DataRepublican</b></a> for updates to JoeIsDone.
   <br /><br/>
@@ -760,7 +759,7 @@
   <br />
 
   When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
-  <span style="font-style:italic; font-size: x-small;">Ongoing early voter 4/4 estimates derived from a linear projection of current estimated 4/4 voter ratio.</span><br/>
+  <span style="font-style:italic; font-size: x-small;">Ongoing early voter 4/4 estimates derived from a linear projection of current estimated 4/4 voter ratio. Follow <a href="https://twitter.com/mcimaps">@mcimaps</a>.</span><br/>
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
@@ -927,7 +926,7 @@
 </div>
 
 <div class="clear"></div>
-	Before clicking on buttons, <span style="background-color:#adffd6;">you certify you have <a href="https://joeisdone.github.io/comic.html">read this comic</a></span> before you go panic on social media.<br /><br/>
+	Before clicking on buttons, <span style="background-color:#adffd6;">you certify you have <a href="https://joeisdone.github.io/comic.html">read this comic</a></span>.<br /><br/>
 	<small>
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
 	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
