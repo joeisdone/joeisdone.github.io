@@ -78,8 +78,8 @@
 	// TOTAL, NPA, REP, DEM
 	var partyType = "TOTAL";
 
-	// total, EarlyVoting, Mail
-	var methodType = "EarlyVoting"; 
+	// total, EarlyVoting, Mail, ElectionDay
+	var methodType = "ElectionDay"; 
 
 	// turnout2016, turnout2016Clinton, turnout2016Trump, ev, split
 	// early2016TOTAL, early2016REP, early2016DEM, early2016NPA
@@ -125,11 +125,13 @@
 		// Numerator type should be formatted like this: 
 		// All early votes, all parties: <num>
 		// Mail-in votes, Republican: <num>
-		var methodStr = "All early votes";
+		var methodStr = "All votes";
 		if (methodType === "Mail") {
 			methodStr = "Mail votes";
 		} else if (methodType === "EarlyVoting") {
 			methodStr = "In-person votes";
+		} else if (methodType === "ElectionDay") {
+			methodStr = "Election Day votes";
 		}
 		
 		var partyStr = "all parties";
@@ -282,54 +284,13 @@
 		});
 	}
 	
-	// https://twitter.com/mcimaps/status/1321497127869173760
-	// Dem - 1,596,467 / GOP - 1,903,132 / NPA - 572,671
-	const allSupervoters = { "DEM" : 1596467,  "REP": 1903132, "NPA": 572671};
-	// Coefficient: Voted supervoters / Party's total 2020 voters
-	const supervoterPct2020 = { "DEM" : 1217022.0/2841731.0,  "REP": 1248199.0/2595819.0, "NPA": 384801.0/1483808.0};
-	var cannibalCache = {};
-	
-	// too tired to do a proper refactor. 
-	// returns [supervoter2020, supervoter2016]
-	function supervoters(party) {
-		// Supervoter blurbs		
-		const early2020Total = liveData['TOTAL'][party]['total'];
-		const pct2020 = supervoterPct2020[party];
-		return Math.floor(early2020Total * pct2020);
-	}
-	
 	function cannibalizationBlurb(party) {
-		var blurb = cannibalCache[party];
-		if (blurb) return blurb;
-	
-		const supervoter2016 = allSupervoters[party];
-		const supervoter2020 = supervoters(party);
-		
-		const opposition = party === "DEM" ? "REP" : "DEM";
-		
-		const remaining = Math.max(0, supervoter2016-supervoter2020);
-		const remainingOpp = Math.max(0, allSupervoters[opposition]-supervoters(opposition));
-		const gap = remaining - remainingOpp;
-		
-		const ratio = supervoter2020/supervoter2016;
-		const color = gap < 0.0 ? 'FFD1D1' : 'D1FFFE';		
-		
-		blurb = "<br/><br />2016 total 4/4 voters:" + supervoter2016 + "<br />" + 
-		                 "2020 4/4 voters (est):" + supervoter2020 + "<br />" + 
-						 "Remaining 4/4 voters (est):<span style=\"background-color:#D1FFFE;\"><b>" + remaining + "</span> (" + pctToString(1.0 - ratio) + ")</b><br/>";
-						 
-		if (party !== "NPA") {
-			const shortDesc = opposition === "DEM" ? "D" : "R";
-			const gapDesc = gap > 0.0 ? "+" + gap : gap;
-			blurb += "Difference with " +  shortDesc + ': <span style="font-weight: bold;background-color: #' + color + '">' + gapDesc + '<span>';
-		}
-		cannibalCache[blurb] = blurb;
-		return blurb;
+		return "";
 	}
 	
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
-	    var methodText = "Vote totals (IPEV + VBM)";
+	    var methodText = "Vote totals (IPEV + VBM + Election Day)";
 		var methodShort = "EV";
 		if (methodType === "Mail") {
 			methodText = "Vote totals (VBM only)";
@@ -338,6 +299,10 @@
 		if (methodType === "EarlyVoting") {
 			methodText = "Vote totals (IPEV only)";
 			methodShort = "IPEV";
+		}
+		if (methodType == "Election Day") {
+			methodText = "Vote totals (Election Day only)";
+			methodShort = "ED";
 		}
 		
 		const total = liveData['TOTAL']['TOTAL'][methodType];
@@ -394,6 +359,8 @@
 			const repCountyLevel = data['REP'][methodType];
 			
 			const demCountySharePct = (demCountyLevel+0.0)/(demCountyLevel+repCountyLevel+0.0);
+			if (isNaN(demCountySharePct)) return;
+
 			const repCountySharePct = 1.0 - demCountySharePct;
 			numNpaSplitR += repCountySharePct * npaCountyLevel;
 			numNpaSplitD += demCountySharePct * npaCountyLevel;
@@ -415,6 +382,7 @@
 			const demCountyLevel = data['DEM'];
 			const repCountyLevel = data['REP'];
 			const npaCountyLevel = data['NPA'];
+			
 			const demCountySharePct = (demCountyLevel+0.0)/(demCountyLevel+repCountyLevel+0.0);
 			const repCountySharePct = 1.0 - demCountySharePct;
 			numNpaSplitR2016 += repCountySharePct * npaCountyLevel;
@@ -435,7 +403,7 @@
 			  "Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" + 
 			  "Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" + 
 			  "Difference: (D-R) <b>" + Math.floor(numNpaSplitD-numNpaSplitR) + " (<span style=\"background-color:#faffc4;\">" + npaSplitGapPct + "</span>) </b><br/>" + 
-			  "2016 overall EV split: " + numNpaSplitDPct2016 + "D - " + numNpaSplitRPct2016 + "R, gap " + npaSplitGapPct2016 + 
+			  "2016 overall split: " + numNpaSplitDPct2016 + "D - " + numNpaSplitRPct2016 + "R, gap " + npaSplitGapPct2016 + 
 			  "</div>";
 			  
 		
@@ -450,10 +418,10 @@
 		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
 		
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 EV turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
-		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat EV" + cannibalizationBlurb('DEM'));
-		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA EV" + cannibalizationBlurb('NPA') + npaSplitStr);
-		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican EV" + cannibalizationBlurb('REP'));
+		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
+		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat votes" + cannibalizationBlurb('DEM'));
+		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA votes" + cannibalizationBlurb('NPA') + npaSplitStr);
+		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican votes" + cannibalizationBlurb('REP'));
 	}
 	
 	
@@ -468,6 +436,7 @@
 	// earlyREP -> early 2016 rep votes
 	// earlyNPA -> early 2016 npa votes
 	function getDenominator(type) {
+		console.log("getDenominator called for " + type);
 		var lookup = {};
 		if (type === "ev") {
 			$.each(liveData, function(k, v) {
@@ -529,23 +498,23 @@
 		const difference = gap * -1.0;
 		if (difference > 0.07) {
 			return '#cc0000'; // dark red
-		} else if (difference > 0.5) {
+		} else if (difference > 0.10) {
 			return '#ff0000'; // bright red
-		} else if (difference > 0.025) {
+		} else if (difference > 0.05) {
 			return '#ff8080'; // pinkish red
-		} else if (difference > 0.01) {
+		} else if (difference > 0.02) {
 			return '#ffb3b3'; // pinky
-		} else if (difference >= 0.00) {
+		} else if (difference >= 0.01) {
 			return '#ffe6e6'; // light pink
-		} else if (difference > -0.0255) {
+		} else if (difference >= 0.0) {
 			return '#ffffe0';
-		} else if (difference > -0.05) {
+		} else if (difference > -0.01) {
 			return '#fffdd0'; // cream
-		} else if (difference > -0.08) {
+		} else if (difference > -0.02) {
 			return '#e6e6ff'; // light blue
-		} else if (difference > -0.10) {
+		} else if (difference > -0.05) {
 			return '#8080ff'; // medium blue
-		} else if (difference > -0.20) {
+		} else if (difference > -0.10) {
 			return '#0000ff'; // bright blue
 		} else {
 			return '#0000cc'; // dark blue
@@ -582,11 +551,13 @@
 			//console.log(k + ":" + pctToString(demPct) + "-" + pctToString(repPct));
 			
 			// Fill in the hover. 
-			var methodStr = "All early votes";
+			var methodStr = "All votes";
 			if (methodType === "Mail") {
 				methodStr = "Mail votes";
 			} else if (methodType === "EarlyVoting") {
 				methodStr = "In-person votes";
+			} else if (methodType === "ElectionDay") {
+				methodStr = "Election Day votes";
 			}
 			
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
@@ -608,9 +579,9 @@
 				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" + 
 				"2020 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" + 
 				"2016 comparison: Clinton: " + pctToString(demPct2016) + " Trump: " + pctToString(repPct2016) +  "<br />" + 
-				"2016 EV: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" + 
-				"2016 EV Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" + 
-				"2020-2016 EV Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
+				"2016 Votes: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" + 
+				"2016 Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" + 
+				"2020-2016 Vote Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
 					
 				"</small>";			
 		});
@@ -674,7 +645,7 @@
 		$('#timestamp').text(liveData['TIMESTAMP']);
 		$.getJSON('https://joeisdone.github.io/json/florida2016_reg.json', function(data2016) {
 			election2016Data = data2016;
-			$.getJSON('https://joeisdone.github.io/json/early2016.json', function(early2016) {
+			$.getJSON('https://joeisdone.github.io/json/early2016_revised.json', function(early2016) {
 				early2016Data = early2016;
 				$.each( usfljsconfig, function( key, value ) {
 				  if (!key || !value || !(value.hover)) {
@@ -745,7 +716,7 @@
   
   <i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
   <u>Sarasota and Miami-Dade use a different system so will be updated manually once daily</u>.</br> 
-  <span style="background-color:#faffc4;"><b>Defaults to IPEV-only view.</b></span> <span style="font-size: x-small;"><i>(Because that's where the momentum is.)</i></span> Scroll down to toggle other views.<br />
+  <span style="background-color:#faffc4;"><b>Defaults to All Votes view.</b></span> Scroll down to toggle other views.<br />
   <span style="background-color: #adffd6;"><a href="https://twitter.com/jakejakeny/status/1320802361447796736"><b>Watch CNBC's Jake Novak explain why this website is so important to Biden's campaign.</b></a></span> This video is a MUST see.<br/><br/>
   
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px;">
@@ -758,9 +729,8 @@
   
   <br />
 
-  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 early votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
-  <span style="font-style:italic; font-size: x-small;">Ongoing early voter 4/4 estimates derived from a linear projection of current estimated 4/4 voter ratio. Follow <a href="https://twitter.com/mcimaps">@mcimaps</a>.
-  <br/><a href="https://twitter.com/DataRepublican/status/1321293306073108480">See explanation of how NPA split heurestic works.</a>
+  When the map says "Advantage Biden" or "Advantage Trump," it is <b>comparing to 2016 votes</b>. In general, <span style="background-color:#adffd6;">Biden advantage within 5% or so is excellent for Trump</span> due to COVID-19 influenced shift to VBM by Democrats.<br />
+<a href="https://twitter.com/DataRepublican/status/1321293306073108480">See explanation of how NPA split heurestic works.</a>
   </span><br/>
 <table>
 	<tr>
@@ -930,15 +900,16 @@
 <div class="clear"></div>
 	Before clicking on buttons, <span style="background-color:#adffd6;">you certify you have <a href="https://joeisdone.github.io/comic.html">read this comic</a></span>.<br /><br/>
 	<small>
+	<button onclick="methodType='total';turnoutType='split';doUpdate();">Votes: All</button><br />
+    <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">Election Day votes only</button><br />
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
-	<button onclick="methodType='total';turnoutType='split';doUpdate();">Early votes: All</button><br />
 	<button onclick="methodType='Mail';turnoutType='split';doUpdate();">Early votes: Mail only</button> <br />
 	<button onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();">Advantage Map</button> - RECOMMENDED, shade map by advantage relative to 2016. <br /><br />	
 	
-	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat early votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2020 Republican early votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2020 unaffliated early votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();">Compare all 2020 early votes vs. 2016 early votes</button> - See where turnout is happening vs. 2016.<br /></small>
+	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2020 Republican votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2020 unaffliated votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();">Compare all 2020 votes vs. 2016 votes</button> - See where turnout is happening vs. 2016.<br /></small>
 	<br /><br />
 
 	<button onclick="methodType='total';turnoutType='reg2020DEM';partyType='DEM';doUpdate();">Compare 2020 Democrat early votes vs. Democrat active registrations</button> - See where Democrats are turning out vs 2016.<br />
@@ -949,8 +920,9 @@
 
 <b>Advanced</b><br />
   <small>Filter by vote type:</small> <select id="methodFilter">
-	<option value="total">All votes (in-person and mail)</option>
-	<option value="EarlyVoting" selected="selected">In-person early voting only</option>
+	<option value="total" selected="selected">All votes</option>
+	<option value="ElectionDay">Election Day votes only</option>
+	<option value="EarlyVoting">In-person early voting only</option>
 	<option value="Mail">Mail in votes only</option>
   </select>	
   <br />
@@ -961,10 +933,10 @@
 	<option value="reg2020REP">Republican voter registrations</option>
 	<option value="reg2020NPA">Unaffliated voter registrations</option>
   
-	<option value="early2016TOTAL">2016 total early votes</option>
-	<option value="early2016DEM">2016 Democrat early votes</option>
-	<option value="early2016REP">2016 Republican early votes</option>
-	<option value="early2016NPA">2016 unaffliated early votes</option>
+	<option value="early2016TOTAL">2016 total votes</option>
+	<option value="early2016DEM">2016 Democrat votes</option>
+	<option value="early2016REP">2016 Republican votes</option>
+	<option value="early2016NPA">2016 unaffliated votes</option>
 	<option value="turnout2016">2016 total votes</option>
 	<option value="turnout2016Clinton">2016 Clinton votes</option>
 	<option value="turnout2016Trump">2016 Trump votes</option>
