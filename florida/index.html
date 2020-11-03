@@ -291,7 +291,7 @@
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
 	    var methodText = "Vote totals (IPEV + VBM + Election Day)";
-		var methodShort = "EV";
+		var methodShort = "final";
 		if (methodType === "Mail") {
 			methodText = "Vote totals (VBM only)";
 			methodShort = "VBM";
@@ -409,10 +409,10 @@
 		
 		
 		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
-		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
-			pctToString((repEarly2016Total + 0.0)/(early2016Total+0.0)) + " R, Gap:" + 
+		var gap2016Desc = "2016 D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
+			pctToString((repEarly2016Total + 0.0)/(early2016Total+0.0)) + " R, Gap: " + 
 			pctEarlyGap;
-		var gap2020Desc = "2020 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
+		var gap2020Desc = "2020 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
 		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
 		
 		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
