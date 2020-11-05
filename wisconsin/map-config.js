@@ -276,7 +276,7 @@
     "hover": "OZAUKEE",
      "target": "none",
     "upColor": "#FFFFF3", "overColor": "#ECFFB3", "downColor": "#FFFFF3",
-    "active": false
+    "active": true
   },
   "uswijs47":{
     "hover": "PEPIN",
