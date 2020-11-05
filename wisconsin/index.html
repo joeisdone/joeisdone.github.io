@@ -187,8 +187,8 @@
 		$.each(liveData, function(county, countyData) {
 			numericData[county] = {};
 			numericData[county]["identity"] = [1.0, "None (identity)"];
-			numericData[county]["trumpVotes"] = [liveData[county]["results"]["trumpd"], "Trump votes"];
-			numericData[county]["bidenVotes"] = [liveData[county]["results"]["bidenj"], "Biden votes"];
+			numericData[county]["trumpVotes"] = [liveData[county]["results"]["trumpd"], "Trump Votes 2020"];
+			numericData[county]["bidenVotes"] = [liveData[county]["results"]["bidenj"], "Biden Votes 2020"];
 			$.each(countyData, function(attr, value) {
 				if (!isNumeric(value)) return;
 				humanName = attr.toLowerCase().split("_")
