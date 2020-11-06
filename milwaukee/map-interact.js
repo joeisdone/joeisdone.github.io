@@ -5,17 +5,17 @@
 }
 jQuery(function () {
   jQuery("polygon[id^=uswijs]").each(function (i, e) {
-	console.log("Adding: " + i);
-	  
     uswiaddEvent( jQuery(e).attr("id"));
   });
 });
 function uswiaddEvent(id,relationId) {
+  if (!uswijsconfig[id]) return;
   var _obj = jQuery("#" + id);
   var arr = id.split("");
   var _Textobj = jQuery("#" + id + "," + "#uswijsvn" + arr.slice(6).join(""));
-   console.log("wtf");
+  
   jQuery("#" + ["visnames"]).attr({"fill":uswijsconfig.general.visibleNames});
+
   _obj.attr({"fill":uswijsconfig[id].upColor, "stroke":uswijsconfig.general.borderColor});
   _Textobj.attr({"cursor": "default"});
   if (uswijsconfig[id].active === true) {
