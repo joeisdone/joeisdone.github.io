@@ -1,0 +1,281 @@
+<html>
+	<title>Simplification demo</title>
+<head>
+	  <script src="./jquery.min.js"></script>
+	  <script src="./convex.min.js"></script>
+	  <script>
+
+	  		const svgPath = 'Columbia.svg'
+	  		const colors = {
+	  			'original' : '#ff9999',
+	  			'sort' : '#ffcc99',
+	  			'skip': '#99ffb3',
+	  			'iterative': '#99e6ff',
+	  			'convex': '#cc99ff'
+	  		};
+
+			function createPoint(pair) {
+			        const split = pair.split(",");
+			        const xp = parseFloat(split[0]);
+			        const yp = parseFloat(split[1]);
+			        return { x : xp, y : yp };
+			}
+
+			function findAngle(p0,p1,p2) {
+			  var a = Math.pow(p1.x-p0.x,2) + Math.pow(p1.y-p0.y,2),
+			      b = Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2),
+			      c = Math.pow(p2.x-p0.x,2) + Math.pow(p2.y-p0.y,2);
+			  return Math.acos( (a+b-c) / Math.sqrt(4*a*b) );
+			}
+
+			// treat points like a circular buffer. 
+			// walk forwards and backwards from a start point until you get 
+			// a previous value and a next value that have not been cancelled like Trump
+			function getPrevAndNext(pointsToSkip, len, index) {
+		        var prev = index - 1;
+		        if (prev < 0) prev = len - 1;
+		        while (pointsToSkip.has(prev)) {
+	                prev = prev - 1;
+	                if (prev < 0) prev = len - 1;
+		        }
+
+		        var next = index + 1;
+		        if (next > (len-1)) next = 0;
+		        while (pointsToSkip.has(next)) {
+	                next = next + 1;
+	                if (next > (len-1)) next = 0;
+		        }
+		        return [prev, next];
+			}
+
+			function getAngles(points) {
+	            // calculate the angles between each pair
+	            var angles = [];
+	            for (var i = 0; i < points.length; i++) {
+	                var center = points[i];
+	                var first = i == 0 ? points[points.length-2] : points[i-1];
+	                var second = i == (points.length-1) ? points[1] : points[i+1];
+	                angles.push(findAngle(first, center, second));
+	            }		                
+	            return angles
+			}
+
+			function getPoints(pairs) {
+                // create the coordinate points from pairs
+                var points = [];
+                for (var i = 0; i < pairs.length; ++i) {
+                    points.push(createPoint(pairs[i]));
+                }
+                return points
+			}
+
+			function doSkip(obj, pairs) {
+				// keep first + last points as they "close" the polygon
+				var newPolygon = ' '
+				var kept = 0
+				for(var i = 20; i < pairs.length-1; i+=20) {
+					newPolygon += pairs[i] + ' '
+					++kept
+				}
+				newPolygon = pairs[0] + newPolygon + pairs[0]
+				$(obj).attr('points', newPolygon)
+				drawText(obj, kept)
+			}
+
+			function doIterative(obj, pairs) {
+				const numToRemove = Math.round(pairs.length/20*19);
+				var points = getPoints(pairs)
+				var angles = getAngles(points)
+
+                // Iteratively find the lowest angle.
+                var pointsToRemove = new Set();
+                while (pointsToRemove.size < numToRemove) {
+                    var lowestIndex = -1;
+
+                    // Identify lowest index of angle.
+                    for (var i = 0; i < angles.length; ++i) {
+                        if (pointsToRemove.has(i)) continue;
+                        if (lowestIndex < 0) {
+                            lowestIndex = i;
+                            continue;
+                        }
+                        if (angles[i] < angles[lowestIndex]) {
+                            lowestIndex = i;
+                        }
+                    }
+
+                    // Now add it to the points to remove.
+                    pointsToRemove.add(lowestIndex);
+                    if (lowestIndex == 0) {
+                        pointsToRemove.add(angles.length-1);
+                    }
+
+                    // adjust the two points.
+                    const pointsToAdjust = getPrevAndNext(pointsToRemove, angles.length, lowestIndex);
+
+
+                    var p1 = pointsToAdjust[0];
+                    var [p0, p2] = getPrevAndNext(pointsToRemove, angles.length, p1);
+                    angles[p1] = findAngle(points[p0], points[p1], points[p2]);
+                    p1 = pointsToAdjust[1];
+                    [p0, p2] = getPrevAndNext(pointsToRemove, angles.length, p1);
+                    angles[p1] = findAngle(points[p0], points[p1], points[p2]);
+                }
+
+                var newPoints = " ";
+                var kept = 0;
+                for (var i = 1; i < pairs.length-1; ++i) {
+                    if (!pointsToRemove.has(i)) {
+                        newPoints += pairs[i] + " ";
+                        kept++;
+                    }
+                }
+                newPoints = pairs[0] + newPoints + pairs[pairs.length-1];
+                $(obj).attr("points", newPoints);
+		        drawText(obj, kept)	                
+            }
+
+            function doSort(obj, pairs) {
+				const numToKeep = Math.round(pairs.length/20);
+				var points = getPoints(pairs)
+				var angles = getAngles(points)            	
+				var indexes = []
+				for (var i = 1; i < angles.length-1; ++i) {
+					indexes.push(i);
+				}
+
+				indexes.sort(function(a, b) {
+					return angles[a] > angles[b] ? -1 : 
+					       angles[a] < angles[b] ? 1 : 0
+				})
+				indexes = new Set(indexes.slice(0, numToKeep))
+
+				var newPolygon = " "
+				for (var i = 1; i < points.length-1; ++i) {
+					if (!indexes.has(i)) continue;
+					newPolygon += pairs[i] + " "
+				}
+				newPolygon = pairs[0] + newPolygon + pairs[0]
+				$(obj).attr('points', newPolygon)
+		        drawText(obj, numToKeep)								
+            }
+
+            function doConvex(obj, pairs) {
+            	// see http://brian3kb.github.io/graham_scan_js/
+				var points = getPoints(pairs)
+			    //Create a new instance.
+			    var convexHull = new ConvexHullGrahamScan();
+			    for (var i = 0; i < points.length; ++i) {
+			    	convexHull.addPoint(points[i].x, points[i].y)
+			    }
+
+		        var hullPoints = convexHull.getHull()
+		        var reconstructed = " "
+		        const first = hullPoints[0].x + ',' + hullPoints[0].y
+
+		        for (var i = 1; i < hullPoints.length; ++i) {
+		        	reconstructed += hullPoints[i].x + ',' + hullPoints[i].y + " "
+		        }
+		        reconstructed += first
+				$(obj).attr('points', reconstructed)
+
+		        drawText(obj, hullPoints.length)		        
+            }
+
+            function drawText(obj, contents) {
+            	const bbox = $(obj)[0].getBBox()
+            	const x = bbox.x + bbox.width/2
+            	const y = bbox.y + bbox.height/2
+            	const id = $(obj).attr('id') + "text"
+
+            	const text = '<text text-anchor="middle" x="' + x + '" y="' + y + '" font-size="smaller" font-family="Arial, Helvetica, sans-serif">' + contents + '</text>'
+            	$(obj).after(text)
+            	/*
+            	var newHtml = '<div class="textentry" id="' + id + '">' + test + "</div>"
+
+            	$('#maparea').append(newHtml)
+            	$('#' + id).css({top: x, left: y, position:'absolute'});
+				*/
+            }
+
+			$(document).ready(function() {	  
+				$('input:radio[name=toggle]').change(function() {
+					const type = $(this).attr('value')
+					const desc = $('label[for=' + type + ']').html()
+
+					$('#svgdesc').html(desc)
+					$('.textentry').each(function() {
+						$(this).remove()
+					})
+					$.get(svgPath, function(lines) {
+		                const svgHtml = (new XMLSerializer()).serializeToString(lines);
+		                $('#maparea').html(svgHtml);
+		                $('#maparea').find('polygon').each(function() {
+		                	$(this).attr('stroke', '#000000')
+		                	$(this).attr('fill', colors[type])
+
+			                // set up metadata. we don't need all of them. who cares. 
+
+			               	// generate pairs - these are the original text coordinate string, 
+			               	// we'll need in reconstructing the coordinates
+			                const pairs = $(this).attr("points").split(" ")
+
+			                // number of points we want to remove
+			                //const numToRemove = Math.floor(pairs.length/20*19)
+
+							switch(type) {
+								case "original":
+									drawText(this, pairs.length)
+								break;
+								case "skip":
+									doSkip(this, pairs)
+								break;
+								case "iterative":
+									doIterative(this, pairs)
+								break;
+								case "sort":
+									doSort(this, pairs)
+								break;
+								case "convex":
+									doConvex(this, pairs)
+								break;
+							}							                	
+		                });
+
+		                // force a redraw
+						$("#maparea").html($("#maparea").html() + "")
+
+					});
+
+				});
+			});
+
+	  </script>
+</head>
+
+
+<body>
+	<div>	
+		<input type="radio" name="toggle" value="original">
+		<label for="original">Original Columbia County SVG (no simplification)</label><br>
+
+		<input type="radio" name="toggle" value="skip">
+		<label for="skip">Naively keep only every 20 points</label><br>
+
+		<input type="radio" name="toggle" value="iterative">
+		<label for="iterative">Iteratively relax the smallest angle until 95% of points are removed (patience, super slow and crappy)</label><br>
+
+		<input type="radio" name="toggle" value="sort">
+		<label for="sort">Sort and take out the 95% of points with the smallest angle</label><br>
+		<input type="radio" name="toggle" value="convex">
+		<label for="convex"><a href="http://brian3kb.github.io/graham_scan_js/">Convex hull</a> (not a simplification)</label><br>
+	</div>
+	<br/>
+	<div id="svgdemo">
+		<div id="svgdesc" style="font-weight: bold;">Select a button to load SVG</div>
+
+		<div id="maparea"></div>
+	</div>
+
+</body>
+</html>
