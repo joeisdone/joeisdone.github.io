@@ -14,6 +14,16 @@
 	  			'convex': '#cc99ff'
 	  		};
 
+	  		var useConvexHull = false
+
+	  		// https://stackoverflow.com/questions/43193341/how-to-generate-random-pastel-or-brighter-color-in-javascript
+			function getRandomPastelColor() { 
+			  return "hsl(" + 360 * Math.random() + ',' +
+			             (25 + 70 * Math.random()) + '%,' + 
+			             (85 + 10 * Math.random()) + '%)'
+			}
+
+
 			function createPoint(pair) {
 			        const split = pair.split(",");
 			        const xp = parseFloat(split[0]);
@@ -27,6 +37,32 @@
 			      c = Math.pow(p2.x-p0.x,2) + Math.pow(p2.y-p0.y,2);
 			  return Math.acos( (a+b-c) / Math.sqrt(4*a*b) );
 			}
+
+            function getConvexHullIndex(points) {
+            	// see http://brian3kb.github.io/graham_scan_js/
+			    //Create a new instance.
+			    var convexHull = new ConvexHullGrahamScan();
+			    for (var i = 0; i < points.length; ++i) {
+			    	convexHull.addPoint(points[i].x, points[i].y)
+			    }
+		        var hullPoints = convexHull.getHull()			    
+
+			    var indexes = new Set()
+				// do ugly unoptimized double loop            	
+				for (var i = 0; i < hullPoints.length; ++i) {
+					var h = hullPoints[i]
+
+					for (var j = 0; j < points.length; ++j) {
+						var p = points[j]
+						if (h.x == p.x && h.y == p.y) {
+							indexes.add(j)
+							break
+						}
+					}
+				}
+
+				return indexes
+            }
 
 			// treat points like a circular buffer. 
 			// walk forwards and backwards from a start point until you get 
@@ -70,22 +106,33 @@
 			}
 
 			function doSkip(obj, pairs) {
+				var kept = useConvexHull ? getConvexHullIndex(getPoints(pairs)) : new Set()
+
 				// keep first + last points as they "close" the polygon
 				var newPolygon = ' '
-				var kept = 0
+				var numKept = 0
 				for(var i = 20; i < pairs.length-1; i+=20) {
+					var begin = Math.max(1, i-20)
+					for (var j = begin; j < i; ++j) {
+						if (kept.has(j)) {
+							newPolygon += pairs[j] + ' '
+							++numKept
+						}
+					}
 					newPolygon += pairs[i] + ' '
-					++kept
+					++numKept
 				}
 				newPolygon = pairs[0] + newPolygon + pairs[0]
 				$(obj).attr('points', newPolygon)
-				drawText(obj, kept)
+				drawText(obj, numKept)
 			}
 
 			function doIterative(obj, pairs) {
-				const numToRemove = Math.round(pairs.length/20*19);
+				var numToRemove = Math.round(pairs.length/20*19);
+
 				var points = getPoints(pairs)
 				var angles = getAngles(points)
+				var kept = useConvexHull ? getConvexHullIndex(points) : new Set()
 
                 // Iteratively find the lowest angle.
                 var pointsToRemove = new Set();
@@ -106,6 +153,7 @@
 
                     // Now add it to the points to remove.
                     pointsToRemove.add(lowestIndex);
+
                     if (lowestIndex == 0) {
                         pointsToRemove.add(angles.length-1);
                     }
@@ -123,21 +171,23 @@
                 }
 
                 var newPoints = " ";
-                var kept = 0;
+                var numKept = 0;
                 for (var i = 1; i < pairs.length-1; ++i) {
-                    if (!pointsToRemove.has(i)) {
+                    if (!pointsToRemove.has(i) || kept.has(i)) {
                         newPoints += pairs[i] + " ";
-                        kept++;
+                        numKept++;
                     }
                 }
                 newPoints = pairs[0] + newPoints + pairs[pairs.length-1];
                 $(obj).attr("points", newPoints);
-		        drawText(obj, kept)	                
+		        drawText(obj, numKept)	                
             }
 
             function doSort(obj, pairs) {
-				const numToKeep = Math.round(pairs.length/20);
 				var points = getPoints(pairs)
+				var kept = useConvexHull ? getConvexHullIndex(points) : new Set()
+				const numToKeep = Math.round(pairs.length/20);
+
 				var angles = getAngles(points)            	
 				var indexes = []
 				for (var i = 1; i < angles.length-1; ++i) {
@@ -148,11 +198,18 @@
 					return angles[a] > angles[b] ? -1 : 
 					       angles[a] < angles[b] ? 1 : 0
 				})
-				indexes = new Set(indexes.slice(0, numToKeep))
+
+				var counter = 0
+				kept.delete(0)
+				kept.delete(points.length-1)
+				while (kept.size < numToKeep) {
+					kept.add(indexes[counter++])
+				}
+
 
 				var newPolygon = " "
 				for (var i = 1; i < points.length-1; ++i) {
-					if (!indexes.has(i)) continue;
+					if (!kept.has(i)) continue;
 					newPolygon += pairs[i] + " "
 				}
 				newPolygon = pairs[0] + newPolygon + pairs[0]
@@ -182,6 +239,30 @@
 		        drawText(obj, hullPoints.length)		        
             }
 
+            function doRandom(obj, pairs) {
+				const numToKeep = Math.round(pairs.length/20);
+				var indexes = new Set()
+				while (indexes.size != (numToKeep)) {
+					const index = Math.floor(Math.random() * (pairs.length-1) + 1)
+					indexes.add(index)
+				}
+
+				indexes = Array.from(indexes)
+				indexes.sort(function(a, b) {
+					return a < b ? -1 : a > b ? 1 : 0;
+				});
+
+				var newPolygon = " "
+				for (var i = 0; i < indexes.length; ++i) {
+					newPolygon += pairs[indexes[i]] + " "
+				}
+				newPolygon = pairs[0] + newPolygon + pairs[0]
+				$(obj).attr('points', newPolygon)
+
+		        drawText(obj, indexes.length)		        
+
+            }
+
             function drawText(obj, contents) {
             	const bbox = $(obj)[0].getBBox()
             	const x = bbox.x + bbox.width/2
@@ -198,55 +279,69 @@
 				*/
             }
 
+            function doUpdate() {
+            	const obj = $('input[name="toggle"]:checked')
+				const type = $(obj).attr('value')
+				const desc = $('label[for=' + type + ']').html()
+
+				$('#svgdesc').html(desc)
+				$('.textentry').each(function() {
+					$(obj).remove()
+				})
+				$.get(svgPath, function(lines) {
+	                const svgHtml = (new XMLSerializer()).serializeToString(lines);
+	                $('#maparea').html(svgHtml);
+	                $('#maparea').find('polygon').each(function() {
+	                	$(this).attr('stroke', '#000000')
+
+	                	$(this).attr('fill', type === 'random' ? getRandomPastelColor() : colors[type])
+
+		                // set up metadata. we don't need all of them. who cares. 
+
+		               	// generate pairs - these are the original text coordinate string, 
+		               	// we'll need in reconstructing the coordinates
+		                const pairs = $(this).attr("points").split(" ")
+
+		                // number of points we want to remove
+		                //const numToRemove = Math.floor(pairs.length/20*19)
+
+						switch(type) {
+							case "original":
+								drawText(this, pairs.length)
+							break;
+							case "skip":
+								doSkip(this, pairs)
+							break;
+							case "iterative":
+								doIterative(this, pairs)
+							break;
+							case "sort":
+								doSort(this, pairs)
+							break;
+							case "convex":
+								doConvex(this, pairs)
+							break;
+							case "random":
+								doRandom(this, pairs)
+							break;
+						}							                	
+	                });
+
+	                // force a redraw
+					$("#maparea").html($("#maparea").html() + "")
+
+				});            	
+            }
+
 			$(document).ready(function() {	  
+				$('#convexhull').click(function() {
+    				useConvexHull = $(this).prop("checked")
+    				doUpdate()
+				});
+
+
 				$('input:radio[name=toggle]').change(function() {
-					const type = $(this).attr('value')
-					const desc = $('label[for=' + type + ']').html()
-
-					$('#svgdesc').html(desc)
-					$('.textentry').each(function() {
-						$(this).remove()
-					})
-					$.get(svgPath, function(lines) {
-		                const svgHtml = (new XMLSerializer()).serializeToString(lines);
-		                $('#maparea').html(svgHtml);
-		                $('#maparea').find('polygon').each(function() {
-		                	$(this).attr('stroke', '#000000')
-		                	$(this).attr('fill', colors[type])
-
-			                // set up metadata. we don't need all of them. who cares. 
-
-			               	// generate pairs - these are the original text coordinate string, 
-			               	// we'll need in reconstructing the coordinates
-			                const pairs = $(this).attr("points").split(" ")
-
-			                // number of points we want to remove
-			                //const numToRemove = Math.floor(pairs.length/20*19)
-
-							switch(type) {
-								case "original":
-									drawText(this, pairs.length)
-								break;
-								case "skip":
-									doSkip(this, pairs)
-								break;
-								case "iterative":
-									doIterative(this, pairs)
-								break;
-								case "sort":
-									doSort(this, pairs)
-								break;
-								case "convex":
-									doConvex(this, pairs)
-								break;
-							}							                	
-		                });
-
-		                // force a redraw
-						$("#maparea").html($("#maparea").html() + "")
-
-					});
-
+					doUpdate(this)
 				});
 			});
 
@@ -267,8 +362,16 @@
 
 		<input type="radio" name="toggle" value="sort">
 		<label for="sort">Sort and take out the 95% of points with the smallest angle</label><br>
+
+		<input type="radio" name="toggle" value="random">
+		<label for="random">Just take 5% random values for giggles</label><br>
+
 		<input type="radio" name="toggle" value="convex">
 		<label for="convex"><a href="http://brian3kb.github.io/graham_scan_js/">Convex hull</a> (not a simplification)</label><br>
+
+		<br>
+		<input type="checkbox" id="convexhull" name="convexhull" value="forceconvex">
+		<label for="convexhull">Force convex hull in simplification</label><br>		
 	</div>
 	<br/>
 	<div id="svgdemo">
