@@ -11,7 +11,8 @@
 	  			'sort' : '#ffcc99',
 	  			'skip': '#99ffb3',
 	  			'iterative': '#99e6ff',
-	  			'convex': '#cc99ff'
+	  			'convex': '#cc99ff',
+	  			'citer': '#ffffcc'
 	  		};
 
 	  		var useConvexHull = false
@@ -104,6 +105,64 @@
                 }
                 return points
 			}
+
+            function doConvexHullIterative(obj, pairs) {
+				var points = getPoints(pairs)
+				var kept = getConvexHullIndex(points)	
+				const numToKeep = Math.round(pairs.length/20);
+
+				// Iterate on the convex hull algorithm, choosing the biggest number of 
+				// points as an index.
+				var iterations = {}
+
+				while (kept.size < numToKeep) {
+					var sorted = Array.from(kept)
+					sorted.sort(function(a, b) {
+						return a < b ? -1 : a > b ? 1 : 0
+					})
+
+					// Identify the biggest gaps
+					var biggestGap = -1
+					var biggestGapIndex = -1
+					for (var i = 1; i < sorted.length; ++i) {
+						const prev = sorted[i-1]
+
+						const iterKey = "" + sorted[i] + " " + prev
+						if (iterations[iterKey]) {
+							continue
+						}
+
+						const gap = sorted[i] - prev
+						if (biggestGap < gap) {
+							biggestGap = gap
+							biggestGapIndex = i
+						}
+					}
+					if (biggestGap < 0) {
+						break
+					}
+
+					const key = "" + sorted[biggestGapIndex] + " " + sorted[biggestGapIndex-1]
+					iterations[key] = 1
+
+					var pointsGap = points.slice(sorted[biggestGapIndex-1], sorted[biggestGapIndex]+1)
+					const subgraph = getConvexHullIndex(pointsGap)
+					for (var i of subgraph) {
+						if (i != 0 && i != (points.length-1))
+							kept.add(i)
+					}
+				}	
+
+				var newPolygon = " "
+				for (var i = 1; i < points.length-1; ++i) {
+					if (!kept.has(i)) continue;
+					newPolygon += pairs[i] + " "
+				}
+				newPolygon = pairs[0] + newPolygon + pairs[0]
+				$(obj).attr('points', newPolygon)
+		        drawText(obj, numToKeep)								
+
+            }
 
 			function doSkip(obj, pairs) {
 				var kept = useConvexHull ? getConvexHullIndex(getPoints(pairs)) : new Set()
@@ -324,6 +383,9 @@
 							case "random":
 								doRandom(this, pairs)
 							break;
+							case "citer":
+								doConvexHullIterative(this, pairs)
+							break;
 						}							                	
 	                });
 
@@ -365,6 +427,9 @@
 
 		<input type="radio" name="toggle" value="random">
 		<label for="random">Just take 5% random values for giggles</label><br>
+
+		<input type="radio" name="toggle" value="citer">
+		<label for="citer">Iteratively invoke the convex hull algorithm on gaps</label><br>
 
 		<input type="radio" name="toggle" value="convex">
 		<label for="convex"><a href="http://brian3kb.github.io/graham_scan_js/">Convex hull</a> (not a simplification)</label><br>
