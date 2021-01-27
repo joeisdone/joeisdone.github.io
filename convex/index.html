@@ -3,6 +3,7 @@
 <head>
 	  <script src="./jquery.min.js"></script>
 	  <script src="./convex.min.js"></script>
+	  <script src="./jquery-timing.min.js"></script>
 	  <script>
 
 	  		const svgPath = 'Columbia.svg'
@@ -37,6 +38,11 @@
 			      b = Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2),
 			      c = Math.pow(p2.x-p0.x,2) + Math.pow(p2.y-p0.y,2);
 			  return Math.acos( (a+b-c) / Math.sqrt(4*a*b) );
+			}
+
+			function getDirectionality(p1, p2, tested) {
+				var sign = ((p2.x - p1.x)*(tested.y - p1.y) - (p2.y - p1.y)*(tested.x - p1.x))
+				return sign > 0 ? 1 : sign < 0 ? -1 : 0;
 			}
 
             function getConvexHullIndex(points) {
@@ -354,7 +360,7 @@
 	                	$(this).attr('stroke', '#000000')
 
 	                	$(this).attr('fill', type === 'random' ? getRandomPastelColor() : colors[type])
-
+	                	$(this).attr('default-fill', $(this).attr('fill'))
 		                // set up metadata. we don't need all of them. who cares. 
 
 		               	// generate pairs - these are the original text coordinate string, 
@@ -397,14 +403,115 @@
 
 			$(document).ready(function() {	  
 				$('#convexhull').click(function() {
-    				useConvexHull = $(this).prop("checked")
+					if ($('#inclusion').prop("checked")) {
+						$('#inclusion').click()
+					}
+
+    				useConvexHull = $(this).prop("checked")    				
     				doUpdate()
 				});
 
-
 				$('input:radio[name=toggle]').change(function() {
+					if ($('#inclusion').prop("checked")) {
+						$('#inclusion').click()
+					}
 					doUpdate(this)
 				});
+
+				$('input:radio[value=original]').click()
+
+				
+				var repeat = null
+				var x = 0
+				var y = 0
+
+				$('#inclusion').click(function() {
+					var useInclusion = $(this).prop("checked")
+					var i = 0
+
+					// either way remove circle
+					$('circle').remove()
+					$('polygon').each(function() {
+						$(this).attr('fill', $(this).attr('default-fill'))
+					})
+
+					$("#maparea").html($("#maparea").html() + "")
+					x = 0
+					y = Math.floor(Math.random() * 600)
+
+					if (repeat) {
+						repeat.unrepeat()
+						repeat = null
+					}
+
+					if (useInclusion) {
+						$('<circle cx="' + x + '" cy="' + y + '" r="4" stroke="black" stroke-width="1" fill="#00FFFF" />').appendTo('g')
+
+						// force redraw
+						$("#maparea").html($("#maparea").html() + "")
+
+						// timer repeat
+						repeat = $.repeat(30, function() {
+							x += 1
+
+							const coord = {'x' : x, 'y': y}
+
+							$('circle').attr('cx', x)
+
+							var intersections = []
+							$('polygon').each(function() {
+								const poly = this
+								const bbox = $(poly)[0].getBBox()
+								if (bbox.y <= y && (bbox.y+bbox.height) >= y) {
+									intersections.push(poly)
+								}
+							})
+
+
+							// For each intersection calculate the line segment and number of times crossed. 
+							for (var i = 0; i < intersections.length; ++i) {
+								var current = intersections[i]
+								const bbox = $(current)[0].getBBox()								
+								if ((bbox.x > x) || ((bbox.x+bbox.width) < x)) {
+
+									$(current).attr('fill', $(current).attr('default-fill'))
+									continue
+								}
+
+								// This is our sign to perform point inclusion tests									
+				                const pairs = $(current).attr("points").split(" ")
+				                const points = getPoints(pairs)
+
+				                // we have passed a line segment if: 
+				                // segment is "within" y
+				                var included = 0
+				                for (var j = 1; j < points.length; ++j) {
+				                	var p1 = points[j-1]
+				                	var p2 = points[j]
+
+				                	// sort in "y" order
+				                	if (p1.y > p2.y) {
+				                		var temp = p1
+				                		p1 = p2
+				                		p2 = temp
+				                	}
+
+				                	if (p1.y <= y && p2.y >= y) {
+				                		const direction = getDirectionality(p1, p2, coord)
+										if (direction < 0) {
+											included += 1
+										}
+				                	}
+				                }
+								$(current).attr('fill', (included % 2)==1 ? '#FFFF00' : $(current).attr('default-fill'))
+							}
+
+
+							$("#maparea").html($("#maparea").html() + "")
+						})
+
+					}
+				})
 			});
 
 	  </script>
@@ -436,7 +543,12 @@
 
 		<br>
 		<input type="checkbox" id="convexhull" name="convexhull" value="forceconvex">
-		<label for="convexhull">Force convex hull in simplification</label><br>		
+		<label for="convexhull">Force convex hull in simplification</label>
+
+		<br>
+		<input type="checkbox" id="inclusion" name="inclusion" value="inclusion">
+		<label for="inclusion">Point inclusion test (flying dot placed at random y-position)</label><br>		
+
 	</div>
 	<br/>
 	<div id="svgdemo">
