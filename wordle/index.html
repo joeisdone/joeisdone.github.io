@@ -219,7 +219,7 @@
 		$("input[type=text]").each(function() {
 			// get corresponding value.
 			const rowId = "#guess" + index;
-			const value = this.value;
+			const value = this.value.trim().toLowerCase();
 			if (value.length == 0)
 				$(rowId).hide();
 			else {
@@ -241,8 +241,9 @@
 		var index = 1;
 		var guesses = [];
 		$("input[type=text]").each(function() {
-			if (this.value.length > 0) {
-				guesses.push(this.value);
+			const val = this.value.trim().toLowerCase();
+			if (val.length > 0) {
+				guesses.push(val);
 			}
 		});
 		
