@@ -459,7 +459,7 @@
 		} else if (type.includes("reg2022")) {
 			const party = type.replace("reg2022", "");
 			$.each(election2016Data, function(county, v) {
-				lookup[county] = v["registration2022"][party]
+				lookup[county] = v["registration2020"][party]
 			});
 		} else {
 			$.each(election2016Data, function(k, v) {
@@ -715,7 +715,6 @@
   <small>Auto-updated:<span id="timestamp"></span><br />
   
   <i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
-  <u>Orange, Sarasota, and Miami-Dade use a different system so will be updated manually.</u>.</br> 
   <span style="background-color:#faffc4;"><b>Defaults to All Votes view.</b></span> Scroll down to toggle other views.<br />  
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px; font-size: x-large;">
   <b>6-Nov-2022 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating for 2022.</span><br/><br/>
