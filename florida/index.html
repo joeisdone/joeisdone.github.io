@@ -149,7 +149,7 @@
 		if ("ev" === denominatorType) {
 			denominatorStr = methodStr + ", all parties:<b>" + dVal + "</b>";
 		} else {
-			denominatorStr = denominatorType.includes("2022") ? "2022 " : "2016 ";
+			denominatorStr = denominatorType.includes("2024") ? "2024 " : "2016 ";
 			if ("trumpVotes" === denominatorType) {
 				denominatorStr += "Trump";
 			} else if ("clintonVotes" === denominatorType) {
@@ -164,20 +164,20 @@
 				denominatorStr += "Republican early";
 			} else if ("earlyTOTAL" === denominatorType) {
 				denominatorStr += "total early";
-			} else if ("reg2022DEM" === denominatorType) {
+			} else if ("reg2024DEM" === denominatorType) {
 				denominatorStr += "Democrat registered";
-			} else if ("reg2022REP" === denominatorType) {
+			} else if ("reg2024REP" === denominatorType) {
 				denominatorStr += "Republican registered";
-			} else if ("reg2022NPA" === denominatorType) {
+			} else if ("reg2024NPA" === denominatorType) {
 				denominatorStr += "unaffliated registered";
-			} else if ("reg2022TOTAL" === denominatorType) {
+			} else if ("reg2024TOTAL" === denominatorType) {
 				denominatorStr += "registered";
 			}
 			else {
 				console.log("Unknown denominator " + denominatorType);
 			}
 			
-			denominatorStr += denominatorType.includes("reg2022") ? " active voters" : " votes";
+			denominatorStr += denominatorType.includes("reg2024") ? " active voters" : " votes";
 			denominatorStr += ":<b>" + dVal + "</b>";
 		}
 		usfljsconfig[hoverId].hover = county + "<br /><small>" + 
@@ -287,10 +287,19 @@
 	function cannibalizationBlurb(party) {
 		return "";
 	}
+
+	function getTotalWithFallback(data, party, methodType) {
+		// const npaCountyLevel = data['NPA'][methodType] || 0;
+		if (!data) return 0;
+		if (!data[party]) return 0;
+		if (!data[party][methodType]) return 0;
+		return data[party][methodType];
+	}
 	
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
-	    var methodText = "Vote totals (IPEV + VBM + Election Day)";
+	   // var methodText = "Vote totals (IPEV + VBM + Election Day)";
+		 var methodText = "Vote totals (IPEV + VBM)";
 		var methodShort = "final";
 		if (methodType === "Mail") {
 			methodText = "Vote totals (VBM only)";
@@ -351,12 +360,13 @@
 		
 		$.each(liveData, function(county, data) {
 			if (county === "TOTAL" || county === "TIMESTAMP") return;
+
 			// Get the NPA total for that county and method. 
-			const npaCountyLevel = data['NPA'][methodType];
+			const npaCountyLevel = getTotalWithFallback(data, 'NPA', methodType);
 			
 			// Get dem share for that county
-			const demCountyLevel = data['DEM'][methodType];
-			const repCountyLevel = data['REP'][methodType];
+			const demCountyLevel = getTotalWithFallback(data, 'DEM', methodType);
+			const repCountyLevel = getTotalWithFallback(data, 'REP', methodType);;
 			
 			const demCountySharePct = (demCountyLevel+0.0)/(demCountyLevel+repCountyLevel+0.0);
 			if (isNaN(demCountySharePct)) return;
@@ -408,14 +418,14 @@
 			  
 		
 		
-		var pctGapDesc = pctPctGap < 0 ? "Advantage DeSantis" : "Advantage Crist";
+		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Harris";
 		var gap2016Desc = "2016 D-R ratio: " + pctToString((demEarly2016Total + 0.0)/(early2016Total+0.0)) + " D - " + 
 			pctToString((repEarly2016Total + 0.0)/(early2016Total+0.0)) + " R, Gap: " + 
 			pctEarlyGap;
-		var gap2022Desc = "2022 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
+		var gap2024Desc = "2024 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
 		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
 		
-		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2022Desc + "<br />" + gapAdvantage + "</small>";
+		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2024Desc + "<br />" + gapAdvantage + "</small>";
 		
 		$('#countMethod').text(methodText);
 		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
@@ -456,8 +466,8 @@
 			$.each(early2016Data, function(k, v) {
 				lookup[k] = v[party];
 			});
-		} else if (type.includes("reg2022")) {
-			const party = type.replace("reg2022", "");
+		} else if (type.includes("reg2024")) {
+			const party = type.replace("reg2024", "");
 			$.each(election2016Data, function(county, v) {
 				lookup[county] = v["registration2020"][party]
 			});
@@ -561,7 +571,7 @@
 			}
 			
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
-			var gapDesc = gap <= 0.0 ? " Advantage DeSantis" : "Advantage Crist";
+			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
 			// raw votes 
 			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
 			gapDesc += " (";			
@@ -577,11 +587,11 @@
 			usfljsconfig[myid].hover = k + "<br /><small>" + 
 				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" + 
 				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" + 
-				"2022 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" + 
+				"2024 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" + 
 				"2016 comparison: Clinton: " + pctToString(demPct2016) + " Trump: " + pctToString(repPct2016) +  "<br />" + 
 				"2016 Votes: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" + 
 				"2016 Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" + 
-				"2022-2016 Vote Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
+				"2024-2016 Vote Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
 					
 				"</small>";			
 		});
@@ -615,7 +625,7 @@
 			const denomType = turnoutType.replace("2016", "");
 			pct = getPercentages(partyType, denomType);
 			colorGradient(partyType, pct);
-		} else if (turnoutType.includes("reg2022")) {
+		} else if (turnoutType.includes("reg2024")) {
 			pct = getPercentages(partyType, turnoutType);
 			colorGradient(partyType, pct);
 		} else if (turnoutType === "allEarly") {
@@ -717,14 +727,14 @@
   <i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the feed directly</a> if you have caching issues.</i><br />
   <span style="background-color:#faffc4;"><b>Defaults to All Votes view.</b></span> Scroll down to toggle other views.<br />  
   <div style="border: 1px solid black; padding: 5px; margin: 5px 0px; font-size: x-large;">
-  <b>6-Nov-2022 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating for 2022.</span><br/><br/>
+  <b>6-Nov-2024 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating for 2024.</span><br/><br/>
   
   Follow <a href="https://twitter.com/DataRepublican"><b>@DataRepublican</b></a> in case the site goes down.</small>
   </div>
   
   <br />
 
-  When the map says "Advantage Crist" or "Advantage DeSantis," it is <b>comparing to 2016 votes - <i>all votes</i> not just Election Day.</b>.<br />
+  When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to 2016 votes - <i>all votes</i> not just Election Day.</b>.<br />
 
 <table>
 	<tr>
@@ -894,37 +904,37 @@
 <div class="clear"></div>
 	<small>
 	<button onclick="methodType='total';turnoutType='split';doUpdate();">Votes: All</button><br />
-    <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">Election Day votes only</button><br />
+    <!-- <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">Election Day votes only</button><br /> -->
     <button onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();">Early votes: In-person only</button><br />
 	<button onclick="methodType='Mail';turnoutType='split';doUpdate();">Early votes: Mail only</button> <br />
 	<button onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();">Advantage Map</button> - RECOMMENDED, shade map by advantage relative to 2016. <br /><br />	
 	
-	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2022 Democrat votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2022 Republican votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2022 unaffliated votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();">Compare all 2022 votes vs. 2016 votes</button> - See where turnout is happening vs. 2016.<br /></small>
+	<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();">Compare 2024 Democrat votes vs. 2016 Democrat EV</button> - See where Democrats are turning out vs 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();">Compare 2024 Republican votes vs. 2016 Republican EV</button> - See where Republicans are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();">Compare 2024 unaffliated votes vs. 2016 unaffliated EV</button> - See where Independents are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();">Compare all 2024 votes vs. 2016 votes</button> - See where turnout is happening vs. 2016.<br /></small>
 	<br /><br />
 
-	<button onclick="methodType='total';turnoutType='reg2022DEM';partyType='DEM';doUpdate();">Compare 2022 Democrat early votes vs. Democrat active registrations</button> - See where Democrats are turning out vs 2016.<br />
-	<button onclick="methodType='total';turnoutType='reg2022REP';partyType='REP';doUpdate();">Compare 2022 Republican early votes vs. Republican active registrations</button> - See where Republicans are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='reg2022NPA';partyType='NPA';doUpdate();">Compare 2022 unaffliated early votes vs. unaffliated active registrations</button> - See where Independents are turning out vs. 2016.<br />
-	<button onclick="methodType='total';turnoutType='reg2022TOTAL';partyType='TOTAL';doUpdate();">Compare all 2022 early votes vs. active voter registrations</button> - See where turnout is happening vs. 2016.<br /></small>
+	<button onclick="methodType='total';turnoutType='reg2024DEM';partyType='DEM';doUpdate();">Compare 2024 Democrat early votes vs. Democrat active registrations</button> - See where Democrats are turning out vs 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2024REP';partyType='REP';doUpdate();">Compare 2024 Republican early votes vs. Republican active registrations</button> - See where Republicans are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2024NPA';partyType='NPA';doUpdate();">Compare 2024 unaffliated early votes vs. unaffliated active registrations</button> - See where Independents are turning out vs. 2016.<br />
+	<button onclick="methodType='total';turnoutType='reg2024TOTAL';partyType='TOTAL';doUpdate();">Compare all 2024 early votes vs. active voter registrations</button> - See where turnout is happening vs. 2016.<br /></small>
 	<br /><br />
 
 <b>Advanced</b><br />
   <small>Filter by vote type:</small> <select id="methodFilter">
 	<option value="total" selected="selected">All votes</option>
-	<option value="ElectionDay">Election Day votes only</option>
+	<!-- <option value="ElectionDay">Election Day votes only</option> -->
 	<option value="EarlyVoting">In-person early voting only</option>
 	<option value="Mail">Mail in votes only</option>
   </select>	
   <br />
   
   <small>Denominator:</small> <select id="turnoutFilter">
-	<option value="reg2022TOTAL">Total voter registrations</option>
-	<option value="reg2022DEM">Democrat voter registrations</option>
-	<option value="reg2022REP">Republican voter registrations</option>
-	<option value="reg2022NPA">Unaffliated voter registrations</option>
+	<option value="reg2024TOTAL">Total voter registrations</option>
+	<option value="reg2024DEM">Democrat voter registrations</option>
+	<option value="reg2024REP">Republican voter registrations</option>
+	<option value="reg2024NPA">Unaffliated voter registrations</option>
   
 	<option value="early2016TOTAL">2016 total votes</option>
 	<option value="early2016DEM">2016 Democrat votes</option>
