@@ -108,22 +108,22 @@ const AGE_ENCODING = new EncodedAttribute('Age', 'Age', 19, 3, {
 	"65" : "65+ years old"
 });
 
-const METHOD_2020_ENCODING = new EncodedAttribute('Method2020', '2020 Voting Method', 7, 3, {
+const METHOD_2024_ENCODING = new EncodedAttribute('Method2024', '2024 Voting Method', 7, 3, {
 	'VBM' : 1,
 	'IPEV' : 2
 }, {
-	'VBM' : '2020 Mail voter (VBM)',
-	'IPEV' : '2020 In-Person Early voter (IPEV)',
+	'VBM' : '2024 Mail voter (VBM)',
+	'IPEV' : '2024 In-Person Early voter (IPEV)',
 });
 
-const METHOD_2016_ENCODING = new EncodedAttribute('Method2016', '2016 Voting Method', 10, 3, {
+const METHOD_2022_ENCODING = new EncodedAttribute('Method2022', '2022 Voting Method', 10, 3, {
 	'VBM' : 1,
 	'IPEV' : 2,
 	'ED' : 3
 }, {
-	'VBM' : '2016 Mail voter (VBM)',
-	'IPEV' : '2016 In-Person Early voter (IPEV)',
-	'ED' : '2016 Election Day voter'
+	'VBM' : '2022 Mail voter (VBM)',
+	'IPEV' : '2022 In-Person Early voter (IPEV)',
+	'ED' : '2022 Election Day voter'
 });
 
 const BITMAP_BOOLEAN = {
@@ -131,29 +131,29 @@ const BITMAP_BOOLEAN = {
 	'False': 0
 };
 
-const VOTED_2012_ENCODING = new EncodedAttribute('Voted2012', 'Voted in 2012', 6, 1, BITMAP_BOOLEAN, {
-	'True' : 'Voted in 2012',
-	'False' : 'Did not vote in 2012'
-});
-
-const VOTED_2014_ENCODING = new EncodedAttribute('Voted2014', 'Voted in 2014', 5, 1, BITMAP_BOOLEAN, {
-	'True' : 'Voted in 2014',
-	'False' : 'Did not vote in 2014'
-});
-
-const VOTED_2016_ENCODING = new EncodedAttribute('Voted2016', 'Voted in 2016', 4, 1, BITMAP_BOOLEAN, {
+const VOTED_2016_ENCODING = new EncodedAttribute('Voted2016', 'Voted in 2016', 6, 1, BITMAP_BOOLEAN, {
 	'True' : 'Voted in 2016',
 	'False' : 'Did not vote in 2016'
 });
 
-const VOTED_2018_ENCODING = new EncodedAttribute('Voted2018', 'Voted in 2018', 3, 1, BITMAP_BOOLEAN, {
+const VOTED_2018_ENCODING = new EncodedAttribute('Voted2018', 'Voted in 2018', 5, 1, BITMAP_BOOLEAN, {
 	'True' : 'Voted in 2018',
 	'False' : 'Did not vote in 2018'
 });
 
-const VOTED_2020_ENCODING = new EncodedAttribute('Voted2020', 'Voted in 2020', 2, 1, BITMAP_BOOLEAN, {
+const VOTED_2022_ENCODING = new EncodedAttribute('Voted2022', 'Voted in 2022', 3, 1, BITMAP_BOOLEAN, {
+	'True' : 'Voted in 2022',
+	'False' : 'Did not vote in 2022'
+});
+
+const VOTED_2020_ENCODING = new EncodedAttribute('Voted2020', 'Voted in 2020', 4, 1, BITMAP_BOOLEAN, {
 	'True' : 'Voted in 2020',
 	'False' : 'Did not vote in 2020'
+});
+
+const VOTED_2024_ENCODING = new EncodedAttribute('Voted2024', 'Voted in 2024', 2, 1, BITMAP_BOOLEAN, {
+	'True' : 'Voted in 2024',
+	'False' : 'Did not vote in 2024'
 });
 
 
@@ -164,25 +164,28 @@ function dec2bin(dec) {
 
 // for debugging
 function dumpRow(encoded) {
+	console.log(encoded)
 	const p = PARTY_ENCODING.extract_readable(encoded);
-	const c = COUNTY_ENCODING.extract_readable(encoded);
+	//const c = COUNTY_ENCODING.extract_readable(encoded);
 	const g = GENDER_ENCODING.extract_readable(encoded);
 	const r = RACE_ENCODING.extract_readable(encoded);
 	const e = ETHNICITY_ENCODING.extract_readable(encoded);
 	const a = AGE_ENCODING.extract_readable(encoded);
-	const v16 = METHOD_2016_ENCODING.extract_readable(encoded);
-	const v20 = METHOD_2020_ENCODING.extract_readable(encoded);
-	const d12 = VOTED_2012_ENCODING.extract_readable(encoded);
-	const d14 = VOTED_2014_ENCODING.extract_readable(encoded);
+	const v22 = METHOD_2022_ENCODING.extract_readable(encoded);
+	const v24 = METHOD_2024_ENCODING.extract_readable(encoded);
 	const d16 = VOTED_2016_ENCODING.extract_readable(encoded);
 	const d18 = VOTED_2018_ENCODING.extract_readable(encoded);
 	const d20 = VOTED_2020_ENCODING.extract_readable(encoded);
+	const d22 = VOTED_2022_ENCODING.extract_readable(encoded);
+	const d24 = VOTED_2024_ENCODING.extract_readable(encoded);
 	
-	const debug_str = "decoded: p:" + p + " c:" + c + " g:" + g + 
-		" r:" + r + " e:" + e + " a:" + a + " v16" + v16 + " v20:" + v20 + 
-		" d12:" + d12 + " d14:" + d14 + " d16:" + d16 + " d18:" + d18 + 
-		" d20:" + d20;
+	const debug_str = "decoded: p:" + p + " g:" + g + 
+		" r:" + r + " e:" + e + " a:" + a + " v22" + v22 + " v24:" + v24 + 
+		" d16:" + d16 + " d18:" + d18 + " d20:" + d20 + " d22:" + d22 + 
+		" d24:" + d24;
 	console.log(debug_str); 
+	// 273891476
+	// decoded: decoded: p:D c:new hanover a:26 g:F r:WHITE e:NOT HISPANIC v22: v24:MAIL 16:0 18:0 20:1 22:0 24:1
 	//catawba a:65 g:M r:WHITE e:NOT HISPANIC v16: v20:IPEV 12:0 14:0 16:0 18:0 20:1
 }
 
@@ -196,21 +199,24 @@ function initializeEncoded(sortedCounties) {
 	for (var i = 0; i < sortedCounties.length; ++i) {
 		bitmap_county[sortedCounties[i]] = i+1;
 	}
-	
+	//dumpRow(273891476);
+	//dumpRow(1346766968);
+
 	var readable = {};
 	$.each(bitmap_county, function(k, v) {
 		readable[k] = k;
 	});
 	COUNTY_ENCODING = new EncodedAttribute('County', 'County', 22, 7, bitmap_county, readable);
+	//console.log(COUNTY_ENCODING)
 
 	encodings[AGE_ENCODING['id']] = AGE_ENCODING;
 	encodings[GENDER_ENCODING['id']] = GENDER_ENCODING;
 	encodings[RACE_ENCODING['id']] = RACE_ENCODING;
 	encodings[ETHNICITY_ENCODING['id']] = ETHNICITY_ENCODING;
-	encodings[VOTED_2012_ENCODING['id']] = VOTED_2012_ENCODING;
-	encodings[VOTED_2014_ENCODING['id']] = VOTED_2014_ENCODING;
 	encodings[VOTED_2016_ENCODING['id']] = VOTED_2016_ENCODING;
 	encodings[VOTED_2018_ENCODING['id']] = VOTED_2018_ENCODING;
+	encodings[VOTED_2020_ENCODING['id']] = VOTED_2020_ENCODING;
+	encodings[VOTED_2022_ENCODING['id']] = VOTED_2022_ENCODING;
 	
 	/*
 	// testing code... 

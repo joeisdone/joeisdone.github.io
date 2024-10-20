@@ -113,8 +113,11 @@
 		});
 
 
+
+
 		// Queries the rows
 		queryResult.fill(true);
+		// uhhh... 
 
 		// Filter by method.
 		for (var i = 0; i < encodedRows.length; ++i) {
@@ -184,13 +187,14 @@
 		}
 	} 	
 
-	const turnoutTotal2016 = 4739292;
-	const demTurnoutTotal2016 = 1872593;
-	const repTurnoutTotal2016 = 1571730;
+	const turnoutTotal2022 = 1247425+1232887+1309386;
+	const demTurnoutTotal2022 = 1247425;
+	const repTurnoutTotal2022 = 1309386;
 	
-	const trumpTotal2016 = 2362631;
-	const clintonTotal2016 = 2189316;
+	const trumpTotal2022 = 2758775;
+	const clintonTotal2022 = 2684292;
 	function updateTotals(methodType, numerator, denominator) {
+
 		// countMethod countDEM countREP countIND countTOTAL
 	    var methodText = "Vote totals (IPEV + VBM)";
 		var methodShort = "EV";
@@ -203,108 +207,108 @@
 			methodShort = "IPEV";
 		}
 		
-			//console.log("set: " + allEV2020 + " " + repAllEV2020 + " " + demAllEV2020);
+			//console.log("set: " + allEV2024 + " " + repAllEV2024 + " " + demAllEV2024);
 		
-		var total2020 = 0;
-		var repTotal2020 = 0;
-		var demTotal2020 = 0;
+		var total2024 = 0;
+		var repTotal2024 = 0;
+		var demTotal2024 = 0;
 		$.each(numerator, function(ignore, res) {
-			total2020 += res['total'];
-			repTotal2020 += res['Rep'];
-			demTotal2020 += res['Dem'];
+			total2024 += res['total'];
+			repTotal2024 += res['Rep'];
+			demTotal2024 += res['Dem'];
 		});
 		
-		const totalPct2020Desc = pctToString((total2020+0.0)/(allEV2020+0.0)) + " of all 2020 EV";
-		const repPct2020Desc = pctToString((repTotal2020+0.0)/(repAllEV2020+0.0)) + " of Republican 2020 EV";
-		const demPct2020Desc = pctToString((demTotal2020+0.0)/(demAllEV2020+0.0)) + " of Democrat 2020 EV";
+		const totalPct2024Desc = pctToString((total2024+0.0)/(allEV2024+0.0)) + " of all 2024 EV";
+		const repPct2024Desc = pctToString((repTotal2024+0.0)/(repAllEV2024+0.0)) + " of Republican 2024 EV";
+		const demPct2024Desc = pctToString((demTotal2024+0.0)/(demAllEV2024+0.0)) + " of Democrat 2024 EV";
 
-		var total2016 = 0;
-		var repTotal2016 = 0;
-		var demTotal2016 = 0;
+		var total2022 = 0;
+		var repTotal2022 = 0;
+		var demTotal2022 = 0;
 		$.each(numerator, function(ignore, res) {
-			total2016 += res['total'];
-			repTotal2016 += res['Rep'];
-			demTotal2016 += res['Dem'];
+			total2022 += res['total'];
+			repTotal2022 += res['Rep'];
+			demTotal2022 += res['Dem'];
 		});
 		
-		const totalPct2016Desc = pctToString((total2016+0.0)/(allEV2016+0.0)) + " of all 2016 EV";
-		const repPct2016Desc = pctToString((repTotal2016+0.0)/(repAllEV2016+0.0)) + " of Republican 2016 EV";
-		const demPct2016Desc = pctToString((demTotal2016+0.0)/(demAllEV2016+0.0)) + " of Democrat 2016 EV";
+		const totalPct2022Desc = pctToString((total2022+0.0)/(allEV2022+0.0)) + " of all 2022 EV";
+		const repPct2022Desc = pctToString((repTotal2022+0.0)/(repAllEV2022+0.0)) + " of Republican 2022 EV";
+		const demPct2022Desc = pctToString((demTotal2022+0.0)/(demAllEV2022+0.0)) + " of Democrat 2022 EV";
 		
-		var total2016 = 0;
-		var repTotal2016 = 0;
-		var demTotal2016 = 0;
+		var total2022 = 0;
+		var repTotal2022 = 0;
+		var demTotal2022 = 0;
 		$.each(denominator, function(ignore, res) {
-			total2016 += res['total'];
-			repTotal2016 += res['Rep'];
-			demTotal2016 += res['Dem'];
+			total2022 += res['total'];
+			repTotal2022 += res['Rep'];
+			demTotal2022 += res['Dem'];
 		});		
 				
-		const repPct = pctToString((repTotal2020 + 0.0)/(total2020+0.0));
-		const demPct = pctToString((demTotal2020 + 0.0)/(total2020+0.0));
+		const repPct = pctToString((repTotal2024 + 0.0)/(total2024+0.0));
+		const demPct = pctToString((demTotal2024 + 0.0)/(total2024+0.0));
 		
-		const totalTurnoutPct = pctToString((total2020 + 0.0) / (turnoutTotal2016+0.0));
-		const totalTurnoutDesc = totalTurnoutPct + " of 2016 total turnout";
-		const repTurnoutPct = pctToString((repTotal2020 + 0.0) / (repTurnoutTotal2016+0.0));
-		const repTurnoutDesc = repTurnoutPct + " of 2016 registered R turnout";
-		const demTurnoutPct = pctToString((demTotal2020 + 0.0) / (demTurnoutTotal2016+0.0));
-		const demTurnoutDesc = demTurnoutPct + " of 2016 registered D turnout";
+		const totalTurnoutPct = pctToString((total2024 + 0.0) / (turnoutTotal2022+0.0));
+		const totalTurnoutDesc = totalTurnoutPct + " of 2022 total turnout";
+		const repTurnoutPct = pctToString((repTotal2024 + 0.0) / (repTurnoutTotal2022+0.0));
+		const repTurnoutDesc = repTurnoutPct + " of 2022 registered R turnout";
+		const demTurnoutPct = pctToString((demTotal2024 + 0.0) / (demTurnoutTotal2022+0.0));
+		const demTurnoutDesc = demTurnoutPct + " of 2022 registered D turnout";
 		
-		const gap = demTotal2020 - repTotal2020;
+		const gap = demTotal2024 - repTotal2024;
 		
-		const earlyPct = pctToString((total2020 + 0.0)/(total2016+0.0));
-		const repEarlyPct = pctToString((repTotal2020 + 0.0)/(repTotal2016+0.0));
-		const demEarlyPct = pctToString((demTotal2020 + 0.0)/(demTotal2016+0.0));
+		const earlyPct = pctToString((total2024 + 0.0)/(total2022+0.0));
+		const repEarlyPct = pctToString((repTotal2024 + 0.0)/(repTotal2022+0.0));
+		const demEarlyPct = pctToString((demTotal2024 + 0.0)/(demTotal2022+0.0));
 
-		const pctGap = pctToString((demTotal2020 + 0.0)/(total2020+0.0) - (repTotal2020 + 0.0)/(total2020+0.0));
-		const pctEarlyGap = pctToString((demTotal2016 + 0.0)/(total2016+0.0)-(repTotal2016 + 0.0)/(total2016+0.0));		
+		const pctGap = pctToString((demTotal2024 + 0.0)/(total2024+0.0) - (repTotal2024 + 0.0)/(total2024+0.0));
+		const pctEarlyGap = pctToString((demTotal2022 + 0.0)/(total2022+0.0)-(repTotal2022 + 0.0)/(total2022+0.0));		
 		var pctPctGap = (
-			((demTotal2020 + 0.0)/(total2020+0.0) - (repTotal2020 + 0.0)/(total2020+0.0)) - 
-			((demTotal2016 + 0.0)/(total2016+0.0)-(repTotal2016 + 0.0)/(total2016+0.0)) 
+			((demTotal2024 + 0.0)/(total2024+0.0) - (repTotal2024 + 0.0)/(total2024+0.0)) - 
+			((demTotal2022 + 0.0)/(total2022+0.0)-(repTotal2022 + 0.0)/(total2022+0.0)) 
 		);
 		
-		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Biden";
-		var gap2016Desc = "2016 EV D-R ratio: " + pctToString((demTotal2016 + 0.0)/(total2016+0.0)) + " D - " + 
-			pctToString((repTotal2016 + 0.0)/(total2016+0.0)) + " R, Gap:" + 
+		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Harris";
+		var gap2022Desc = "2022 EV D-R ratio: " + pctToString((demTotal2022 + 0.0)/(total2022+0.0)) + " D - " + 
+			pctToString((repTotal2022 + 0.0)/(total2022+0.0)) + " R, Gap:" + 
 			pctEarlyGap;
-		var gap2020Desc = "2020 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
+		var gap2024Desc = "2024 " + methodShort + " D-R ratio:" + demPct + " D - " + repPct + " R, Gap: " + pctGap;
 		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
 		
-		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2020Desc + "<br />" + gapAdvantage + "</small>";
+		const addendum = "<br /><br /><small>" + gap2022Desc + "<br />" + gap2024Desc + "<br />" + gapAdvantage + "</small>";
 		
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total2020 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b><br/>" + totalPct2020Desc + "<br/>" + totalPct2016Desc + "<br/>" + totalTurnoutDesc + addendum);
-		$('#countDEM').html(demTotal2020 + " (" + demPct + ")<br />" + demPct2020Desc + "<br/>" + demPct2016Desc + "<br/>" + demTurnoutDesc);
-		$('#countREP').html(repTotal2020 + " (" + repPct + ")<br />" + repPct2020Desc + "<br/>" + repPct2016Desc + "<br/>" + repTurnoutDesc);
+		$('#countTOTAL').html(total2024 + "</b><br/>"  + "D-R gap (raw): <b>" + gap + "</b><br/>" + totalPct2024Desc + "<br/>" + totalPct2022Desc + "<br/>" + totalTurnoutDesc + addendum);
+		$('#countDEM').html(demTotal2024 + " (" + demPct + ")<br />" + demPct2024Desc + "<br/>" + demPct2022Desc + "<br/>" + demTurnoutDesc);
+		$('#countREP').html(repTotal2024 + " (" + repPct + ")<br />" + repPct2024Desc + "<br/>" + repPct2022Desc + "<br/>" + repTurnoutDesc);
 	}
 
 
 	/** Do a split, a la Florida map. */
 	function doSplit(methodStr, numerator, denominator) {
-		$.each(numerator, function(county, results2020) {
+		$.each(numerator, function(county, results2024) {
 
 
-			const results2016 = denominator[county];
-			const total2020 = results2020['total'];
-			const repTotal2020 = results2020['Rep'];
-			const demTotal2020 = results2020['Dem'];
-			const demPct2020 = (demTotal2020 + 0.0) / (total2020 + 0.0);
-			const repPct2020 = (repTotal2020 + 0.0) / (total2020 + 0.0);
+			const results2022 = denominator[county];
+			const total2024 = results2024['total'];
+			const repTotal2024 = results2024['Rep'];
+			const demTotal2024 = results2024['Dem'];
+			const demPct2024 = (demTotal2024 + 0.0) / (total2024 + 0.0);
+			const repPct2024 = (repTotal2024 + 0.0) / (total2024 + 0.0);
 			
-			const total2016 = results2016['total'];
-			const repTotal2016 = results2016['Rep'];
-			const demTotal2016 = results2016['Dem'];
-			const demPct2016 = (demTotal2016 + 0.0) / (total2016 + 0.0);
-			const repPct2016 = (repTotal2016 + 0.0) / (total2016 + 0.0);
-			const otherPct2016 = 1.0 - demPct2016 - repPct2016;
+			const total2022 = results2022['total'];
+			const repTotal2022 = results2022['Rep'];
+			const demTotal2022 = results2022['Dem'];
+			const demPct2022 = (demTotal2022 + 0.0) / (total2022 + 0.0);
+			const repPct2022 = (repTotal2022 + 0.0) / (total2022 + 0.0);
+			const otherPct2022 = 1.0 - demPct2022 - repPct2022;
 
-			const partyDiff2020 = demTotal2020 - demTotal2016;
-			var partyDiffDesc = partyDiff2020 < 0.0 ? ("" + partyDiff2020) : ("+" + partyDiff2020);
+			const partyDiff2024 = demTotal2024 - demTotal2022;
+			var partyDiffDesc = partyDiff2024 < 0.0 ? ("" + partyDiff2024) : ("+" + partyDiff2024);
 			partyDiffDesc = " (" + partyDiffDesc + ")";
 
-			var gap = (demPct2020 - repPct2020) - (demPct2016 - repPct2020);
-			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Biden";
-			var gapRaw = Math.ceil((gap * total2020)) * -1;
+			var gap = (demPct2024 - repPct2024) - (demPct2022 - repPct2024);
+			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
+			var gapRaw = Math.ceil((gap * total2024)) * -1;
 			gapDesc += " (";			
 			gapDesc += gap <= 0.0 ? ("+" + gapRaw) : ("" + gapRaw);
 			gapDesc += " votes)";
@@ -316,12 +320,12 @@
 			$('#' + countyid).attr({fill: splitColor});
 			
 			usncjsconfig[countyid].hover = county + "<br /><small>" + 
-				methodStr + ", Democrat:<b>" + demTotal2020 + " (" + pctToString(demPct2020) + ")</b><br />" + 
-				methodStr + ", Republican:<b>" + repTotal2020 + " (" + pctToString(repPct2020) + ")</b><br />" + 
-				"2020 Difference (D-R): <b>" + pctToString(demPct2020 - repPct2020) + "</b> " + partyDiffDesc + "<br />" + 
-				"2016 EV: Dem: " + pctToString(demPct2016) + " Rep: " + pctToString(repPct2016) + " Other:" + pctToString(otherPct2016) + "<br />" + 
-				"2016 EV Difference (D-R): <b>" + pctToString(demPct2016 - repPct2016) + "</b><br />" + 
-				"2020-2016 EV Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
+				methodStr + ", Democrat:<b>" + demTotal2024 + " (" + pctToString(demPct2024) + ")</b><br />" + 
+				methodStr + ", Republican:<b>" + repTotal2024 + " (" + pctToString(repPct2024) + ")</b><br />" + 
+				"2024 Difference (D-R): <b>" + pctToString(demPct2024 - repPct2024) + "</b> " + partyDiffDesc + "<br />" + 
+				"2022 EV: Dem: " + pctToString(demPct2022) + " Rep: " + pctToString(repPct2022) + " Other:" + pctToString(otherPct2022) + "<br />" + 
+				"2022 EV Difference (D-R): <b>" + pctToString(demPct2022 - repPct2022) + "</b><br />" + 
+				"2024-2022 EV Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
 					
 				"</small>";			
 
@@ -329,24 +333,24 @@
 			usfljsconfig[myid].hover = k + "<br /><small>" + 
 				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" + 
 				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" + 
-				"2020 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" + 
-				"2016 comparison: Clinton: " + pctToString(demPct2016) + " Trump: " + pctToString(repPct2016) +  "<br />" + 
-				"2016 EV: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" + 
-				"2016 EV Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" + 
-				"2020-2016 EV Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
+				"2024 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" + 
+				"2022 comparison: Clinton: " + pctToString(demPct2022) + " Trump: " + pctToString(repPct2022) +  "<br />" + 
+				"2022 EV: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" + 
+				"2022 EV Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" + 
+				"2024-2022 EV Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" + 
 					
 				"</small>";			
 */
 		});
 	}
 	
-	var repAllEV2020 = 0;
-	var demAllEV2020 = 0;
-	var allEV2020 = 0;
+	var repAllEV2024 = 0;
+	var demAllEV2024 = 0;
+	var allEV2024 = 0;
 
-	var repAllEV2016 = 0;
-	var demAllEV2016 = 0;
-	var allEV2016 = 0;
+	var repAllEV2022 = 0;
+	var demAllEV2022 = 0;
+	var allEV2022 = 0;
 	
 	function doUpdate(checkboxId) {
 		resetHover();
@@ -386,25 +390,25 @@
 			attrFilters[id] = attrs;
 		});
 		
-		// Perform query - this is advantage split only, so do method 2020
-		const countyNumerators = query(METHOD_2020_ENCODING, methodFilter, rawFilters);
+		// Perform query - this is advantage split only, so do method 2024
+		const countyNumerators = query(METHOD_2024_ENCODING, methodFilter, rawFilters);
 		
-		// Now calculate denominators. we calculate via method 2016
-		const countyDenominators = query(METHOD_2016_ENCODING, methodFilter, rawFilters);
+		// Now calculate denominators. we calculate via method 2022
+		const countyDenominators = query(METHOD_2022_ENCODING, methodFilter, rawFilters);
 		
 		// If this is the first time, initialize the EV numbers
-		if (allEV2020 == 0) {
+		if (allEV2024 == 0) {
 			$.each(countyNumerators, function(ignore, v) {
-				allEV2020 += v['total'];
-				repAllEV2020 += v['Rep'];
-				demAllEV2020 += v['Dem'];
+				allEV2024 += v['total'];
+				repAllEV2024 += v['Rep'];
+				demAllEV2024 += v['Dem'];
 			});
 			$.each(countyDenominators, function(ignore, v) {
-				allEV2016 += v['total'];
-				repAllEV2016 += v['Rep'];
-				demAllEV2016 += v['Dem'];
+				allEV2022 += v['total'];
+				repAllEV2022 += v['Rep'];
+				demAllEV2022 += v['Dem'];
 			});			
-			//console.log("set: " + allEV2020 + " " + repAllEV2020 + " " + demAllEV2020);
+			//console.log("set: " + allEV2024 + " " + repAllEV2024 + " " + demAllEV2024);
 		}
 				
 		const methodStr = methodFilter.length == 2 ? 'All early votes' : 
@@ -431,8 +435,8 @@
 
 	}
 
-	
-    $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/northcarolina_optimized.json', function(data) {
+	    $.getJSON('../json/northcarolina_optimized.json', function(data) {
+//    $.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/northcarolina_optimized.json', function(data) {
 		encodedRows = data['rows'];
 		countRows = data['counts'];
 		$('#timestamp').text(data['timestamp']);
@@ -489,7 +493,7 @@
 						
 			$.each(encoding['bit_map'], function(attr, ignore) {
 				const checkboxId = 'numerator' + encoding.id + attr;
-				if (checkboxId === 'numeratorVoted2016False') {
+				if (checkboxId === 'numeratorVoted2022False') {
 					return;
 				}
 				if ((count % 2)==0) {
@@ -535,16 +539,15 @@
 <span style="background-color:#faffc4;"><b>Have patience, please do not refresh!!!</b></span> North Carolina updates its data once-daily and does not push out continuously like Florida SOS does.
 <br/><br />
 <span style="background-color:#faffc4; font-weight:bold; font-size:larger;">This map is meant to explore demographics, not serve as a 100% accurate count. Here's why:</span> <br/>
-The map is compiled from the entire NC voter history records, which is quite messy and inconsistent. Generally the numbers here are more friendly to Biden than the 
-<a href="https://s3.amazonaws.com/dl.ncsbe.gov/Press/NC%20Absentee%20Stats%20for%202020%20General%20Election/Absentee_Stats_2020General_10312020.pdf">"official" numbers (linked)</a>. <br/><br/>
+The map is compiled from the entire NC voter history records, which is not always consistent.<br/><br/>
 
-<a href="https://twitter.com/DataRepublican/status/1321663568719216640">How this map was implemented.</a> It took me a long time just to figure out how to encode the entire 5+gig NC voter history on the client - so it'll be a little slow.<br />
+<a href="https://twitter.com/DataRepublican">How this map was implemented.</a> It took me a long time just to figure out how to encode the entire 5+gig NC voter history on the client - so it'll be a little slow.<br />
 
 Alter checkboxes to enable filtering over demographics. Multiple checkboxes within a category act as inclusive operators.<br /><br />
 
 <b><span style="background-color:#faffc4;">NOTE: Not every category adds up to 100%!</span></b> (E.g., many voters do not give out demographic data.) This is why "all categories checked" will look different than "none checked." <br/><br/>
 
-<span style="font-size: larger;">Defaults to "Advantage Split" view where you see comparative advantage versus 2016.</span><br/>
+<span style="font-size: larger;">Defaults to "Advantage Split" view where you see comparative advantage versus 2022.</span><br/>
 <table>
 	<tr>
 	<td><b><span id="countMethod"></span></b></td>
