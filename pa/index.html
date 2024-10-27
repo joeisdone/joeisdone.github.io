@@ -262,7 +262,14 @@
       });
 
 
-      console.log("max value:" + max) 
+      count = 0.0
+      agg = 0.0
+      $.each(values, function(k, v) {
+        if (v <= 0) return;
+        count += 1
+        agg += v
+      })
+      max = Math.min(agg/count*5, max)
 
       var rainbow = null
       const party_colors = {
@@ -274,7 +281,7 @@
 
       if (color_scheme.startsWith('registration')) {
         rainbow = new Rainbow(0.0, 1.0)
-        rainbow.setSpectrum(party_colors['D'], party_colors['I'], party_colors['R'])
+        rainbow.setSpectrum(party_colors['D'], '#FFFFF3', party_colors['R'])
       } else {
         if (max == 0) max = 1
         rainbow = new Rainbow(0, max)
