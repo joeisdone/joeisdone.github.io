@@ -1,0 +1,1294 @@
+{
+  "42001": {
+    "trumpVotes": 37567,
+    "trumpPct": 0.6613,
+    "bidenVotes": 18254,
+    "bidenPct": 0.3213,
+    "total": 56809,
+    "registration2024": {
+      "DEM": 17584,
+      "REP": 40966,
+      "NPA": 10936,
+      "TOTAL": 69486
+    },
+    "registration2020": {
+      "DEM": 16473,
+      "REP": 37555,
+      "NPA": 9563,
+      "TOTAL": 63591
+    }
+  },
+  "42003": {
+    "trumpVotes": 282913,
+    "trumpPct": 0.3903,
+    "bidenVotes": 430759,
+    "bidenPct": 0.5943,
+    "total": 724800,
+    "registration2024": {
+      "DEM": 472296,
+      "REP": 251068,
+      "NPA": 128972,
+      "TOTAL": 852336
+    },
+    "registration2020": {
+      "DEM": 465278,
+      "REP": 241735,
+      "NPA": 116979,
+      "TOTAL": 823992
+    }
+  },
+  "42005": {
+    "trumpVotes": 27489,
+    "trumpPct": 0.7547,
+    "bidenVotes": 8457,
+    "bidenPct": 0.2322,
+    "total": 36426,
+    "registration2024": {
+      "DEM": 10704,
+      "REP": 26541,
+      "NPA": 4728,
+      "TOTAL": 41973
+    },
+    "registration2020": {
+      "DEM": 10652,
+      "REP": 24485,
+      "NPA": 4265,
+      "TOTAL": 39402
+    }
+  },
+  "42007": {
+    "trumpVotes": 54759,
+    "trumpPct": 0.5801,
+    "bidenVotes": 38122,
+    "bidenPct": 0.4038,
+    "total": 94397,
+    "registration2024": {
+      "DEM": 45058,
+      "REP": 48905,
+      "NPA": 14869,
+      "TOTAL": 108832
+    },
+    "registration2020": {
+      "DEM": 45257,
+      "REP": 46586,
+      "NPA": 13824,
+      "TOTAL": 105667
+    }
+  },
+  "42009": {
+    "trumpVotes": 23025,
+    "trumpPct": 0.8339,
+    "bidenVotes": 4367,
+    "bidenPct": 0.1582,
+    "total": 27610,
+    "registration2024": {
+      "DEM": 5203,
+      "REP": 23634,
+      "NPA": 2810,
+      "TOTAL": 31647
+    },
+    "registration2020": {
+      "DEM": 5245,
+      "REP": 22078,
+      "NPA": 2646,
+      "TOTAL": 29969
+    }
+  },
+  "42011": {
+    "trumpVotes": 109926,
+    "trumpPct": 0.5322,
+    "bidenVotes": 93116,
+    "bidenPct": 0.4508,
+    "total": 206553,
+    "registration2024": {
+      "DEM": 97439,
+      "REP": 110931,
+      "NPA": 42109,
+      "TOTAL": 250479
+    },
+    "registration2020": {
+      "DEM": 99037,
+      "REP": 105979,
+      "NPA": 38754,
+      "TOTAL": 243770
+    }
+  },
+  "42013": {
+    "trumpVotes": 45306,
+    "trumpPct": 0.7107,
+    "bidenVotes": 17636,
+    "bidenPct": 0.2767,
+    "total": 63748,
+    "registration2024": {
+      "DEM": 18666,
+      "REP": 48306,
+      "NPA": 9570,
+      "TOTAL": 76542
+    },
+    "registration2020": {
+      "DEM": 18184,
+      "REP": 45134,
+      "NPA": 8460,
+      "TOTAL": 71778
+    }
+  },
+  "42015": {
+    "trumpVotes": 21600,
+    "trumpPct": 0.7145,
+    "bidenVotes": 8046,
+    "bidenPct": 0.2661,
+    "total": 30232,
+    "registration2024": {
+      "DEM": 7528,
+      "REP": 24084,
+      "NPA": 4614,
+      "TOTAL": 36226
+    },
+    "registration2020": {
+      "DEM": 7583,
+      "REP": 22458,
+      "NPA": 4203,
+      "TOTAL": 34244
+    }
+  },
+  "42017": {
+    "trumpVotes": 187367,
+    "trumpPct": 0.4716,
+    "bidenVotes": 204712,
+    "bidenPct": 0.5153,
+    "total": 397291,
+    "registration2024": {
+      "DEM": 185666,
+      "REP": 192637,
+      "NPA": 77397,
+      "TOTAL": 455700
+    },
+    "registration2020": {
+      "DEM": 183185,
+      "REP": 185368,
+      "NPA": 71062,
+      "TOTAL": 439615
+    }
+  },
+  "42019": {
+    "trumpVotes": 74359,
+    "trumpPct": 0.6542,
+    "bidenVotes": 37508,
+    "bidenPct": 0.33,
+    "total": 113663,
+    "registration2024": {
+      "DEM": 37511,
+      "REP": 78735,
+      "NPA": 18738,
+      "TOTAL": 134984
+    },
+    "registration2020": {
+      "DEM": 36927,
+      "REP": 74662,
+      "NPA": 17294,
+      "TOTAL": 128883
+    }
+  },
+  "42021": {
+    "trumpVotes": 48085,
+    "trumpPct": 0.6796,
+    "bidenVotes": 21730,
+    "bidenPct": 0.3071,
+    "total": 70751,
+    "registration2024": {
+      "DEM": 29621,
+      "REP": 44237,
+      "NPA": 8794,
+      "TOTAL": 82652
+    },
+    "registration2020": {
+      "DEM": 29800,
+      "REP": 40970,
+      "NPA": 8057,
+      "TOTAL": 78827
+    }
+  },
+  "42023": {
+    "trumpVotes": 1771,
+    "trumpPct": 0.7258,
+    "bidenVotes": 634,
+    "bidenPct": 0.2598,
+    "total": 2440,
+    "registration2024": {
+      "DEM": 693,
+      "REP": 1791,
+      "NPA": 337,
+      "TOTAL": 2821
+    },
+    "registration2020": {
+      "DEM": 709,
+      "REP": 1688,
+      "NPA": 312,
+      "TOTAL": 2709
+    }
+  },
+  "42025": {
+    "trumpVotes": 21984,
+    "trumpPct": 0.6526,
+    "bidenVotes": 11212,
+    "bidenPct": 0.3328,
+    "total": 33689,
+    "registration2024": {
+      "DEM": 13449,
+      "REP": 22028,
+      "NPA": 6508,
+      "TOTAL": 41985
+    },
+    "registration2020": {
+      "DEM": 13555,
+      "REP": 20632,
+      "NPA": 5946,
+      "TOTAL": 40133
+    }
+  },
+  "42027": {
+    "trumpVotes": 36372,
+    "trumpPct": 0.467,
+    "bidenVotes": 40055,
+    "bidenPct": 0.5142,
+    "total": 77891,
+    "registration2024": {
+      "DEM": 37568,
+      "REP": 39330,
+      "NPA": 15894,
+      "TOTAL": 92792
+    },
+    "registration2020": {
+      "DEM": 36385,
+      "REP": 37927,
+      "NPA": 14626,
+      "TOTAL": 88938
+    }
+  },
+  "42029": {
+    "trumpVotes": 128565,
+    "trumpPct": 0.4072,
+    "bidenVotes": 182372,
+    "bidenPct": 0.5776,
+    "total": 315753,
+    "registration2024": {
+      "DEM": 150136,
+      "REP": 146135,
+      "NPA": 67635,
+      "TOTAL": 363906
+    },
+    "registration2020": {
+      "DEM": 144577,
+      "REP": 142418,
+      "NPA": 61866,
+      "TOTAL": 348861
+    }
+  },
+  "42031": {
+    "trumpVotes": 14578,
+    "trumpPct": 0.7467,
+    "bidenVotes": 4678,
+    "bidenPct": 0.2396,
+    "total": 19524,
+    "registration2024": {
+      "DEM": 5101,
+      "REP": 14904,
+      "NPA": 2440,
+      "TOTAL": 22445
+    },
+    "registration2020": {
+      "DEM": 5365,
+      "REP": 14193,
+      "NPA": 2380,
+      "TOTAL": 21938
+    }
+  },
+  "42033": {
+    "trumpVotes": 29203,
+    "trumpPct": 0.7394,
+    "bidenVotes": 9673,
+    "bidenPct": 0.2449,
+    "total": 39496,
+    "registration2024": {
+      "DEM": 11837,
+      "REP": 29570,
+      "NPA": 5229,
+      "TOTAL": 46636
+    },
+    "registration2020": {
+      "DEM": 11974,
+      "REP": 27423,
+      "NPA": 4806,
+      "TOTAL": 44203
+    }
+  },
+  "42035": {
+    "trumpVotes": 11902,
+    "trumpPct": 0.6739,
+    "bidenVotes": 5502,
+    "bidenPct": 0.3115,
+    "total": 17661,
+    "registration2024": {
+      "DEM": 5972,
+      "REP": 12551,
+      "NPA": 2695,
+      "TOTAL": 21218
+    },
+    "registration2020": {
+      "DEM": 6043,
+      "REP": 11460,
+      "NPA": 2429,
+      "TOTAL": 19932
+    }
+  },
+  "42037": {
+    "trumpVotes": 20098,
+    "trumpPct": 0.6425,
+    "bidenVotes": 10532,
+    "bidenPct": 0.3367,
+    "total": 31280,
+    "registration2024": {
+      "DEM": 11301,
+      "REP": 21135,
+      "NPA": 5586,
+      "TOTAL": 38022
+    },
+    "registration2020": {
+      "DEM": 11048,
+      "REP": 19428,
+      "NPA": 4939,
+      "TOTAL": 35415
+    }
+  },
+  "42039": {
+    "trumpVotes": 28561,
+    "trumpPct": 0.6782,
+    "bidenVotes": 12924,
+    "bidenPct": 0.3069,
+    "total": 42114,
+    "registration2024": {
+      "DEM": 13751,
+      "REP": 30145,
+      "NPA": 5833,
+      "TOTAL": 49729
+    },
+    "registration2020": {
+      "DEM": 14208,
+      "REP": 28575,
+      "NPA": 5491,
+      "TOTAL": 48274
+    }
+  },
+  "42041": {
+    "trumpVotes": 77212,
+    "trumpPct": 0.543,
+    "bidenVotes": 62245,
+    "bidenPct": 0.4378,
+    "total": 142187,
+    "registration2024": {
+      "DEM": 56830,
+      "REP": 84156,
+      "NPA": 28043,
+      "TOTAL": 169029
+    },
+    "registration2020": {
+      "DEM": 55077,
+      "REP": 82236,
+      "NPA": 25896,
+      "TOTAL": 163209
+    }
+  },
+  "42043": {
+    "trumpVotes": 66408,
+    "trumpPct": 0.449,
+    "bidenVotes": 78983,
+    "bidenPct": 0.534,
+    "total": 147901,
+    "registration2024": {
+      "DEM": 78251,
+      "REP": 72634,
+      "NPA": 31036,
+      "TOTAL": 181921
+    },
+    "registration2020": {
+      "DEM": 77445,
+      "REP": 70157,
+      "NPA": 27345,
+      "TOTAL": 174947
+    }
+  },
+  "42045": {
+    "trumpVotes": 118639,
+    "trumpPct": 0.3602,
+    "bidenVotes": 206709,
+    "bidenPct": 0.6275,
+    "total": 329404,
+    "registration2024": {
+      "DEM": 187372,
+      "REP": 139240,
+      "NPA": 55562,
+      "TOTAL": 382174
+    },
+    "registration2020": {
+      "DEM": 184523,
+      "REP": 136888,
+      "NPA": 50209,
+      "TOTAL": 371620
+    }
+  },
+  "42047": {
+    "trumpVotes": 12140,
+    "trumpPct": 0.7164,
+    "bidenVotes": 4522,
+    "bidenPct": 0.2668,
+    "total": 16946,
+    "registration2024": {
+      "DEM": 5903,
+      "REP": 11587,
+      "NPA": 2256,
+      "TOTAL": 19746
+    },
+    "registration2020": {
+      "DEM": 5911,
+      "REP": 10710,
+      "NPA": 2020,
+      "TOTAL": 18641
+    }
+  },
+  "42049": {
+    "trumpVotes": 66869,
+    "trumpPct": 0.4863,
+    "bidenVotes": 68286,
+    "bidenPct": 0.4966,
+    "total": 137494,
+    "registration2024": {
+      "DEM": 73196,
+      "REP": 66107,
+      "NPA": 23492,
+      "TOTAL": 162795
+    },
+    "registration2020": {
+      "DEM": 75240,
+      "REP": 64595,
+      "NPA": 22164,
+      "TOTAL": 161999
+    }
+  },
+  "42051": {
+    "trumpVotes": 41251,
+    "trumpPct": 0.6624,
+    "bidenVotes": 20469,
+    "bidenPct": 0.3287,
+    "total": 62279,
+    "registration2024": {
+      "DEM": 29466,
+      "REP": 38244,
+      "NPA": 7509,
+      "TOTAL": 75219
+    },
+    "registration2020": {
+      "DEM": 30711,
+      "REP": 35531,
+      "NPA": 6983,
+      "TOTAL": 73225
+    }
+  },
+  "42053": {
+    "trumpVotes": 1882,
+    "trumpPct": 0.7091,
+    "bidenVotes": 728,
+    "bidenPct": 0.2743,
+    "total": 2654,
+    "registration2024": {
+      "DEM": 722,
+      "REP": 1851,
+      "NPA": 309,
+      "TOTAL": 2882
+    },
+    "registration2020": {
+      "DEM": 786,
+      "REP": 1820,
+      "NPA": 299,
+      "TOTAL": 2905
+    }
+  },
+  "42055": {
+    "trumpVotes": 57245,
+    "trumpPct": 0.7065,
+    "bidenVotes": 22422,
+    "bidenPct": 0.2767,
+    "total": 81025,
+    "registration2024": {
+      "DEM": 21891,
+      "REP": 61341,
+      "NPA": 14237,
+      "TOTAL": 97469
+    },
+    "registration2020": {
+      "DEM": 20548,
+      "REP": 56089,
+      "NPA": 12053,
+      "TOTAL": 88690
+    }
+  },
+  "42057": {
+    "trumpVotes": 6824,
+    "trumpPct": 0.8541,
+    "bidenVotes": 1085,
+    "bidenPct": 0.1358,
+    "total": 7990,
+    "registration2024": {
+      "DEM": 1375,
+      "REP": 6822,
+      "NPA": 849,
+      "TOTAL": 9046
+    },
+    "registration2020": {
+      "DEM": 1390,
+      "REP": 6331,
+      "NPA": 788,
+      "TOTAL": 8509
+    }
+  },
+  "42059": {
+    "trumpVotes": 12579,
+    "trumpPct": 0.7108,
+    "bidenVotes": 4911,
+    "bidenPct": 0.2775,
+    "total": 17697,
+    "registration2024": {
+      "DEM": 7521,
+      "REP": 11045,
+      "NPA": 1916,
+      "TOTAL": 20482
+    },
+    "registration2020": {
+      "DEM": 7802,
+      "REP": 10377,
+      "NPA": 1799,
+      "TOTAL": 19978
+    }
+  },
+  "42061": {
+    "trumpVotes": 17061,
+    "trumpPct": 0.7469,
+    "bidenVotes": 5445,
+    "bidenPct": 0.2384,
+    "total": 22843,
+    "registration2024": {
+      "DEM": 5688,
+      "REP": 18079,
+      "NPA": 2569,
+      "TOTAL": 26336
+    },
+    "registration2020": {
+      "DEM": 5786,
+      "REP": 16954,
+      "NPA": 2433,
+      "TOTAL": 25173
+    }
+  },
+  "42063": {
+    "trumpVotes": 28089,
+    "trumpPct": 0.6803,
+    "bidenVotes": 12634,
+    "bidenPct": 0.306,
+    "total": 41289,
+    "registration2024": {
+      "DEM": 14057,
+      "REP": 27611,
+      "NPA": 5754,
+      "TOTAL": 47422
+    },
+    "registration2020": {
+      "DEM": 13746,
+      "REP": 25325,
+      "NPA": 5312,
+      "TOTAL": 44383
+    }
+  },
+  "42065": {
+    "trumpVotes": 17964,
+    "trumpPct": 0.7854,
+    "bidenVotes": 4529,
+    "bidenPct": 0.198,
+    "total": 22872,
+    "registration2024": {
+      "DEM": 5363,
+      "REP": 18715,
+      "NPA": 2876,
+      "TOTAL": 26954
+    },
+    "registration2020": {
+      "DEM": 5355,
+      "REP": 17338,
+      "NPA": 2578,
+      "TOTAL": 25271
+    }
+  },
+  "42067": {
+    "trumpVotes": 9649,
+    "trumpPct": 0.7993,
+    "bidenVotes": 2253,
+    "bidenPct": 0.1866,
+    "total": 12072,
+    "registration2024": {
+      "DEM": 2514,
+      "REP": 9688,
+      "NPA": 1326,
+      "TOTAL": 13528
+    },
+    "registration2020": {
+      "DEM": 2583,
+      "REP": 9079,
+      "NPA": 1221,
+      "TOTAL": 12883
+    }
+  },
+  "42069": {
+    "trumpVotes": 52334,
+    "trumpPct": 0.4523,
+    "bidenVotes": 61991,
+    "bidenPct": 0.5358,
+    "total": 115695,
+    "registration2024": {
+      "DEM": 73834,
+      "REP": 48529,
+      "NPA": 16983,
+      "TOTAL": 139346
+    },
+    "registration2020": {
+      "DEM": 72529,
+      "REP": 45161,
+      "NPA": 14777,
+      "TOTAL": 132467
+    }
+  },
+  "42071": {
+    "trumpVotes": 160209,
+    "trumpPct": 0.5694,
+    "bidenVotes": 115847,
+    "bidenPct": 0.4117,
+    "total": 281375,
+    "registration2024": {
+      "DEM": 103914,
+      "REP": 174733,
+      "NPA": 56145,
+      "TOTAL": 334792
+    },
+    "registration2020": {
+      "DEM": 101079,
+      "REP": 165589,
+      "NPA": 50805,
+      "TOTAL": 317473
+    }
+  },
+  "42073": {
+    "trumpVotes": 29597,
+    "trumpPct": 0.6408,
+    "bidenVotes": 15978,
+    "bidenPct": 0.3459,
+    "total": 46187,
+    "registration2024": {
+      "DEM": 19312,
+      "REP": 28308,
+      "NPA": 6557,
+      "TOTAL": 54177
+    },
+    "registration2020": {
+      "DEM": 19305,
+      "REP": 25677,
+      "NPA": 5853,
+      "TOTAL": 50835
+    }
+  },
+  "42075": {
+    "trumpVotes": 46731,
+    "trumpPct": 0.6503,
+    "bidenVotes": 23932,
+    "bidenPct": 0.333,
+    "total": 71858,
+    "registration2024": {
+      "DEM": 23835,
+      "REP": 50338,
+      "NPA": 13555,
+      "TOTAL": 87728
+    },
+    "registration2020": {
+      "DEM": 24032,
+      "REP": 47797,
+      "NPA": 12596,
+      "TOTAL": 84425
+    }
+  },
+  "42077": {
+    "trumpVotes": 84418,
+    "trumpPct": 0.4547,
+    "bidenVotes": 98498,
+    "bidenPct": 0.5305,
+    "total": 185655,
+    "registration2024": {
+      "DEM": 101456,
+      "REP": 84501,
+      "NPA": 44443,
+      "TOTAL": 230400
+    },
+    "registration2020": {
+      "DEM": 101892,
+      "REP": 80803,
+      "NPA": 40089,
+      "TOTAL": 222784
+    }
+  },
+  "42079": {
+    "trumpVotes": 86929,
+    "trumpPct": 0.5663,
+    "bidenVotes": 64873,
+    "bidenPct": 0.4226,
+    "total": 153499,
+    "registration2024": {
+      "DEM": 80519,
+      "REP": 84343,
+      "NPA": 25339,
+      "TOTAL": 190201
+    },
+    "registration2020": {
+      "DEM": 79279,
+      "REP": 78248,
+      "NPA": 21846,
+      "TOTAL": 179373
+    }
+  },
+  "42081": {
+    "trumpVotes": 41462,
+    "trumpPct": 0.698,
+    "bidenVotes": 16971,
+    "bidenPct": 0.2857,
+    "total": 59397,
+    "registration2024": {
+      "DEM": 17487,
+      "REP": 42313,
+      "NPA": 9082,
+      "TOTAL": 68882
+    },
+    "registration2020": {
+      "DEM": 17468,
+      "REP": 39999,
+      "NPA": 8440,
+      "TOTAL": 65907
+    }
+  },
+  "42083": {
+    "trumpVotes": 14083,
+    "trumpPct": 0.7218,
+    "bidenVotes": 5098,
+    "bidenPct": 0.2613,
+    "total": 19510,
+    "registration2024": {
+      "DEM": 5083,
+      "REP": 15208,
+      "NPA": 3219,
+      "TOTAL": 23510
+    },
+    "registration2020": {
+      "DEM": 5114,
+      "REP": 14232,
+      "NPA": 2998,
+      "TOTAL": 22344
+    }
+  },
+  "42085": {
+    "trumpVotes": 36143,
+    "trumpPct": 0.6219,
+    "bidenVotes": 21067,
+    "bidenPct": 0.3625,
+    "total": 58117,
+    "registration2024": {
+      "DEM": 22669,
+      "REP": 36196,
+      "NPA": 9086,
+      "TOTAL": 67951
+    },
+    "registration2020": {
+      "DEM": 23281,
+      "REP": 34352,
+      "NPA": 8567,
+      "TOTAL": 66200
+    }
+  },
+  "42087": {
+    "trumpVotes": 16670,
+    "trumpPct": 0.7737,
+    "bidenVotes": 4603,
+    "bidenPct": 0.2136,
+    "total": 21547,
+    "registration2024": {
+      "DEM": 5155,
+      "REP": 17674,
+      "NPA": 2728,
+      "TOTAL": 25557
+    },
+    "registration2020": {
+      "DEM": 5061,
+      "REP": 16464,
+      "NPA": 2384,
+      "TOTAL": 23909
+    }
+  },
+  "42089": {
+    "trumpVotes": 38726,
+    "trumpPct": 0.4608,
+    "bidenVotes": 44060,
+    "bidenPct": 0.5243,
+    "total": 84034,
+    "registration2024": {
+      "DEM": 44708,
+      "REP": 39539,
+      "NPA": 21382,
+      "TOTAL": 105629
+    },
+    "registration2020": {
+      "DEM": 44019,
+      "REP": 36587,
+      "NPA": 18897,
+      "TOTAL": 99503
+    }
+  },
+  "42091": {
+    "trumpVotes": 185460,
+    "trumpPct": 0.3623,
+    "bidenVotes": 319511,
+    "bidenPct": 0.6241,
+    "total": 511920,
+    "registration2024": {
+      "DEM": 289532,
+      "REP": 201228,
+      "NPA": 95904,
+      "TOTAL": 586664
+    },
+    "registration2020": {
+      "DEM": 282399,
+      "REP": 195170,
+      "NPA": 88440,
+      "TOTAL": 566009
+    }
+  },
+  "42093": {
+    "trumpVotes": 5844,
+    "trumpPct": 0.5953,
+    "bidenVotes": 3771,
+    "bidenPct": 0.3841,
+    "total": 9817,
+    "registration2024": {
+      "DEM": 3622,
+      "REP": 6252,
+      "NPA": 1739,
+      "TOTAL": 11613
+    },
+    "registration2020": {
+      "DEM": 3437,
+      "REP": 5822,
+      "NPA": 1493,
+      "TOTAL": 10752
+    }
+  },
+  "42095": {
+    "trumpVotes": 83854,
+    "trumpPct": 0.4892,
+    "bidenVotes": 85087,
+    "bidenPct": 0.4964,
+    "total": 171399,
+    "registration2024": {
+      "DEM": 89615,
+      "REP": 81097,
+      "NPA": 41629,
+      "TOTAL": 212341
+    },
+    "registration2020": {
+      "DEM": 85954,
+      "REP": 75527,
+      "NPA": 36467,
+      "TOTAL": 197948
+    }
+  },
+  "42097": {
+    "trumpVotes": 28975,
+    "trumpPct": 0.6828,
+    "bidenVotes": 12703,
+    "bidenPct": 0.2994,
+    "total": 42435,
+    "registration2024": {
+      "DEM": 14616,
+      "REP": 30072,
+      "NPA": 6841,
+      "TOTAL": 51529
+    },
+    "registration2020": {
+      "DEM": 15018,
+      "REP": 28509,
+      "NPA": 6529,
+      "TOTAL": 50056
+    }
+  },
+  "42099": {
+    "trumpVotes": 18293,
+    "trumpPct": 0.7398,
+    "bidenVotes": 5950,
+    "bidenPct": 0.2406,
+    "total": 24728,
+    "registration2024": {
+      "DEM": 5826,
+      "REP": 20143,
+      "NPA": 3671,
+      "TOTAL": 29640
+    },
+    "registration2020": {
+      "DEM": 5664,
+      "REP": 19056,
+      "NPA": 3383,
+      "TOTAL": 28103
+    }
+  },
+  "42101": {
+    "trumpVotes": 132870,
+    "trumpPct": 0.1786,
+    "bidenVotes": 604175,
+    "bidenPct": 0.8121,
+    "total": 743966,
+    "registration2024": {
+      "DEM": 697375,
+      "REP": 116897,
+      "NPA": 140789,
+      "TOTAL": 955061
+    },
+    "registration2020": {
+      "DEM": 693833,
+      "REP": 109770,
+      "NPA": 119047,
+      "TOTAL": 922650
+    }
+  },
+  "42103": {
+    "trumpVotes": 19241,
+    "trumpPct": 0.5899,
+    "bidenVotes": 13052,
+    "bidenPct": 0.4002,
+    "total": 32616,
+    "registration2024": {
+      "DEM": 12133,
+      "REP": 20423,
+      "NPA": 8637,
+      "TOTAL": 41193
+    },
+    "registration2020": {
+      "DEM": 11721,
+      "REP": 18155,
+      "NPA": 7339,
+      "TOTAL": 37215
+    }
+  },
+  "42105": {
+    "trumpVotes": 7239,
+    "trumpPct": 0.7968,
+    "bidenVotes": 1726,
+    "bidenPct": 0.19,
+    "total": 9085,
+    "registration2024": {
+      "DEM": 1715,
+      "REP": 7712,
+      "NPA": 1098,
+      "TOTAL": 10525
+    },
+    "registration2020": {
+      "DEM": 1740,
+      "REP": 7303,
+      "NPA": 1041,
+      "TOTAL": 10084
+    }
+  },
+  "42107": {
+    "trumpVotes": 48871,
+    "trumpPct": 0.6907,
+    "bidenVotes": 20727,
+    "bidenPct": 0.2929,
+    "total": 70755,
+    "registration2024": {
+      "DEM": 24982,
+      "REP": 50192,
+      "NPA": 11730,
+      "TOTAL": 86904
+    },
+    "registration2020": {
+      "DEM": 25044,
+      "REP": 47353,
+      "NPA": 10622,
+      "TOTAL": 83019
+    }
+  },
+  "42109": {
+    "trumpVotes": 13983,
+    "trumpPct": 0.729,
+    "bidenVotes": 4910,
+    "bidenPct": 0.256,
+    "total": 19181,
+    "registration2024": {
+      "DEM": 4566,
+      "REP": 15382,
+      "NPA": 2634,
+      "TOTAL": 22582
+    },
+    "registration2020": {
+      "DEM": 4359,
+      "REP": 14360,
+      "NPA": 2423,
+      "TOTAL": 21142
+    }
+  },
+  "42111": {
+    "trumpVotes": 31466,
+    "trumpPct": 0.7745,
+    "bidenVotes": 8654,
+    "bidenPct": 0.213,
+    "total": 40626,
+    "registration2024": {
+      "DEM": 10614,
+      "REP": 31543,
+      "NPA": 4596,
+      "TOTAL": 46753
+    },
+    "registration2020": {
+      "DEM": 10790,
+      "REP": 29614,
+      "NPA": 4267,
+      "TOTAL": 44671
+    }
+  },
+  "42113": {
+    "trumpVotes": 2619,
+    "trumpPct": 0.7279,
+    "bidenVotes": 921,
+    "bidenPct": 0.256,
+    "total": 3598,
+    "registration2024": {
+      "DEM": 1064,
+      "REP": 2682,
+      "NPA": 484,
+      "TOTAL": 4230
+    },
+    "registration2020": {
+      "DEM": 1092,
+      "REP": 2539,
+      "NPA": 447,
+      "TOTAL": 4078
+    }
+  },
+  "42115": {
+    "trumpVotes": 15207,
+    "trumpPct": 0.6972,
+    "bidenVotes": 6236,
+    "bidenPct": 0.2859,
+    "total": 21813,
+    "registration2024": {
+      "DEM": 5933,
+      "REP": 16384,
+      "NPA": 3478,
+      "TOTAL": 25795
+    },
+    "registration2020": {
+      "DEM": 5877,
+      "REP": 15152,
+      "NPA": 3021,
+      "TOTAL": 24050
+    }
+  },
+  "42117": {
+    "trumpVotes": 15742,
+    "trumpPct": 0.7451,
+    "bidenVotes": 4955,
+    "bidenPct": 0.2345,
+    "total": 21126,
+    "registration2024": {
+      "DEM": 4736,
+      "REP": 17096,
+      "NPA": 3188,
+      "TOTAL": 25020
+    },
+    "registration2020": {
+      "DEM": 4749,
+      "REP": 16020,
+      "NPA": 2826,
+      "TOTAL": 23595
+    }
+  },
+  "42119": {
+    "trumpVotes": 12356,
+    "trumpPct": 0.6119,
+    "bidenVotes": 7475,
+    "bidenPct": 0.3702,
+    "total": 20192,
+    "registration2024": {
+      "DEM": 6981,
+      "REP": 13568,
+      "NPA": 3449,
+      "TOTAL": 23998
+    },
+    "registration2020": {
+      "DEM": 6539,
+      "REP": 12640,
+      "NPA": 3452,
+      "TOTAL": 22631
+    }
+  },
+  "42121": {
+    "trumpVotes": 18569,
+    "trumpPct": 0.6981,
+    "bidenVotes": 7585,
+    "bidenPct": 0.2851,
+    "total": 26601,
+    "registration2024": {
+      "DEM": 7892,
+      "REP": 19209,
+      "NPA": 4021,
+      "TOTAL": 31122
+    },
+    "registration2020": {
+      "DEM": 7853,
+      "REP": 17978,
+      "NPA": 3610,
+      "TOTAL": 29441
+    }
+  },
+  "42123": {
+    "trumpVotes": 14237,
+    "trumpPct": 0.6892,
+    "bidenVotes": 6066,
+    "bidenPct": 0.2937,
+    "total": 20657,
+    "registration2024": {
+      "DEM": 6180,
+      "REP": 14317,
+      "NPA": 3326,
+      "TOTAL": 23823
+    },
+    "registration2020": {
+      "DEM": 6383,
+      "REP": 13776,
+      "NPA": 3260,
+      "TOTAL": 23419
+    }
+  },
+  "42125": {
+    "trumpVotes": 72080,
+    "trumpPct": 0.607,
+    "bidenVotes": 45088,
+    "bidenPct": 0.3797,
+    "total": 118756,
+    "registration2024": {
+      "DEM": 52382,
+      "REP": 68843,
+      "NPA": 17264,
+      "TOTAL": 138489
+    },
+    "registration2020": {
+      "DEM": 51751,
+      "REP": 63790,
+      "NPA": 15459,
+      "TOTAL": 131000
+    }
+  },
+  "42127": {
+    "trumpVotes": 18637,
+    "trumpPct": 0.6621,
+    "bidenVotes": 9191,
+    "bidenPct": 0.3265,
+    "total": 28147,
+    "registration2024": {
+      "DEM": 8401,
+      "REP": 20460,
+      "NPA": 5376,
+      "TOTAL": 34237
+    },
+    "registration2020": {
+      "DEM": 8248,
+      "REP": 18739,
+      "NPA": 4777,
+      "TOTAL": 31764
+    }
+  },
+  "42129": {
+    "trumpVotes": 130299,
+    "trumpPct": 0.6346,
+    "bidenVotes": 72192,
+    "bidenPct": 0.3516,
+    "total": 205330,
+    "registration2024": {
+      "DEM": 85591,
+      "REP": 123660,
+      "NPA": 29007,
+      "TOTAL": 238258
+    },
+    "registration2020": {
+      "DEM": 85825,
+      "REP": 118254,
+      "NPA": 27205,
+      "TOTAL": 231284
+    }
+  },
+  "42131": {
+    "trumpVotes": 9936,
+    "trumpPct": 0.6668,
+    "bidenVotes": 4704,
+    "bidenPct": 0.3157,
+    "total": 14900,
+    "registration2024": {
+      "DEM": 4513,
+      "REP": 10755,
+      "NPA": 2056,
+      "TOTAL": 17324
+    },
+    "registration2020": {
+      "DEM": 4470,
+      "REP": 10117,
+      "NPA": 1852,
+      "TOTAL": 16439
+    }
+  },
+  "42133": {
+    "trumpVotes": 146733,
+    "trumpPct": 0.6136,
+    "bidenVotes": 88114,
+    "bidenPct": 0.3685,
+    "total": 239146,
+    "registration2024": {
+      "DEM": 87700,
+      "REP": 157291,
+      "NPA": 50172,
+      "TOTAL": 295163
+    },
+    "registration2020": {
+      "DEM": 87790,
+      "REP": 151320,
+      "NPA": 45434,
+      "TOTAL": 284544
+    }
+  },
+  "TOTAL": {
+    "trumpVotes": 3379055,
+    "trumpPct": 0.4869,
+    "bidenVotes": 3461221,
+    "bidenPct": 0.4987,
+    "total": 6940449,
+    "registration2024": {
+      "DEM": 3591174,
+      "REP": 3441641,
+      "NPA": 1263036,
+      "TOTAL": 8295851
+    },
+    "registration2020": {
+      "DEM": 3551983,
+      "REP": 3270057,
+      "NPA": 1138648,
+      "TOTAL": 7960688
+    }
+  }
+}
