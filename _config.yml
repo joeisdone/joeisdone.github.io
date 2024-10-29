@@ -1,1 +1,14 @@
-theme: jekyll-theme-slate
+title: Joe is done.
+baseurl: ""
+url: "https://joeisdone.github.io/"
+destination: docs
+
+include:
+  - florida
+
+exclude:
+  - node_modules
+  - package.json
+  - package-lock.json
+  - postcss.config.js
+  - tailwind.config.js

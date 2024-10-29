@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  body {
+    @apply bg-gray-100 text-neutral-600 font-['Open_Sans',_Helvetica,_sans-serif] font-light m-4 py-0.5 mb-4;
+  }
+
+  table {
+    @apply border-collapse mb-5;
+  }
+
+  table, th, td {
+    @apply border border-black;
+  }
+
+  td {
+    @apply p-5;
+  }
+
+  button {
+    @apply border border-black bg-gray-200 p-1 text-sm;
+  }
+
+  a {
+    @apply text-blue-500 underline;
+  }
+
+  h1 {
+    @apply text-2xl font-bold;
+  }
+}
