@@ -237,14 +237,13 @@ title: Pennsylvania early voting statistics
 		// omg, gap of gaps... 
 		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2020Raw);
 
-		const npaSplitStr = "<div style=\"border: 1px solid #AAAAAA; margin:3px; padding:2px; font-size: smaller;\">" +
-			"<b>Split estimate</b><br/>" +
-			"<i>Estimated by proportional assignment of NPAs by county R/D share</i><br />" +
+		const npaSplitStr = "<div class='bg-gray-100 border border-gray-200 mt-2 p-2 rounded text-sm max-w-sm'>" +
+			"<strong>Split estimate</strong><br/>" +
 			"Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
 			"Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" +
 			"Difference: (D-R) <b>" + Math.floor(numNpaSplitD - numNpaSplitR) + " (<span style=\"background-color:#faffc4;\">" + npaSplitGapPct + "</span>) </b><br/>" +
 			"2020 overall split: " + numNpaSplitDPct2020 + "D - " + numNpaSplitRPct2020 + "R, gap " + npaSplitGapPct2020 +
-			"</div>";
+			"<div class='border-t border-gray-200 pt-2 mt-2 text-xs text-opacity-75'>Estimated by proportional assignment of NPAs by county R/D share</div></div>";
 
 
 
@@ -312,10 +311,6 @@ title: Pennsylvania early voting statistics
 		}
 		return lookup;
 	}
-
-
-
-
 
 	// Handle split ratio separately.
 	function doSplit(isAdvantage) {
@@ -497,23 +492,7 @@ title: Pennsylvania early voting statistics
 
 {% include total_votes.html %}
 
-<table>
-	<tr>
-		<td><b><span id="countMethod"></span></b></td>
-		<td><b>Democrat</b></td>
-		<td><b>Republican</b></td>
-		<td><b>Unaffiliated</b></td>
-	</tr>
-	<tr>
-		<td><span id="countTOTAL"></span></td>
-		<td><span id="countDEM"></span></td>
-		<td><span id="countREP"></span></td>
-		<td><span id="countNPA"></span></td>
-	</tr>
-</table>
-
-️
-</small>
+{% include votes_breakdown.html %}
 
 <div class="flex flex-col md:flex-row md:gap-4">
 	<aside class="order-2 md:order-1">

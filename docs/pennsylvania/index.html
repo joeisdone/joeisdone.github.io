@@ -279,14 +279,13 @@ const greenGradient = ["#007B10", "#008C12",
 		// omg, gap of gaps... 
 		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2020Raw);
 
-		const npaSplitStr = "<div style=\"border: 1px solid #AAAAAA; margin:3px; padding:2px; font-size: smaller;\">" +
-			"<b>Split estimate</b><br/>" +
-			"<i>Estimated by proportional assignment of NPAs by county R/D share</i><br />" +
+		const npaSplitStr = "<div class='bg-gray-100 border border-gray-200 mt-2 p-2 rounded text-sm max-w-sm'>" +
+			"<strong>Split estimate</strong><br/>" +
 			"Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
 			"Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" +
 			"Difference: (D-R) <b>" + Math.floor(numNpaSplitD - numNpaSplitR) + " (<span style=\"background-color:#faffc4;\">" + npaSplitGapPct + "</span>) </b><br/>" +
 			"2020 overall split: " + numNpaSplitDPct2020 + "D - " + numNpaSplitRPct2020 + "R, gap " + npaSplitGapPct2020 +
-			"</div>";
+			"<div class='border-t border-gray-200 pt-2 mt-2 text-xs text-opacity-75'>Estimated by proportional assignment of NPAs by county R/D share</div></div>";
 
 
 
@@ -354,10 +353,6 @@ const greenGradient = ["#007B10", "#008C12",
 		}
 		return lookup;
 	}
-
-
-
-
 
 	// Handle split ratio separately.
 	function doSplit(isAdvantage) {
@@ -567,23 +562,21 @@ const greenGradient = ["#007B10", "#008C12",
   </div>
 </div>
 
-<table>
-	<tr>
-		<td><b><span id="countMethod"></span></b></td>
-		<td><b>Democrat</b></td>
-		<td><b>Republican</b></td>
-		<td><b>Unaffiliated</b></td>
-	</tr>
-	<tr>
-		<td><span id="countTOTAL"></span></td>
-		<td><span id="countDEM"></span></td>
-		<td><span id="countREP"></span></td>
-		<td><span id="countNPA"></span></td>
-	</tr>
-</table>
-
-️
-</small>
+<div class="bg-white p-4 border border-gray-200 rounded mb-8 grid md:grid-cols-4">
+  <h3 class="border-b border-gray-200 pb-2 mb-4 md:col-span-4">Breakdown</h3>
+  <div class="pr-4 lg:pr-8">
+    <h3 class="text-blue-500">Democrat</h3>
+    <span id="countDEM"></span>
+  </div>
+  <div class="border-y md:border-y-0 md:border-x border-gray-200 py-4 my-4 md:py-0 md:my-0 md:px-4 lg:px-8">
+    <h3 class="text-red-500">Republican</h3>
+    <span id="countREP"></span>
+  </div>
+  <div class="md:col-span-2 md:pl-4 lg:pl-8">
+    <h3>Unaffiliated</h3>
+    <span id="countNPA"></span>
+  </div>
+</div>
 
 <div class="flex flex-col md:flex-row md:gap-4">
 	<aside class="order-2 md:order-1">
