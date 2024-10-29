@@ -624,6 +624,10 @@ select {
 .order-2 {
   order: 2;
 }
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 .-mt-1 {
   margin-top: -0.25rem;
 }
@@ -679,6 +683,12 @@ select {
 .size-6 {
   width: 1.5rem;
   height: 1.5rem;
+}
+.max-w-7xl {
+  max-width: 80rem;
+}
+.flex-1 {
+  flex: 1 1 0%;
 }
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
