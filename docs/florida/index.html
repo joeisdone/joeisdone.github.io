@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="stylesheet" href="/assets/css/map-style.css">
 <script>
   !function (t, e) { var o, n, p, r; e.__SV || (window.posthog = e, e._i = [], e.init = function (i, s, a) { function g(t, e) { var o = e.split("."); 2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } } (p = t.createElement("script")).type = "text/javascript", p.crossOrigin = "anonymous", p.async = !0, p.src = s.api_host.replace(".i.posthog.com", "-assets.i.posthog.com") + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r); var u = e; for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function (t) { var e = "posthog"; return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e }, u.people.toString = function () { return u.toString(1) + ".people (stub)" }, o = "init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "), n = 0; n < o.length; n++)g(u, o[n]); e._i.push([i, s, a]) }, e.__SV = 1) }(document, window.posthog || []);
   posthog.init('phc_N9vMS3PvDUAEToLCWTi0eSS63fyVAxExArOHIz3kqGh', {
@@ -577,11 +578,13 @@
 			}
 
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
-			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
+			var gapDesc = gap <= 0.0 ? " Advantage: Trump" : "Advantage: Harris";
+			var pctDescColor = gap <= 0.0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+
 			// raw votes 
 			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
 			gapDesc += " (";
-			gapDesc += gap <= 0.0 ? ("+" + gapRaw) : ("" + gapRaw);
+			gapDesc += gap <= 0.0 ? ("+" + formatNumber(gapRaw)) : ("" + formatNumber(gapRaw));
 			gapDesc += " votes)";
 
 
@@ -590,16 +593,14 @@
 			usfljsconfig[myid].downColor = splitColor;
 			$('#' + myid).attr({ fill: splitColor });
 
-			usfljsconfig[myid].hover = k + "<br /><small>" +
-				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" +
-				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" +
-				"2024 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" +
-				"2016 comparison: Clinton: " + pctToString(demPct2016) + " Trump: " + pctToString(repPct2016) + "<br />" +
-				"2016 Votes: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" +
-				"2016 Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" +
-				"2024-2016 Vote Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" +
-
-				"</small>";
+			usfljsconfig[myid].hover = "<h4 class='mb-1'>" + k + "</h4>" + "<div class='col-span-2 text-sm border rounded px-2 py-1 mb-2 " + pctDescColor + "'>" + gapDesc + "</div><div class='text-sm grid grid-cols-2 gap-2'>" +
+				"<div>" + methodStr + ", Democrat:</div> <strong>" + v + " (" + pctToString(demPct) + ")</strong>" +
+				"<div>" + methodStr + ", Republican:</div> <strong>" + repNums[k] + " (" + pctToString(repPct) + ")</strong>" +
+				"<div>2024 Difference (D-R):</div> <div><strong>" + pctToString(demPct - repPct) + "</strong> " + partyDiffDesc + "</div>" +
+				"<div>2016 comparison:</div> Clinton: " + pctToString(demPct2016) + "<br />Trump: " + pctToString(repPct2016) + "" +
+				"<div>2016 Votes:</div> Dem: " + pctToString(demEarlyPct) + "<br />Rep: " + pctToString(repEarlyPct) + "<br />No party aff: " + pctToString(npaEarlyPct) + "" +
+				"<div>2016 Difference (D-R):</div> <strong>" + pctToString(demEarlyPct - repEarlyPct) + "</strong>" +
+				"2024-2016 Vote Gap: <strong>" + pctToString(Math.abs(gap)) + "</strong></div>";
 		});
 
 	}
@@ -850,10 +851,10 @@
 			</div>
 		</div>
 
-		<div class="bg-gray-200 p-2 rounded mb-4 text-sm">
+		<div class="bg-gray-200 p-2 rounded mb-4 text-sm border border-gray-300">
 			<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
-  alt="info" class="lucide-icon -mt-1 size-4" />
-			Recommended: Shade map by <strong>advantage map</strong> to compare to 2016
+  alt="info" class="lucide-icon -mt-1 opacity-50 size-4" />
+			Try <strong>advantage map</strong> to compare to 2016
 		</div>
 
 		<h3 class="mt-6">Compare 2024 current turnout vs. 2016 early votes</h3>
