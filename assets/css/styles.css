@@ -832,6 +832,9 @@ select {
 .pt-2 {
   padding-top: 0.5rem;
 }
+.pr-4 {
+  padding-right: 1rem;
+}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
@@ -933,8 +936,17 @@ select {
     padding-bottom: 0px;
   }
 
+  .md\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .md\:pl-8 {
     padding-left: 2rem;
+  }
+
+  .md\:pl-4 {
+    padding-left: 1rem;
   }
 }
 
@@ -942,6 +954,19 @@ select {
 
   .lg\:max-w-sm {
     max-width: 24rem;
+  }
+
+  .lg\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .lg\:pl-8 {
+    padding-left: 2rem;
+  }
+
+  .lg\:pr-8 {
+    padding-right: 2rem;
   }
 }
 
