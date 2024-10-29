@@ -21,13 +21,51 @@
 
   button {
     @apply border border-black bg-gray-200 p-1 text-sm;
+
+    &.active {
+      @apply font-bold;
+    }
   }
 
   a {
     @apply text-blue-500 underline;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold mb-2;
+  }
+
   h1 {
-    @apply text-2xl font-bold;
+    @apply text-2xl;
+  }
+
+  .radio-group {
+    @apply flex flex-col;
+
+    label {
+      @apply flex items-center gap-2 cursor-pointer;
+
+      &:hover {
+        @apply bg-gray-100;
+      }
+    }
+
+    input[type="radio"] {
+      @apply m-0;
+
+      &:checked + span {
+        @apply font-bold;
+      }
+    }
+  }
+  .lucide-icon {
+    speak: never;
+    display: inline-block;
+    text-decoration: inherit;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
   }
 }

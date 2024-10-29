@@ -10,6 +10,11 @@ module.exports = {
   ],
   safelist: [
     'md:gap-4',
+    'size-2',
+    'size-3',
+    'size-4',
+    'size-5',
+    'size-6',
     // You can also use patterns
     // 'bg-[0-9]+',
   ],
