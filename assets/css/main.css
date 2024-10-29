@@ -68,4 +68,8 @@
     line-height: 1;
     -webkit-font-smoothing: antialiased;
   }
+
+  select {
+    @apply border border-gray-300 p-1 rounded-sm;
+  }
 }

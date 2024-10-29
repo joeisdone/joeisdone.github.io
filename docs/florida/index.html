@@ -743,8 +743,6 @@
 	<i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a
 			href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
 			feed directly</a> if you have caching issues.</i><br />
-	<span style="background-color:#faffc4;"><b>Defaults to All Votes view.</b></span> Scroll down to toggle other
-	views.<br />
 	<div style="border: 1px solid black; padding: 5px; margin: 5px 0px; font-size: x-large;">
 		<b>6-Oct-2024 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating for
 			2024.</span><br />
@@ -755,8 +753,13 @@
 
 <br />
 
-When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to 2016 votes - <i>all votes</i> not just
-	Election Day.</b>.<br />
+<div class="bg-gray-200 p-2 rounded mb-4 text-sm">
+	<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
+  alt="info" class="lucide-icon -mt-1 size-4" />
+	When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to 2016 votes - <i>all votes</i> not
+		just Election Day</b>.
+</div>
+
 
 <table>
 	<tr>
@@ -785,7 +788,8 @@ When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to
 
 				<label>
   <input type="radio" name="voteType" value="total-split"
-    onclick="methodType='total';turnoutType='split';doUpdate();" checked>
+    onclick="methodType='total';turnoutType='split';doUpdate();"
+    checked>
   <span>All votes</span>
 </label>
 
@@ -795,19 +799,22 @@ When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to
 
 				<label>
   <input type="radio" name="voteType" value="early-split"
-    onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();" >
+    onclick="methodType='EarlyVoting';turnoutType='split';doUpdate();"
+    >
   <span>Early votes: In-person only</span>
 </label>
 
 				<label>
   <input type="radio" name="voteType" value="mail-split"
-    onclick="methodType='Mail';turnoutType='split';doUpdate();" >
+    onclick="methodType='Mail';turnoutType='split';doUpdate();"
+    >
   <span>Early votes: Mail only</span>
 </label>
 
 				<label>
   <input type="radio" name="voteType" value="total-advantage"
-    onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();" >
+    onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();"
+    >
   <span>Advantage Map</span>
 </label>
 			</div>
@@ -816,80 +823,114 @@ When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to
 		<div class="bg-gray-200 p-2 rounded mb-4 text-sm">
 			<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
   alt="info" class="lucide-icon -mt-1 size-4" />
-			Recommended: Shade map by advantage relative to 2016
+			Recommended: Shade map by <strong>advantage map</strong> to compare to 2016
 		</div>
 
-		<h3>Comparisons</h3>
+		<h3 class="mt-6">Compare 2024 current turnout vs. 2016 early votes</h3>
 
-		<button onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();setActiveButton(this);">
-			Compare 2024 Democrat
-			votes vs. 2016 Democrat EV</button><br /> - See where Democrats are turning out vs 2016.<br /><br />
-		<button onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();setActiveButton(this);">
-			Compare 2024 Republican
-			votes vs. 2016 Republican EV</button><br /> - See where Republicans are turning out vs. 2016.<br /><br />
-		<button onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();setActiveButton(this);">
-			Compare 2024
-			unaffiliated
-			votes vs. 2016 unaffiliated EV</button><br /> - See where Independents are turning out vs. 2016.<br /><br />
-		<button
-			onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();setActiveButton(this);">
-			Compare all 2024
-			votes
-			vs. 2016 votes</button><br /> - See where turnout is happening vs. 2016.<br /><br />
+		<div class="radio-group mb-2">
 
-		<button onclick="methodType='total';turnoutType='reg2024DEM';partyType='DEM';doUpdate();setActiveButton(this);">
-			Compare 2024 Democrat
-			early
-			votes vs. Democrat active registrations</button><br /> - See where Democrats are turning out vs 2016.<br /><br />
-		<button onclick="methodType='total';turnoutType='reg2024REP';partyType='REP';doUpdate();setActiveButton(this);">
-			Compare 2024 Republican
-			early
-			votes vs. Republican active registrations</button><br /> - See where Republicans are turning out vs.
-		2016.<br /><br />
-		<button onclick="methodType='total';turnoutType='reg2024NPA';partyType='NPA';doUpdate();setActiveButton(this);">
-			Compare 2024 unaffiliated
-			early
-			votes vs. unaffiliated active registrations</button><br /> - See where Independents are turning out vs.
-		2016.<br />
-		<button onclick="methodType='total';turnoutType='reg2024TOTAL';partyType='TOTAL';doUpdate();setActiveButton(this);">
-			Compare all 2024 early
-			votes vs. active voter registrations</button><br /> - See where turnout is happening vs. 2016.<br /><br /></small>
-		<br /><br />
+			<label>
+  <input type="radio" name="voteType" value="total-split"
+    onclick="methodType='total';turnoutType='early2016TOTAL';partyType='TOTAL';doUpdate();"
+    >
+  <span>All votes</span>
+</label>
 
-		<b>Advanced</b><br />
-		<small>Filter by vote type:</small> <select id="methodFilter">
-			<option value="total" selected="selected">All votes</option>
-			<!-- <option value="ElectionDay">Election Day votes only</option> -->
-			<option value="EarlyVoting">In-person early voting only</option>
-			<option value="Mail">Mail in votes only</option>
-		</select>
-		<br />
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='early2016DEM';partyType='DEM';doUpdate();"
+    >
+  <span>Democrats</span>
+</label>
 
-		<small>Denominator:</small> <select id="turnoutFilter">
-			<option value="reg2024TOTAL">Total voter registrations</option>
-			<option value="reg2024DEM">Democrat voter registrations</option>
-			<option value="reg2024REP">Republican voter registrations</option>
-			<option value="reg2024NPA">Unaffiliated voter registrations</option>
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='early2016REP';partyType='REP';doUpdate();"
+    >
+  <span>Republicans</span>
+</label>
 
-			<option value="early2016TOTAL">2016 total votes</option>
-			<option value="early2016DEM">2016 Democrat votes</option>
-			<option value="early2016REP">2016 Republican votes</option>
-			<option value="early2016NPA">2016 unaffiliated votes</option>
-			<option value="turnout2016">2016 total votes</option>
-			<option value="turnout2016Clinton">2016 Clinton votes</option>
-			<option value="turnout2016Trump">2016 Trump votes</option>
-			<option value="allEarly">All party early votes</option>
-			<option value="splitAdvantage">Advantage split (ignores party)</option>
-			<option value="split" selected="selected">R/D split (ignores party)</option>
-		</select>
-		<br />
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();"
+    >
+  <span>Unaffiliateds</span>
+</label>
+		</div>
 
-		<small>Filter by party:</small> <select id="partyFilter">
-			<option value="NPA">NPA (unaffiliated)</option>
-			<option value="REP">Republican</option>
-			<option value="DEM">Democrat</option>
-			<option value="TOTAL" selected="selected">All parties</option>
-		</select>
+		<h3 class="mt-6">Compare 2024 early votes vs. active registrations</h3>
+
+		<div class="radio-group mb-2">
+
+			<label>
+  <input type="radio" name="voteType" value="total-split"
+    onclick="methodType='total';turnoutType='reg2024TOTAL';partyType='TOTAL';doUpdate();"
+    >
+  <span>All votes</span>
+</label>
+
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='reg2024DEM';partyType='DEM';doUpdate();"
+    >
+  <span>Democrats</span>
+</label>
+
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='reg2024REP';partyType='REP';doUpdate();"
+    >
+  <span>Republicans</span>
+</label>
+
+			<label>
+  <input type="radio" name="voteType" value="early-split"
+    onclick="methodType='total';turnoutType='reg2024NPA';partyType='NPA';doUpdate();"
+    >
+  <span>Independents</span>
+</label>
+		</div>
+
+
+		<h3 class="mt-6">Advanced</h3>
+		<div class="inline-grid grid-cols-2 gap-2">
+
+			<span>Filter by vote type</span>
+			<select id="methodFilter">
+				<option value="total" selected="selected">All votes</option>
+				<!-- <option value="ElectionDay">Election Day votes only</option> -->
+				<option value="EarlyVoting">In-person early voting only</option>
+				<option value="Mail">Mail in votes only</option>
+			</select>
+
+			<span>Denominator</span>
+			<select id="turnoutFilter">
+				<option value="reg2024TOTAL">Total voter registrations</option>
+				<option value="reg2024DEM">Democrat voter registrations</option>
+				<option value="reg2024REP">Republican voter registrations</option>
+				<option value="reg2024NPA">Unaffiliated voter registrations</option>
+
+				<option value="early2016TOTAL">2016 total votes</option>
+				<option value="early2016DEM">2016 Democrat votes</option>
+				<option value="early2016REP">2016 Republican votes</option>
+				<option value="early2016NPA">2016 unaffiliated votes</option>
+				<option value="turnout2016">2016 total votes</option>
+				<option value="turnout2016Clinton">2016 Clinton votes</option>
+				<option value="turnout2016Trump">2016 Trump votes</option>
+				<option value="allEarly">All party early votes</option>
+				<option value="splitAdvantage">Advantage split (ignores party)</option>
+				<option value="split" selected="selected">R/D split (ignores party)</option>
+			</select>
+
+			<span>Filter by party</span>
+			<select id="partyFilter">
+				<option value="NPA">NPA (unaffiliated)</option>
+				<option value="REP">Republican</option>
+				<option value="DEM">Democrat</option>
+				<option value="TOTAL" selected="selected">All parties</option>
+			</select>
+
 	</aside>
 	<div>
 		<span id="usfljstip"></span>
@@ -1106,7 +1147,7 @@ When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to
 </div>
 <br />
 <div id="dataTable"></div>
-<a href="https://joeisdone.github.io/">Back to JoeIsDone</a>
+<a href="https://joeisdone.github.io/">Back to Joe is done.</a>
   </main>
 </body>
 
