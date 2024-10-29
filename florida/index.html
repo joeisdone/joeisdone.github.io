@@ -237,6 +237,7 @@ title: Florida Early Voting Statistics
 		// omg, gap of gaps... 
 		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2016Raw);
 
+
 		const npaSplitStr = "<div class='bg-gray-100 border border-gray-200 mt-2 p-2 rounded text-sm max-w-sm'>" +
 			"<strong>Split estimate</strong><br/>" + "Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
 			"Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" +
@@ -515,7 +516,7 @@ title: Florida Early Voting Statistics
 
 {% include update.html %}
 
-{% include total_votes.html %}
+{% include total_votes.html year="2016" %}
 
 {% include votes_breakdown.html %}
 
@@ -555,15 +556,12 @@ title: Florida Early Voting Statistics
 				value="total-advantage"
 				methodType="total"
 				turnoutType="splitAdvantage"
-				label="Advantage Map"
+				label="Advantage map"
 				%}
 			</div>
 		</div>
 
-		<div class="bg-gray-200 p-2 rounded mb-4 text-sm border border-gray-300">
-			{% include icon.html name="info" size="4" class="-mt-1 opacity-50" %}
-			Try <strong>advantage map</strong> to compare to 2016
-		</div>
+		{% include advantage_tip.html %}
 
 		<h3 class="mt-6">Compare 2024 current turnout vs. 2016 early votes</h3>
 
@@ -680,10 +678,10 @@ title: Florida Early Voting Statistics
 
 			<span>Filter by party</span>
 			<select id="partyFilter">
-				<option value="NPA">NPA (unaffiliated)</option>
-				<option value="REP">Republican</option>
-				<option value="DEM">Democrat</option>
 				<option value="TOTAL" selected="selected">All parties</option>
+				<option value="DEM">Democrat</option>
+				<option value="REP">Republican</option>
+				<option value="NPA">NPA (unaffiliated)</option>
 			</select>
 
 	</aside>

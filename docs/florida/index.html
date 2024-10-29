@@ -279,6 +279,7 @@ const greenGradient = ["#007B10", "#008C12",
 		// omg, gap of gaps... 
 		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2016Raw);
 
+
 		const npaSplitStr = "<div class='bg-gray-100 border border-gray-200 mt-2 p-2 rounded text-sm max-w-sm'>" +
 			"<strong>Split estimate</strong><br/>" + "Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
 			"Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" +
@@ -577,7 +578,7 @@ const greenGradient = ["#007B10", "#008C12",
       </div>
       <div id="addendum" class="mb-4"></div>
       <p class="text-xs text-gray-500">
-        Advantage is calculated against 2016 vote totals.
+        Advantage is calculated against 2016 vote totals
       </p>
     </div>
     <div>
@@ -640,16 +641,16 @@ const greenGradient = ["#007B10", "#008C12",
   <input type="radio" name="voteType" value="total-advantage"
     onclick="methodType='total';turnoutType='splitAdvantage';doUpdate();"
     >
-  <span>Advantage Map</span>
+  <span>Advantage map</span>
 </label>
 			</div>
 		</div>
 
 		<div class="bg-gray-200 p-2 rounded mb-4 text-sm border border-gray-300">
-			<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
+  <img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
   alt="info" class="lucide-icon -mt-1 opacity-50 size-4" />
-			Try <strong>advantage map</strong> to compare to 2016
-		</div>
+  Try <strong>advantage map</strong> to compare to 2016
+</div>
 
 		<h3 class="mt-6">Compare 2024 current turnout vs. 2016 early votes</h3>
 
@@ -750,10 +751,10 @@ const greenGradient = ["#007B10", "#008C12",
 
 			<span>Filter by party</span>
 			<select id="partyFilter">
-				<option value="NPA">NPA (unaffiliated)</option>
-				<option value="REP">Republican</option>
-				<option value="DEM">Democrat</option>
 				<option value="TOTAL" selected="selected">All parties</option>
+				<option value="DEM">Democrat</option>
+				<option value="REP">Republican</option>
+				<option value="NPA">NPA (unaffiliated)</option>
 			</select>
 
 	</aside>
