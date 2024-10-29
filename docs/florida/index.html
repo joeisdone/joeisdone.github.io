@@ -414,14 +414,12 @@
 		// omg, gap of gaps... 
 		const npaGapGap = pctToString(npaSplitGapPctRaw - npaSplitGapPct2016Raw);
 
-		const npaSplitStr = "<div style=\"border: 1px solid #AAAAAA; margin:3px; padding:2px; font-size: smaller;\">" +
-			"<b>Split estimate</b><br/>" +
-			"<i>Estimated by proportional assignment of NPAs by county R/D share</i><br />" +
-			"Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
+		const npaSplitStr = "<div class='bg-gray-100 border border-gray-200 mt-2 p-2 rounded text-sm max-w-sm'>" +
+			"<strong>Split estimate</strong><br/>" + "Democrats: " + Math.floor(numNpaSplitD) + " (" + numNpaSplitDPct + ")<br/>" +
 			"Republicans: " + Math.floor(numNpaSplitR) + " (" + numNpaSplitRPct + ")<br/>" +
 			"Difference: (D-R) <b>" + Math.floor(numNpaSplitD - numNpaSplitR) + " (<span style=\"background-color:#faffc4;\">" + npaSplitGapPct + "</span>) </b><br/>" +
 			"2016 overall split: " + numNpaSplitDPct2016 + "D - " + numNpaSplitRPct2016 + "R, gap " + npaSplitGapPct2016 +
-			"</div>";
+			"<div class='border-t border-gray-200 pt-2 mt-2 text-xs text-opacity-75'>Estimated by proportional assignment of NPAs by county R/D share</div></div>";
 
 		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
 		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
@@ -431,16 +429,16 @@
 		var gap2024Desc = "2024 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
 		var gapAdvantage = "Advantage: <strong>" + pctGapDesc + " by " + pctToString(Math.abs(pctPctGap)) + "</strong>";
 
-		const addendum = "<div class='rounded p-4 border " + pctGapColor + "'>" + gapAdvantage + "</div>";
+		const addendum = "<div class='rounded px-4 py-2 border " + pctGapColor + "'>" + gapAdvantage + "</div>";
 
 		$('#countMethod').text(methodText);
 		$('#countMethodDetails').text(methodTextDetails);
 		$('#countTOTAL').html("<strong>" + formatNumber(total) + "</strong>");
 		$('#countTOTALdetails').html("<div class='text-sm'>" + turnoutPct + " of 2016 total turnout</div><div class='text-sm'>" + earlyPct + " of 2016 early turnout</div>" + "<div class='mt-4 text-sm'>D-R gap (raw): <b>" + gap + "</b></div>");
 		$('#addendum').html(addendum);
-		$('#countDEM').html("<strong>" + formatNumber(demTotal) + "</strong> (" + demPct + ")<br/><div class='text-sm'>" + clintonPct + " of 2016 Clinton votes</div><br/>" + demEarlyPct + " of 2016 Democrat votes" + cannibalizationBlurb('DEM'));
-		$('#countNPA').html("<strong>" + formatNumber(npaTotal) + "</strong> (" + npaPct + ")<br /><div class='text-sm'>" + npaEarlyPct + " of 2016 NPA votes</div>" + cannibalizationBlurb('NPA') + npaSplitStr);
-		$('#countREP').html("<strong>" + formatNumber(repTotal) + "</strong> (" + repPct + ")<br/><div class='text-sm'>" + trumpPct + " of 2016 Trump votes</div><br />" + repEarlyPct + " of 2016 Republican votes" + cannibalizationBlurb('REP'));
+		$('#countDEM').html("<strong>" + formatNumber(demTotal) + "</strong> (" + demPct + ")<div class='text-sm'>" + clintonPct + " of 2016 Clinton votes</div><div class='text-sm'>" + demEarlyPct + " of 2016 Democrat votes" + cannibalizationBlurb('DEM'));
+		$('#countNPA').html("<strong>" + formatNumber(npaTotal) + "</strong> (" + npaPct + ")<div class='text-sm'>" + npaEarlyPct + " of 2016 NPA votes</div>" + cannibalizationBlurb('NPA') + npaSplitStr);
+		$('#countREP').html("<strong>" + formatNumber(repTotal) + "</strong> (" + repPct + ")<div class='text-sm'>" + trumpPct + " of 2016 Trump votes</div><div class='text-sm'>" + repEarlyPct + " of 2016 Republican votes" + cannibalizationBlurb('REP'));
 	}
 
 
@@ -757,26 +755,26 @@
 </script>
 
 <h1>Florida early voting statistics</h1>
-<small>Auto-updated: <span id="timestamp"></span><br />
+<p class="text-sm">Auto-updated: <span id="timestamp"></span></p>
+<p class="text-sm">Data updates every 20 minutes (computer uptime permitting). <a
+		href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
+		feed directly</a> if you have caching issues.
+</p>
 
-	<i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a
-			href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
-			feed directly</a> if you have caching issues.</i><br />
-	<div style="border: 1px solid black; padding: 5px; margin: 5px 0px; font-size: x-large;">
-		<b>6-Oct-2024 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating for
-			2024.</span><br />
 
-		Follow <a href="https://twitter.com/DataRepublican"><b>@DataRepublican</b></a> in case the site goes down.
-</small>
-</div>
 
 <br />
 
-<div class="bg-gray-200 p-2 rounded mb-4 text-sm">
-	<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
+<div class="bg-gray-200 border border-gray-300 p-2 rounded mb-4 text-sm flex gap-2">
+	<div className="shrink-0">
+		<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
   alt="info" class="lucide-icon -mt-1 size-4" />
-	When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to 2016 votes - <i>all votes</i> not
-		just Election Day</b>.
+	</div>
+	<div class="flex-1">
+		<p><strong>Oct. 6 2024 update:</strong> This map is updating for
+			2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
+					rel="noopener noreferrer"><b>@DataRepublican</b></a> in case the site goes down.</strong></p>
+	</div>
 </div>
 
 <div class="bg-white p-4 border border-gray-200 rounded mb-4">
@@ -788,6 +786,9 @@
 				<p id="countMethodDetails" class="text-sm"></p>
 			</div>
 			<div id="addendum" class="mb-4"></div>
+			<p class="text-xs text-gray-500">
+				Advantage is calculated against 2016 vote totals.
+			</p>
 		</div>
 		<div>
 			<strong>Details:</strong>
@@ -796,21 +797,22 @@
 	</div>
 </div>
 
-<table>
-	<tr>
-		<td><b>Democrat</b></td>
-		<td><b>Republican</b></td>
-		<td><b>Unaffiliated</b></td>
-	</tr>
-	<tr>
-		<td><span id="countDEM"></span></td>
-		<td><span id="countREP"></span></td>
-		<td><span id="countNPA"></span></td>
-	</tr>
-</table>
+<div class="bg-white p-4 border border-gray-200 rounded mb-8 grid md:grid-cols-4">
+	<h3 class="border-b border-gray-200 pb-2 mb-4 md:col-span-4">Breakdown</h3>
+	<div class="pr-8">
+		<h3 class="text-blue-500">Democrat</h3>
+		<span id="countDEM"></span>
+	</div>
+	<div class="border-y md:border-y-0 md:border-x border-gray-200 py-4 my-4 md:py-0 md:my-0 md:px-8">
+		<h3 class="text-red-500">Republican</h3>
+		<span id="countREP"></span>
+	</div>
+	<div class="md:col-span-2 md:pl-8">
+		<h3>Unaffiliated</h3>
+		<span id="countNPA"></span>
+	</div>
+</div>
 
-️
-</small>
 
 <div class="flex flex-col md:flex-row md:gap-4 max-w-7xl mx-auto">
 	<aside class="order-2 md:order-1 md:max-w-xs lg:max-w-sm xl:max-w-lg">
@@ -966,6 +968,8 @@
 
 	</aside>
 	<div class="flex-1">
+		<h3>Explore by county</h3>
+
 		<span id="usfljstip"></span>
 		<div id="mapwrapper">
 			<div id="mapbase"><!-- V4.1 -->
