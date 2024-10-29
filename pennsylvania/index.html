@@ -353,6 +353,8 @@ title: Pennsylvania early voting statistics
 
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
 			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
+			var pctDescColor = gap <= 0.0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+
 			// raw votes 
 			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
 			gapDesc += " (";
@@ -365,16 +367,13 @@ title: Pennsylvania early voting statistics
 			usfljsconfig[myid].downColor = splitColor;
 			$('#' + myid).attr({ fill: splitColor });
 
-			usfljsconfig[myid].hover = k + "<br /><small>" +
-				methodStr + ", Democrat:<b>" + v + " (" + pctToString(demPct) + ")</b><br />" +
-				methodStr + ", Republican:<b>" + repNums[k] + " (" + pctToString(repPct) + ")</b><br />" +
-				"2024 Difference (D-R): <b>" + pctToString(demPct - repPct) + "</b> " + partyDiffDesc + "<br />" +
-				"2020 comparison: Biden: " + pctToString(demPct2020) + " Trump: " + pctToString(repPct2020) + "<br />" +
-				"2020 Votes: Dem: " + pctToString(demEarlyPct) + " Rep: " + pctToString(repEarlyPct) + " NPA:" + pctToString(npaEarlyPct) + "<br />" +
-				"2020 Difference (D-R): <b>" + pctToString(demEarlyPct - repEarlyPct) + "</b><br />" +
-				"2024-2020 Vote Gap: <b>" + pctToString(Math.abs(gap)) + "</b>, " + gapDesc + "<br />" +
-
-				"</small>";
+			usfljsconfig[myid].hover = "<h4 class='mb-1'>" + k + "</h4>" + "<div class='col-span-2 text-sm border rounded px-2 py-1 mb-2 " + pctDescColor + "'>" + gapDesc + "</div><div class='text-sm grid grid-cols-2 gap-2'>" +
+				"<div>" + methodStr + ", Democrat:</div> <strong>" + v + " (" + pctToString(demPct) + ")</strong>" + "<div>" + methodStr + ", Republican:</div> <strong>" + repNums[k] + " (" + pctToString(repPct) + ")</strong>" +
+				"<div>2024 Difference (D-R):</div> <div><strong>" + pctToString(demPct - repPct) + "</strong> " + partyDiffDesc + "</div>" +
+				"<div>2020 comparison:</div> Biden: " + pctToString(demPct2020) + "<br />Trump: " + pctToString(repPct2020) + "" +
+				"<div>2020 Votes:</div> Dem: " + pctToString(demEarlyPct) + "<br />Rep: " + pctToString(repEarlyPct) + " <br />No party aff:" + pctToString(npaEarlyPct) + "" +
+				"<div>2020 Difference (D-R):</div> <strong>" + pctToString(demEarlyPct - repEarlyPct) + "</strong>" +
+				"2024-2020 Vote Gap: <strong>" + pctToString(Math.abs(gap)) + "</strong></div>";
 		});
 
 	}
@@ -490,7 +489,7 @@ title: Pennsylvania early voting statistics
 
 {% include update.html %}
 
-{% include total_votes.html year="2020" %}
+{% include total_votes.html %}
 
 {% include votes_breakdown.html %}
 
