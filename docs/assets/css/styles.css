@@ -538,6 +538,11 @@ a {
   color: rgb(59 130 246 / var(--tw-text-opacity));
   text-decoration-line: underline;
 }
+h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
 .visible {
   visibility: visible;
 }

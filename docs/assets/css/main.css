@@ -26,4 +26,8 @@
   a {
     @apply text-blue-500 underline;
   }
+
+  h1 {
+    @apply text-2xl font-bold;
+  }
 }
