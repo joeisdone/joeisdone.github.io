@@ -482,12 +482,23 @@ const greenGradient = ["#007B10", "#008C12",
 	}
 
 	$(document).ready(function () {
-		$.getJSON('../json/pennsylvania.json', function (data) {
+		$.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/pennsylvania.json', function (data) {
 			liveData = data;
-			$('#timestamp').text(liveData['TIMESTAMP']);
-			$.getJSON('../json/pennsylvania2020_reg.json', function (data2020) {
+			const timestamp = liveData['TIMESTAMP'].replace(' EST', '');
+			const date = new Date(timestamp);
+			const options = {
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+				hour: 'numeric',
+				minute: '2-digit',
+				timeZoneName: 'short'
+			};
+			$('#timestamp').text(date.toLocaleString('en-US', options));
+			$.getJSON('https://joeisdone.github.io/json/pennsylvania2020_reg.json', function (data2020) {
 				election2020Data = data2020;
-				$.getJSON('../json/pa_early2020_revised.json', function (early2020) {
+				$.getJSON('https://joeisdone.github.io/json/pa_early2020_revised.json', function (early2020) {
 					early2020Data = early2020;
 
 					$.each(usfljsconfig, function (key, value) {
@@ -520,44 +531,27 @@ const greenGradient = ["#007B10", "#008C12",
 
 		});
 
-		/*
-			"usfljs2":{
-			"hover": "BAKER",
-			"target": "none",
-			"upColor": "#FFFFF3", "overColor": "#ECFFB3", "downColor": "#cae9af",
-			"active": true
-		},
-		$.each( usfljsconfig, function( key, value ) {
-			if (!key || !value || !(value.hover)) {
-			return;
-			}
-			color = "#FF00FF";
-			$('#' + key).attr({fill: color});
-			value.upColor = color;
-			value.downColor = color;
-			countyName = value.hover.toLowerCase()
-			.split(' ')
-			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-			.join(' ');
-			console.log( key + ": " + 	  countyName );
-		});
-		*/
+
 
 	});
 </script>
 
 <h1>Pennsylvania early voting statistics</h1>
-<small>Updated Daily:<span id="timestamp"></span><br />
+<p class="text-sm mb-4">Updated daily. Last update: <span id="timestamp"></span></p>
 
-	<span style="background-color:#faffc4;"><b>Defaults to All Votes view.</b></span> Scroll down to toggle other
-	views.<br />
-	<div style="border: 1px solid black; padding: 5px; margin: 5px 0px; font-size: x-large;">
-		<b>26-Oct-2024 Update:</b> <span style="background-color:#faffc4; font-weight: bold;">This map is updating daily for
-			2024.</span><br /><br />
-
-		Follow <a href="https://twitter.com/DataRepublican"><b>@DataRepublican</b></a> in case the site goes down.
-</small>
+<div class="bg-gray-200 border border-gray-300 p-3 rounded mb-4 text-sm flex gap-2">
+  <div className="shrink-0">
+    <img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
+  alt="info" class="lucide-icon -mt-1 opacity-50 size-5" />
+  </div>
+  <div class="flex-1">
+    <p><strong>Oct. 26 2024 update:</strong> This map is updating for
+      2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
+          rel="noopener noreferrer">@DataRepublican</a> in case the site goes down.</strong></p>
+  </div>
 </div>
+
+
 
 <br />
 

@@ -492,29 +492,6 @@ title: Florida Early Voting Statistics
 
 		});
 
-		/*
-			"usfljs2":{
-			"hover": "BAKER",
-			"target": "none",
-			"upColor": "#FFFFF3", "overColor": "#ECFFB3", "downColor": "#cae9af",
-			"active": true
-		},
-		$.each( usfljsconfig, function( key, value ) {
-			if (!key || !value || !(value.hover)) {
-			return;
-			}
-			color = "#FF00FF";
-			$('#' + key).attr({fill: color});
-			value.upColor = color;
-			value.downColor = color;
-			countyName = value.hover.toLowerCase()
-			.split(' ')
-			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-			.join(' ');
-			console.log( key + ": " + 	  countyName );
-		});
-		*/
-
 		// Set initial active button
 		const defaultButton = document.querySelector('button[onclick*="methodType=\'total\';turnoutType=\'split\'"]');
 		if (defaultButton) {
@@ -540,16 +517,9 @@ title: Florida Early Voting Statistics
 		feed directly</a> if you have caching issues.
 </p>
 
-<div class="bg-gray-200 border border-gray-300 p-3 rounded mb-4 text-sm flex gap-2">
-	<div className="shrink-0">
-		{% include icon.html name="info" size="5" class="-mt-1 opacity-50" %}
-	</div>
-	<div class="flex-1">
-		<p><strong>Oct. 6 2024 update:</strong> This map is updating for
-			2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
-					rel="noopener noreferrer">@DataRepublican</a> in case the site goes down.</strong></p>
-	</div>
-</div>
+{% include update.html %}
+
+
 
 <div class="bg-white p-4 border border-gray-200 rounded mb-4">
 	<h3 class="border-b border-gray-200 pb-2"><span id="countMethod"></span></h3>
