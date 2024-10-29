@@ -1,1 +1,11 @@
-theme: jekyll-theme-slate
+title: Joe is done.
+baseurl: ""
+url: ""
+destination: docs
+
+exclude:
+  - node_modules
+  - package.json
+  - package-lock.json
+  - postcss.config.js
+  - tailwind.config.js
