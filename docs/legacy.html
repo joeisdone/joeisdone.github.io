@@ -11,17 +11,16 @@
     api_host: 'https://us.i.posthog.com', person_profiles: 'always' // or 'always' to create profiles for anonymous users as well
   })
 </script>
-<style>
-  @font-face {
-    font-family: 'LucideIcons';
-    src: url(https://unpkg.com/lucide-static@latest/font/Lucide.ttf) format('truetype');
-  }
-</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet">
 </head>
 
 <body>
-  <header class="flex gap-1 border-b border-gray-300 pb-2 mb-2 text-sm">
-  <strong>Joe is Done.</strong>
+  <header class="flex gap-1 border-b border-gray-300 pb-2 mb-2 text-sm items-baseline">
+  <strong class="text-lg inline-block mr-2">Joe is Done.</strong>
   <a href="/florida">Florida</a> |
   <a href="/northcarolina">North Carolina</a> |
   <a href="/pennsylvania">Pennsylvania</a>

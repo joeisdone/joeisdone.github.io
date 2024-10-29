@@ -11,17 +11,16 @@
     api_host: 'https://us.i.posthog.com', person_profiles: 'always' // or 'always' to create profiles for anonymous users as well
   })
 </script>
-<style>
-  @font-face {
-    font-family: 'LucideIcons';
-    src: url(https://unpkg.com/lucide-static@latest/font/Lucide.ttf) format('truetype');
-  }
-</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet">
 </head>
 
 <body>
-  <header class="flex gap-1 border-b border-gray-300 pb-2 mb-2 text-sm">
-  <strong>Joe is Done.</strong>
+  <header class="flex gap-1 border-b border-gray-300 pb-2 mb-2 text-sm items-baseline">
+  <strong class="text-lg inline-block mr-2">Joe is Done.</strong>
   <a href="/florida">Florida</a> |
   <a href="/northcarolina">North Carolina</a> |
   <a href="/pennsylvania">Pennsylvania</a>
@@ -756,24 +755,20 @@
 
 <h1>Florida early voting statistics</h1>
 <p class="text-sm">Auto-updated: <span id="timestamp"></span></p>
-<p class="text-sm">Data updates every 20 minutes (computer uptime permitting). <a
+<p class="text-sm mb-4">Data updates every 20 minutes (computer uptime permitting). <a
 		href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
 		feed directly</a> if you have caching issues.
 </p>
 
-
-
-<br />
-
-<div class="bg-gray-200 border border-gray-300 p-2 rounded mb-4 text-sm flex gap-2">
+<div class="bg-gray-200 border border-gray-300 p-3 rounded mb-4 text-sm flex gap-2">
 	<div className="shrink-0">
 		<img src="https://unpkg.com/lucide-static@latest/icons/info.svg"
-  alt="info" class="lucide-icon -mt-1 size-4" />
+  alt="info" class="lucide-icon -mt-1 opacity-50 size-5" />
 	</div>
 	<div class="flex-1">
 		<p><strong>Oct. 6 2024 update:</strong> This map is updating for
 			2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
-					rel="noopener noreferrer"><b>@DataRepublican</b></a> in case the site goes down.</strong></p>
+					rel="noopener noreferrer">@DataRepublican</a> in case the site goes down.</strong></p>
 	</div>
 </div>
 
@@ -791,7 +786,7 @@
 			</p>
 		</div>
 		<div>
-			<strong>Details:</strong>
+			<strong>Details</strong>
 			<span id="countTOTALdetails"></span>
 		</div>
 	</div>

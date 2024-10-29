@@ -5,6 +5,10 @@
 @layer components {
   body {
     @apply bg-gray-100 text-neutral-600 font-['Open_Sans',_Helvetica,_sans-serif] font-light m-4 py-0.5 mb-4;
+    font-family: "Libre Franklin", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
   }
 
   strong {
