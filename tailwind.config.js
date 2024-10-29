@@ -8,6 +8,11 @@ module.exports = {
     './florida/**/*.{html,js}',
     './*.{html,js}',
   ],
+  safelist: [
+    'md:gap-4',
+    // You can also use patterns
+    // 'bg-[0-9]+',
+  ],
   theme: {
     extend: {},
   },
