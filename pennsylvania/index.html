@@ -124,20 +124,12 @@ title: Pennsylvania early voting statistics
 		//console.log("setHover called " + county + ":" + nVal + ":" + dVal + ":" + pctToString(pct));
 	}
 
-
-
-
-
-
-
-
-
-
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
 		// var methodText = "Vote totals (IPEV + VBM + Election Day)";
-		var methodText = "Vote totals (VBM)";
-		var methodShort = "VBM";
+		var methodText = "Total votes counted";
+		var methodTextDetails = "In-person early voting + vote by mail";
+		var methodShort = "IPEV+VBM";
 		// var methodShort = "cumulative";
 		if (methodType === "Mail") {
 			methodText = "Vote totals (VBM only)";
@@ -256,17 +248,21 @@ title: Pennsylvania early voting statistics
 
 
 
-		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Harris";
+		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
+		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
 		var gap2020Desc = "2020 D-R ratio: " + pctToString((demEarly2020Total + 0.0) / (early2020Total + 0.0)) + " D - " +
 			pctToString((repEarly2020Total + 0.0) / (early2020Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
 		var gap2024Desc = "2024 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
-		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
+		var gapAdvantage = "Advantage: <strong>" + pctGapDesc + " by " + pctToString(Math.abs(pctPctGap)) + "</strong>";
 
-		const addendum = "<br /><br /><small>" + gap2020Desc + "<br />" + gap2024Desc + "<br />" + gapAdvantage + "</small>";
+		const addendum = "<div class='rounded px-4 py-2 border " + pctGapColor + "'>" + gapAdvantage + "</div>";
 
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2020 total turnout<br />" + earlyPct + " of 2020 early turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
+		$('#countMethodDetails').text(methodTextDetails);
+		$('#countTOTAL').html("<strong>" + formatNumber(total) + "</strong>");
+		$('#countTOTALdetails').html("<div class='text-sm'>" + turnoutPct + " of 2020 total turnout</div><div class='text-sm'>" + earlyPct + " of 2020 early turnout</div>" + "<div class='mt-4 text-sm'>D-R gap (raw): <b>" + gap + "</b></div>");
+		$('#addendum').html(addendum);
 		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + bidenPct + " of 2020 Biden votes<br/>" + demEarlyPct + " of 2020 early Democrat votes" + cannibalizationBlurb('DEM'));
 		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2020 early NPA votes" + cannibalizationBlurb('NPA') + npaSplitStr);
 		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2020 Trump votes<br />" + repEarlyPct + " of 2020 early Republican votes" + cannibalizationBlurb('REP'));
@@ -499,12 +495,7 @@ title: Pennsylvania early voting statistics
 
 {% include update.html %}
 
-
-
-<br />
-
-When the map says "Advantage Harris" or "Advantage Trump," it is <b>comparing to 2020 votes - <i>all votes</i> not just
-	Election Day.</b>.<br />
+{% include total_votes.html %}
 
 <table>
 	<tr>
