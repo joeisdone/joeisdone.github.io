@@ -170,7 +170,7 @@ const greenGradient = ["#007B10", "#008C12",
 		// countMethod countDEM countREP countIND countTOTAL
 		// var methodText = "Vote totals (IPEV + VBM + Election Day)";
 		var methodText = "Total votes counted";
-		var methodTextDetails = "In-person early voting + vote by mail";
+		var methodTextDetails = "Vote by mail";
 		var methodShort = "IPEV+VBM";
 		// var methodShort = "cumulative";
 		if (methodType === "Mail") {
@@ -304,9 +304,9 @@ const greenGradient = ["#007B10", "#008C12",
 		$('#countTOTAL').html("<strong>" + formatNumber(total) + "</strong>");
 		$('#countTOTALdetails').html("<div class='text-sm'>" + turnoutPct + " of 2020 total turnout</div><div class='text-sm'>" + earlyPct + " of 2020 early turnout</div>" + "<div class='mt-4 text-sm'>D-R gap (raw): <b>" + gap + "</b></div>");
 		$('#addendum').html(addendum);
-		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + bidenPct + " of 2020 Biden votes<br/>" + demEarlyPct + " of 2020 early Democrat votes" + cannibalizationBlurb('DEM'));
-		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2020 early NPA votes" + cannibalizationBlurb('NPA') + npaSplitStr);
-		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2020 Trump votes<br />" + repEarlyPct + " of 2020 early Republican votes" + cannibalizationBlurb('REP'));
+		$('#countDEM').html("<strong>" + formatNumber(demTotal) + "</strong> (" + formatNumber(demPct) + ")<div class='text-sm'>" + bidenPct + " of 2020 Biden votes</div><div class='text-sm'>" + demEarlyPct + " of 2020 early Democrat votes" + cannibalizationBlurb('DEM'));
+		$('#countNPA').html("<strong>" + formatNumber(npaTotal) + "</strong> (" + formatNumber(npaPct) + ")<div class='text-sm'>" + npaEarlyPct + " of 2020 early NPA votes" + cannibalizationBlurb('NPA') + npaSplitStr);
+		$('#countREP').html("<strong>" + formatNumber(repTotal) + "</strong> (" + formatNumber(repPct) + ")<div class='text-sm'>" + trumpPct + " of 2020 Trump votes</div><div class='text-sm'>" + repEarlyPct + " of 2020 early Republican votes" + cannibalizationBlurb('REP'));
 	}
 
 
