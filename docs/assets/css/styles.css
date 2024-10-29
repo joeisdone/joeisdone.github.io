@@ -558,6 +558,9 @@ h1 {
 .relative {
   position: relative;
 }
+.order-2 {
+  order: 2;
+}
 .mb-4 {
   margin-bottom: 1rem;
 }
@@ -593,6 +596,9 @@ h1 {
 }
 .resize {
   resize: both;
+}
+.flex-col {
+  flex-direction: column;
 }
 .justify-center {
   justify-content: center;
@@ -635,4 +641,15 @@ h1 {
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+@media (min-width: 768px) {
+
+  .md\:order-1 {
+    order: 1;
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
+  }
 }
