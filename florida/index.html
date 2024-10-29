@@ -272,10 +272,15 @@ title: Florida Early Voting Statistics
 		return data[party][methodType];
 	}
 
+	function formatNumber(num) {
+		return num.toLocaleString();
+	}
+
 	function updateTotals() {
 		// countMethod countDEM countREP countIND countTOTAL
 		// var methodText = "Vote totals (IPEV + VBM + Election Day)";
-		var methodText = "Vote totals (IPEV + VBM)";
+		var methodText = "Total votes counted";
+		var methodTextDetails = "In-person early voting + vote by mail";
 		var methodShort = "IPEV+VBM";
 		// var methodShort = "cumulative";
 		if (methodType === "Mail") {
@@ -393,22 +398,24 @@ title: Florida Early Voting Statistics
 			"2016 overall split: " + numNpaSplitDPct2016 + "D - " + numNpaSplitRPct2016 + "R, gap " + npaSplitGapPct2016 +
 			"</div>";
 
-
-
-		var pctGapDesc = pctPctGap < 0 ? "Advantage Trump" : "Advantage Harris";
+		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
+		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
 		var gap2016Desc = "2016 D-R ratio: " + pctToString((demEarly2016Total + 0.0) / (early2016Total + 0.0)) + " D - " +
 			pctToString((repEarly2016Total + 0.0) / (early2016Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
 		var gap2024Desc = "2024 " + methodShort + " D-R ratio: " + demPct + " D - " + repPct + " R, Gap: " + pctGap;
-		var gapAdvantage = pctToString(Math.abs(pctPctGap)) + " " + pctGapDesc;
+		var gapAdvantage = "Advantage: <strong>" + pctGapDesc + " by " + pctToString(Math.abs(pctPctGap)) + "</strong>";
 
-		const addendum = "<br /><br /><small>" + gap2016Desc + "<br />" + gap2024Desc + "<br />" + gapAdvantage + "</small>";
+		const addendum = "<div class='rounded p-4 border " + pctGapColor + "'>" + gapAdvantage + "</div>";
 
 		$('#countMethod').text(methodText);
-		$('#countTOTAL').html(total + "</b><br/>" + turnoutPct + " of 2016 total turnout<br />" + earlyPct + " of 2016 turnout<br/>" + "D-R gap (raw): <b>" + gap + "</b>" + addendum);
-		$('#countDEM').html(demTotal + " (" + demPct + ")<br/>" + clintonPct + " of 2016 Clinton votes<br/>" + demEarlyPct + " of 2016 Democrat votes" + cannibalizationBlurb('DEM'));
-		$('#countNPA').html(npaTotal + " (" + npaPct + ")<br />" + npaEarlyPct + " of 2016 NPA votes" + cannibalizationBlurb('NPA') + npaSplitStr);
-		$('#countREP').html(repTotal + " (" + repPct + ")<br/>" + trumpPct + " of 2016 Trump votes<br />" + repEarlyPct + " of 2016 Republican votes" + cannibalizationBlurb('REP'));
+		$('#countMethodDetails').text(methodTextDetails);
+		$('#countTOTAL').html("<strong>" + formatNumber(total) + "</strong>");
+		$('#countTOTALdetails').html("<div class='text-sm'>" + turnoutPct + " of 2016 total turnout</div><div class='text-sm'>" + earlyPct + " of 2016 early turnout</div>" + "<div class='mt-4 text-sm'>D-R gap (raw): <b>" + gap + "</b></div>");
+		$('#addendum').html(addendum);
+		$('#countDEM').html("<strong>" + formatNumber(demTotal) + "</strong> (" + demPct + ")<br/><div class='text-sm'>" + clintonPct + " of 2016 Clinton votes</div><br/>" + demEarlyPct + " of 2016 Democrat votes" + cannibalizationBlurb('DEM'));
+		$('#countNPA').html("<strong>" + formatNumber(npaTotal) + "</strong> (" + npaPct + ")<br /><div class='text-sm'>" + npaEarlyPct + " of 2016 NPA votes</div>" + cannibalizationBlurb('NPA') + npaSplitStr);
+		$('#countREP').html("<strong>" + formatNumber(repTotal) + "</strong> (" + repPct + ")<br/><div class='text-sm'>" + trumpPct + " of 2016 Trump votes</div><br />" + repEarlyPct + " of 2016 Republican votes" + cannibalizationBlurb('REP'));
 	}
 
 
@@ -746,16 +753,30 @@ title: Florida Early Voting Statistics
 		just Election Day</b>.
 </div>
 
+<div class="bg-white p-4 border border-gray-200 rounded mb-4">
+	<h3 class="border-b border-gray-200 pb-2"><span id="countMethod"></span></h3>
+	<div class="grid md:grid-cols-2 md:gap-8">
+		<div>
+			<div class="mb-4">
+				<h4 id="countTOTAL" class="text-2xl m-0"></h4>
+				<p id="countMethodDetails" class="text-sm"></p>
+			</div>
+			<div id="addendum" class="mb-4"></div>
+		</div>
+		<div>
+			<strong>Details:</strong>
+			<span id="countTOTALdetails"></span>
+		</div>
+	</div>
+</div>
 
 <table>
 	<tr>
-		<td><b><span id="countMethod"></span></b></td>
 		<td><b>Democrat</b></td>
 		<td><b>Republican</b></td>
 		<td><b>Unaffiliated</b></td>
 	</tr>
 	<tr>
-		<td><span id="countTOTAL"></span></td>
 		<td><span id="countDEM"></span></td>
 		<td><span id="countREP"></span></td>
 		<td><span id="countNPA"></span></td>

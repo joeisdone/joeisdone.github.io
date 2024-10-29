@@ -7,6 +7,10 @@
     @apply bg-gray-100 text-neutral-600 font-['Open_Sans',_Helvetica,_sans-serif] font-light m-4 py-0.5 mb-4;
   }
 
+  strong {
+    @apply font-bold;
+  }
+
   table {
     @apply border-collapse mb-5;
   }
@@ -38,6 +42,7 @@
   h1 {
     @apply text-2xl;
   }
+
 
   .radio-group {
     @apply flex flex-col;

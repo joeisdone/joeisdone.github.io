@@ -9,6 +9,7 @@ module.exports = {
     './*.{html,js}',
   ],
   safelist: [
+    'bg-white',
     'md:gap-4',
     'size-2',
     'size-3',
