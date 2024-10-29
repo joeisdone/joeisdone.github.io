@@ -1,20 +1,24 @@
 ---
-title: This will be used as the title-tag of the page head
+title: How to run the site locally
 ---
 
-# This is a H1
+## Setup
 
-[the clickable text](http://xlson.com/)
+In terminal:
 
-* Bullet lists are also easy to create
-* One more
+1. `npm install --global yarn`
 
 ## Run the site
 
-In Terminal, run `bundle exec jekyll serve --livereload`
+1. `yarn && yarn start`
+1. Open the site at `http://localhost:4000`
 
-Optionally add the `--verbose` flag to see more information.
+## Advanced
 
-## Build CSS
+The above command should run everything, but if you need to run things separately:
 
-`yarn run build:css`
+1. `bundle exec jekyll serve --livereload`
+
+    Optionally add the `--verbose` flag to see more information.
+
+1. `yarn run watch:css` (only needed if modifying CSS)
