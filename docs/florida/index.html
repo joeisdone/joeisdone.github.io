@@ -654,7 +654,19 @@
 	$(document).ready(function () {
 		$.getJSON('https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json', function (data) {
 			liveData = data;
-			$('#timestamp').text(liveData['TIMESTAMP']);
+			// Format the timestamp to be more human-readable
+			const timestamp = liveData['TIMESTAMP'].replace(' EST', '');
+			const date = new Date(timestamp);
+			const options = {
+				weekday: 'short',
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+				hour: 'numeric',
+				minute: '2-digit',
+				timeZoneName: 'short'
+			};
+			$('#timestamp').text(date.toLocaleString('en-US', options));
 			$.getJSON('https://joeisdone.github.io/json/florida2016_reg.json', function (data2016) {
 				election2016Data = data2016;
 				$.getJSON('https://joeisdone.github.io/json/early2016_revised.json', function (early2016) {
@@ -738,7 +750,7 @@
 </script>
 
 <h1>Florida early voting statistics</h1>
-<small>Auto-updated:<span id="timestamp"></span><br />
+<small>Auto-updated: <span id="timestamp"></span><br />
 
 	<i>The data here is updated regularly every 20 minutes (computer uptime permitting).<a
 			href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
@@ -855,7 +867,7 @@
   <input type="radio" name="voteType" value="early-split"
     onclick="methodType='total';turnoutType='early2016NPA';partyType='NPA';doUpdate();"
     >
-  <span>Unaffiliateds</span>
+  <span>Unaffiliated</span>
 </label>
 		</div>
 
