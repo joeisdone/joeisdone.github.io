@@ -2,25 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Your custom CSS here */
-body {
-  @apply bg-black text-neutral-600 font-['Open_Sans',_Helvetica,_sans-serif] font-light m-4 py-0.5 mb-4;
-}
+@layer components {
+  body {
+    @apply bg-gray-100 text-neutral-600 font-['Open_Sans',_Helvetica,_sans-serif] font-light m-4 py-0.5 mb-4;
+  }
 
-table {
-  border-collapse: collapse;
-}
+  table {
+    @apply border-collapse mb-5;
+  }
 
-table,
-th,
-td {
-  border: 1px solid black;
-}
+  table, th, td {
+    @apply border border-black;
+  }
 
-td {
-  padding: 5px;
-}
+  td {
+    @apply p-5;
+  }
 
-table {
-  margin-bottom: 5px;
+  button {
+    @apply border border-black bg-gray-200 p-1 text-sm;
+  }
+
+  a {
+    @apply text-blue-500 underline;
+  }
 }

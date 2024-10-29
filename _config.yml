@@ -1,7 +1,10 @@
 title: Joe is done.
 baseurl: ""
-url: ""
+url: "https://joeisdone.github.io/"
 destination: docs
+
+include:
+  - florida
 
 exclude:
   - node_modules
