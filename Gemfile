@@ -4,6 +4,7 @@ source "https://rubygems.org"
 
 # If you're planning to deploy to GitHub Pages, use:
 gem "github-pages", group: :jekyll_plugins
+gem "jekyll-seo-tag"
 
 group :jekyll_plugins do
   # Add any Jekyll plugins here

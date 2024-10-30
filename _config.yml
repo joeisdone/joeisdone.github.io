@@ -12,3 +12,6 @@ exclude:
   - package-lock.json
   - postcss.config.js
   - tailwind.config.js
+
+plugins:
+  - jekyll-seo-tag
