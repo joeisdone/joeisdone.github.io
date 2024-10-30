@@ -15,3 +15,7 @@ exclude:
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-redirect-from
+
+whitelist:
+  - jekyll-redirect-from
