@@ -38,7 +38,7 @@ redirect_from: /florida/has
 	var partyType = "TOTAL";
 
 	// total, EarlyVoting, Mail, ElectionDay
-	var methodType = "total";
+	var methodType = "ElectionDay";
 
 	// turnout2016, turnout2016Clinton, turnout2016Trump, ev, split
 	// early2016TOTAL, early2016REP, early2016DEM, early2016NPA
@@ -530,7 +530,7 @@ redirect_from: /florida/has
 			<div class="radio-group mb-2">
 
 				{% include radio-button.html name="voteType" value="total-split" methodType="total" turnoutType="split"
-				label="All votes" checked=true %}
+				label="All votes" %}
 
 				<!-- <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">
 					Election Day votes only</button> -->
@@ -539,7 +539,7 @@ redirect_from: /florida/has
 				value="election-split"
 				methodType="ElectionDay"
 				turnoutType="split"
-				label="Election Day votes only"
+				label="Election Day votes only" checked=true
 				%}
 
 

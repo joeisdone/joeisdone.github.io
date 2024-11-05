@@ -134,7 +134,7 @@ const greenGradient = ["#007B10", "#008C12",
 	var partyType = "TOTAL";
 
 	// total, EarlyVoting, Mail, ElectionDay
-	var methodType = "total";
+	var methodType = "ElectionDay";
 
 	// turnout2016, turnout2016Clinton, turnout2016Trump, ev, split
 	// early2016TOTAL, early2016REP, early2016DEM, early2016NPA
@@ -670,7 +670,7 @@ const greenGradient = ["#007B10", "#008C12",
 				<label>
   <input type="radio" name="voteType" value="total-split"
     onclick="methodType='total';turnoutType='split';doUpdate();"
-    checked>
+    >
   <span>All votes</span>
 </label>
 
@@ -680,7 +680,7 @@ const greenGradient = ["#007B10", "#008C12",
         <label>
   <input type="radio" name="voteType" value="election-split"
     onclick="methodType='ElectionDay';turnoutType='split';doUpdate();"
-    >
+    checked>
   <span>Election Day votes only</span>
 </label>
 
@@ -786,8 +786,8 @@ const greenGradient = ["#007B10", "#008C12",
 
 			<span>Filter by vote type</span>
 			<select id="methodFilter">
-				<option value="total" selected="selected">All votes</option>
-				<option value="ElectionDay">Election Day votes only</option>
+				<option value="total">All votes</option>
+				<option value="ElectionDay" selected="selected">Election Day votes only</option>
 				<option value="EarlyVoting">In-person early voting only</option>
 				<option value="Mail">Mail in votes only</option>
 			</select>
