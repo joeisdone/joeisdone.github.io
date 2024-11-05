@@ -127,6 +127,9 @@ function getTotalWithFallback(data, party, methodType) {
 }
 
 function formatNumber(num) {
+  if (num == null)
+    return 'NaN';
+
   return num.toLocaleString();
 }
 

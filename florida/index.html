@@ -534,6 +534,13 @@ redirect_from: /florida/has
 
 				<!-- <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">
 					Election Day votes only</button> -->
+				{% include radio-button.html
+				name="voteType"
+				value="election-split"
+				methodType="ElectionDay"
+				turnoutType="split"
+				label="Election Day votes only"
+				%}
 
 
 				{% include radio-button.html
@@ -653,7 +660,7 @@ redirect_from: /florida/has
 			<span>Filter by vote type</span>
 			<select id="methodFilter">
 				<option value="total" selected="selected">All votes</option>
-				<!-- <option value="ElectionDay">Election Day votes only</option> -->
+				<option value="ElectionDay">Election Day votes only</option>
 				<option value="EarlyVoting">In-person early voting only</option>
 				<option value="Mail">Mail in votes only</option>
 			</select>

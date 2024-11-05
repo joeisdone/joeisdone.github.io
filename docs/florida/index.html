@@ -237,7 +237,7 @@ const greenGradient = ["#007B10", "#008C12",
 			methodText = "Vote totals (IPEV only)";
 			methodShort = "IPEV";
 		}
-		if (methodType == "Election Day") {
+		if (methodType == "ElectionDay") {
 			methodText = "Vote totals (Election Day only)";
 			methodShort = "ED";
 		}
@@ -674,8 +674,15 @@ const greenGradient = ["#007B10", "#008C12",
   <span>All votes</span>
 </label>
 
-				<!-- <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">
-					Election Day votes only</button> -->
+
+        <!-- <button onclick="methodType='ElectionDay';turnoutType='split';doUpdate();">
+          Election Day votes only</button> -->
+        <label>
+  <input type="radio" name="voteType" value="election-split"
+    onclick="methodType='ElectionDay';turnoutType='split';doUpdate();"
+    >
+  <span>Election Day votes only</span>
+</label>
 
 
 				<label>
@@ -780,7 +787,7 @@ const greenGradient = ["#007B10", "#008C12",
 			<span>Filter by vote type</span>
 			<select id="methodFilter">
 				<option value="total" selected="selected">All votes</option>
-				<!-- <option value="ElectionDay">Election Day votes only</option> -->
+				<option value="ElectionDay">Election Day votes only</option>
 				<option value="EarlyVoting">In-person early voting only</option>
 				<option value="Mail">Mail in votes only</option>
 			</select>
