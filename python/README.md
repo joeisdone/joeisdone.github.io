@@ -1,6 +1,3 @@
-Note: this repository draws from the joeisdone.github.io repository.
-
-
 To use `parse_house_pdf.py`, you must have `pdfplumber` installed in your python environment.
 Instructions for installing it are below.
 
