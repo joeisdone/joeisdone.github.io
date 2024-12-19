@@ -1,0 +1,3029 @@
+[DISCUSSION DRAFT]
+118TH CONGRESS H. R. ll
+2D SESSION
+Making further continuing appropriations for the fiscal year ending September
+30, 2025, and for other purposes.
+IN THE HOUSE OF REPRESENTATIVES
+Mr. COLE introduced the following bill; which was referred to the Committee
+on llllllllllllll
+A BILL
+Making further continuing appropriations for the fiscal year
+ending September 30, 2025, and for other purposes.
+Be it enacted by the Senate and House of Representa-
+tives of the United States of America in Congress assembled,
+
+SECTION 1. SHORT TITLE.
+This Act may be cited as the ‘‘American Relief Act,
+2025’’.
+
+SEC. 2. TABLE OF CONTENTS.
+The table of contents of this Act is as follows:
+Sec. 1. Short title.
+Sec. 2. Table of contents.
+Sec. 3. References.
+
+DIVISION A—FURTHER CONTINUING APPROPRIATIONS ACT, 2025
+DIVISION B—DISASTER RELIEF SUPPLEMENTAL
+APPROPRIATIONS ACT, 2025
+DIVISION C—HEALTH
+Sec. 3001. Short title; table of contents.
+TITLE I—PUBLIC HEALTH EXTENDERS
+Sec. 3101. Extension for community health centers, National Health Service
+Corps, and teaching health centers that operate GME pro-
+grams.
+Sec. 3102. Extension of special diabetes programs.
+Sec. 3103. National health security extensions.
+TITLE II—MEDICARE
+Sec. 3201. Extension of increased inpatient hospital payment adjustment for
+certain low-volume hospitals.
+Sec. 3202. Extension of the Medicare-dependent hospital (MDH) program.
+Sec. 3203. Extension of add-on payments for ambulance services.
+Sec. 3204. Extension of funding for quality measure endorsement, input, and
+selection.
+Sec. 3205. Extension of funding outreach and assistance for low-income pro-
+grams.
+Sec. 3206. Extension of the work geographic index floor.
+Sec. 3207. Extension of certain telehealth flexibilities.
+Sec. 3208. Extending acute hospital care at home waiver authorities.
+Sec. 3209. Extension of temporary inclusion of authorized oral antiviral drugs
+as covered part D drugs.
+Sec. 3210. Medicare improvement fund.
+TITLE III—HUMAN SERVICES
+Sec. 3301. Extension of child and family services programs.
+Sec. 3302. Sexual risk avoidance education extension.
+Sec. 3303. Personal responsibility education extension.
+Sec. 3304. Extension of funding for family-to-family health information centers.
+DIVISION D—EXTENSION OF AGRICULTURAL PROGRAMS
+Sec. 4101. Extension of agricultural programs.
+DIVISION E—OTHER MATTERS
+Sec. 5101. Commodity futures trading commission whistleblower program.
+Sec. 5102. Protection of certain facilities and assets from unmanned aircraft.
+Sec. 5103. Additional special assessment.
+Sec. 5104. National cybersecurity protection system authorization.
+Sec. 5105. Extension of temporary order for fentanyl-related substances.
+Sec. 5106. Temporary extension of public debt limit.
+
+
+SEC. 3. REFERENCES.
+Except as expressly provided otherwise, any reference
+to ‘‘this Act’’ contained in any division of this Act shall
+be treated as referring only to the provisions of that divi-
+sion.
+DIVISION A—FURTHER CONTINUING
+APPROPRIATIONS ACT, 2025
+SEC. 101. The Continuing Appropriations Act, 2025
+(division A of Public Law 118–83) is amended—
+(1) by striking the date specified in section
+106(3) and inserting ‘‘March 14, 2025’’;
+(2) in section 126 to read as follows:
+‘‘SEC. 126. Notwithstanding section 101, amounts
+are provided for ‘District of Columbia—Federal Payment
+for Emergency Planning and Security Costs in the Dis-
+trict of Columbia’ at a rate for operations of $90,000,000,
+of which not less than $50,000,000 shall be for costs asso-
+ciated with the Presidential Inauguration to be held in
+January 2025: Provided, That such amounts may be ap-
+portioned up to the rate for operations necessary to main-
+tain emergency planning and security activities.’’; and
+(3) by adding after section 152 the following
+new sections:
+‘‘SEC. 153. Amounts made available by section 101
+for ‘Department of Commerce—National Oceanic and At-
+mospheric Administration—Procurement, Acquisition and
+
+Construction’ may be apportioned up to the rate for oper-
+ations necessary to maintain the acquisition schedule for
+Geostationary Earth Orbit in an amount not to exceed
+$625,000,000.
+‘‘SEC. 154. Amounts made available by section 101
+for ‘Department of Justice—Justice Operations, Manage-
+ment and Accountability—Justice Information Sharing
+Technology’ may be apportioned up to the rate for oper-
+ations necessary to carry out proactive vulnerability detec-
+tion and penetration testing activities.
+‘‘SEC. 155. In addition to amounts otherwise pro-
+vided by section 101, there is appropriated to the Depart-
+ment of Justice for ‘Federal Bureau of Investigation—
+Salaries and Expenses’, $16,668,000, for an additional
+amount for fiscal year 2025, to remain available until Sep-
+tember 30, 2026, to conduct risk reduction and modifica-
+tion of National Security Systems: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+‘‘SEC. 156. (a) Amounts made available by section
+101 to the Department of Defense for ‘Procurement—
+Shipbuilding and Conversion, Navy’, may be apportioned
+up to the rate for operations necessary for ‘Columbia Class
+
+Submarine (AP)’ in an amount not to exceed
+$5,996,130,000.
+‘‘(b) Amounts made available by section 101 to the
+Department of Defense for ‘Procurement—Shipbuilding
+and Conversion, Navy’ may be apportioned up to the rate
+for operations necessary for ‘Columbia Class Submarine’
+in an amount not to exceed $2,922,300,000.
+‘‘SEC. 157. (a) In addition to amounts otherwise pro-
+vided by section 101, there is appropriated to the Depart-
+ment of Defense for ‘Procurement—Shipbuilding and
+Conversion, Navy’, $5,691,000,000, for an additional
+amount for fiscal year 2025, to remain available until Sep-
+tember 30, 2029, for the Virginia Class Submarine pro-
+gram and for workforce wage and non-executive salary im-
+provements for other nuclear-powered vessel programs:
+Provided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+‘‘(b) Amounts appropriated by subsection (a) may be
+used to incrementally fund contract obligations for the im-
+provement of workforce wages and non-executive level sal-
+aries on new or existing contracts pertaining to the Vir-
+ginia Class Submarine program or to other nuclear-pow-
+ered vessel programs.
+
+‘‘SEC. 158. In addition to amounts otherwise pro-
+vided by section 101, there is appropriated to the Depart-
+ment of Defense for ‘Operation and Maintenance—De-
+fense-Wide’, $913,440,000, for an additional amount for
+fiscal year 2025, to remain available until September 30,
+2026, to conduct risk reduction and modification of Na-
+tional Security Systems: Provided, That the amount pro-
+vided by this section may be transferred to accounts under
+the headings ‘Operation and Maintenance’, ‘Procurement’,
+and ‘Research, Development, Test and Evaluation’: Pro-
+vided further, That funds transferred pursuant to the pre-
+ceding proviso shall be merged with and available for the
+same purpose and for the same time period as the appro-
+priations to which the funds are transferred: Provided fur-
+ther, That any transfer authority provided herein is in ad-
+dition to any other transfer authority provided by law:
+Provided further, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+‘‘SEC. 159. (a) Amounts made available by section
+101 for ‘Department of Energy—Atomic Energy Defense
+Activities—Environmental and Other Defense Activities—
+Other Defense Activities’ may be apportioned up to the
+
+rate for operations necessary to sustain specialized secu-
+rity activities.
+‘‘(b) The Director of the Office of Management and
+Budget and the Secretary of Energy shall notify the Com-
+mittees on Appropriations of the House of Representatives
+and the Senate not later than 3 days after each use of
+the authority provided in subsection (a).
+‘‘SEC. 160. In addition to amounts otherwise pro-
+vided by section 101, there is appropriated to the Depart-
+ment of Energy for ‘Atomic Energy Defense Activities—
+Environmental and Other Defense Activities—Other De-
+fense Activities’, $1,750,000, for an additional amount for
+fiscal year 2025, to remain available until September 30,
+2026, to conduct risk reduction and modification of Na-
+tional Security Systems: Provided, That such amount is
+designated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+‘‘SEC. 161. During the period covered by this Act,
+section 10609(a) of the Northwestern New Mexico Rural
+Water Projects Act (subtitle B of title X of Public Law
+111–11) shall be applied by substituting ‘$1,640,000,000’
+for ‘$870,000,000’ and ‘2025’ for ‘2024’.
+‘‘SEC. 162. In addition to amounts otherwise pro-
+vided by section 101, there is appropriated to the Depart-
+
+ment of the Treasury for ‘Departmental Offices—Office
+of Terrorism and Financial Intelligence—Salaries and Ex-
+penses’, $908,000, for an additional amount for fiscal year
+2025, to remain available until September 30, 2026, to
+conduct risk reduction and modification of National Secu-
+rity Systems: Provided, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+‘‘SEC. 163. Section 302 of title III of Public Law
+108-494 shall be applied by substituting the date specified
+in section 106(3) of this Act for ‘December 31, 2024’ each
+place it appears.
+‘‘SEC. 164. (a) Notwithstanding section 101, section
+747 of title VII of division B of Public Law 118–47 shall
+be applied through the date specified in section 106(3) of
+this Act by—
+‘‘(1) substituting ‘2024’ for ‘2023’ each place it
+appears;
+‘‘(2) substituting ‘2025’ for ‘2024’ each place it
+appears;
+‘‘(3) substituting ‘2026’ for ‘2025’; and
+‘‘(4) substituting ‘section 747 of division B of
+Public Law 118–47, as in effect on September 30,
+
+2024’ for ‘section 747 of division E of Public Law
+117–328’ each place it appears.
+‘‘(b) Subsection (a) shall not take effect until the first
+day of the first applicable pay period beginning on or after
+January 1, 2025.
+‘‘SEC. 165. Amounts made available by section 101
+for ‘Department of Education—Student Aid Administra-
+tion’ may be apportioned up to the rate for operations nec-
+essary to ensure the continuation of student loan servicing
+activities and student aid application and eligibility deter-
+mination processes.
+‘‘SEC. 166. During the period covered by this Act,
+section 123 of division A of Public Law 118–42 and the
+provisions carrying the same restriction in prior Acts mak-
+ing appropriations to the Department of Defense for mili-
+tary construction shall not apply to unobligated balances
+from prior year appropriations made available under the
+heading ‘Department of Defense—Military Construction,
+Army’ and such balances may be obligated for an access
+road project at Arlington National Cemetery.
+‘‘SEC. 167. (a) Notwithstanding section 101, the sec-
+ond proviso under the heading ‘Department of Veterans
+Affairs—Veterans Health Administration—Medical Serv-
+ices’ shall not apply during the period covered by this Act.
+
+‘‘(b) Notwithstanding section 101, the second proviso
+under the heading ‘Department of Veterans Affairs—Vet-
+erans Health Administration—Medical Community Care’
+shall not apply during the period covered by this Act.
+‘‘(c) Notwithstanding section 101, the second proviso
+under the heading ‘Department of Veterans Affairs—Vet-
+erans Health Administration—Medical Support and Com-
+pliance’ shall not apply during the period covered by this
+Act.
+‘‘SEC. 168. Notwithstanding section 101, the fifth
+and sixth provisos under the heading ‘Millennium Chal-
+lenge Corporation’ in division F of Public Law 118–47
+shall be applied by substituting ‘December 31, 2025’ for
+‘December 31, 2024’ each place it appears.
+‘‘SEC. 169. Amounts made available by section 101
+for ‘Department of Transportation—Federal Aviation Ad-
+ministration—Operations’ may be apportioned up to the
+rate for operations necessary to fund mandatory pay in-
+creases and other inflationary adjustments, to maintain
+and improve air traffic services, to hire and train air traf-
+fic controllers, and to continue aviation safety oversight,
+while avoiding service reductions.’’.
+This division may be cited as the ‘‘Further Con-
+tinuing Appropriations Act, 2025’’.
+
+DIVISION B—DISASTER RELIEF
+
+SUPPLEMENTAL APPROPRIA-
+
+TIONS ACT, 2025
+
+The following sums are appropriated, out of any
+money in the Treasury not otherwise appropriated, for the
+fiscal year ending September 30, 2025, and for other pur-
+poses, namely:
+TITLE I
+DEPARTMENT OF AGRICULTURE
+AGRICULTURAL PROGRAMS
+PROCESSING, RESEARCH, AND MARKETING
+OFFICE OF THE SECRETARY
+For an additional amount for ‘‘Office of the Sec-
+retary’’, $30,780,000,000, to remain available until ex-
+pended, for necessary expenses related to losses of rev-
+enue, quality or production of crops (including milk, on-
+farm stored commodities, crops prevented from planting,
+and harvested adulterated wine grapes), trees, bushes, and
+vines, as a consequence of droughts, wildfires, hurricanes,
+floods, derechos, excessive heat, tornadoes, winter storms,
+freeze, including a polar vortex, smoke exposure, and ex-
+cessive moisture occurring in calendar years 2023 and
+2024 under such terms and conditions as determined by
+the Secretary of Agriculture (referred to in this title as
+‘‘Secretary’’): Provided, That of the amounts provided in
+
+this paragraph under this heading in this Act, the Sec-
+retary shall use up to $2,000,000,000 to provide assist-
+ance to producers of livestock, as determined by the Sec-
+retary, for losses incurred during calendar years 2023 and
+2024 due to drought, wildfires, or floods: Provided further,
+That the Secretary may provide assistance for such losses
+in the form of block grants to eligible States and terri-
+tories and such assistance may include compensation to
+producers, as determined by the Secretary, for timber (in-
+cluding payments to non-Federal forest landowners), cit-
+rus, pecan, and poultry (including infrastructure) losses,
+and for agricultural producers who have suffered losses
+due to the failure of Mexico to deliver water to the United
+States in accordance with the 1944 Water Treaty: Pro-
+vided further, That of the amounts provided under this
+heading in this Act, the Secretary shall offer individualized
+technical assistance to interested non-insured producers to
+help them apply for assistance made available under this
+heading: Provided further, That of the amounts made
+available under this paragraph under this heading in this
+Act, the Secretary may use up to $30,000,000, for reim-
+bursement for administrative and operating expenses
+available for crop insurance contracts for 2022 and 2023
+reinsurance years in a manner consistent with Section 771
+of the Consolidated Appropriations Act, 2023 (Public Law
+
+117–328): Provided further, That of the amounts made
+available under this paragraph under this heading in this
+Act, and without regard to 44 U.S.C. 3501 et. seq., the
+Secretary shall use $3,000,000 to carry out regular testing
+for the purposes of verifying and validating the method-
+ology and protocols of the inspection of molasses at any
+United States ports of entry, including whether the molas-
+ses meets each statutory requirement without the use of
+additives or blending, relevant definitional explanatory
+notes, and each property typical of molasses in the United
+States as directed in Senate Report 118–193: Provided
+further, That at the election of a processor eligible for a
+loan under section 156 of the Federal Agriculture Im-
+provement and Reform Act of 1996 (7 U.S.C. 7272) or
+a cooperative processor of dairy, the Secretary shall make
+payments for losses in 2023 and 2024 to such processors
+(to be paid to producers, as determined by such proc-
+essors) in lieu of payments to producers and under the
+same terms and conditions as payments made to proc-
+essors pursuant to title I of the Additional Supplemental
+Appropriations for Disaster Relief Act, 2019 (Public Law
+116–20) under the heading ‘‘Department of Agriculture—
+Agricultural Programs—Processing, Research and Mar-
+keting—Office of the Secretary’’, as last amended by sec-
+tion 791(c) of title VII of division B of the Further Con-
+
+solidated Appropriations Act, 2020 (Public Law 116–94):
+Provided further, That notwithstanding section
+760.1503(j) of title 7, Code of Federal Regulations, in the
+event that a processor described in the preceding proviso
+does not elect to receive payments under such clause, the
+Secretary shall make direct payments to producers under
+this heading in this Act: Provided further, That the total
+amount of payments received under this paragraph under
+this heading in this Act for producers who did not obtain
+a policy or plan of insurance for an insurable commodity
+for the applicable crop year under the Federal Crop Insur-
+ance Act (7 U.S.C. 1501 et seq.) for the crop incurring
+the losses or did not file the required paperwork and pay
+the service fee by the applicable State filing deadline for
+a noninsurable commodity for the applicable crop year
+under Noninsured Crop Disaster Assistance Program for
+the crop incurring the losses shall not exceed 70 percent
+of the loss as determined by the Secretary, except the Sec-
+retary shall provide payments not to exceed 90 percent
+of the producer’s revenue losses as determined by the Sec-
+retary if the Secretary determines a de minimis amount
+of a producer’s revenue loss is attributable to crops for
+which the producer did not insure or obtain Noninsured
+Crop Disaster Assistance Program coverage: Provided fur-
+ther, That the amount provided in this paragraph under
+
+this heading in this Act shall be subject to the terms and
+conditions set forth in the first, second, sixth, seventh,
+eighth, ninth, tenth, and 12th provisos under this heading
+in title I of the Disaster Relief Supplemental Appropria-
+tions Act, 2022 (division B of Public Law 117–43), except
+that such ninth proviso under such heading shall be ap-
+plied by substituting ‘‘2023 and 2024’’ for ‘‘2020 and
+2021’’ and the Secretary shall apply a separate payment
+limit for economic assistance payments: Provided further,
+That not later than 120 days after the enactment of this
+Act, and for each fiscal quarter thereafter until the
+amounts provided under this heading in this Act are ex-
+pended, the Secretary shall report to the Committees on
+Appropriations of the House of Representatives and the
+Senate on the implementation of any programs provided
+for under this heading in this Act specifying the type,
+amount, and method of such assistance by State and terri-
+tory: Provided further, That of the amounts provided in
+this paragraph, $10,000,000,000 shall be made available
+for the Secretary to make economic assistance available
+pursuant to section 2102 of this title in this Act: Provided
+further, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+
+For an additional amount for ‘‘Office of the Sec-
+retary’’, $220,000,000, to remain available until expended,
+for the Secretary to provide assistance in the form of block
+grants to eligible States to provide compensation to pro-
+ducers for necessary expenses related to crop, timber, and
+livestock losses, including on-farm infrastructure, as a
+consequence of any weather event in 2023 or 2024 that
+a State, in its sole discretion, determines warrants such
+relief: Provided, That eligible States are those States with
+a net farm income for 2023 of less than $250,000,000,
+as recorded in the data in the Economic Research Service
+publication ‘‘Farm Income and Wealth Statistics’’ as of
+December 3, 2024, and fewer than eight thousand farms
+and an average farm size of fewer than one thousand acres
+per farm, as recorded in the National Agricultural Statis-
+tics Service publication ‘‘Farms and Land in Farms 2023
+Summary (February, 2024)’’: Provided further, That the
+Secretary shall work with eligible States on any necessary
+terms and conditions of the block grants, fully taking in
+account the needs of each State: Provided further, That
+any such terms and conditions may not impose additional
+costs on producers: Provided further, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+OFFICE OF INSPECTOR GENERAL
+For an additional amount for ‘‘Office of Inspector
+General’’, $7,500,000, to remain available until expended,
+for audits, investigations, and other oversight of projects
+and activities carried out with funds made available to the
+Department of Agriculture in this Act: Provided, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+AGRICULTURAL RESEARCH SERVICE
+BUILDINGS AND FACILITIES
+For an additional amount for ‘‘Buildings and Facili-
+ties’’, $42,500,000, to remain available until expended:
+Provided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+
+FARM PRODUCTION AND CONSERVATION
+PROGRAMS
+FARM SERVICE AGENCY
+EMERGENCY FOREST RESTORATION PROGRAM
+For an additional amount for ‘‘Emergency Forest
+Restoration Program’’, $356,535,000, to remain available
+until expended: Provided, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+EMERGENCY CONSERVATION PROGRAM
+For an additional amount for ‘‘Emergency Conserva-
+tion Program’’, $828,000,000, to remain available until
+expended: Provided, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+NATURAL RESOURCES CONSERVATION SERVICE
+EMERGENCY WATERSHED PROTECTION PROGRAM
+For an additional amount for ‘‘Emergency Watershed
+Protection Program’’ for necessary expenses for the Emer-
+gency Watershed Protection Program, $920,000,000, to
+remain available until expended: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+RURAL DEVELOPMENT PROGRAMS
+RURAL DEVELOPMENT DISASTER ASSISTANCE FUND
+For an additional amount for the ‘‘Rural Develop-
+ment Disaster Assistance Fund’’ as authorized under sec-
+tion 6945 of title 7, United States Code, as amended by
+this Act, $362,500,000, to remain available until ex-
+pended: Provided, That section 6945(b) of title 7, United
+States Code, shall apply to amounts provided under this
+heading in this Act: Provided further, That amounts pro-
+vided under this heading in this Act may not be trans-
+ferred pursuant to section 2257 of title 7, United States
+Code: Provided further, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+DOMESTIC FOOD PROGRAMS
+FOOD AND NUTRITION SERVICE
+COMMODITY ASSISTANCE PROGRAM
+For an additional amount for ‘‘Commodity Assistance
+Program’’ for the emergency food assistance program as
+authorized by section 27(a) of the Food and Nutrition Act
+of 2008 (7 U.S.C. 2036(a)) and section 204(a)(1) of the
+Emergency Food Assistance Act of 1983 (7 U.S.C.
+
+7508(a)(1)), $25,000,000, to remain available until Sep-
+tember 30, 2026: Provided, That such funds shall be for
+infrastructure needs related to the consequences of a
+major disaster declaration pursuant to the Robert T. Staf-
+ford Disaster Relief and Emergency Assistance Act (42
+U.S.C. 5121 et seq.) in calendar years 2023 and 2024:
+Provided further, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+GENERAL PROVISIONS—THIS TITLE
+SEC. 2101. Section 10101 of the Disaster Relief and
+Recovery Supplemental Appropriations Act, 2008 (division
+B of Public Law 110–329; 7 U.S.C. 6945) is amended—
+(1) in subsection (b)—
+(A) in the first sentence—
+(i) by striking ‘‘for authorized activi-
+ties’’ and inserting ‘‘, in the form of loans,
+grants, loan guarantees, or cooperative
+agreements, for any authorized activity’’;
+(ii) by striking ‘‘or’’ between ‘‘Presi-
+dent’’ and ‘‘the Secretary of Agriculture’’
+and inserting a comma; and
+
+(iii) by inserting after ‘‘the Secretary
+of Agriculture’’ the following: ‘‘, or the
+Governor of a State or Territory’’;
+(B) in the second sentence, inserting after
+‘‘to carry out the activity’’, the following: ‘‘, but
+shall not be limited to the original form of as-
+sistance, if any’’; and
+(C) by inserting after the first sentence, as
+so amended, the following: ‘‘The cost of such
+direct and guaranteed loans, including the cost
+of modifying loans, shall be as defined in sec-
+tion 502 of the Congressional Budget Act of
+1974.’’; and
+(2) in subsection (c), to read as follows—
+‘‘(c) WAIVER OF ACTIVITY OR PROJECT LIMITA-
+TIONS.—For any activity or project for which amounts in
+the Rural Development Disaster Assistance Fund will be
+obligated under subsection (b)—
+‘‘(1) the Secretary of Agriculture may waive
+any limits on population, income, age, and duplica-
+tion with respect to replacement of damaged or de-
+stroyed utilities, or cost-sharing otherwise applicable,
+except that, if the amounts proposed to be obligated
+in connection with the disaster would exceed the
+amount specified in subsection (h), the notification
+
+required by that subsection shall include information
+and justification with regard to any waivers to be
+granted under this subsection;
+‘‘(2) the Secretary of Agriculture may use alter-
+native sources of income data provided by local, re-
+gional, State, or Federal government sources to de-
+termine program eligibility; and
+‘‘(3) with respect to grants authorized by 7
+U.S.C. 1926(a)(19), the Secretary of Agriculture
+shall not require the applicant to demonstrate that
+it is unable to finance the proposed project from its
+own resources, or through commercial credit at rea-
+sonable rates and terms, or other funding sources
+without grant assistance.’’.
+(3) Amounts provided by this section are des-
+ignated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of
+the Balanced Budget and Emergency Deficit Control
+Act of 1985.
+SEC. 2102. (a)(1) With respect to the 2024 crop year,
+if the Secretary determines that the expected gross return
+per acre for an eligible commodity determined under para-
+graph (2) is less than the expected cost of production per
+acre for that eligible commodity determined under para-
+graph (3), the Secretary shall, not later than 90 days after
+
+the date of enactment of this Act, make a 1-time economic
+assistance payment to each producer of that eligible com-
+modity during that crop year.
+(2) The expected gross return per acre for an
+eligible commodity referred to in paragraph (1) shall
+be equal to—
+(A) in the case of wheat, corn, grain sor-
+ghum, barley, oats, cotton, rice, and soybeans,
+the product obtained by multiplying—
+(i) the projected average farm price
+for the applicable eligible commodity for
+the 2024–2025 marketing year contained
+in the most recent World Agricultural Sup-
+ply and Demand Estimates published be-
+fore the date of enactment of this Act by
+the World Agricultural Outlook Board; and
+(ii) the national average harvested
+yield per acre for the applicable eligible
+commodity for the most recent 10 crop
+years, as determined by the Secretary; and
+(B) in the case of each eligible commodity
+not specified in subparagraph (A), a com-
+parable estimate of gross returns, as deter-
+mined by the Secretary.
+
+(3) The expected cost of production per acre for
+an eligible commodity referred to in paragraph (1)
+shall be equal to—
+(A) in the case of wheat, corn, grain sor-
+ghum, barley, oats, cotton, rice, and soybeans,
+the total costs listed for the 2024 crop year
+with respect to the applicable eligible com-
+modity contained in the most recent data prod-
+uct entitled ‘‘national average cost-of-produc-
+tion forecasts for major U.S. field crops’’ pub-
+lished by the Economic Research Service; and
+(B) in the case of each eligible commodity
+not specified in subparagraph (A), a com-
+parable total estimated cost-of-production, as
+determined by the Secretary.
+(4)(A) The amount of an economic assistance
+payment to a producer for an eligible commodity
+under paragraph (1) shall be equal to 26 percent of
+the product obtained by multiplying—
+(i) the economic loss for that eligible
+commodity determined under subpara-
+graph (B); and
+(ii) the eligible acres of that eligible
+commodity on the farm determined under
+subparagraph (C).
+
+(B) For purposes of subparagraph (A)(i),
+the economic loss for an eligible commodity
+shall be equal to the difference between—
+(i) the expected cost of production per
+acre for that eligible commodity, as deter-
+mined under paragraph (3); and
+(ii) the expected gross return per acre
+for that eligible commodity, as determined
+under paragraph (2).
+(C) For purposes of subparagraph (A)(ii),
+the eligible acres of an eligible commodity on a
+farm shall be equal to the sum obtained by add-
+ing—
+(i) the acreage planted on the farm to
+that eligible commodity for harvest, graz-
+ing, haying, silage, or other similar pur-
+poses for the 2024 crop year; and
+(ii) an amount equal to 50 percent of
+the acreage on the farm that was pre-
+vented from being planted during the 2024
+crop year to that eligible commodity be-
+cause of drought, flood, or other natural
+disaster, or other condition beyond the con-
+trol of the producers on the farm, as deter-
+mined by the Secretary.
+
+(D) For purposes of subparagraph (C)(i),
+the Secretary shall consider acreage planted to
+include any land devoted to planted acres for
+accepted skip-row planting patterns, as deter-
+mined by the Secretary.
+(E) If the Secretary determines there is in-
+sufficient data to determine the comparable es-
+timate of gross returns with respect to an eligi-
+ble commodity under paragraph (2)(B) or a
+comparable total estimated cost-of-production
+with respect to an eligible commodity under
+paragraph (3)(B), the Secretary shall use data
+related to a similarly situated commodity for
+purposes of determining the payment amount
+under this paragraph.
+(5) In no case shall the amount of an economic
+assistance payment to a producer for an eligible
+commodity under paragraph (1) be equal to less
+than the product obtained by multiplying—
+(A) 8 percent of the reference price for the
+eligible commodity described in section
+1111(19) of the Agricultural Act of 2014 (7
+U.S.C. 9011(19));
+
+(B) the national average payment yield for
+the eligible commodity described in section
+1111(15) of that Act (7 U.S.C. 9011(15)); and
+(C) the number of eligible acres for the eli-
+gible commodity described in paragraph (4)(C).
+(b)(1) Except as provided in paragraph (2), sections
+1001, 1001A, 1001B, and 1001C of the Food Security
+Act of 1985 (7 U.S.C. 1308, 1308–1, 1308–2, 1308–3)
+shall apply with respect to assistance provided under this
+section.
+(2) The total amount of payments received, di-
+rectly or indirectly, by a person or legal entity (ex-
+cept a joint venture or general partnership) under
+this section may not exceed—
+(A) $125,000, if less than 75 percent of
+the average gross income of the person or legal
+entity for the 2020, 2021, and 2022 tax years
+is derived from farming, ranching, or
+silviculture activities; and
+(B) $250,000, if not less than 75 percent
+of the average gross income of the person or
+legal entity for the 2020, 2021, and 2022 tax
+years is derived from farming, ranching, or
+silviculture activities.
+
+(3) The payment limitations under paragraph
+(2) shall be separate from annual payment limita-
+tions under any other program.
+(c) In this section:
+(1) The terms ‘‘extra-long staple cotton’’ and
+‘‘producer’’ have the meanings given those terms in
+section 1111 of the Agricultural Act of 2014 (7
+U.S.C. 9011).
+(2) The term ‘‘cotton’’ means extra-long staple
+cotton and upland cotton.
+(3)(A) The term ‘‘eligible commodity’’ means a
+loan commodity (as defined in section 1201(a) of the
+Agricultural Act of 2014 (7 U.S.C. 9031(a)).
+(B) The term ‘‘eligible commodity’’ does
+not include graded wool, nongraded wool, mo-
+hair, or honey.
+(4) The terms ‘‘legal entity’’ and ‘‘person’’ have
+the meanings given those terms in section 1001(a)
+of the Food Security Act of 1985 (7 U.S.C.
+1308(a)).
+(5) The term ‘‘rice’’ means long grain rice and
+medium grain rice.
+(6) The term ‘‘Secretary’’ means the Secretary
+of Agriculture.
+
+(d) Amounts provided by this section are designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+TITLE II
+DEPARTMENT OF COMMERCE
+ECONOMIC DEVELOPMENT ADMINISTRATION
+ECONOMIC DEVELOPMENT ASSISTANCE PROGRAMS
+(INCLUDING TRANSFERS OF FUNDS)
+For an additional amount for ‘‘Economic Develop-
+ment Assistance Programs’’, $1,510,000,000, to remain
+available until expended, pursuant to sections 209 and 703
+of the Public Works and Economic Development Act (42
+U.S.C. 3149 and 3233), for economic adjustment assist-
+ance related to flood mitigation, disaster relief, long-term
+recovery, and restoration of infrastructure in areas that
+received a major disaster designation as a result of hurri-
+canes, wildfires, severe storms and flooding, tornadoes,
+and other natural disasters occurring in calendar years
+2023 and 2024 under the Robert T. Stafford Disaster Re-
+lief and Emergency Assistance Act (42 U.S.C. 5121 et
+seq.): Provided, That within the amount appropriated
+under this heading in this Act, up to 3 percent of funds
+may be transferred to ‘‘Salaries and Expenses’’ for admin-
+istration and oversight activities: Provided further, That
+
+within the amount appropriated under this heading in this
+Act, $10,000,000 shall be transferred to the Delta Re-
+gional Authority (7 U.S.C. 2009aa et seq.): Provided fur-
+ther, That the Delta Regional Authority shall notify the
+Committees on Appropriations of the House of Represent-
+atives and the Senate 15 days prior to the obligation of
+the amounts made available under the preceding proviso:
+Provided further, That the Secretary of Commerce is au-
+thorized to appoint and fix the compensation of such tem-
+porary personnel as may be necessary to implement the
+requirements under this heading in this Act, without re-
+gard to the provisions of title 5, United States Code, gov-
+erning appointments in the competitive service: Provided
+further, That within the amount appropriated under this
+heading in this Act, $7,000,000 shall be transferred to
+‘‘Departmental Management—Office of Inspector Gen-
+eral’’ for carrying out investigations and audits related to
+the funding provided under this heading in this Act: Pro-
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+
+NATIONAL OCEANIC AND ATMOSPHERIC
+ADMINISTRATION
+OPERATIONS, RESEARCH, AND FACILITIES
+For an additional amount for ‘‘Operations, Research,
+and Facilities’’ for necessary expenses related to the con-
+sequences of hurricanes, typhoons, flooding, wildfires, and
+other disasters in calendar years 2023 and 2024,
+$244,000,000, to remain available until September 30,
+2026, as follows:
+(1) $144,000,000 for repair and replacement of
+observing assets, real property, and equipment; for
+marine debris assessment and removal; and for map-
+ping, charting, and geodesy services; and
+(2) $100,000,000 for necessary expenses re-
+lated to the consequences of tornadoes, hurricanes,
+typhoons, flooding, and wildfires in calendar year
+2024;
+Provided, That the National Oceanic and Atmospheric Ad-
+ministration shall submit a spending plan to the Commit-
+tees on Appropriations of the House of Representatives
+and the Senate not later than 45 days after the date of
+enactment of this Act: Provided further, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+PROCUREMENT, ACQUISITION AND CONSTRUCTION
+For an additional amount for ‘‘Procurement, Acquisi-
+tion and Construction’’ for necessary expenses related to
+the consequences of hurricanes, typhoons, wildfires, volca-
+noes, and other disasters in calendar years 2022, 2023
+and 2024, $499,000,000, to remain available until ex-
+pended, as follows:
+(1) $100,000,000 for repair and replacement of
+observing assets, real property, and equipment; and
+(2) $399,000,000 for the acquisition of hurri-
+cane hunter aircraft and related expenses as author-
+ized under section 11708 of division K of Public
+Law 117–263:
+Provided, That the National Oceanic and Atmospheric Ad-
+ministration shall submit a spending plan to the Commit-
+tees on Appropriations of the House of Representatives
+and the Senate not later than 45 days after the date of
+enactment of this Act: Provided further, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+
+FISHERIES DISASTER ASSISTANCE
+For an additional amount for ‘‘Fisheries Disaster As-
+sistance’’ for necessary expenses associated with fishery
+resource disaster relief as authorized by law,
+$300,000,000, to remain available until expended: Pro-
+vided, That notwithstanding section 312(a)(3)(A) of the
+Magnuson-Stevens Fishery Conservation and Manage-
+ment Act (18 U.S.C. 1861a(a)(3)(A)), any request for a
+fishery resource disaster determination in Tribal salmon
+and urchin fisheries received by the Secretary prior to
+September 30, 2025, may be evaluated by the Secretary:
+Provided further, That a portion of the amounts provided
+under this heading in this Act shall be used to provide
+additional assistance up to the historical percentage for
+positively determined disasters announced in calendar year
+2024 that were partially funded: Provided further, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+DEPARTMENT OF JUSTICE
+UNITED STATES MARSHALS SERVICE
+SALARIES AND EXPENSES
+For an additional amount for ‘‘Salaries and Ex-
+penses’’, $12,000,000, to remain available until September
+
+30, 2027, for necessary expenses related to the protection
+of the residences of the Supreme Court Justices: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+FEDERAL PRISON SYSTEM
+BUILDINGS AND FACILITIES
+For an additional amount for ‘‘Buildings and Facili-
+ties’’, $64,795,500, to remain available until expended, for
+necessary expenses related to the consequences of major
+disasters: Provided, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+SCIENCE
+NATIONAL AERONAUTICS AND SPACE ADMINISTRATION
+CONSTRUCTION AND ENVIRONMENTAL COMPLIANCE AND
+RESTORATION
+(INCLUDING TRANSFER OF FUNDS)
+For an additional amount for ‘‘Construction and En-
+vironmental Compliance and Restoration’’ for repair and
+replacement of National Aeronautics and Space Adminis-
+tration facilities damaged by hurricanes, tropical storms,
+typhoons, and tornadoes in calendar years 2023 and 2024,
+
+$740,200,000, to remain available until expended: Pro-
+vided, That up to 20 percent of such amount may be
+transferred to ‘‘Space Operations’’ for necessary expenses
+related to communications facilities and equipment, re-
+quired remediation, and alternative operations caused by
+Typhoon Mawar: Provided further, That except as pro-
+vided in the preceding proviso, the amounts appropriated
+under this heading in this Act shall not be available for
+transfer under any transfer authority provided for the Na-
+tional Aeronautics and Space Administration in an appro-
+priation Act for fiscal year 2025: Provided further, That
+the National Aeronautics and Space Administration shall
+submit a spending plan to the Committees on Appropria-
+tions of the House of Representatives and the Senate not
+later than 45 days after the date of enactment of this Act:
+Provided further, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+TITLE III
+DEPARTMENT OF DEFENSE
+OPERATION AND MAINTENANCE
+OPERATION AND MAINTENANCE, ARMY
+For an additional amount for ‘‘Operation and Main-
+tenance, Army’’, $451,894,000, to remain available until
+
+September 30, 2025, for necessary expenses related to the
+consequences of severe storms, straight-line winds, torna-
+does, microbursts, and hurricanes in calendar years 2023
+and 2024: Provided, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, NAVY
+For an additional amount for ‘‘Operation and Main-
+tenance, Navy’’, $1,454,153,000, to remain available until
+September 30, 2025, for necessary expenses related to the
+consequences of Hurricanes Ian, Nicole, Idalia, Helene,
+and Milton, Typhoon Mawar, and severe storms in cal-
+endar year 2023: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, MARINE CORPS
+For an additional amount for ‘‘Operation and Main-
+tenance, Marine Corps’’, $8,900,000, to remain available
+until September 30, 2025, for necessary expenses related
+to the consequences of Hurricanes Helene and Milton:
+Provided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, AIR FORCE
+For an additional amount for ‘‘Operation and Main-
+tenance, Air Force’’, $912,778,000, to remain available
+until September 30, 2025, for necessary expenses related
+to the consequences of Hurricanes Helene and Milton and
+Typhoon Mawar: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, SPACE FORCE
+For an additional amount for ‘‘Operation and Main-
+tenance, Space Force’’, $90,230,000, to remain available
+until September 30, 2025, for necessary expenses related
+to the consequences of Hurricanes Helene and Milton and
+Typhoon Mawar: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, DEFENSE-WIDE
+For an additional amount for ‘‘Operation and Main-
+tenance, Defense-Wide’’, $1,208,000, to remain available
+until September 30, 2025, for necessary expenses related
+to the consequences of Hurricanes Helene and Milton:
+
+Provided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, ARMY RESERVE
+For an additional amount for ‘‘Operation and Main-
+tenance, Army Reserve’’, $19,594,000, to remain available
+until September 30, 2025, for necessary expenses related
+to the consequences of Hurricanes Helene and Milton and
+microbursts in calendar year 2024: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, AIR FORCE RESERVE
+For an additional amount for ‘‘Operation and Main-
+tenance, Air Force Reserve’’, $1,319,000, to remain avail-
+able until September 30, 2025, for necessary expenses re-
+lated to the consequences of Hurricanes Helene and Mil-
+ton and Typhoon Mawar: Provided, That such amount is
+designated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+
+OPERATION AND MAINTENANCE, ARMY NATIONAL
+GUARD
+For an additional amount for ‘‘Operation and Main-
+tenance, Army National Guard’’, $26,065,000, to remain
+available until September 30, 2025, for necessary expenses
+related to the consequences of Hurricanes Helene and Mil-
+ton, Typhoon Mawar, and severe storms in calendar years
+2023 and 2024: Provided, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+OPERATION AND MAINTENANCE, AIR NATIONAL GUARD
+For an additional amount for ‘‘Operation and Main-
+tenance, Air National Guard’’, $2,209,000, to remain
+available until September 30, 2025, for necessary expenses
+related to the consequences of Hurricane Helene and Ty-
+phoon Mawar: Provided, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+PROCUREMENT
+PROCUREMENT OF AMMUNITION, ARMY
+For an additional amount for ‘‘Procurement of Am-
+munition, Army’’, $125,100,000, to remain available until
+September 30, 2027, for necessary expenses related to the
+
+consequences of Hurricane Helene: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+OTHER PROCUREMENT, AIR FORCE
+For an additional amount for ‘‘Other Procurement,
+Air Force’’, $129,722,000, to remain available until Sep-
+tember 30, 2027, for necessary expenses related to the
+consequences of Typhoon Mawar: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+PROCUREMENT, SPACE FORCE
+For an additional amount for ‘‘Procurement, Space
+Force’’, $37,994,000, to remain available until September
+30, 2027, for necessary expenses related to the con-
+sequences of Typhoon Mawar: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+RESEARCH, DEVELOPMENT, TEST AND
+EVALUATION
+RESEARCH, DEVELOPMENT, TEST AND EVALUATION,
+ARMY
+For an additional amount for ‘‘Research, Develop-
+ment, Test and Evaluation, Army’’, $41,400,000, to re-
+main available until September 30, 2026, for necessary ex-
+penses related to the consequences of severe storms and
+wave overwash: Provided, That such amount is designated
+by the Congress as being for an emergency requirement
+pursuant to section 251(b)(2)(A)(i) of the Balanced Budg-
+et and Emergency Deficit Control Act of 1985.
+RESEARCH, DEVELOPMENT, TEST AND EVALUATION,
+AIR FORCE
+For an additional amount for ‘‘Research, Develop-
+ment, Test and Evaluation, Air Force’’, $69,278,000, to
+remain available until September 30, 2026, for necessary
+expenses related to the consequences of Typhoon Mawar:
+Provided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+
+OTHER DEPARTMENT OF DEFENSE PROGRAMS
+DEFENSE HEALTH PROGRAM
+For an additional amount for ‘‘Defense Health Pro-
+gram’’, $17,362,000, to remain available until September
+30, 2025, for necessary expenses related to the con-
+sequences of Hurricanes Helene and Milton: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+TITLE IV
+CORPS OF ENGINEERS—CIVIL
+DEPARTMENT OF THE ARMY
+CORPS OF ENGINEERS—CIVIL
+INVESTIGATIONS
+For an additional amount for ‘‘Investigations’’,
+$20,000,000, to remain available until expended, for nec-
+essary expenses related to the completion, or initiation and
+completion, of flood and storm damage reduction, includ-
+ing shore protection, studies that are currently authorized,
+to reduce risks from future floods and hurricanes, at full
+Federal expense: Provided, That amounts made available
+under this heading in this Act shall be for high-priority
+studies of projects in States and insular areas with a
+major disaster, including for glacial lake outbursts, in cal-
+
+endar year 2022, 2023, or 2024: Provided further, That
+not later than 60 days after the date of enactment of this
+Act and not less than three business days prior to public
+release, the Chief of Engineers shall submit directly to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate a detailed work plan for the funds
+provided under this heading in this Act, including a list
+of study locations, new studies selected to be initiated, the
+total cost for each study selected for funding, the remain-
+ing cost for each ongoing study selected for funding, and
+a schedule by fiscal year of the proposed use of such funds:
+Provided further, That the Secretary of the Army shall not
+deviate from the work plan, once the plan has been sub-
+mitted to such Committees: Provided further, That funds
+included in a submitted work plan shall be deemed allo-
+cated to specific projects and subject to the reprogram-
+ming requirements specified in section 101(6) of the En-
+ergy and Water Development and Related Agencies Ap-
+propriations Act, 2024: Provided further, That beginning
+not later than 60 days after the date of enactment of this
+Act and until all amounts provided under this heading in
+this Act have been expended, the Assistant Secretary of
+the Army for Civil Works shall provide a quarterly report
+directly to such Committees detailing the allocation, obli-
+gation, and expenditure of the funds provided under this
+
+heading in this Act: Provided further, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+CONSTRUCTION
+For an additional amount for ‘‘Construction’’,
+$700,000,000, to remain available until expended, for nec-
+essary expenses to address emergency situations at Corps
+of Engineers projects, construct Corps of Engineers
+projects, and rehabilitate and repair damages caused by
+natural disasters to Corps of Engineers projects: Provided,
+That of the amount provided under this heading in this
+Act, $100,000,000 shall be used for continuing authorities
+projects to reduce the risk of flooding and storm damage,
+notwithstanding project number or program cost limita-
+tions: Provided further, That of the amount provided
+under this heading in this Act, $300,000,000 shall be to
+complete, or initiate and complete, without regard to new
+start or new investment decision considerations, a useful
+increment of work for water-related environmental infra-
+structure assistance in States and insular areas that were
+impacted by disasters occurring in or prior to calendar
+year 2024: Provided further, That of the amount provided
+under this heading in this Act, $300,000,000 shall be for
+
+projects that have previously received funds under this
+heading in chapter 4 of title X of the Disaster Relief Ap-
+propriations Act, 2013 (division A of Public Law 113–2),
+title IV of division B of the Bipartisan Budget Act of 2018
+(Public Law 115–123), or title IV of the Disaster Relief
+Supplemental Appropriations Act, 2022 (division B of
+Public Law 117–43), and for which non-Federal interests
+have entered into binding agreements with the Secretary
+as of the date of enactment of this Act: Provided further,
+That each project receiving funds pursuant to the pre-
+ceding proviso shall be subject to the terms and conditions
+of such chapter 4 of title X of the Disaster Relief Appro-
+priations Act, 2013 (division A of Public Law 113–2), title
+IV of division B of the Bipartisan Budget Act of 2018
+(Public Law 115–123), or title IV of the Disaster Relief
+Supplemental Appropriations Act, 2022 (division B of
+Public Law 117–43), and as specifically modified by sec-
+tion 111 of the Energy and Water Development and Re-
+lated Agencies Appropriations Act, 2024 (division D of
+Public Law 118–42), as applicable: Provided further, That
+of the amount provided under this heading in this Act,
+such sums as are necessary to cover the Federal share of
+eligible construction costs for coastal harbors and chan-
+nels, and for inland harbors eligible to be derived from
+the Harbor Maintenance Trust Fund under section 101
+
+or section 104 of the Water Resources and Development
+Act of 2020 shall be derived from the general fund of the
+Treasury: Provided further, That for projects receiving
+funding under this heading in this Act, the limitation con-
+cerning total project costs in section 902 of the Water Re-
+sources Development Act of 1986 (Public Law 99–662)
+shall not apply to funds provided under this heading in
+this Act: Provided further, That for any projects using
+funding provided under this heading in this Act, the non-
+Federal cash contribution for projects shall be financed
+in accordance with the provisions of section 103(k) of Pub-
+lic Law 99–662 over a period of 30 years from the date
+of completion of the project, separable element, or useful
+increment: Provided further, That any projects initiated
+using funds provided under this heading in this Act shall
+be initiated only after non-Federal interests have entered
+into binding agreements with the Secretary requiring,
+where applicable, the non-Federal interests to pay 100
+percent of the operation, maintenance, repair, replace-
+ment, and rehabilitation costs of the project and to hold
+and save the United States free from damages due to the
+construction or operation and maintenance of the project,
+except for damages due to the fault or negligence of the
+United States or its contractors: Provided further, That
+not later than 60 days after the date of enactment of this
+
+Act and not less than three business days prior to public
+release, the Chief of Engineers shall submit directly to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate a detailed work plan for the funds
+provided under this heading in this Act, including a list
+of project locations, the total cost for all projects, and a
+schedule by fiscal year of proposed use of such funds: Pro-
+vided further, That the Secretary shall not deviate from
+the work plan, once the plan has been submitted to such
+Committees: Provided further, That funds included in a
+submitted work plan shall be deemed allocated to specific
+projects and subject to the reprogramming requirements
+specified in section 101(7) of the Energy and Water De-
+velopment and Related Agencies Appropriations Act,
+2024: Provided further, That beginning not later than 60
+days after the date of enactment of this Act and until all
+amounts provided under this heading in this Act have been
+expended, the Assistant Secretary of the Army for Civil
+Works shall provide a quarterly report directly to such
+Committees detailing the allocation, obligation, and ex-
+penditure of the funds provided under this heading in this
+Act: Provided further, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+
+MISSISSIPPI RIVER AND TRIBUTARIES
+For an additional amount for ‘‘Mississippi River and
+Tributaries’’, $50,000,000, to remain available until ex-
+pended, for necessary expenses to address emergency situ-
+ations at Corps of Engineers projects, and to construct,
+and rehabilitate and repair damages to Corps of Engineers
+projects, caused by natural disasters: Provided, That be-
+ginning not later than 60 days after the date of enactment
+of this Act and until all amounts provided under this head-
+ing in this Act have been expended, the Assistant Sec-
+retary of the Army for Civil Works shall provide a quar-
+terly report directly to the Committees on Appropriations
+of the House of Representatives and the Senate detailing
+the allocation, obligation, and expenditure of the funds
+provided under this heading in this Act: Provided further,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+FLOOD CONTROL AND COASTAL EMERGENCIES
+For an additional amount for ‘‘Flood Control and
+Coastal Emergencies’’, as authorized by section 5 of the
+Act of August 18, 1941 (33 U.S.C. 701n), $745,000,000,
+to remain available until expended, for necessary expenses
+to prepare for flood, hurricane, and other natural disasters
+
+and support emergency operations, repairs, and other ac-
+tivities in response to such disasters, as authorized by law:
+Provided, That funding provided under this heading in
+this Act utilized to repair authorized shore protection
+projects shall restore such projects to their full project
+profile at full Federal expense: Provided further, That be-
+ginning not later than 60 days after the date of enactment
+of this Act and until all amounts provided under this head-
+ing in this Act have been expended, the Chief of Engineers
+shall provide a quarterly report directly to the Committees
+on Appropriations of the House of Representatives and the
+Senate detailing the allocation, obligation, and expenditure
+of the funds provided under this heading in this Act: Pro-
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+DEPARTMENT OF THE INTERIOR
+BUREAU OF RECLAMATION
+WATER AND RELATED RESOURCES
+For an additional amount for ‘‘Water and Related
+Resources’’, $74,464,000, to remain available until ex-
+pended, of which $27,930,000 shall be for necessary ex-
+penses related to the consequences of natural disasters
+that occurring in or prior to calendar year 2024: Provided,
+
+That $46,534,000 shall be available for deposit into the
+Aging Infrastructure Account established by section
+9603(d)(1) of the Omnibus Public Land Management Act
+of 2009 (43 U.S.C. 510b(d)(1)), and shall be made avail-
+able for reserved or transferred works that have suffered
+a critical failure, in accordance with section 40901(2)(A)
+of division D of Public Law 117–58: Provided further,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+DEPARTMENT OF ENERGY
+ENERGY PROGRAMS
+STRATEGIC PETROLEUM RESERVE
+For an additional amount for ‘‘Strategic Petroleum
+Reserve’’, $60,000,000, to remain available until ex-
+pended, for necessary expenses related to damages caused
+by natural disasters: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+
+ATOMIC ENERGY DEFENSE ACTIVITIES
+NATIONAL NUCLEAR SECURITY
+ADMINISTRATION
+WEAPONS ACTIVITIES
+For an additional amount for ‘‘Weapons Activities’’,
+$1,884,000, to remain available until expended, for nec-
+essary expenses related to damages caused by Hurricanes
+Helene and Milton: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+ENVIRONMENTAL AND OTHER DEFENSE
+ACTIVITIES
+DEFENSE ENVIRONMENTAL CLEANUP
+For an additional amount for ‘‘Defense Environ-
+mental Cleanup’’, $2,415,000, to remain available until
+expended, for necessary expenses related to damages
+caused by Hurricanes Helene and Milton: Provided, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+TITLE V
+THE JUDICIARY
+SUPREME COURT OF THE UNITED STATES
+SALARIES AND EXPENSES
+For an additional amount for ‘‘Salaries and Ex-
+penses’’, $13,597,000, to remain available until expended,
+for protection of the residences of the Supreme Court Jus-
+tices: Provided, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+INDEPENDENT AGENCIES
+SMALL BUSINESS ADMINISTRATION
+DISASTER LOANS PROGRAM ACCOUNT
+(INCLUDING TRANSFER OF FUNDS)
+For an additional amount for ‘‘Disaster Loans Pro-
+gram Account’’ for the cost of direct loans authorized by
+section 7(b) of the Small Business Act, $2,249,000,000,
+to remain available until expended, of which $50,000,000
+shall be transferred to ‘‘Small Business Administration—
+Office of Inspector General’’ for audits and reviews of dis-
+aster loans and the disaster loans programs, and of which
+$613,000,000 may be transferred to ‘‘Small Business Ad-
+ministration—Salaries and Expenses’’ for administrative
+expenses to carry out the disaster loan program authorized
+
+by section 7(b) of the Small Business Act: Provided, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+TITLE VI
+DEPARTMENT OF HOMELAND SECURITY
+SECURITY, ENFORCEMENT, AND
+INVESTIGATIONS
+COAST GUARD
+OPERATIONS AND SUPPORT
+For an additional amount for ‘‘Operations and Sup-
+port’’, $102,500,000, to remain available until September
+30, 2027, for necessary expenses related to the con-
+sequences of the Francis Scott Key Bridge collapse and
+other disasters, including for minor repairs, maintenance,
+and environmental remediation costs: Provided, That the
+Commandant of the Coast Guard shall provide to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate an expenditure plan and quarterly
+updates for the expenditure of such funds: Provided fur-
+ther, That such amount is designated by the Congress as
+being for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+PROCUREMENT, CONSTRUCTION, AND IMPROVEMENTS
+For an additional amount for ‘‘Procurement, Con-
+struction, and Improvements’’, $210,200,000, to remain
+available until September 30, 2029, for necessary expenses
+related to the consequences of disasters: Provided, That
+the Commandant of the Coast Guard shall provide to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate an expenditure plan and quarterly
+updates for the expenditure of such funds: Provided fur-
+ther, That such amount is designated by the Congress as
+being for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+PROTECTION, PREPAREDNESS, RESPONSE, AND
+RECOVERY
+FEDERAL EMERGENCY MANAGEMENT AGENCY
+DISASTER RELIEF FUND
+(INCLUDING TRANSFER OF FUNDS)
+For an additional amount for ‘‘Disaster Relief
+Fund’’, $29,000,000,000, to remain available until ex-
+pended, of which $28,000,000,000 shall be for major dis-
+asters declared pursuant to the Robert T. Stafford Dis-
+aster Relief and Emergency Assistance Act (42 U.S.C.
+5121 et seq.): Provided, That $4,000,000 shall be trans-
+ferred to ‘‘Office of Inspector General—Operations and
+
+Support’’ for audits and investigations funded under
+‘‘Federal Emergency Management Agency—Disaster Re-
+lief Fund’’: Provided further, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+HERMIT’S PEAK/CALF CANYON FIRE ASSISTANCE
+ACCOUNT
+(INCLUDING TRANSFER OF FUNDS)
+For an additional amount for ‘‘Hermit’s Peak/Calf
+Canyon Fire Assistance Account’’, $1,500,000,000, to re-
+main available until expended: Provided, That $1,000,000
+shall be transferred to ‘‘Office of Inspector General—Op-
+erations and Support’’ for oversight of activities author-
+ized by the Hermit’s Peak/Calf Canyon Fire Assistance
+Act: Provided further, That the amounts provided under
+this heading in this Act shall be subject to the reporting
+requirement in the third proviso of section 136 of the Con-
+tinuing Appropriations Act, 2023 (division A of Public
+Law 117–180): Provided further, That amounts provided
+under this heading in this Act shall be subject to the same
+authorities and conditions as if such amounts were pro-
+vided by title III of the Department of Homeland Security
+Appropriations Act, 2024 (division C of Public Law 118–
+47): Provided further, That such amount is designated by
+
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+RESEARCH, DEVELOPMENT, TRAINING, AND
+SERVICES
+FEDERAL LAW ENFORCEMENT TRAINING CENTERS
+PROCUREMENT, CONSTRUCTION, AND IMPROVEMENTS
+For an additional amount for ‘‘Procurement, Con-
+struction, and Improvements’’, $14,020,000, to remain
+available until September 30, 2029, for necessary expenses
+relating to the consequences of disasters: Provided, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+TITLE VII
+DEPARTMENT OF THE INTERIOR
+BUREAU OF LAND MANAGEMENT
+MANAGEMENT OF LANDS AND RESOURCES
+For an additional amount for ‘‘Management of Lands
+and Resources’’, $58,115,000, to remain available until
+expended, for necessary expenses related to the con-
+sequences of natural disasters occurring in and prior to
+calendar year 2024: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+UNITED STATES FISH AND WILDLIFE SERVICE
+CONSTRUCTION
+For an additional amount for ‘‘Construction’’,
+$500,000,000, to remain available until expended, for nec-
+essary expenses related to the consequences of natural dis-
+asters occurring in and prior to calendar year 2024: Pro-
+vided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+NATIONAL PARK SERVICE
+HISTORIC PRESERVATION FUND
+For an additional amount for ‘‘Historic Preservation
+Fund’’, $50,000,000, to remain available until expended,
+for necessary expenses related to the consequences of nat-
+ural disasters occurring in and prior to calendar year
+2024, including costs to States, Tribes, and territories
+necessary to complete compliance activities required by
+section 306108 of title 54, United States Code, and costs
+needed to administer the program: Provided, That funds
+appropriated under this heading in this Act shall be used
+for historic and cultural resource preservation work that
+meets the Secretary of the Interior’s Standards and
+
+Guidelines as published in the Federal Register (Vol. 48,
+No. 190, September 29, 1983), to include Reconstruction
+of National Register listed or eligible sites: Provided fur-
+ther, That grants using funds appropriated under this
+heading in this Act shall only be available for areas that
+have received a major disaster declaration pursuant to the
+Robert T. Stafford Disaster Relief and Emergency Assist-
+ance Act (42 U.S.C. 5121 et seq.): Provided further, That
+such grants shall not be subject to a non-Federal matching
+requirement: Provided further, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+CONSTRUCTION
+For an additional amount for ‘‘Construction’’,
+$2,262,871,000, to remain available until expended, for
+necessary expenses related to the consequences of disas-
+ters, including hurricanes, tropical storms, tornadoes, and
+other severe storms, wildfire, fire, and flooding occurring
+in and prior to calendar year 2024: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+UNITED STATES GEOLOGICAL SURVEY
+SURVEYS, INVESTIGATIONS, AND RESEARCH
+For an additional amount for ‘‘Surveys, Investiga-
+tions, and Research’’, $2,743,000, to remain available
+until expended, for necessary expenses related to the con-
+sequences of natural disasters occurring in and prior to
+calendar year 2024: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+INDIAN AFFAIRS
+BUREAU OF INDIAN AFFAIRS
+OPERATION OF INDIAN PROGRAMS
+For an additional amount for ‘‘Operation of Indian
+Programs’’, $17,765,000, to remain available until ex-
+pended, for necessary expenses related to the consequences
+of natural disasters occurring in and prior to calendar
+year 2024: Provided, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+BUREAU OF INDIAN EDUCATION
+EDUCATION CONSTRUCTION
+For an additional amount for ‘‘Education Construc-
+tion’’, $153,000,000, to remain available until expended,
+
+for necessary expenses related to the consequences of nat-
+ural disasters occurring in and prior to calendar year
+2024: Provided, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+OFFICE OF INSPECTOR GENERAL
+SALARIES AND EXPENSES
+For an additional amount for ‘‘Salaries and Ex-
+penses’’, $8,000,000, to remain available until expended,
+for oversight of the Department of the Interior activities
+funded by this Act: Provided, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+ENVIRONMENTAL PROTECTION AGENCY
+LEAKING UNDERGROUND STORAGE TANK TRUST FUND
+PROGRAM
+For an additional amount for ‘‘Leaking Underground
+Storage Tank Trust Fund Program’’, $17,000,000, to re-
+main available until expended, for necessary expenses re-
+lated to the consequences of Hurricanes Helene and
+Hilary: Provided, That such amount is designated by the
+Congress as being for an emergency requirement pursuant
+
+to section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+STATE AND TRIBAL ASSISTANCE GRANTS
+For an additional amount for ‘‘State and Tribal As-
+sistance Grants’’, $3,000,000,000 to remain available
+until expended, of which $1,230,000,000 shall be for cap-
+italization grants for the Clean Water State Revolving
+Funds under title VI of the Federal Water Pollution Con-
+trol Act, and of which $1,770,000,000 shall be for capital-
+ization grants under section 1452 of the Safe Drinking
+Water Act: Provided, That notwithstanding section 604(a)
+of the Federal Water Pollution Control Act and section
+1452(a)(1)(D) of the Safe Drinking Water Act, funds ap-
+propriated under this paragraph in this Act shall be pro-
+vided to States or territories in EPA Regions 3, 4, and
+9 in amounts determined by the Administrator of the En-
+vironmental Protection Agency for wastewater treatment
+works and drinking water facilities impacted by Hurri-
+canes Helene and Milton and Hawaii wildfires: Provided
+further, That notwithstanding the requirements of section
+603(i) of the Federal Water Pollution Control Act and sec-
+tion 1452(d) of the Safe Drinking Water Act, for the
+funds appropriated under this paragraph in this Act, each
+State shall use not less than 30 percent of the amount
+of its capitalization grants to provide additional subsidiza-
+
+tion to eligible recipients in the form of forgiveness of prin-
+cipal, negative interest loans or grants, or any combination
+of these: Provided further, That the funds appropriated
+under this paragraph in this Act shall be used for eligible
+projects whose purpose is to reduce flood or fire damage
+risk and vulnerability or to enhance resiliency to rapid hy-
+drologic change or natural disaster at treatment works,
+as defined by section 212 of the Federal Water Pollution
+Control Act, or any eligible facilities under section 1452
+of the Safe Drinking Water Act, and for other eligible
+tasks at such treatment works or facilities necessary to
+further such purposes: Provided further, That the funds
+provided under this paragraph in this Act shall not be sub-
+ject to the matching or cost share requirements of section
+1452(e) of the Safe Drinking Water Act: Provided further,
+That funds provided under this paragraph in this Act shall
+not be subject to the matching or cost share requirements
+of sections 602(b)(2), 602(b)(3), or 202 of the Federal
+Water Pollution Control Act: Provided further, That the
+Administrator of the Environmental Protection Agency
+may retain up to $5,000,000 of the funds appropriated
+under this paragraph in this Act for management and
+oversight: Provided further, That such amount is des-
+ignated by the Congress as being for an emergency re-
+
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+For an additional amount for ‘‘State and Tribal As-
+sistance Grants’’, $85,000,000, to remain available until
+expended, for capitalization grants for the Clean Water
+State Revolving Funds under title VI of the Federal Water
+Pollution Control Act: Provided, That notwithstanding
+section 604(a) of the Federal Water Pollution Control Act,
+funds appropriated under this paragraph in this Act shall
+be provided to States or territories in EPA Regions 3 and
+4 impacted by Hurricanes Helene and Milton in amounts
+determined by the Administrator of the Environmental
+Protection Agency to improve the resilience of decentral-
+ized wastewater treatment systems to flooding, to assess
+the potential to connect homes served by decentralized
+wastewater treatment systems to centralized wastewater
+systems, and to fund such connections: Provided further,
+That notwithstanding the requirements of section 603(i)
+of the Federal Water Pollution Control Act, for the funds
+appropriated under this paragraph in this Act, each State
+shall use 100 percent of the amount of its capitalization
+grants to provide additional subsidization to eligible recipi-
+ents in the form of forgiveness of principal, grants, nega-
+tive interest loans, other loan forgiveness, and through
+buying, refinancing, or restructuring debt or any combina-
+
+tion thereof: Provided further, That funds appropriated
+under this paragraph in this Act shall not be subject to
+the matching or cost share requirements of sections
+602(b)(2), 602(b)(3), or 202 of the Federal Water Pollu-
+tion Control Act: Provided further, That the Administrator
+of the Environmental Protection Agency may retain up to
+$3,000,000 of the funds appropriated under this para-
+graph in this Act for management and oversight: Provided
+further, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+For an additional amount for ‘‘State and Tribal As-
+sistance Grants’’, $60,000,000, to remain available until
+expended, for necessary expenses to address water emer-
+gencies under section 1442(b) of the Safe Drinking Water
+Act (42 U.S.C. 300j–1(b)) or section 504(a) of the Fed-
+eral Water Pollution Control Act (33 U.S.C. 1364) in
+States or territories in EPA Regions 3 and 4 impacted
+by Hurricanes Helene and Milton: Provided, That notwith-
+standing section 1442(b) of the Safe Drinking Water Act,
+funds appropriated under this paragraph in this Act may
+be used to provide technical assistance and grants regard-
+less of whether the emergency situation presents a sub-
+stantial danger to public health: Provided further, That
+
+notwithstanding section 1442(b) of the Safe Drinking
+Water Act, funds appropriated under this paragraph in
+this Act may be used to provide grants regardless of
+whether such grants will be used to support actions that
+would not otherwise be taken without emergency assist-
+ance: Provided further, That funds appropriated under
+this paragraph in this Act may be used to provide tech-
+nical assistance and grants under section 1442(b) of the
+Safe Drinking Water Act to any appropriate recipient, as
+determined by the Administrator of the Environmental
+Protection Agency, to assist in responding to and alle-
+viating an emergency situation affecting a privately owned
+water system: Provided further, That funds appropriated
+under this paragraph in this Act may be used to take ac-
+tions authorized under section 504(a) of the Federal
+Water Pollution Control Act that the Administrator of the
+Environmental Protection Agency deems necessary to pro-
+tect the health or welfare of persons affected by a water
+emergency, including other necessary actions and for pro-
+viding technical assistance and grants to address such
+water emergency: Provided further, That the Adminis-
+trator of the Environmental Protection Agency may retain
+up to $1,000,000 of the funds appropriated under this
+paragraph in this Act for management and oversight: Pro-
+vided further, That such amount is designated by the Con-
+
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+For an additional amount for ‘‘State and Tribal As-
+sistance Grants’’, $10,000,000, to remain available until
+expended, for grants and other activities authorized by
+subsections (a) through (c) of section 103 of the Clean
+Air Act (42 U.S.C. 7403) or section 105 of such Act (42
+U.S.C. 7405) for necessary expenses related to the con-
+sequences of Hurricanes Milton and Helene, including re-
+pair or replacement of damaged air monitoring equipment:
+Provided, That funds appropriated under this paragraph
+in this Act may be awarded noncompetitively: Provided
+further, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+For an additional amount for ‘‘State and Tribal As-
+sistance Grants’’, $95,000,000, to remain available until
+expended, for the hazardous waste financial assistance
+grants program and other solid waste management activi-
+ties for necessary expenses related to the consequences of
+Hurricanes Helene and Milton: Provided, That none of the
+funds appropriated under this paragraph in this Act shall
+be subject to section 3011(b) of the Solid Waste Disposal
+
+Act: Provided further, That the Administrator of the Envi-
+ronmental Protection Agency may retain up to $500,000
+of the funds appropriated under this paragraph in this Act
+for management and oversight: Provided further, That
+such amount is designated by the Congress as being for
+an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+DEPARTMENT OF AGRICULTURE
+FOREST SERVICE
+FOREST SERVICE OPERATIONS
+For an additional amount for ‘‘Forest Service Oper-
+ations’’, $68,100,000, to remain available until expended,
+for necessary expenses related to the consequences of cal-
+endar year 2022, 2023, and 2024 wildfires, hurricanes,
+and other natural disasters: Provided, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+FOREST AND RANGELAND RESEARCH
+For an additional amount for ‘‘Forest and Rangeland
+Research’’, $26,000,000, to remain available until ex-
+pended, for necessary expenses related to the consequences
+of calendar year 2022, 2023, and 2024 wildfires, hurri-
+
+canes, and other natural disasters: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+STATE, PRIVATE, AND TRIBAL FORESTRY
+For an additional amount for ‘‘State, Private, and
+Tribal Forestry’’, $208,000,000, to remain available until
+expended, for necessary expenses related to the con-
+sequences of calendar year 2022, 2023, and 2024
+wildfires, hurricanes, and other natural disasters: Pro-
+vided, That of the amounts made available under this
+heading in this Act, $14,000,000 shall be to provide For-
+est Health Protection assistance to States for an emerging
+eastern spruce budworm outbreak approaching the north-
+eastern U.S. border: Provided further, That with respect
+to the preceding proviso, an award of financial assistance
+from the Forest Service will not be subject to a non-Fed-
+eral cost-share requirement: Provided further, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+NATIONAL FOREST SYSTEM
+For an additional amount for ‘‘National Forest Sys-
+tem’’, $2,523,000,000, to remain available until expended:
+Provided, That of the amounts made available under this
+heading in this Act, $2,448,000,000 shall be for necessary
+expenses related to the consequences of calendar year
+2022, 2023, and 2024 wildfires, hurricanes, and other
+natural disasters: Provided further, That of the amounts
+made available under this heading in this Act,
+$75,000,000 shall be for the construction or maintenance
+of shaded fuel breaks in the Pacific Regions: Provided fur-
+ther, That such amount is designated by the Congress as
+being for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+CAPITAL IMPROVEMENT AND MAINTENANCE
+For an additional amount for ‘‘Capital Improvement
+and Maintenance’’, $3,525,000,000, to remain available
+until expended, for necessary expenses related to the con-
+sequences of calendar year 2022, 2023, and 2024
+wildfires, hurricanes, and other natural disasters: Pro-
+vided, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+
+GENERAL PROVISIONS—THIS TITLE
+SEC. 2701. Notwithstanding section 3304 of title 5,
+United States Code, and without regard to the provisions
+of sections 3309 through 3318 of such title 5, the Sec-
+retary of the Interior and the Secretary of Agriculture,
+acting through the Chief of the Forest Service, may re-
+cruit and directly appoint highly qualified individuals into
+the competitive service to address critical hiring needs for
+the planning and execution of the projects and activities
+funded in this title: Provided, That such authority shall
+not apply to positions in the Excepted Service or the Sen-
+ior Executive Service: Provided further, That any action
+authorized herein shall be consistent with the merit prin-
+ciples of section 2301 of such title 5, and the Department
+of the Interior and the Department of Agriculture shall
+comply with the public notice requirements of section 3327
+of such title 5: Provided further, That the authority under
+this section shall terminate on September 30, 2029: Pro-
+vided further, That amounts provided by this section are
+designated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+SEC. 2702. Not later than 45 days after the date of
+enactment of this Act, the agencies receiving funds appro-
+priated by this title shall provide a detailed operating plan
+
+of anticipated uses of funds made available in this title
+by State and Territory, and by program, project, and ac-
+tivity, to the Committees on Appropriations of the House
+of Representatives and the Senate: Provided, That no such
+funds shall be obligated before the operating plans are
+provided to such Committees: Provided further, That such
+plans shall be updated, including obligations and expendi-
+tures to date, and submitted to such Committees on Ap-
+propriations every 60 days until all such funds are ex-
+pended.
+TITLE VIII
+DEPARTMENT OF HEALTH AND HUMAN
+SERVICES
+ADMINISTRATION FOR CHILDREN AND FAMILIES
+PAYMENTS TO STATES FOR THE CHILD CARE AND
+DEVELOPMENT BLOCK GRANT
+For an additional amount for ‘‘Payments to States
+for the Child Care and Development Block Grant’’,
+$250,000,000, to remain available through September 30,
+2026, for necessary expenses directly related to the con-
+sequences of major disasters and emergencies declared
+pursuant to the Robert T. Stafford Disaster Relief and
+Emergency Assistance Act (42 U.S.C. 5121 et seq.) occur-
+ring in 2023 and 2024 (referred to under this heading
+in this Act as ‘‘covered disaster or emergency’’), including
+
+activities authorized under section 319(a) of the Public
+Health Service Act: Provided, That the Secretary of
+Health and Human Services shall allocate such funds to
+States, territories, and Tribes based on assessed need not-
+withstanding sections 658J and 658O of the Child Care
+and Development Block Grant Act of 1990: Provided fur-
+ther, That not to exceed 2 percent of funds appropriated
+in this paragraph may be reserved, to remain available
+until expended, for Federal administration costs: Provided
+further, That such funds may be used for alteration, ren-
+ovation, construction, equipment, and other capital im-
+provement costs, including for child care facilities without
+regard to section 658F(b) of such Act, and for other ex-
+penditures related to child care, as necessary to meet the
+needs of areas affected by a covered disaster or emergency:
+Provided further, That funds made available in this para-
+graph may be used without regard to section 658G of such
+Act and with amounts allocated for such purposes ex-
+cluded from the calculation of percentages under sub-
+section 658E(c)(3) of such Act: Provided further, That
+notwithstanding section 658J(c) of such Act, funds allot-
+ted to a State may be obligated by the State in that fiscal
+year or the succeeding three fiscal years: Provided further,
+That Federal interest provisions will not apply to the ren-
+ovation or construction of privately-owned family child
+
+care homes, and the Secretary of Health and Human
+Services shall develop parameters on the use of funds for
+family child care homes: Provided further, That the Sec-
+retary shall not retain Federal interest after a period of
+10 years (from the date on which the funds are made
+available to purchase or improve the property) in any facil-
+ity renovated or constructed with funds made available in
+this paragraph: Provided further, That funds made avail-
+able in this paragraph shall not be available for costs that
+are reimbursed by the Federal Emergency Management
+Agency, under a contract for insurance, or by self-insur-
+ance: Provided further, That funds appropriated in this
+paragraph may be made available to restore amounts, ei-
+ther directly or through reimbursement, for obligations in-
+curred for such purposes, prior to the date of enactment
+of this Act: Provided further, That such amount is des-
+ignated by the Congress as being for an emergency re-
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985.
+For an additional amount for ‘‘Payments to States
+for the Child Care and Development Block Grant’’,
+$250,000,000, to remain available until September 30,
+2025: Provided, That amounts made available in this
+paragraph shall be available without regard to require-
+ments in sections 658E(c)(3)(E) or 658G of the Child
+
+Care and Development Block Grant Act: Provided further,
+That payments made to States, territories, Indian Tribes,
+and Tribal organizations from amounts made available in
+this paragraph shall be obligated in this fiscal year or the
+succeeding two fiscal years: Provided further, That
+amounts made available in this paragraph shall be used
+to supplement and not supplant other Federal, State, and
+local public funds expended to provide child care services
+for eligible individuals: Provided further, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+GENERAL PROVISION—THIS TITLE
+SEC. 2801. Not later than 45 days after the date of
+enactment of this Act, the agencies receiving funds appro-
+priated by this title in this Act shall provide a detailed
+operating plan of anticipated uses of funds made available
+in this title in this Act by State and territory, and by pro-
+gram, project, and activity, to the Committees on Appro-
+priations of the House of Representatives and the Senate:
+Provided, That no such funds shall be obligated before the
+operating plans are provided to such Committees: Pro-
+vided further, That such plans shall be updated, including
+obligations to date and anticipated use of funds made
+
+available in this title in this Act, and submitted to such
+Committees quarterly until all such funds expire.
+TITLE IX
+LEGISLATIVE BRANCH
+GOVERNMENT ACCOUNTABILITY OFFICE
+SALARIES AND EXPENSES
+For an additional amount for ‘‘Salaries and Ex-
+penses’’, $10,000,000, to remain available until expended,
+for audits and investigations related to Hurricanes Helene
+and Milton, and other disasters declared pursuant to the
+Robert T. Stafford Disaster Relief and Emergency Assist-
+ance Act (42 U.S.C. 5121 et seq.) in calendar years 2023
+and 2024: Provided, That such amount is designated by
+the Congress as being for an emergency requirement pur-
+suant to section 251(b)(2)(A)(i) of the Balanced Budget
+and Emergency Deficit Control Act of 1985.
+TITLE X
+DEPARTMENT OF DEFENSE
+MILITARY CONSTRUCTION, NAVY AND MARINE CORPS
+For an additional amount for ‘‘Military Construction,
+Navy and Marine Corps’’, $1,127,281,000, to remain
+available until September 30, 2029, for necessary expenses
+related to the consequences of Typhoon Mawar: Provided,
+That not later than 60 days after enactment of this Act,
+the Secretary of the Navy, or their designee, shall submit
+
+to the Committees on Appropriations of the House of Rep-
+resentatives and the Senate form 1391 for each specific
+project and an expenditure plan for funds provided under
+this heading in this Act: Provided further, That such funds
+may be obligated or expended for design and military con-
+struction projects not otherwise authorized by law: Pro-
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+MILITARY CONSTRUCTION, AIR FORCE
+For an additional amount for ‘‘Military Construction,
+Air Force’’, $487,300,000, to remain available until Sep-
+tember 30, 2029, for necessary expenses related to the
+consequences of Typhoon Mawar: Provided, That not later
+than 60 days after enactment of this Act, the Secretary
+of the Air Force, or their designee, shall submit to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate form 1391 for each specific project
+and an expenditure plan for funds provided under this
+heading in this Act: Provided further, That such funds
+may be obligated or expended for design and military con-
+struction projects not otherwise authorized by law: Pro-
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+MILITARY CONSTRUCTION, ARMY NATIONAL GUARD
+For an additional amount for ‘‘Military Construction,
+Army National Guard’’, $21,000,000, to remain available
+until September 30, 2029, for necessary expenses related
+to the consequences of Typhoon Mawar and severe storms
+in calendar year 2023: Provided, That not later than 60
+days after enactment of this Act, the Director of the Army
+National Guard, or their designee, shall submit to the
+Committees on Appropriations of the House of Represent-
+atives and the Senate form 1391 for each specific project
+and an expenditure plan for funds provided under this
+heading in this Act: Provided further, That such funds
+may be obligated or expended for design and military con-
+struction projects not otherwise authorized by law: Pro-
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+FAMILY HOUSING CONSTRUCTION, NAVY AND MARINE
+CORPS
+For an additional amount for ‘‘Family Housing Con-
+struction, Navy and Marine Corps’’, $27,399,000, to re-
+main available until September 30, 2029, for necessary ex-
+
+penses related to the consequences of Typhoon Mawar:
+Provided, That not later than 60 days after enactment of
+this Act, the Secretary of the Navy, or their designee, shall
+submit to the Committees on Appropriations of the House
+of Representatives and the Senate an expenditure plan for
+funds provided under this heading in this Act: Provided
+further, That such amount is designated by the Congress
+as being for an emergency requirement pursuant to sec-
+tion 251(b)(2)(A)(i) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985.
+FAMILY HOUSING OPERATION AND MAINTENANCE,
+NAVY AND MARINE CORPS
+For an additional amount for ‘‘Family Housing Oper-
+ation and Maintenance, Navy and Marine Corps’’,
+$102,168,000, to remain available until September 30,
+2026, for necessary expenses related to the consequences
+of Typhoon Mawar: Provided, That not later than 60 days
+after enactment of this Act, the Secretary of the Navy,
+or their designee, shall submit to the Committees on Ap-
+propriations of the House of Representatives and the Sen-
+ate an expenditure plan for funds provided under this
+heading in this Act: Provided further, That such amount
+is designated by the Congress as being for an emergency
+requirement pursuant to section 251(b)(2)(A)(i) of the
+
+Balanced Budget and Emergency Deficit Control Act of
+1985.
+DEPARTMENT OF VETERANS AFFAIRS
+VETERANS HEALTH ADMINISTRATION
+MEDICAL SERVICES
+For an additional amount for ‘‘Medical Services’’,
+$19,258,000, to remain available until September 30,
+2027, for necessary expenses related to the consequences
+of Hurricanes Milton and Helene: Provided, That such
+amount is designated by the Congress as being for an
+emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+MEDICAL SUPPORT AND COMPLIANCE
+For an additional amount for ‘‘Medical Support and
+Compliance’’, $330,000, to remain available until Sep-
+tember 30, 2027, for necessary expenses related to the
+consequences of Hurricanes Milton and Helene: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+MEDICAL FACILITIES
+For an additional amount for ‘‘Medical Facilities’’,
+$41,660,000, to remain available until September 30,
+
+2029, for necessary expenses related to the consequences
+of Hurricanes Milton and Helene and other Federally de-
+clared disasters occurring in 2023 and 2024: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+NATIONAL CEMETERY ADMINISTRATION
+For an additional amount for ‘‘National Cemetery
+Administration’’ for necessary expenses related to the con-
+sequences of Hurricanes Milton and Helene, $693,000, to
+remain available until September 30, 2029: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+DEPARTMENTAL ADMINISTRATION
+CONSTRUCTION, MAJOR PROJECTS
+For an additional amount for ‘‘Construction, Major
+Projects’’, $4,000,000, to remain available until Sep-
+tember 30, 2029, for necessary expenses related to the
+consequences of Hurricanes Milton and Helene: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+CONSTRUCTION, MINOR PROJECTS
+For an additional amount for ‘‘Construction, Minor
+Projects’’, $2,020,000, to remain available until Sep-
+tember 30, 2029, for necessary expenses related to the
+consequences of Hurricanes Milton and Helene: Provided,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+TITLE XI
+DEPARTMENT OF STATE AND RELATED
+AGENCY
+DEPARTMENT OF STATE
+INTERNATIONAL COMMISSIONS
+INTERNATIONAL BOUNDARY AND WATER COMMISSION,
+UNITED STATES AND MEXICO
+CONSTRUCTION
+For an additional amount for ‘‘Construction’’,
+$250,000,000, to remain available until expended: Pro-
+vided, That funds provided under this heading in this Act
+shall be subject to prior consultation with, and the regular
+notification procedures of, the Committees on Appropria-
+tions of the House of Representatives and the Senate: Pro-
+
+vided further, That such amount is designated by the Con-
+gress as being for an emergency requirement pursuant to
+section 251(b)(2)(A)(i) of the Balanced Budget and
+Emergency Deficit Control Act of 1985.
+TITLE XII
+DEPARTMENT OF TRANSPORTATION
+FEDERAL HIGHWAY ADMINISTRATION
+EMERGENCY RELIEF PROGRAM
+For an additional amount for the ‘‘Emergency Relief
+Program’’ as authorized under section 125 of title 23,
+United States Code, $8,086,020,000, to remain available
+until expended: Provided, That notwithstanding subsection
+(e) of section 120 of title 23, United States Code, for any
+obligations made on or after March 26, 2024, for fiscal
+year 2024, this fiscal year, and hereafter, the Federal
+share for Emergency Relief funds made available under
+section 125 of such title to respond to damage caused by
+the cargo ship Dali to the Francis Scott Key Bridge lo-
+cated in Baltimore City and Baltimore and Anne Arundel
+Counties, Maryland, including reconstruction of that
+bridge and its approaches, shall be 100 percent: Provided
+further, That consistent with section 668.105(e) of title
+23, Code of Federal Regulations (or a successor regula-
+tion), any insurance proceeds, judgments, settlements,
+penalties, fines, or other compensation for damages, in-
+
+cluding interest, from whatever source derived, recovered
+by a State, a political subdivision of a State, or a toll au-
+thority for repair, including reconstruction, of the Francis
+Scott Key Bridge located in Baltimore City and Baltimore
+and Anne Arundel Counties, Maryland, in response to, or
+as a result of, the damage caused by the cargo ship Dali
+to that bridge and its approaches, shall be used upon re-
+ceipt to reduce liability on the repair, including reconstruc-
+tion, of such bridge and its approaches from the emer-
+gency fund authorized under section 125 of title 23,
+United States Code: Provided further, That any funds re-
+covered and used to reduce liability pursuant to the pre-
+ceding proviso shall not exceed the total amount of liability
+on the repair, including reconstruction, of the Francis
+Scott Key Bridge located in Baltimore City and Baltimore
+and Anne Arundel Counties, Maryland, and its ap-
+proaches, from the emergency fund authorized under sec-
+tion 125 of title 23, United States Code: Provided further,
+That such amount is designated by the Congress as being
+for an emergency requirement pursuant to section
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+
+DEPARTMENT OF HOUSING AND URBAN
+DEVELOPMENT
+COMMUNITY PLANNING AND DEVELOPMENT
+COMMUNITY DEVELOPMENT FUND
+(INCLUDING TRANSFERS OF FUNDS)
+For an additional amount for ‘‘Community Develop-
+ment Fund’’, $12,039,000,000, to remain available until
+expended, for the same purposes and under the same
+terms and conditions as funds appropriated under such
+heading in title VIII of the Disaster Relief Supplemental
+Appropriations Act, 2022 (Public Law 117–43), except
+that such amounts shall be for major disasters that oc-
+curred in 2023 or 2024 and the fourth, tenth, 15th, 16th,
+20th, and 21st provisos under such heading in such Act
+shall not apply: Provided, That the Secretary of Housing
+and Urban Development shall allocate all funds provided
+under this heading in this Act for the total estimate for
+unmet needs including additional mitigation for qualifying
+disasters and publish such allocations in the Federal Reg-
+ister no later than January 15, 2025: Provided further,
+That the amount obligated for each qualifying disaster
+area shall be no less than the amounts specified in such
+Federal Register publication, unless such allocation is re-
+jected by the grantee: Provided further, That a grantee
+shall submit a plan to the Secretary for approval detailing
+
+the proposed use of all funds, including criteria for eligi-
+bility and how the use of these funds will address long-
+term recovery and restoration of infrastructure and hous-
+ing, economic revitalization, and mitigation in the most
+impacted and distressed areas: Provided further, That un-
+obligated balances remaining as of the date of enactment
+of this Act included under Treasury Appropriation Fund
+Symbol 86 X 0162 from Public Laws 108–324, 109–148,
+109–234, 110–252, 110–329, 111–212, 112–55, and
+113–2 shall also be available for the purposes authorized
+under this heading in this Act (except that the amount
+for each set-aside provided herein shall not be exceeded),
+notwithstanding the purposes for which such amounts
+were appropriated: Provided further, That of the amounts
+made available under this heading in this Act,
+$45,000,000 shall be transferred to ‘‘Department of
+Housing and Urban Development—Management and Ad-
+ministration—Program Offices’’ for salaries and expenses
+of the Office of Community Planning and Development for
+necessary costs, including information technology costs, of
+administering and overseeing the obligation and expendi-
+ture of amounts made available for activities authorized
+under title I of the Housing and Community Development
+Act of 1974 (42 U.S.C. 5301 et seq.) related to disaster
+relief, long-term recovery, restoration of infrastructure
+
+and housing, economic revitalization, and mitigation in the
+most impacted and distressed areas resulting from a
+major disaster in this, prior, or future Acts (‘‘this, prior,
+or future disaster Acts’’): Provided further, That of the
+amounts made available under this heading in this Act,
+$1,850,000 shall be transferred to ‘‘Department of Hous-
+ing and Urban Development—Information Technology
+Fund’’ for the disaster recovery data portal: Provided fur-
+ther, That of the amounts made available under this head-
+ing in this Act, $7,000,000 shall be transferred to ‘‘De-
+partment of Housing and Urban Development—Office of
+Inspector General’’ for necessary costs of overseeing and
+auditing amounts made available in this, prior, or future
+disaster Acts: Provided further, That of the amounts made
+available under this heading in this Act, $25,000,000 shall
+be made available for capacity building and technical as-
+sistance, including assistance on contracting and procure-
+ment processes, to support recipients of allocations from
+this, prior, or future disaster Acts: Provided further, That
+amounts made available under this heading in this Act
+may be used by a grantee to assist utilities as part of a
+disaster-related eligible activity under section 105(a) of
+the Housing and Community Development Act of 1974
+(42 U.S.C. 5305(a)): Provided further, That recipients of
+funds made available in this, prior, or future disaster Acts
+
+that use such funds to supplement other Federal assist-
+ance may adopt, without review or public comment, any
+environmental review, approval, or permit performed by
+a Federal agency, and such adoption shall satisfy the re-
+sponsibilities of the recipient with respect to such environ-
+mental review, approval or permit, so long as the actions
+covered by the existing environmental review, approval, or
+permit and the actions proposed for these supplemental
+funds are substantially the same: Provided further, That
+the Secretary or a State may, upon receipt of a request
+for release of funds and certification, immediately approve
+the release of funds for any activity or project if the recipi-
+ent has adopted an environmental review, approval or per-
+mit under the previous proviso or if the activity or project
+is categorically excluded from review under the National
+Environmental Policy Act of 1969 (42 U.S.C. 4321 et
+seq.), notwithstanding section 104(g)(2) of the Housing
+and Community Development Act of 1974 (42 U.S.C.
+5304(g)(2)): Provided further, That such amount and
+amounts repurposed under this heading that were pre-
+viously designated by the Congress as an emergency re-
+quirement pursuant to a concurrent resolution on the
+budget or the Balanced Budget and Emergency Deficit
+Control Act of 1985 are designated by the Congress as
+being for an emergency requirement pursuant to section
+
+251(b)(2)(A)(i) of the Balanced Budget and Emergency
+Deficit Control Act of 1985.
+TITLE XIII
+GENERAL PROVISIONS
+SEC. 21301. Each amount appropriated or made
+available by this Act is in addition to amounts otherwise
+appropriated for the fiscal year involved.
+SEC. 21302. No part of any appropriation contained
+in this Act shall remain available for obligation beyond
+the current fiscal year unless expressly so provided herein.
+SEC. 21303. Unless otherwise provided for by this
+Act, the additional amounts appropriated by this Act to
+appropriations accounts shall be available under the au-
+thorities and conditions applicable to such appropriations
+accounts for fiscal year 2025.
+SEC. 21304. Each amount designated in divisions A
+or B by the Congress as being for an emergency require-
+ment pursuant to section 251(b)(2)(A)(i) of the Balanced
+Budget and Emergency Deficit Control Act of 1985 shall
+be available (or repurposed, rescinded, or transferred, if
+applicable) only if the President subsequently so des-
+ignates all such amounts and transmits such designations
+to the Congress.
+SEC. 21305. Any amount appropriated by divisions
+A or B, designated by the Congress as an emergency re-
+
+quirement pursuant to section 251(b)(2)(A)(i) of the Bal-
+anced Budget and Emergency Deficit Control Act of 1985,
+and subsequently so designated by the President, and
+transferred pursuant to transfer authorities provided by
+this division shall retain such designation.
+SEC. 21306. Budgetary Effects.—
+(1) STATUTORY PAYGO SCORECARDS.—The
+budgetary effects of division C and each succeeding
+division shall not be entered on either PAYGO score-
+card maintained pursuant to section 4(d) of the
+Statutory Pay-As-You-Go Act of 2010.
+(2) SENATE PAYGO SCORECARDS.—The budg-
+etary effects of division C and each succeeding divi-
+sion shall not be entered on any PAYGO scorecard
+maintained for purposes of section 4106 of H. Con.
+Res. 71 (115th Congress).
+(3) CLASSIFICATION OF BUDGETARY EF-
+FECTS.—Notwithstanding Rule 3 of the Budget
+Scorekeeping Guidelines set forth in the joint ex-
+planatory statement of the committee of conference
+accompanying Conference Report 105–217 and sec-
+tion 250(c)(8) of the Balanced Budget and Emer-
+gency Deficit Control Act of 1985, the budgetary ef-
+fects of division C and each succeeding division shall
+not be estimated—
+
+(A) for purposes of section 251 of such
+Act;
+(B) for purposes of an allocation to the
+Committee on Appropriations pursuant to sec-
+tion 302(a) of the Congressional Budget Act of
+1974; and
+(C) for purposes of paragraph (4)(C) of
+section 3 of the Statutory Pay-As-You-Go Act
+of 2010 as being included in an appropriation
+Act.
+(4) BALANCES ON THE PAYGO SCORECARDS.—
+Effective on the date of the adjournment of the sec-
+ond session of the 118th Congress, and for the pur-
+poses of the annual report issued pursuant to section
+5 of the Statutory Pay-As-You-Go Act of 2010 (2
+U.S.C. 934) after such adjournment and for deter-
+mining whether a sequestration order is necessary
+under such section, the balances on the PAYGO
+scorecards established pursuant to paragraphs (4)
+and (5) of section 4(d) of such Act shall be zero.
+This division may be cited as the ‘‘Disaster Relief
+Supplemental Appropriations Act, 2025’’.
+
+DIVISION C—HEALTH
+
+
+SEC. 3001. SHORT TITLE; TABLE OF CONTENTS.
+(a) SHORT TITLE.—This division may be cited as the
+‘‘Health Extensions and Other Matters Act, 2025’’.
+(b) TABLE OF CONTENTS.—The table of contents for
+this division is as follows:
+Sec. 1. Short title; table of contents.
+TITLE I—PUBLIC HEALTH EXTENDERS
+Sec. 3101. Extension for community health centers, National Health Service
+Corps, and teaching health centers that operate GME pro-
+grams.
+Sec. 3102. Extension of special diabetes programs.
+Sec. 3103. National health security extensions.
+TITLE II—MEDICARE
+Sec. 3201. Extension of increased inpatient hospital payment adjustment for
+certain low-volume hospitals.
+Sec. 3202. Extension of the Medicare-dependent hospital (MDH) program.
+Sec. 3203. Extension of add-on payments for ambulance services.
+Sec. 3204. Extension of funding for quality measure endorsement, input, and
+selection.
+Sec. 3205. Extension of funding outreach and assistance for low-income pro-
+grams.
+Sec. 3206. Extension of the work geographic index floor.
+Sec. 3207. Extension of certain telehealth flexibilities.
+Sec. 3208. Extending acute hospital care at home waiver authorities.
+Sec. 3209. Extension of temporary inclusion of authorized oral antiviral drugs
+as covered part D drugs.
+Sec. 3210. Medicare improvement fund.
+TITLE III—HUMAN SERVICES
+Sec. 3301. Extension of child and family services programs.
+Sec. 3302. Sexual risk avoidance education extension.
+Sec. 3303. Personal responsibility education extension.
+Sec. 3304. Extension of funding for family-to-family health information centers.
+
+TITLE I—PUBLIC HEALTH
+
+EXTENDERS
+
+
+SEC. 3101. EXTENSION FOR COMMUNITY HEALTH CENTERS,
+
+NATIONAL HEALTH SERVICE CORPS, AND
+
+TEACHING HEALTH CENTERS THAT OPERATE
+
+GME PROGRAMS.
+(a) EXTENSION FOR COMMUNITY HEALTH CEN-
+TERS.—Section 10503(b)(1) of the Patient Protection and
+Affordable Care Act (42 U.S.C. 254b–2(b)(1)) is amend-
+ed—
+(1) in subparagraph (E), by striking ‘‘and’’ at
+the end;
+(2) in subparagraph (F), by striking ‘‘,
+$4,000,000,000 for each of fiscal years 2019
+through 2023’’ and all that follows through ‘‘and
+ending on December 31, 2024; and’’ and inserting
+a semicolon; and
+(3) by adding at the end the following:
+‘‘(G) $4,000,000,000 for each of fiscal
+years 2019 through 2023;
+‘‘(H) $526,027,397 for the period begin-
+ning on October 1, 2023, and ending on No-
+vember 17, 2023, $690,410,959 for the period
+beginning on November 18, 2023, and ending
+on January 19, 2024, $536,986,301 for the pe-
+
+riod beginning on January 20, 2024, and end-
+ing on March 8, 2024, and $3,592,328,767 for
+the period beginning on October 1, 2023, and
+ending on December 31, 2024; and
+‘‘(I) $1,050,410,959 for the period begin-
+ning on January 1, 2025, and ending on March
+31, 2025.’’.
+(b) EXTENSION FOR THE NATIONAL HEALTH SERV-
+ICE CORPS.—Section 10503(b)(2) of the Patient Protec-
+tion and Affordable Care Act (42 U.S.C. 254b–2(b)(2))
+is amended—
+(1) in subparagraph (H), by striking ‘‘and’’ at
+the end;
+(2) in subparagraph (I), by striking the period
+at the end and inserting ‘‘; and’’; and
+(3) by adding at the end the following:
+‘‘(J) $85,068,493 for the period beginning
+on January 1, 2025, and ending on March 31,
+2025.’’.
+(c) TEACHING HEALTH CENTERS THAT OPERATE
+GRADUATE MEDICAL EDUCATION PROGRAMS.—Section
+340H(g)(1) of the Public Health Service Act (42 U.S.C.
+256h(g)(1)) is amended—
+
+(1) by striking ‘‘not to exceed $230,000,000’’
+and all that follows through ‘‘and ending on Decem-
+ber 31, 2024,’’; and
+(2) by striking the period at the end and insert-
+ing the following: ‘‘, not to exceed—
+‘‘(A) $230,000,000, for the period of fiscal
+years 2011 through 2015;
+‘‘(B) $60,000,000 for each of fiscal years
+2016 and 2017;
+‘‘(C) $126,500,000 for each of fiscal years
+2018 through 2023;
+‘‘(D) $16,635,616 for the period beginning
+on October 1, 2023, and ending on November
+17, 2023, $21,834,247 for the period beginning
+on November 18, 2023, and ending on January
+19, 2024, $16,982,192 for the period beginning
+on January 20, 2024, and ending on March 8,
+2024, and $164,136,986 for the period begin-
+ning on October 1, 2023, and ending on De-
+cember 31, 2024; and
+‘‘(E) $43,150,685 for the period beginning
+on January 1, 2025, and ending on March 31,
+2025.’’.
+(d) APPLICATION OF PROVISIONS.—Amounts appro-
+priated pursuant to the amendments made by this section
+
+shall be subject to the requirements contained in Public
+Law 117–328 for funds for programs authorized under
+sections 330 through 340 of the Public Health Service Act
+(42 U.S.C. 254b et seq.).
+(e) CONFORMING AMENDMENTS.—Section 3014(h)
+of title 18, United States Code, is amended—
+(1) in paragraph (1), by striking ‘‘under sub-
+paragraphs (E) and (F) of section 10503(b)(1) of
+the Patient Protection and Affordable Care Act (42
+U.S.C. 254b–2(b)(1))’’ and inserting ‘‘under section
+10503(b)(1) of the Patient Protection and Afford-
+able Care Act (42 U.S.C. 254b–2(b)(1)) for fiscal
+year 2015 and each subsequent fiscal year (or period
+thereof)’’; and
+(2) in paragraph (4), by striking ‘‘and section
+101(d) of the Consolidated Appropriations Act,
+2024’’ and inserting ‘‘section 101(d) of division G of
+the Consolidated Appropriations Act, 2024, and sec-
+tion 3101(d) of the Health Extensions and Other
+Matters Act, 2025’’.
+
+SEC. 3102. EXTENSION OF SPECIAL DIABETES PROGRAMS.
+(a) EXTENSION OF SPECIAL DIABETES PROGRAMS
+FOR TYPE I DIABETES.—Section 330B(b)(2) of the Pub-
+lic Health Service Act (42 U.S.C. 254c–2(b)(2)) is amend-
+ed—
+
+(1) in subparagraph (D), by striking ‘‘and’’ at
+the end;
+(2) in subparagraph (E), by striking the period
+at the end and inserting ‘‘; and’’; and
+(3) by adding at the end the following:
+‘‘(F) $39,261,745 for the period beginning
+on January 1, 2025, and ending on March 31,
+2025, to remain available until expended.’’.
+(b) EXTENDING FUNDING FOR SPECIAL DIABETES
+PROGRAMS FOR INDIANS.—Section 330C(c)(2) of the
+Public Health Service Act (42 U.S.C. 254c–3(c)(2)) is
+amended—
+(1) in subparagraph (D), by striking ‘‘and’’ at
+the end;
+(2) in subparagraph (E), by striking the period
+at the end and inserting ‘‘; and’’; and
+(3) by adding at the end the following:
+‘‘(F) $39,261,745 for the period beginning
+on January 1, 2025, and ending on March 31,
+2025, to remain available until expended.’’.
+
+SEC. 3103. NATIONAL HEALTH SECURITY EXTENSIONS.
+(a) Section 319(e)(8) of the Public Health Service
+Act (42 U.S.C. 247d(e)(8)) is amended by striking ‘‘De-
+cember 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+(b) Section 319L(e)(1)(D) of the Public Health Serv-
+ice Act (42 U.S.C. 247d–7e(e)(1)(D)) is amended by strik-
+ing ‘‘December 31, 2024’’ and inserting ‘‘March 31,
+2025’’.
+(c) Section 319L–1(b) of the Public Health Service
+Act (42 U.S.C. 247d–7f(b)) is amended by striking ‘‘De-
+cember 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+(d)(1) Section 2811A(g) of the Public Health Service
+Act (42 U.S.C. 300hh–10b(g)) is amended by striking
+‘‘December 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+(2) Section 2811B(g)(1) of the Public Health Service
+Act (42 U.S.C. 300hh–10c(g)(1)) is amended by striking
+‘‘December 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+(3) Section 2811C(g)(1) of the Public Health Service
+Act (42 U.S.C. 300hh–10d(g)(1)) is amended by striking
+‘‘December 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+(e) Section 2812(c)(4)(B) of the Public Health Serv-
+ice Act (42 U.S.C. 300hh–11(c)(4)(B)) is amended by
+striking ‘‘December 31, 2024’’ and inserting ‘‘March 31,
+2025’’.
+
+TITLE II—MEDICARE
+
+
+SEC. 3201. EXTENSION OF INCREASED INPATIENT HOS-
+
+PITAL PAYMENT ADJUSTMENT FOR CERTAIN
+
+LOW-VOLUME HOSPITALS.
+(a) IN GENERAL.——Section 1886(d)(12) of the So-
+cial Security Act (42 U.S.C. 1395ww(d)(12)) is amend-
+ed—
+(1) in subparagraph (B), in the matter pre-
+ceding clause (i), by striking ‘‘January 1, 2025’’ and
+inserting ‘‘April 1, 2025’’;
+(2) in subparagraph (C)(i)—
+(A) in the matter preceding subclause (I),
+by striking ‘‘December 31, 2024’’ and inserting
+‘‘March 31, 2025’’;
+(B) in subclause (III), by striking ‘‘Decem-
+ber 31, 2024’’ and inserting ‘‘March 31, 2025’’;
+and
+(C) in subclause (IV), by striking ‘‘Janu-
+ary 1, 2025’’ and inserting ‘‘April 1, 2025’’;
+and
+(3) in subparagraph (D)—
+(A) in the matter preceding clause (i), by
+striking ‘‘December 31, 2024’’ and inserting
+‘‘March 31, 2025’’; and
+
+(B) in clause (ii), by striking ‘‘December
+31, 2024’’ and inserting ‘‘March 31, 2025’’.
+(b) IMPLEMENTATION.—Notwithstanding any other
+provision of law, the Secretary of Health and Human
+Services may implement the amendments made by this
+section by program instruction or otherwise.
+
+SEC. 3202. EXTENSION OF THE MEDICARE-DEPENDENT
+
+HOSPITAL (MDH) PROGRAM.
+(a) IN GENERAL.——Section 1886(d)(5)(G) of the
+Social Security Act (42 U.S.C. 1395ww(d)(5)(G)) is
+amended—
+(1) in clause (i), by striking ‘‘January 1, 2025’’
+and inserting ‘‘April 1, 2025’’; and
+(2) in clause (ii)(II), by striking ‘‘January 1,
+2025’’ and inserting ‘‘April 1, 2025’’.
+(b) CONFORMING AMENDMENTS.—
+(1) IN GENERAL.—Section 1886(b)(3)(D) of
+the Social Security Act (42 U.S.C.
+1395ww(b)(3)(D)) is amended—
+(A) in the matter preceding clause (i), by
+striking ‘‘January 1, 2025’’ and inserting
+‘‘April 1, 2025’’; and
+(B) in clause (iv), by striking ‘‘January 1,
+2025’’ and inserting ‘‘March 31, 2025’’.
+
+(2) PERMITTING HOSPITALS TO DECLINE RE-
+CLASSIFICATION.—Section 13501(e)(2) of the Omni-
+bus Budget Reconciliation Act of 1993 (42 U.S.C.
+1395ww note) is amended by striking ‘‘December
+31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+SEC. 3203. EXTENSION OF ADD-ON PAYMENTS FOR AMBU-
+
+LANCE SERVICES.
+Section 1834(l) of the Social Security Act (42 U.S.C.
+1395m(l)) is amended—
+(1) in paragraph (12)(A), by striking ‘‘January
+1, 2025’’ and inserting ‘‘April 1, 2025’’; and
+(2) in paragraph (13), by striking ‘‘January 1,
+2025’’ each place it appears and inserting ‘‘April 1,
+2025’’ in each such place.
+
+SEC. 3204. EXTENSION OF FUNDING FOR QUALITY MEAS-
+
+URE ENDORSEMENT, INPUT, AND SELECTION.
+Section 1890(d)(2) of the Social Security Act (42
+U.S.C. 1395aaa(d)(2)) is amended—
+(1) in the first sentence—
+(A) by striking ‘‘$9,000,000’’ and inserting
+‘‘$11,030,000’’; and
+(B) by striking ‘‘December 31, 2024’’ and
+inserting ‘‘March 31, 2025’’; and
+(2) in the third sentence, by striking ‘‘Decem-
+ber 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+
+SEC. 3205. EXTENSION OF FUNDING OUTREACH AND AS-
+
+SISTANCE FOR LOW-INCOME PROGRAMS.
+(a) STATE HEALTH INSURANCE ASSISTANCE PRO-
+GRAMS.—Subsection (a)(1)(B)(xiv) of section 119 of the
+Medicare Improvements for Patients and Providers Act of
+2008 (42 U.S.C. 1395b–3 note) is amended by striking
+‘‘December 31, 2024, $18,750,000’’ and inserting ‘‘March
+31, 2025, $22,500,000’’.
+(b) AREA AGENCIES ON AGING.—Subsection
+(b)(1)(B)(xiv) of such section 119 is amended by striking
+‘‘December 31, 2024, $18,750,000’’ and inserting ‘‘March
+31, 2025, $22,500,000’’.
+(c) AGING AND DISABILITY RESOURCE CENTERS.—
+Subsection (c)(1)(B)(xiv) of such section 119 is amended
+by striking ‘‘December 31, 2024, $6,250,000’’ and insert-
+ing ‘‘March 31, 2025, $8,500,000’’.
+(d) COORDINATION OF EFFORTS TO INFORM OLDER
+AMERICANS ABOUT BENEFITS AVAILABLE UNDER FED-
+ERAL AND STATE PROGRAMS.—Subsection (d)(2)(xiv) of
+such section 119 is amended by striking ‘‘December 31,
+2024, $18,750,000’’ and inserting ‘‘March 31, 2025,
+$22,500,000’’.
+
+
+SEC. 3206. EXTENSION OF THE WORK GEOGRAPHIC INDEX
+
+FLOOR.
+Section 1848(e)(1)(E) of the Social Security Act (42
+U.S.C. 1395w–4(e)(1)(E)) is amended by striking ‘‘Janu-
+ary 1, 2025’’ and inserting ‘‘April 1, 2025’’.
+
+SEC. 3207. EXTENSION OF CERTAIN TELEHEALTH FLEXI-
+
+BILITIES.
+(a) REMOVING GEOGRAPHIC REQUIREMENTS AND
+EXPANDING ORIGINATING SITES FOR TELEHEALTH
+SERVICES.—Section 1834(m) of the Social Security Act
+(42 U.S.C. 1395m(m)) is amended—
+(1) in paragraph (2)(B)(iii), by striking ‘‘end-
+ing December 31, 2024’’ and inserting ‘‘ending
+March 31, 2025’’; and
+(2) in paragraph (4)(C)(iii), by striking ‘‘ending
+on December 31, 2024’’ and inserting ‘‘ending on
+March 31, 2025’’.
+(b) EXPANDING PRACTITIONERS ELIGIBLE TO FUR-
+NISH TELEHEALTH SERVICES.—Section 1834(m)(4)(E)
+of the Social Security Act (42 U.S.C. 1395m(m)(4)(E))
+is amended by striking ‘‘ending on December 31, 2024’’
+and inserting ‘‘ending on March 31, 2025’’.
+(c) EXTENDING TELEHEALTH SERVICES FOR FED-
+ERALLY QUALIFIED HEALTH CENTERS AND RURAL
+HEALTH CLINICS.—Section 1834(m)(8)(A) of the Social
+Security Act (42 U.S.C. 1395m(m)(8)(A)) is amended by
+
+striking ‘‘ending on December 31, 2024’’ and inserting
+‘‘ending on March 31, 2025’’.
+(d) DELAYING THE IN-PERSON REQUIREMENTS
+UNDER MEDICARE FOR MENTAL HEALTH SERVICES
+FURNISHED THROUGH TELEHEALTH AND TELE-
+COMMUNICATIONS TECHNOLOGY.—
+(1) DELAY IN REQUIREMENTS FOR MENTAL
+HEALTH SERVICES FURNISHED THROUGH TELE-
+HEALTH.—Section 1834(m)(7)(B)(i) of the Social
+Security Act (42 U.S.C. 1395m(m)(7)(B)(i)) is
+amended, in the matter preceding subclause (I), by
+striking ‘‘on or after’’ and all that follows through
+‘‘described in section 1135(g)(1)(B))’’ and inserting
+‘‘on or after April 1, 2025’’.
+(2) MENTAL HEALTH VISITS FURNISHED BY
+RURAL HEALTH CLINICS.—Section 1834(y)(2) of the
+Social Security Act (42 U.S.C. 1395m(y)(2)) is
+amended by striking ‘‘January 1, 2025’’ and all that
+follows through the period at the end and inserting
+‘‘April 1, 2025.’’.
+(3) MENTAL HEALTH VISITS FURNISHED BY
+FEDERALLY QUALIFIED HEALTH CENTERS.—Section
+1834(o)(4)(B) of the Social Security Act (42 U.S.C.
+1395m(o)(4)(B)) is amended by striking ‘‘January
+
+1, 2025’’ and all that follows through the period at
+the end and inserting ‘‘April 1, 2025.’’.
+(e) ALLOWING FOR THE FURNISHING OF AUDIO-
+ONLY TELEHEALTH SERVICES.—Section 1834(m)(9) of
+the Social Security Act (42 U.S.C. 1395m(m)(9)) is
+amended by striking ‘‘ending on December 31, 2024’’ and
+inserting ‘‘ending on March 31, 2025’’.
+(f) EXTENDING USE OF TELEHEALTH TO CONDUCT
+FACE-TO-FACE ENCOUNTER PRIOR TO RECERTIFICATION
+OF ELIGIBILITY FOR HOSPICE CARE.—Section
+1814(a)(7)(D)(i)(II) of the Social Security Act (42 U.S.C.
+1395f(a)(7)(D)(i)(II)) is amended by striking ‘‘ending on
+December 31, 2024’’ and inserting ‘‘ending on March 31,
+2025’’.
+(g) PROGRAM INSTRUCTION AUTHORITY.—The Sec-
+retary of Health and Human Services may implement the
+amendments made by this section through program in-
+struction or otherwise.
+
+SEC. 3208. EXTENDING ACUTE HOSPITAL CARE AT HOME
+
+WAIVER AUTHORITIES.
+Section 1866G(a)(1) of the Social Security Act (42
+U.S.C. 1395cc–7(a)(1)) is amended by striking ‘‘Decem-
+ber 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+
+SEC. 3209. EXTENSION OF TEMPORARY INCLUSION OF AU-
+
+THORIZED ORAL ANTIVIRAL DRUGS AS COV-
+
+ERED PART D DRUGS.
+Section 1860D–2(e)(1)(C) of the Social Security Act
+(42 U.S.C. 1395w–102(e)(1)(C)) is amended by striking
+‘‘December 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+SEC. 3210. MEDICARE IMPROVEMENT FUND.
+Section 1898(b)(1) of the Social Security Act (42
+U.S.C. 1395iii(b)(1)) is amended by striking
+‘‘$3,197,000,000’’ and inserting ‘‘$1,251,000,000’’.
+TITLE III—HUMAN SERVICES
+
+
+SEC. 3301. EXTENSION OF CHILD AND FAMILY SERVICES
+
+PROGRAMS.
+Activities authorized by part B of title IV of the So-
+cial Security Act shall continue through March 31, 2025,
+in the manner authorized for fiscal year 2024, and out
+of any money in the Treasury of the United States not
+otherwise appropriated, there are hereby appropriated
+such sums as may be necessary for such purpose.
+
+SEC. 3302. SEXUAL RISK AVOIDANCE EDUCATION EXTEN-
+
+SION.
+Section 510 of the Social Security Act (42 U.S.C.
+710) is amended—
+(1) in subsection (a)(1), by striking ‘‘December
+31, 2024’’ and inserting ‘‘March 31, 2025’’; and
+
+(2) in subsection (f)(1), by striking ‘‘December
+31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+SEC. 3303. PERSONAL RESPONSIBILITY EDUCATION EXTEN-
+
+SION.
+Section 513 of the Social Security Act (42 U.S.C.
+713) is amended—
+(1) in subsection (a)(1)—
+(A) in subparagraph (A), in the matter
+preceding clause (i), by striking ‘‘December 31,
+2024’’ and inserting ‘‘March 31, 2025’’; and
+(B) in subparagraph (B)(i), by striking
+‘‘December 31, 2024’’ and inserting ‘‘March
+31, 2025’’; and
+(2) in subsection (f), by striking ‘‘December 31,
+2024’’ and inserting ‘‘March 31, 2025’’.
+
+SEC. 3304. EXTENSION OF FUNDING FOR FAMILY-TO-FAM-
+
+ILY HEALTH INFORMATION CENTERS.
+Section 501(c)(1)(A)(viii) of the Social Security Act
+(42 U.S.C. 701(c)(1)(A)(viii)) is amended—
+(1) by striking ‘‘$1,500,000’’ and inserting
+‘‘$2,500,000’’; and
+(2) by striking ‘‘January 1, 2025’’ and insert-
+ing ‘‘April 1, 2025’’.
+
+DIVISION D—EXTENSION OF
+
+AGRICULTURAL PROGRAMS
+
+
+SEC. 4101. EXTENSION OF AGRICULTURAL PROGRAMS.
+(a) EXTENSION.—
+(1) IN GENERAL.—Except as otherwise pro-
+vided in this section and the amendments made by
+this section, notwithstanding any other provision of
+law, the following authorities (including any limita-
+tions on the authorities) as in effect on September
+30, 2024, shall continue and be carried out until the
+date specified in paragraph (2):
+(A) The authorities provided by each provi-
+sion of the Agriculture Improvement Act of
+2018 (Public Law 115–334; 132 Stat. 4490)
+(and for mandatory programs at such funding
+levels) and extended by section 102 of division
+B of the Further Continuing Appropriations
+and Other Extensions Act, 2024 (Public Law
+118–22; 137 Stat. 114).
+(B) The authorities provided by each pro-
+vision of law amended by the Agriculture Im-
+provement Act of 2018 (Public Law 115–334;
+132 Stat. 4490) (and for mandatory programs
+at such funding levels) and extended by section
+102 of division B of the Further Continuing
+
+Appropriations and Other Extensions Act, 2024
+(Public Law 118–22; 137 Stat. 114).
+(2) DATE SPECIFIED.—The date specified in
+this paragraph is the later of—
+(A) September 30, 2025; or
+(B) the date specified in the provision of
+the Agriculture Improvement Act of 2018 (Pub-
+lic Law 115–334; 132 Stat. 4490) or the provi-
+sion of law amended by the Agriculture Im-
+provement Act of 2018 (Public Law 115–334;
+132 Stat. 4490) (and, if applicable, amended by
+section 102 of division B of the Further Con-
+tinuing Appropriations and Other Extensions
+Act, 2024 (Public Law 118–22; 132 Stat.
+4490)).
+(b) DISCRETIONARY PROGRAMS.—Programs carried
+out using the authorities described in subparagraphs (A)
+and (B) of subsection (a)(1) that are funded by discre-
+tionary appropriations (as defined in section 250(c) of the
+Balanced Budget and Emergency Deficit Control Act of
+1985 (2 U.S.C. 900(c))) shall be subject to the availability
+of appropriations.
+(c) COMMODITY PROGRAMS.—
+(1) IN GENERAL.—The provisions of law appli-
+cable to a covered commodity (as defined in section
+
+1111 of the Agricultural Act of 2014 (7 U.S.C.
+9011)), a loan commodity (as defined in section
+1201 of that Act (7 U.S.C. 9031)), sugarcane, or
+sugar beets for the 2024 crop year pursuant to title
+I of that Act (7 U.S.C. 9011 et seq.) (as extended
+by section 102(c)(1) of division B of the Further
+Continuing Appropriations and Other Extensions
+Act, 2024 (7 U.S.C. 9001 note; Public Law 118–
+22)) and each amendment made by subtitle C of
+title I of the Agriculture Improvement Act of 2018
+(Public Law 115–334; 132 Stat. 4511) (as extended
+by that section) shall be applicable to the 2025 crop
+year for that covered commodity, loan commodity,
+sugarcane, or sugar beets.
+(2) DAIRY.—
+(A) DAIRY MARGIN COVERAGE.—
+(i) DURATION.—Section 1409 of the
+Agricultural Act of 2014 (7 U.S.C. 9059)
+is amended by striking ‘‘2024’’ and insert-
+ing ‘‘2025’’.
+(ii) AVAILABILITY OF PREMIUM DIS-
+COUNT.—With respect to coverage for cal-
+endar year 2025, section 1407(g) of the
+Agricultural Act of 2014 (7 U.S.C.
+9057(g)) shall only apply to a participating
+
+dairy operation with respect to which the
+premium was reduced in accordance with
+that section (as extended by section
+102(c)(2)(B)(ii) of the Further Continuing
+Appropriations and Other Extensions Act,
+2024 (7 U.S.C. 9057 note; Public Law
+118–22)) for calendar year 2024.
+(B) DAIRY FORWARD PRICING PROGRAM.—
+Section 1502(e)(2) of the Food, Conservation,
+and Energy Act of 2008 (7 U.S.C. 8772(e)(2))
+is amended by striking ‘‘2027’’ and inserting
+‘‘2028’’.
+(3) EXTENSION OF PAYMENT AMOUNT.—Sec-
+tion 1116(d) of the Agricultural Act of 2014 (7
+U.S.C. 9016(d)) is amended, in the matter pre-
+ceding paragraph (1), by striking ‘‘2024’’ and in-
+serting ‘‘2025’’.
+(4) SUSPENSION OF PERMANENT PRICE SUP-
+PORT AUTHORITIES.—The provisions of law specified
+in—
+(A) subsections (a) and (b) of section 1602
+of the Agricultural Act of 2014 (7 U.S.C.
+9092)—
+(i) shall not be applicable to the 2025
+crops of covered commodities (as defined
+
+in section 1111 of that Act (7 U.S.C.
+9011)), cotton, and sugar; and
+(ii) shall not be applicable to milk
+through December 31, 2025; and
+(B) section 1602(c) of that Act (7 U.S.C.
+9092(c)) shall not be applicable to the crops of
+wheat planted for harvest in calendar year
+2025.
+(d) OTHER PROGRAMS.—
+(1) TRADE.—Section 302(h)(2) of the Bill
+Emerson Humanitarian Trust Act (7 U.S.C. 1736f–
+1(h)(2)) is amended by striking ‘‘2024’’ and insert-
+ing ‘‘2025’’.
+(2) GRAZINGLANDS RESEARCH LABORATORY.—
+Section 7502 of the Food, Conservation, and Energy
+Act of 2008 (Public Law 110–246; 122 Stat. 2019;
+132 Stat. 4817) shall be applied by substituting
+‘‘the period beginning on the date of enactment of
+this Act and ending on September 30, 2025’’ for
+‘‘the 15-year period beginning on the date of enact-
+ment of this Act’’.
+(3) FEEDSTOCK FLEXIBILITY PROGRAM.—Sec-
+tion 9010(b) of the Farm Security and Rural Invest-
+ment Act of 2002 (7 U.S.C. 8110(b)) is amended in
+
+paragraphs (1)(A) and (2)(A) by striking ‘‘2024’’
+each place it appears and inserting ‘‘2025’’.
+(4) EXCEPTIONS.—Subsection (a) shall not
+apply with respect to mandatory funding under the
+following provisions of law:
+(A) Section 1614(c)(4) of the Agricultural
+Act of 2014 (7 U.S.C. 9097(c)(4)).
+(B) Subparagraphs (A) and (B) of section
+1241(a)(1) of the Food Security Act of 1985
+(16 U.S.C. 3841(a)(1)).
+(C) Section 1240O(b)(3) of the Food Secu-
+rity Act of 1985 (16 U.S.C. 3839bb–2(b)(3)).
+(D) Section 1240R(f)(1) of the Food Secu-
+rity Act of 1985 (16 U.S.C. 3839bb–5(f)(1)).
+(E) Section 2408(g)(1) of the Agriculture
+Improvement Act of 2018 (7 U.S.C. 8351 note;
+Public Law 115–334).
+(F) Section 1446(b)(1) of the National Ag-
+ricultural Research, Extension, and Teaching
+Policy Act of 1977 (7 U.S.C. 3222a(b)(1)).
+(G) Section 1672E(d)(1) of the Food, Ag-
+riculture, Conservation, and Trade Act of 1990
+(7 U.S.C. 5925g(d)(1)).
+(H) Section 7601(g)(1)(A) of the Agricul-
+tural Act of 2014 (7 U.S.C. 5939(g)(1)(A)).
+
+(I) Section 9002(k)(1) of the Farm Secu-
+rity and Rural Investment Act of 2002 (7
+U.S.C. 8102(k)(1)).
+(J) Section 9003(g)(1)(A) of the Farm Se-
+curity and Rural Investment Act of 2002 (7
+U.S.C. 8103(g)(1)(A)).
+(K) Section 9005(g)(1) of the Farm Secu-
+rity and Rural Investment Act of 2002 (7
+U.S.C. 8105(g)(1).
+(L) Section 7407(d)(1) of the Farm Secu-
+rity and Rural Investment Act of 2002 (7
+U.S.C. 5925c(d)(1)).
+(M) Section 2123(c)(4) of the Organic
+Foods Production Act of 1990 (7 U.S.C.
+6522(c)(4)).
+(N) Section 10606(d)(1) of the Farm Se-
+curity and Rural Investment Act of 2002 (7
+U.S.C. 6523(d)(1)).
+(O) Section 10109(c)(1) of the Agriculture
+Improvement Act of 2018 (Public Law 115–
+334; 132 Stat. 4907; 137 Stat. 118).
+(P) Section 12314(h) of the Agricultural
+Act of 2014 (7 U.S.C. 2101 note; Public Law
+113–79).
+
+(Q) Section 12315(f)(1) of the Agricultural
+Act of 2014 (7 U.S.C. 7101 note; Public Law
+113–79).
+(R) Section 12316(a) of the Agricultural
+Act of 2014 (7 U.S.C. 7101 note; Public Law
+113–79).
+(S) Section 12605(d) of the Agriculture
+Improvement Act of 2018 (7 U.S.C. 7632 note;
+Public Law 115–334).
+(T) Section 209(c) of the Agricultural
+Marketing Act of 1946 (7 U.S.C. 1627a(c)).
+(U) Section 313B(e)(2) of the Rural Elec-
+trification Act of 1936 (7 U.S.C. 940c–2(e)(2)).
+(e) REPORTS.—
+(1) IN GENERAL.—Subject to paragraph (2),
+any requirement under a provision of law described
+in subsection (a)(1) to submit a report on a recur-
+ring basis, and the final report under which was re-
+quired to be submitted during fiscal year 2024, shall
+continue, and the requirement shall be carried out,
+on the same recurring basis, until the later of the
+dates specified in subsection (a)(2).
+(2) APPROPRIATIONS REQUIRED.—If discre-
+tionary appropriations (as defined in section 250(c)
+of the Balanced Budget and Emergency Deficit Con-
+
+trol Act of 1985 (2 U.S.C. 900(c))) are required to
+carry out a reporting requirement described in para-
+graph (1), the application of that paragraph to that
+reporting requirement shall be subject to the avail-
+ability of appropriations.
+(f) EFFECTIVE DATE.—This section and the amend-
+ments made by this section shall be applied and adminis-
+tered as if this section and those amendments had been
+enacted on September 30, 2024.
+DIVISION E—OTHER MATTERS
+
+
+SEC. 5101. COMMODITY FUTURES TRADING COMMISSION
+
+WHISTLEBLOWER PROGRAM.
+(a) IN GENERAL.—Section 1(b) of Public Law 117–
+25 (135 Stat. 297; 136 Stat. 2133; 136 Stat. 5984) is
+amended, in paragraphs (3) and (4), by striking ‘‘October
+1, 2024’’ each place it appears and inserting ‘‘March 14,
+2025’’.
+(b) EFFECTIVE DATE.—The amendments made by
+subsection (a) shall take effect as if enacted on September
+30, 2024.
+
+SEC. 5102. PROTECTION OF CERTAIN FACILITIES AND AS-
+
+SETS FROM UNMANNED AIRCRAFT.
+Section 210G(i) of the Homeland Security Act of 22
+2002 (6 U.S.C. 124n(i)) is amended by striking ‘‘Decem-
+ber 20, 2024’’ and inserting ‘‘March 14, 2025’’.
+
+
+SEC. 5103. ADDITIONAL SPECIAL ASSESSMENT.
+Section 3014 of title 18, United States Code, is
+amended by striking ‘‘December 23, 2024’’ and inserting
+‘‘March 14, 2025’’.
+
+SEC. 5104. NATIONAL CYBERSECURITY PROTECTION SYS-
+
+TEM AUTHORIZATION.
+Section 227(a) of the Federal Cybersecurity En-
+hancement Act of 2015 (6 U.S.C. 1525(a)) is amended
+by striking ‘‘December 20, 2024’’ and inserting ‘‘March
+14, 2025’’.
+
+SEC. 5105. EXTENSION OF TEMPORARY ORDER FOR
+
+FENTANYL-RELATED SUBSTANCES.
+Effective as if included in the enactment of the Tem-
+porary Reauthorization and Study of the Emergency
+Scheduling of Fentanyl Analogues Act (Public Law 116–
+114), section 2 of such Act is amended by striking ‘‘De-
+cember 31, 2024’’ and inserting ‘‘March 31, 2025’’.
+
+SEC. 5106. TEMPORARY EXTENSION OF PUBLIC DEBT
+
+LIMIT.
+Section 401 of the Fiscal Responsibility Act of 2023
+(Public Law 118–5) is amended—
+(1) by striking ‘‘January 1, 2025’’ in subsection
+(a) and inserting ‘‘January 30, 2027’’, and
+(2) by striking ‘‘January 2, 2025’’ each place
+it appears in subsections (b) and (c) and inserting
+‘‘January 30, 2027’’.
