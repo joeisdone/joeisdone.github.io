@@ -5,7 +5,7 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# Set your OpenAI API key
+# Set your OpenAI API key test
 
 # Path to the large text file
 input_file = "CR.txt"
