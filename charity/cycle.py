@@ -23,13 +23,17 @@ def main():
             ein = row['filer_ein'].strip()
             charities[ein] = {
                 'name': row['filer_name'].strip(),
-                'receipt_amt': row['receipt_amt'].strip()
+                'receipt_amt': row['receipt_amt'].strip(),
+                'govt_amt': row['govt_amt'].strip(),
+                'contrib_amt': row['contrib_amt'].strip(),
+                'grant_amt' : 0
             }
 
     # 2) Read grants.csv and accumulate the amounts
     #    Keep edge data only if both filer_ein and grant_ein exist in charities
     edge_accumulator = defaultdict(int)
-
+    grants_total = 0
+    grants_count = 0
     with open('grants.csv', 'r', newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -39,6 +43,12 @@ def main():
 
             if filer in charities and grantee in charities:
                 edge_accumulator[(filer, grantee)] += grant_amt
+                grants_count += 1
+                grants_total += grant_amt
+                charities[filer]['grant_amt'] += grant_amt
+
+    print(grants_total, grants_count)
+    
 
     # If the requested root EIN is not in the dictionary, bail out
     if root_ein not in charities:
@@ -102,10 +112,13 @@ def main():
     # 8) Add nodes. Label them with 'NAME (receipt_amt)'
     for ein in subgraph_nodes:
         name = charities[ein]['name']
-        amt = charities[ein]['receipt_amt']
+        amt = f"{int(charities[ein]['receipt_amt']):,}"
+        gamt = format(int(charities[ein]['govt_amt']), ',')
+        camt = format(int(charities[ein]['contrib_amt']), ',')
+        oamt = format(int(charities[ein]['grant_amt']), ',')
         dot.node(
             ein,
-            label=f"{name} ({amt})",
+            label=f"{name}\nGross Receipts: ${amt}\nGovernment Grants Received: ${gamt}\nContributions Received: ${camt}\nGrants Given: ${oamt}",
             shape='ellipse',
             style='filled',
             fillcolor='lightblue',
@@ -118,7 +131,7 @@ def main():
         dot.edge(
             filer,
             grantee,
-            label=f"${total_amt}"
+            label=f"${int(total_amt):,}"
         )
 
     # 10) Render the graph to a file (PDF, PNG, etc.)
