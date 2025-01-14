@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nonprofits</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #filterContainer {
+      margin-bottom: 10px;
+    }
+    #totals {
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    #warning {
+      color: red;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #efefef;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    th.sort-asc::after {
+      content: " ▲";
+    }
+    th.sort-desc::after {
+      content: " ▼";
+    }
+  </style>
+</head>
+<body>
+
+  <div id="filterContainer">
+    <label for="filterInput">Filter EIN or 501(c)(3) Name: </label>
+    <input type="text" id="filterInput" placeholder="Type your filter..." />
+    <button id="filterButton">Filter / Reload</button>
+  </div>
+
+  <div id="warning"></div>
+  <div id="totals"></div>
+
+  <table id="nonprofitTable">
+    <thead>
+      <tr>
+        <th data-field="ein">EIN</th>
+        <th data-field="name">501(c)(3) Name</th>
+        <th data-field="contribTotal">Contributions Total</th>
+        <th data-field="govtGrants">Government Grants</th>
+        <th data-field="otherContrib">Other Cash Contributions</th>
+        <th data-field="govtIndirect">Indirect Government Monies</th>
+        <th data-field="totalTaxpayer">Total Taxpayer Dollars</th>
+        <th data-field="percentTaxpayer">Percent Taxpayer Funded</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows inserted dynamically -->
+    </tbody>
+  </table>
+
+  <!-- jQuery (CDN) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- JSZip (CDN) -->
+  <script src="jszip.min.js"></script>
+  <script>
+    let nonprofitData = [];           // The raw (transformed) data from the JSON
+    let currentSortField = null;      // Which column is currently sorted
+    let currentSortDirection = 'asc'; // or 'desc'
+
+    // Utility: format as currency (no decimal places)
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    // Utility: format as percentage with two decimals
+    function formatPercentage(value) {
+      return (value * 100).toFixed(2) + '%';
+    }
+
+    // Given one array row from the JSON, compute derived fields
+    function buildRecord(arr) {
+      const ein = arr[0];
+      const name = arr[1];
+      const govtAmt = arr[2];
+      const contribAmt = arr[3];
+      const govtIndirectAmt = arr[4];
+
+      const contribTotal = govtAmt + contribAmt;
+      const totalTaxpayer = govtAmt + govtIndirectAmt;
+      let percentTaxpayer = 0;
+      if (contribTotal !== 0) {
+        percentTaxpayer = totalTaxpayer / contribTotal;
+      }
+
+      return {
+        ein: ein,
+        name: name,
+        contribTotal: contribTotal,
+        govtGrants: govtAmt,
+        otherContrib: contribAmt,
+        govtIndirect: govtIndirectAmt,
+        totalTaxpayer: totalTaxpayer,
+        percentTaxpayer: percentTaxpayer
+      };
+    }
+
+    // Update the totals div with sums for the *entire* passed data
+    function updateTotals(dataArray) {
+      let totalContribTotal = 0;
+      let totalGovtGrants = 0;
+      let totalOtherContrib = 0;
+      let totalGovtIndirect = 0;
+      let totalTaxpayer = 0;
+
+      dataArray.forEach(item => {
+        totalContribTotal += item.contribTotal;
+        totalGovtGrants += item.govtGrants;
+        totalOtherContrib += item.otherContrib;
+        totalGovtIndirect += item.govtIndirect;
+        totalTaxpayer += item.totalTaxpayer;
+      });
+
+      const count = dataArray.length;
+      const totalsText = 
+        `Count: ${count} | ` +
+        `Contributions Total: ${formatCurrency(totalContribTotal)} | ` +
+        `Government Grants: ${formatCurrency(totalGovtGrants)} | ` +
+        `Other Cash Contributions: ${formatCurrency(totalOtherContrib)} | ` +
+        `Indirect Government Monies: ${formatCurrency(totalGovtIndirect)} | ` +
+        `Total Taxpayer Dollars: ${formatCurrency(totalTaxpayer)}`;
+
+      $('#totals').text(totalsText);
+    }
+
+    // Sort data by the chosen field in ascending/descending order
+    function sortData(dataArray, field, direction) {
+      const sorted = dataArray.slice().sort((a, b) => {
+        let valA = (field === 'ein' || field === 'name')
+          ? a[field].toString().toLowerCase()
+          : a[field];
+        let valB = (field === 'ein' || field === 'name')
+          ? b[field].toString().toLowerCase()
+          : b[field];
+
+        if (valA < valB) return direction === 'asc' ? -1 : 1;
+        if (valA > valB) return direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+      return sorted;
+    }
+
+    // Filter data by EIN or name (case-insensitive)
+    function filterData(dataArray, query) {
+      const q = query.toLowerCase().trim();
+      if (!q) return dataArray; // No filter
+      return dataArray.filter(item =>
+        item.ein.toLowerCase().includes(q) || item.name.toLowerCase().includes(q)
+      );
+    }
+
+    // Renders the table body, but only up to 1000 rows. Shows warning if truncated.
+    function renderTable(dataArray) {
+      // First, update totals for the full data set
+      updateTotals(dataArray);
+
+      // Then, optionally truncate if over 1000
+      if (dataArray.length > 1000) {
+        $('#warning').text(`Showing first 1000 results out of ${dataArray.length}.`);
+      } else {
+        $('#warning').text('');
+      }
+      const rowsToRender = dataArray.slice(0, 1000);
+
+      const tbody = $('#nonprofitTable tbody');
+      tbody.empty();
+
+      rowsToRender.forEach(item => {
+        const tr = $('<tr></tr>');
+
+        tr.append($('<td></td>').text(item.ein));
+        tr.append($('<td></td>').text(item.name));
+        tr.append($('<td></td>').text(formatCurrency(item.contribTotal)));
+        tr.append($('<td></td>').text(formatCurrency(item.govtGrants)));
+        tr.append($('<td></td>').text(formatCurrency(item.otherContrib)));
+        tr.append($('<td></td>').text(formatCurrency(item.govtIndirect)));
+        tr.append($('<td></td>').text(formatCurrency(item.totalTaxpayer)));
+        tr.append($('<td></td>').text(formatPercentage(item.percentTaxpayer)));
+
+        tbody.append(tr);
+      });
+    }
+
+    // Applies the current filter and the current sort, then renders
+    function applyFilterAndSort() {
+      // Filter
+      const filterQuery = $('#filterInput').val();
+      let filtered = filterData(nonprofitData, filterQuery);
+
+      // Sort
+      if (currentSortField) {
+        filtered = sortData(filtered, currentSortField, currentSortDirection);
+      }
+
+      // Render
+      renderTable(filtered);
+    }
+
+    // Reload data from the ZIP, then filter & sort
+    function loadData() {
+      // 1. Fetch the .zip file
+      fetch('nonprofit.json.zip')
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+          // 2. Load it via JSZip
+          return JSZip.loadAsync(arrayBuffer);
+        })
+        .then(zip => {
+          // 3. Extract the "nonprofit.json" file inside
+          //    Make sure the internal filename matches what you zipped
+          return zip.file('nonprofit.json').async('string');
+        })
+        .then(jsonText => {
+          // 4. Parse the JSON
+          const rawData = JSON.parse(jsonText);
+          nonprofitData = rawData.map(buildRecord);
+
+          // 5. Filter & sort
+          applyFilterAndSort();
+        })
+        .catch(err => {
+          console.error('Error loading or parsing nonprofit.json.zip:', err);
+          $('#warning').text('Error loading data. Check console for details.');
+        });
+    }
+
+    $(document).ready(function() {
+      // Initial load
+      loadData();
+
+      // Set up click on column headers for sorting
+      $('#nonprofitTable thead th').on('click', function() {
+        const field = $(this).data('field');
+
+        if (currentSortField === field) {
+          // Toggle direction
+          currentSortDirection = (currentSortDirection === 'asc') ? 'desc' : 'asc';
+        } else {
+          currentSortField = field;
+          currentSortDirection = 'asc';
+        }
+
+        // Update sort arrow classes
+        $('#nonprofitTable thead th').removeClass('sort-asc sort-desc');
+        $(this).addClass(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+
+        // Re-apply filter & sort
+        applyFilterAndSort();
+      });
+
+      // Filter button: reload the data from the server and re-apply
+      $('#filterButton').on('click', function() {
+        loadData();
+      });
+    });
+  </script>
+</body>
+</html>
