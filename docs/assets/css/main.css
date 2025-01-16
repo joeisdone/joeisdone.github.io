@@ -93,3 +93,7 @@
     @apply border border-gray-300 p-1 rounded-sm;
   }
 }
+
+table {
+  @apply text-sm;
+}
