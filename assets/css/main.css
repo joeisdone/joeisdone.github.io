@@ -43,10 +43,21 @@
     @apply font-bold mb-2;
   }
 
+  h1, h2, h3 {
+    @apply mt-6;
+  }
+
+  h4, h5, h6 {
+    @apply mt-4;
+  }
+
   h1 {
     @apply text-2xl;
   }
 
+  p {
+    @apply mb-2;
+  }
 
   .radio-group {
     @apply flex flex-col;
@@ -81,4 +92,8 @@
   select {
     @apply border border-gray-300 p-1 rounded-sm;
   }
+}
+
+table {
+  @apply text-sm;
 }
