@@ -14,8 +14,8 @@ title: Nonprofits
   }
 
   #warning {
-    color: red;
-    font-size: 12px;
+    font-size: 13px;
+    opacity: 0.75;
   }
 
   table {
@@ -42,6 +42,10 @@ title: Nonprofits
     content: " ▼";
   }
 
+  tbody td {
+    background-color: #fff;
+  }
+
   .loading-container {
     text-align: center;
     padding: 20px;
@@ -54,15 +58,51 @@ title: Nonprofits
 </style>
 
 
-<div id="totals"></div>
-
-
-<div class="flex flex-col md:flex-row justify-between w-full pb-4">
-  <div id="filterContainer">
-    <label for="filterInput"><strong>Filter EIN or 501(c)(3) Name: </strong></label>
-    <input type="text" id="filterInput" placeholder="Type your filter..." class="p-1 rounded-sm" autofocus />
-    <button id="filterButton">Filter / Reload</button>
+<div id="totals" class="min-h-[68px]">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Indirect Government Monies</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
+    <div>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Total Taxpayer Dollars</h3> <span
+        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+    </div>
   </div>
+</div>
+
+
+<div class="flex flex-col md:flex-row md:items-center justify-between w-full">
+  <form>
+    <div id="filterContainer" class="flex items-center gap-2 text-sm">
+      <label for="filterInput"><strong class="font-medium">Filter EIN or 501(c)(3) Name: </strong></label>
+      <div class="flex gap-1">
+        <input type="text" id="filterInput" placeholder="Type your filter..."
+          class="px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
+        <button id="filterButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded">
+          <span class="button-text">Filter</span>
+          <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;"
+            alt="Loading..." />
+        </button>
+      </div>
+    </div>
+  </form>
 
   <div id="warning"></div>
 
@@ -216,7 +256,7 @@ title: Nonprofits
       setTimeout(() => {
         console.log('Starting setTimeout callback');
         if (dataArray.length > 1000) {
-          $('#warning').text(`Showing first 1000 results out of ${dataArray.length}`);
+          $('#warning').text(`Showing first 1,000 results out of ${dataArray.length.toLocaleString()}`);
         } else {
           $('#warning').text('');
         }
@@ -270,29 +310,34 @@ title: Nonprofits
 
   // Reload data from the ZIP, then filter & sort
   function loadData() {
-    // 1. Fetch the .zip file
+    // Disable button and show loading state
+    const filterButton = $('#filterButton');
+    filterButton.prop('disabled', true);
+    filterButton.find('.button-text').addClass('hidden');
+    filterButton.find('.loading-spinner').css('display', 'inline-block');
+
     fetch('nonprofit.json.zip')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
-        // 2. Load it via JSZip
         return JSZip.loadAsync(arrayBuffer);
       })
       .then(zip => {
-        // 3. Extract the "nonprofit.json" file inside
-        //    Make sure the internal filename matches what you zipped
         return zip.file('nonprofit.json').async('string');
       })
       .then(jsonText => {
-        // 4. Parse the JSON
         const rawData = JSON.parse(jsonText);
         nonprofitData = rawData.map(buildRecord);
-
-        // 5. Filter & sort
         applyFilterAndSort();
       })
       .catch(err => {
         console.error('Error loading or parsing nonprofit.json.zip:', err);
         $('#warning').text('Error loading data. Check console for details.');
+      })
+      .finally(() => {
+        // Re-enable button and hide loading state
+        filterButton.prop('disabled', false);
+        filterButton.find('.button-text').removeClass('hidden');
+        filterButton.find('.loading-spinner').css('display', 'none');
       });
   }
 
@@ -321,8 +366,17 @@ title: Nonprofits
     });
 
     // Filter button: reload the data from the server and re-apply
-    $('#filterButton').on('click', function () {
+    $('#filterButton').on('click', function (e) {
+      e.preventDefault(); // Prevent form submission
       loadData();
+    });
+
+    // Bind Enter key to filter button action
+    $('#filterInput').on('keypress', function (e) {
+      if (e.which === 13) { // 13 is the Enter key code
+        e.preventDefault(); // Prevent form submission
+        loadData();
+      }
     });
   });
 </script>

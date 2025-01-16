@@ -621,6 +621,15 @@ select {
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
   padding: 0.25rem;
 }
+.relative {
+  position: relative;
+}
+.left-1 {
+  left: 0.25rem;
+}
+.top-px {
+  top: 1px;
+}
 .order-2 {
   order: 2;
 }
@@ -666,6 +675,9 @@ select {
 .mt-0 {
   margin-top: 0px;
 }
+.mt-1 {
+  margin-top: 0.25rem;
+}
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -686,6 +698,12 @@ select {
 }
 .inline-grid {
   display: inline-grid;
+}
+.\!hidden {
+  display: none !important;
+}
+.hidden {
+  display: none;
 }
 .size-2 {
   width: 0.5rem;
@@ -710,6 +728,15 @@ select {
 .h-0 {
   height: 0px;
 }
+.h-5 {
+  height: 1.25rem;
+}
+.min-h-\[68px\] {
+  min-height: 68px;
+}
+.w-16 {
+  width: 4rem;
+}
 .w-full {
   width: 100%;
 }
@@ -730,6 +757,15 @@ select {
 }
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+@keyframes pulse {
+
+  50% {
+    opacity: .5;
+  }
+}
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -805,9 +841,17 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+}
 .bg-red-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 242 242 / var(--tw-bg-opacity));
+}
+.bg-slate-900 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity));
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -911,6 +955,10 @@ select {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
 }
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }
@@ -1001,6 +1049,10 @@ table {
 
   .md\:flex-row {
     flex-direction: row;
+  }
+
+  .md\:items-center {
+    align-items: center;
   }
 
   .md\:gap-4 {
