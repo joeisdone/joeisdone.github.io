@@ -552,9 +552,18 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0.5rem;
   font-weight: 700;
 }
+h1, h2, h3 {
+  margin-top: 1.5rem;
+}
+h4, h5, h6 {
+  margin-top: 1rem;
+}
 h1 {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+p {
+  margin-bottom: 0.5rem;
 }
 .radio-group {
   display: flex;
@@ -882,21 +891,17 @@ select {
 .outline {
   outline-style: solid;
 }
-
 .hover\:bg-gray-200:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
-
 .hover\:text-black:hover {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
-
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
-
 @media (min-width: 640px) {
 
   .sm\:flex-row {
@@ -911,7 +916,6 @@ select {
     gap: 0.5rem;
   }
 }
-
 @media (min-width: 768px) {
 
   .md\:order-1 {
@@ -979,7 +983,6 @@ select {
     padding-left: 1rem;
   }
 }
-
 @media (min-width: 1024px) {
 
   .lg\:max-w-sm {
@@ -999,7 +1002,6 @@ select {
     padding-right: 2rem;
   }
 }
-
 @media (min-width: 1280px) {
 
   .xl\:max-w-lg {
