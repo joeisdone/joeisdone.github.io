@@ -43,7 +43,7 @@
   <header
   class="max-w-7xl mx-auto flex flex-col sm:flex-row gap-2 border-b border-gray-300 pb-2 mb-4 text-sm sm:items-center">
   <strong class="text-lg inline-block mr-2">Joe is Done.</strong>
-  <div class="flex gap-1 sm:gap-2 overflow-x-auto -mx-4 px-4">
+  <div class="flex gap-1 sm:gap-2 overflow-x-auto -mx-4 px-2 md:px-4">
     <a href="/nonprofit"
       class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-gray-600 hover:text-black">
       <svg class="opacity-80 group-hover:opacity-100 relative left-1 top-px" xmlns="http://www.w3.org/2000/svg" x="0px"
@@ -150,7 +150,7 @@
 </style>
 
 
-<div id="totals" class="min-h-[68px]">
+<div id="totals" class="min-h-[44px]">
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
     <div>
       <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
@@ -182,11 +182,11 @@
 
 <div class="flex flex-col md:flex-row md:items-center justify-between w-full">
   <form>
-    <div id="filterContainer" class="flex items-center gap-2 text-sm">
+    <div id="filterContainer" class="flex flex-col md:flex-row w-full md:w-auto md:items-center gap-1 md:gap-2 text-sm">
       <label for="filterInput"><strong class="font-medium">Filter EIN or 501(c)(3) Name: </strong></label>
-      <div class="flex gap-1">
+      <div class="flex gap-1 w-full md:w-auto">
         <input type="text" id="filterInput" placeholder="Type your filter..."
-          class="px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
+          class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
         <button id="filterButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded">
           <span class="button-text">Filter</span>
           <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;"
@@ -196,32 +196,40 @@
     </div>
   </form>
 
-  <div id="warning"></div>
+  <div id="warning" class="mb-2 md:mb-0"></div>
 
 </div>
-<table id="nonprofitTable" class="w-full overflow-x-auto">
-  <thead>
-    <tr>
-      <th data-field="ein">EIN</th>
-      <th data-field="name">501(c)(3) Name</th>
-      <th data-field="contribTotal">Contributions Total</th>
-      <th data-field="govtGrants">Government Grants</th>
-      <th data-field="otherContrib">Other Cash Contributions</th>
-      <th data-field="govtIndirect">Indirect Government Monies</th>
-      <th data-field="totalTaxpayer">Total Taxpayer Dollars</th>
-      <th data-field="percentTaxpayer">Percent Taxpayer Funded</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td colspan="8" style="text-align: center; padding: 20px;">
-        <div class="loading-container">
-          <img src="/assets/images/loading.svg" alt="Loading..." class="mx-auto">
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="w-screen md:w-auto overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+  <table id="nonprofitTable" class="">
+    <thead>
+      <tr>
+        <th data-field="ein">EIN</th>
+        <th data-field="name">501(c)(3) Name</th>
+        <th data-field="contribTotal">Contributions Total</th>
+        <th data-field="govtGrants">Government Grants</th>
+        <th data-field="otherContrib">Other Cash Contributions</th>
+        <th data-field="govtIndirect">Indirect Government Monies</th>
+        <th data-field="totalTaxpayer">Total Taxpayer Dollars</th>
+        <th data-field="percentTaxpayer">Percent Taxpayer Funded</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="8" style="text-align: center; padding: 20px;">
+          <div class="loading-container">
+            <img src="/assets/images/loading.svg" alt="Loading..." class="mx-auto">
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="flex justify-center py-8">
+  <button id="backToTop" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded">
+    <span class="button-text">Back to top</span>
+  </button>
+</div>
 
 <!-- jQuery (CDN) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -293,12 +301,12 @@
     const count = dataArray.length;
     const totalsText =
       `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span>${count}</span></div>
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span>${formatCurrency(totalContribTotal)}</span></div>
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span>${formatCurrency(totalGovtGrants)}</span></div>
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3> <span>${formatCurrency(totalOtherContrib)}</span></div>
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Indirect Government Monies</h3> <span>${formatCurrency(totalGovtIndirect)}</span></div>
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Total Taxpayer Dollars</h3> <span>${formatCurrency(totalTaxpayer)}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span class="text-[15px] md:text-base">${count}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalContribTotal)}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalGovtGrants)}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalOtherContrib)}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Indirect Government Monies</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalGovtIndirect)}</span></div>
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Total Taxpayer Dollars</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalTaxpayer)}</span></div>
       </div>`;
 
     $('#totals').html(totalsText);
@@ -469,6 +477,14 @@
         e.preventDefault(); // Prevent form submission
         loadData();
       }
+    });
+
+    // Add smooth scroll functionality to back to top button
+    $('#backToTop').on('click', function () {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     });
   });
 </script>

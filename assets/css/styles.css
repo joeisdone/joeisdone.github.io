@@ -731,8 +731,8 @@ select {
 .h-5 {
   height: 1.25rem;
 }
-.min-h-\[68px\] {
-  min-height: 68px;
+.min-h-\[44px\] {
+  min-height: 44px;
 }
 .w-16 {
   width: 4rem;
@@ -775,6 +775,9 @@ select {
 }
 .items-center {
   align-items: center;
+}
+.justify-center {
+  justify-content: center;
 }
 .justify-between {
   justify-content: space-between;
@@ -890,6 +893,10 @@ select {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
 .pb-2 {
   padding-bottom: 0.5rem;
 }
@@ -905,6 +912,9 @@ select {
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+.text-\[15px\] {
+  font-size: 15px;
 }
 .text-base {
   font-size: 1rem;
@@ -1026,9 +1036,18 @@ table {
     grid-column: span 4 / span 4;
   }
 
+  .md\:mx-0 {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
   .md\:my-0 {
     margin-top: 0px;
     margin-bottom: 0px;
+  }
+
+  .md\:w-auto {
+    width: auto;
   }
 
   .md\:max-w-xs {
@@ -1055,6 +1074,10 @@ table {
     align-items: center;
   }
 
+  .md\:gap-2 {
+    gap: 0.5rem;
+  }
+
   .md\:gap-4 {
     gap: 1rem;
   }
@@ -1073,6 +1096,11 @@ table {
     border-bottom-width: 0px;
   }
 
+  .md\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .md\:px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
@@ -1085,6 +1113,11 @@ table {
 
   .md\:pl-4 {
     padding-left: 1rem;
+  }
+
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
   }
 }
 
