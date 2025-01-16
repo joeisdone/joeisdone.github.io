@@ -3,7 +3,7 @@
     "build:css": "postcss assets/css/main.css -o assets/css/styles.css",
     "watch:css": "postcss assets/css/main.css -o assets/css/styles.css --watch",
     "start": "run-p watch:css jekyll:serve",
-    "jekyll:serve": "bundle exec jekyll serve --livereload"
+    "jekyll:serve": "bundle exec jekyll serve --incremental --livereload"
   },
   "dependencies": {
     "autoprefixer": "^10.4.14",
