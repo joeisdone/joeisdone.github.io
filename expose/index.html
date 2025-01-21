@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>GraphViz DOT Example with Pan/Zoom and Toggle</title>
+    
+    <!-- jQuery (optional, but convenient) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Viz.js core and renderer -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+
+    <!-- svg-pan-zoom library -->
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Simple control bar at the top */
+      #controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        background-color: #eee;
+        border-bottom: 1px solid #ccc;
+      }
+      #controls button {
+        margin: 0 10px;
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+
+      /* Graph container takes up remaining space */
+      #graph-container {
+        width: 100%;
+        height: calc(100% - 50px);
+        overflow: hidden; /* Hide scrollbars */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Button Controls -->
+    <div id="controls">
+      <button id="toggleGraph">Toggle Graph</button>
+      <button id="recenterGraph">Recenter Graph</button>
+    </div>
+
+    <!-- Container for the rendered SVG diagram -->
+    <div id="graph-container"></div>
+
+    <script>
+      // Two sample DOT strings
+      const dot1 = `
+        digraph {
+          rankdir=LR;
+          A [label="Start"];
+          B [label="Step 1"];
+          C [label="Step 2"];
+          D [label="End"];
+          A -> B;
+          B -> C;
+          C -> D;
+        }
+      `;
+
+      const dot2 = `
+        digraph {
+          node [shape=box, style="filled", color="#a0c4ff"];
+          subgraph cluster_0 {
+            label="Subgraph 1";
+            A -> B -> C;
+          }
+          subgraph cluster_1 {
+            label="Subgraph 2";
+            D -> E -> F;
+          }
+          C -> D [style=dashed];
+        }
+      `;
+
+      // Keep track of which DOT is being shown
+      let currentGraph = 1;
+
+      // We'll store the Viz.js instance and the pan/zoom instance
+      let viz = null;
+      let panZoomInstance = null;
+
+      // On document ready, initialize Viz.js and render the first graph
+      $(document).ready(function () {
+        viz = new Viz();
+
+        // Render the initial graph
+        renderDot(dot1);
+
+        // Handle the "Toggle Graph" button
+        $('#toggleGraph').on('click', function () {
+          currentGraph = (currentGraph === 1) ? 2 : 1;
+          if (currentGraph === 1) {
+            renderDot(dot1);
+          } else {
+            renderDot(dot2);
+          }
+        });
+
+        // Handle the "Recenter Graph" button
+        $('#recenterGraph').on('click', function () {
+          recenterGraph();
+        });
+
+        // Re-fit and center whenever the window is resized
+        $(window).on('resize', function(){
+          if (panZoomInstance) {
+            panZoomInstance.resize();
+            panZoomInstance.fit();
+            panZoomInstance.center();
+          }
+        });
+      });
+
+      /**
+       * Renders the given DOT string to the #graph-container.
+       * This function cleans up any existing SVG or pan-zoom instance
+       * before rendering the new diagram.
+       */
+      function renderDot(dot) {
+        // Clear out the container
+        $('#graph-container').empty();
+
+        // If a previous pan/zoom instance exists, destroy it
+        if (panZoomInstance) {
+          panZoomInstance.destroy();
+          panZoomInstance = null;
+        }
+
+        // Use Viz.js to render the DOT to an SVG element
+        viz.renderSVGElement(dot)
+          .then(function (svgElement) {
+            // Make sure the SVG can scale to the container
+            // so it maintains aspect ratio
+            svgElement.setAttribute('width', '100%');
+            svgElement.setAttribute('height', '100%');
+            svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+            // Append SVG to our container
+            $('#graph-container').append(svgElement);
+
+            // Initialize svg-pan-zoom
+            panZoomInstance = svgPanZoom(svgElement, {
+              zoomEnabled: true,
+              controlIconsEnabled: true,
+              fit: true,
+              center: true,
+            });
+          })
+          .catch(function (error) {
+            console.error('Viz.js render error:', error);
+          });
+      }
+
+      /**
+       * Re-fit and center the current diagram.
+       */
+      function recenterGraph() {
+        if (panZoomInstance) {
+          panZoomInstance.resize();
+          panZoomInstance.fit();
+          panZoomInstance.center();
+        }
+      }
+    </script>
+  </body>
+</html>
