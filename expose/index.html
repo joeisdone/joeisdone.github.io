@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8"/>
-    <title>GraphViz DOT Example with Pan/Zoom and Toggle</title>
+    <meta charset="utf-8" />
+    <title>Charity Graph Example</title>
     
-    <!-- jQuery (optional, but convenient) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery for convenience -->
+    <script src="jquery.min.js"></script>
+    
+    <!-- Viz.js (core + full render) -->
+    <script src="viz.js"></script>
+    <script src="full.render.js"></script>
 
-    <!-- Viz.js core and renderer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+    <!-- svg-pan-zoom for panning/zooming the resulting SVG -->
+    <script src="svg-pan-zoom.min.js"></script>
 
-    <!-- svg-pan-zoom library -->
-    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+    <!-- JSZip for reading the zipped CSVs -->
+    <script src="jszip.min.js"></script>
+
+    <!-- Papa Parse for CSV parsing -->
+    <script src="papaparse.min.js"></script>
 
     <style>
       html, body {
@@ -21,163 +27,361 @@
         height: 100%;
         width: 100%;
         box-sizing: border-box;
+        font-family: Arial, sans-serif;
       }
-
-      /* Simple control bar at the top */
       #controls {
+        height: 60px;
+        background: #f0f0f0;
         display: flex;
         align-items: center;
-        justify-content: center;
-        height: 50px;
-        background-color: #eee;
+        justify-content: flex-start;
+        padding: 0 1em;
         border-bottom: 1px solid #ccc;
       }
+      #controls label {
+        margin-right: 0.5em;
+      }
+      #controls input[type="text"] {
+        width: 200px;
+        margin-right: 1em;
+        padding: 4px;
+      }
       #controls button {
-        margin: 0 10px;
+        margin-right: 1em;
         padding: 6px 12px;
         cursor: pointer;
       }
-
-      /* Graph container takes up remaining space */
+      #status {
+        margin-left: auto;
+        margin-right: 1em;
+        color: #444;
+        font-size: 0.9em;
+      }
       #graph-container {
         width: 100%;
-        height: calc(100% - 50px);
-        overflow: hidden; /* Hide scrollbars */
+        height: calc(100% - 60px);
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #fafafa;
+        background: #fafafa;
+        overflow: hidden; /* Hide scrollbars */
+      }
+      #excluded-info {
+        position: absolute;
+        top: 65px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ccc;
+        padding: 4px 8px;
+        font-size: 0.8em;
+        border-radius: 4px;
       }
     </style>
   </head>
   <body>
-    <!-- Button Controls -->
     <div id="controls">
-      <button id="toggleGraph">Toggle Graph</button>
-      <button id="recenterGraph">Recenter Graph</button>
+      <label for="einInput">Enter EIN:</label>
+      <input type="text" id="einInput" value="952274801" />
+      <button id="generateBtn">Generate Graph</button>
+      <div id="status"></div>
     </div>
 
-    <!-- Container for the rendered SVG diagram -->
     <div id="graph-container"></div>
+    <div id="excluded-info" style="display: none;">
+      <div>501(c)(3)s not displayed: <span id="excluded501"></span></div>
+      <div>Grants not displayed: <span id="excludedGrants"></span></div>
+    </div>
 
     <script>
-      // Two sample DOT strings
-      const dot1 = `
-        digraph {
-          rankdir=LR;
-          A [label="Start"];
-          B [label="Step 1"];
-          C [label="Step 2"];
-          D [label="End"];
-          A -> B;
-          B -> C;
-          C -> D;
-        }
-      `;
+      // BFS limit in each direction
+      const BFS_CAP = 10;
 
-      const dot2 = `
-        digraph {
-          node [shape=box, style="filled", color="#a0c4ff"];
-          subgraph cluster_0 {
-            label="Subgraph 1";
-            A -> B -> C;
-          }
-          subgraph cluster_1 {
-            label="Subgraph 2";
-            D -> E -> F;
-          }
-          C -> D [style=dashed];
-        }
-      `;
+      // We'll store the parsed data in memory so we don't re-fetch on every click
+      let charities = {};              // ein -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
+      let edgeAccumulator = {};        // (filer, grantee) -> total grant amount
+      let totalCharitiesCount = 0;     // total charities read
+      let totalGrantsCount = 0;        // total edges read
 
-      // Keep track of which DOT is being shown
-      let currentGraph = 1;
+      let dataReady = false;          // Flag indicating we've loaded & parsed data
+      let panZoomInstance = null;     // svg-pan-zoom instance
 
-      // We'll store the Viz.js instance and the pan/zoom instance
-      let viz = null;
-      let panZoomInstance = null;
-
-      // On document ready, initialize Viz.js and render the first graph
-      $(document).ready(function () {
-        viz = new Viz();
-
-        // Render the initial graph
-        renderDot(dot1);
-
-        // Handle the "Toggle Graph" button
-        $('#toggleGraph').on('click', function () {
-          currentGraph = (currentGraph === 1) ? 2 : 1;
-          if (currentGraph === 1) {
-            renderDot(dot1);
-          } else {
-            renderDot(dot2);
-          }
+      // On page load, pre-fetch and parse the data
+      $(document).ready(function() {
+        loadData().then(() => {
+          dataReady = true;
+          $('#status').text('Data loaded. Ready.');
+        }).catch(err => {
+          console.error(err);
+          $('#status').text('Failed to load data.');
         });
 
-        // Handle the "Recenter Graph" button
-        $('#recenterGraph').on('click', function () {
-          recenterGraph();
-        });
-
-        // Re-fit and center whenever the window is resized
-        $(window).on('resize', function(){
-          if (panZoomInstance) {
-            panZoomInstance.resize();
-            panZoomInstance.fit();
-            panZoomInstance.center();
-          }
+        $('#generateBtn').on('click', function() {
+          generateGraph();
         });
       });
 
       /**
-       * Renders the given DOT string to the #graph-container.
-       * This function cleans up any existing SVG or pan-zoom instance
-       * before rendering the new diagram.
+       * Asynchronously loads charities.csv.zip and grants.csv.zip,
+       * unzips them, and populates the "charities" and "edgeAccumulator" data.
        */
-      function renderDot(dot) {
-        // Clear out the container
-        $('#graph-container').empty();
+      async function loadData() {
+        $('#status').text('Loading data...');
 
-        // If a previous pan/zoom instance exists, destroy it
+        // 1) Load charities.csv.zip
+        const charitiesZipBuf = await fetch('charities.csv.zip').then(r => r.arrayBuffer());
+        const charitiesZip = await JSZip.loadAsync(charitiesZipBuf);
+        // Assume we have a file named 'charities.csv' in charities.csv.zip
+        const charitiesCsvString = await charitiesZip.file('charities_truncated.csv').async('string');
+
+        // 2) Parse charities CSV
+        $('#status').text('Parsing charities.csv...');
+        await new Promise((resolve, reject) => {
+          Papa.parse(charitiesCsvString, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+              // results.data is an array of objects
+              results.data.forEach(row => {
+                const ein = (row['filer_ein'] || '').trim();
+                if (!ein) return;
+                charities[ein] = {
+                  name: (row['filer_name'] || '').trim(),
+                  receipt_amt: (row['receipt_amt'] || '0').trim(),
+                  govt_amt: (row['govt_amt'] || '0').trim(),
+                  contrib_amt: (row['contrib_amt'] || '0').trim(),
+                  grant_amt: 0
+                };
+              });
+              totalCharitiesCount = Object.keys(charities).length;
+              resolve();
+            },
+            error: (err) => reject(err)
+          });
+        });
+
+        // 3) Load grants.csv.zip
+        $('#status').text('Loading grants.csv...');
+        const grantsZipBuf = await fetch('grants.csv.zip').then(r => r.arrayBuffer());
+        const grantsZip = await JSZip.loadAsync(grantsZipBuf);
+        // Assume we have a file named 'grants.csv' in grants.csv.zip
+        const grantsCsvString = await grantsZip.file('grants_truncated.csv').async('string');
+
+        // 4) Parse grants CSV and build edgeAccumulator
+        $('#status').text('Parsing grants.csv...');
+        await new Promise((resolve, reject) => {
+          Papa.parse(grantsCsvString, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+              let localEdgeAccumulator = {};
+              let localGrantsCount = 0;
+              results.data.forEach(row => {
+                const filer = (row['filer_ein'] || '').trim();
+                const grantee = (row['grant_ein'] || '').trim();
+                let grantAmt = parseInt((row['grant_amt'] || '0').trim(), 10);
+                if (isNaN(grantAmt)) {
+                  grantAmt = 0;
+                }
+                localGrantsCount++;
+
+                // Only keep edges if both filer and grantee are in charities
+                if (charities[filer] && charities[grantee]) {
+                  const key = `${filer}~${grantee}`;
+                  if (!localEdgeAccumulator[key]) {
+                    localEdgeAccumulator[key] = 0;
+                  }
+                  localEdgeAccumulator[key] += grantAmt;
+                  charities[filer].grant_amt += grantAmt;
+                }
+              });
+              totalGrantsCount = localGrantsCount;
+              edgeAccumulator = localEdgeAccumulator;
+              resolve();
+            },
+            error: (err) => reject(err)
+          });
+        });
+      }
+
+      /**
+       * Main entry point for generating the graph from the current EIN in the text field.
+       */
+      function generateGraph() {
+        if (!dataReady) {
+          alert("Data not loaded yet. Please wait.");
+          return;
+        }
+
+        // Clear any previous SVG or excluded info
+        $('#graph-container').empty();
+        $('#excluded-info').hide();
         if (panZoomInstance) {
           panZoomInstance.destroy();
           panZoomInstance = null;
         }
 
-        // Use Viz.js to render the DOT to an SVG element
-        viz.renderSVGElement(dot)
-          .then(function (svgElement) {
-            // Make sure the SVG can scale to the container
-            // so it maintains aspect ratio
+        const rootEin = $('#einInput').val().trim();
+        if (!rootEin) {
+          alert("Please enter an EIN.");
+          return;
+        }
+
+        // If the requested root EIN is not found, do nothing
+        if (!charities[rootEin]) {
+          alert(`Root EIN '${rootEin}' not found in charities.csv`);
+          return;
+        }
+
+        $('#status').text('Generating graph...').css('color', 'red');
+        $('#generateBtn').prop('disabled', true);
+
+        // Build adjacency lists
+        const adjacencyFwd = {};
+        const adjacencyRev = {};
+
+        Object.keys(edgeAccumulator).forEach(key => {
+          const [filer, grantee] = key.split('~');
+          // Build adjacency for BFS forward
+          if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
+          adjacencyFwd[filer].push(grantee);
+
+          // Build adjacency for BFS reverse
+          if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
+          adjacencyRev[grantee].push(filer);
+        });
+
+        // BFS to find forward_visited
+        const forwardVisited = doBFS(adjacencyFwd, rootEin, BFS_CAP);
+        // BFS to find reverse_visited
+        const reverseVisited = doBFS(adjacencyRev, rootEin, BFS_CAP);
+
+        // Union
+        const subgraphNodes = new Set([...forwardVisited, ...reverseVisited]);
+        // Build subgraph edges
+        const subgraphEdges = [];
+
+        Object.keys(edgeAccumulator).forEach(key => {
+          const [filer, grantee] = key.split('~');
+          if (subgraphNodes.has(filer) && subgraphNodes.has(grantee)) {
+            subgraphEdges.push({ filer, grantee, amt: edgeAccumulator[key] });
+          }
+        });
+
+        // Calculate how many charities & grants are excluded
+        // (i.e. not displayed in the BFS subgraph)
+        const excluded501 = totalCharitiesCount - subgraphNodes.size;
+        const displayedEdgesCount = subgraphEdges.length;
+        // totalGrantsCount is how many lines we read in CSV, including those that didn't map
+        // but only edges that had filer and grantee in charities. If you want to count
+        // *all* lines, you can do so, but here let's approximate:
+        const includedEdgesInAccumulator = Object.keys(edgeAccumulator).length;
+        const excludedGrants = includedEdgesInAccumulator - displayedEdgesCount;
+
+        // Build DOT source
+        const dotSource = buildDotSource(rootEin, subgraphNodes, subgraphEdges);
+
+        // Render as SVG using Viz
+        const viz = new Viz();
+        viz.renderSVGElement(dotSource)
+          .then(svgElement => {
+            // Make sure the SVG fills the container and preserves aspect ratio
             svgElement.setAttribute('width', '100%');
             svgElement.setAttribute('height', '100%');
             svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // Append SVG to our container
+            // Insert SVG into page
             $('#graph-container').append(svgElement);
 
-            // Initialize svg-pan-zoom
+            // Initialize pan-zoom
             panZoomInstance = svgPanZoom(svgElement, {
               zoomEnabled: true,
               controlIconsEnabled: true,
               fit: true,
-              center: true,
+              center: true
             });
+
+            // Show excluded info
+            $('#excluded501').text(excluded501);
+            $('#excludedGrants').text(excludedGrants);
+            $('#excluded-info').show();
+
+            // Done
+            $('#status').text('Graph generated.').css('color', 'black');
+            $('#generateBtn').prop('disabled', false);
           })
-          .catch(function (error) {
-            console.error('Viz.js render error:', error);
+          .catch(err => {
+            console.error(err);
+            $('#status').text('Error generating graph.').css('color', 'red');
+            $('#generateBtn').prop('disabled', false);
           });
       }
 
       /**
-       * Re-fit and center the current diagram.
+       * BFS function (up to BFS_CAP) for either forward or reverse adjacency.
        */
-      function recenterGraph() {
-        if (panZoomInstance) {
-          panZoomInstance.resize();
-          panZoomInstance.fit();
-          panZoomInstance.center();
+      function doBFS(adjacency, root, cap) {
+        const visited = new Set();
+        const queue = [root];
+        while (queue.length > 0 && visited.size < cap) {
+          const current = queue.shift();
+          if (!visited.has(current)) {
+            visited.add(current);
+            if (adjacency[current]) {
+              for (const neighbor of adjacency[current]) {
+                if (!visited.has(neighbor) && visited.size < cap) {
+                  queue.push(neighbor);
+                }
+              }
+            }
+          }
         }
+        return visited;
+      }
+
+      /**
+       * Build a DOT string from the BFS subgraph.
+       */
+      function buildDotSource(rootEin, subgraphNodes, subgraphEdges) {
+        // Start with a Digraph
+        let dot = `digraph G {
+  // Graph settings
+  rankdir=LR;
+  node [shape=ellipse, style=filled, fillcolor=lightblue, color=black];
+  // Label the graph
+  label="Charity Graph Rooted at EIN: ${rootEin}";
+  labelloc="t";
+`;
+
+        // Add nodes
+        for (const ein of subgraphNodes) {
+          const c = charities[ein];
+          // Format numeric fields
+          const receipts = formatNumber(c.receipt_amt);
+          const govt = formatNumber(c.govt_amt);
+          const contrib = formatNumber(c.contrib_amt);
+          const grantsGiven = formatNumber(c.grant_amt);
+
+          // Node label
+          const label = `${c.name}\\nGross Receipts: $${receipts}\\nGovernment Grants Received: $${govt}\\nContributions Received: $${contrib}\\nGrants Given: $${grantsGiven}`;
+          dot += `  "${ein}" [label="${label}"];\n`;
+        }
+
+        // Add edges
+        for (const e of subgraphEdges) {
+          const amtLabel = `$${formatNumber(e.amt)}`;
+          dot += `  "${e.filer}" -> "${e.grantee}" [label="${amtLabel}"];\n`;
+        }
+
+        dot += `}\n`;
+        return dot;
+      }
+
+      /**
+       * Helper to format numeric strings with commas.
+       */
+      function formatNumber(nstr) {
+        const num = parseInt(nstr, 10) || 0;
+        return num.toLocaleString('en-US');
       }
     </script>
   </body>
