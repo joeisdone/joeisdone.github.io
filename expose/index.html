@@ -155,7 +155,7 @@
     <div id="excluded-info">
       <div>501(c)(3)s <em>not</em> displayed: <span id="excluded501"></span></div>
       <div>Grants <em>not</em> displayed: <span id="excludedGrants"></span></div>
-      <div>Taxpayer total in subgraph: <span id="taxpayerTotal"></span></div>
+      <div>🚨 <strong>Taxpayer Dollars in Subgraph:</strong> <span id="taxpayerTotal"></span></div>
     </div>
 
     <script>
@@ -540,7 +540,7 @@
             // Show excluded info
             $('#excluded501').text(excluded501);
             $('#excludedGrants').text(excludedGrants);
-            $('#taxpayerTotal').text('$' + formatNumber(taxpayerTotal));
+            $('#taxpayerTotal').html(`<b style="color:red; font-size:1.2em;">Taxpayer Total: $${formatNumber(taxpayerTotal)}</b>`);
             $('#excluded-info').show();
 
             $('#status').text(`Graph done. ${visitedSet.size} charities displayed.`).css('color','black');
@@ -573,8 +573,10 @@
           const contrib = formatNumber(c.contrib_amt);
           const grants = formatNumber(c.grant_amt);
           // Emphasize taxpayer funds
-          const label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
-          dot += `  "${ein}" [label="${label}"];\n`;
+          const taxpayerAlert = c.govt_amt > 10000000 ? '\\n🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨' : '';
+          var label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}${taxpayerAlert}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
+          const fillColor = c.govt_amt > 1000000 ? "#FFAD99" : "lightblue"; // Use red for high taxpayer funds
+          dot += `  "${ein}" [label="${label}", style=filled, fillcolor="${fillColor}"];\n`;
         }
 
         // Add edges
