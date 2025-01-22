@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Charity Graph Example</title>
+    <title>Charity Graph - Upfront Filtering</title>
     
     <!-- jQuery for convenience -->
     <script src="jquery.min.js"></script>
@@ -29,182 +29,395 @@
         box-sizing: border-box;
         font-family: Arial, sans-serif;
       }
-      #controls {
-        height: 60px;
+      #topbar {
         background: #f0f0f0;
+        border-bottom: 1px solid #ccc;
+        padding: 0.5em 1em;
+      }
+      #explanation {
+        font-size: 0.8em;
+        margin-bottom: 1em;
+        color: #555;
+      }
+      #controls {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
-        padding: 0 1em;
-        border-bottom: 1px solid #ccc;
+        gap: 0.5em;
+        flex-wrap: wrap;
       }
       #controls label {
         margin-right: 0.5em;
       }
-      #controls input[type="text"] {
-        width: 200px;
-        margin-right: 1em;
+      input[type="text"] {
         padding: 4px;
       }
-      #controls button {
-        margin-right: 1em;
+      button {
         padding: 6px 12px;
         cursor: pointer;
       }
       #status {
         margin-left: auto;
-        margin-right: 1em;
         color: #444;
         font-size: 0.9em;
       }
+
+      /* Filters/EINs box */
+      #filters-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-top: 0.5em;
+      }
+      #activeEINs, #activeFilters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+      }
+      .filter-tag {
+        background: #e0e0ff;
+        border: 1px solid #888;
+        border-radius: 4px;
+        padding: 2px 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .filter-tag span.remove-filter {
+        color: #c00;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      /* Graph container takes up the rest of the screen */
       #graph-container {
         width: 100%;
-        height: calc(100% - 60px);
+        height: calc(100% - 180px);
         display: flex;
         align-items: center;
         justify-content: center;
         background: #fafafa;
         overflow: hidden; /* Hide scrollbars */
       }
+
+      /* Exclusion info overlay */
       #excluded-info {
         position: absolute;
-        top: 65px;
+        top: 120px;
         right: 10px;
         background: rgba(255, 255, 255, 0.9);
         border: 1px solid #ccc;
         padding: 4px 8px;
         font-size: 0.8em;
         border-radius: 4px;
+        display: none;
       }
     </style>
   </head>
   <body>
-    <div id="controls">
-      <label for="einInput">Enter EIN:</label>
-      <input type="text" id="einInput" value="952274801" />
-      <button id="generateBtn">Generate Graph</button>
-      <div id="status"></div>
+    <div id="topbar">
+      <div id="explanation">
+        <strong>Instructions (Upfront Filtering):</strong><br/>
+        - Enter any number of EINs. These EINs will always be included in the graph even if keywords don't match.<br/>
+        - Enter any number of keywords (case-insensitive). Only charities whose names contain at least one keyword will be included, <em>unless</em> they're specified by EIN.<br/>
+        - Click <em>Generate Graph</em> to run BFS. If multiple EINs are present, the BFS root is the one with largest <code>receipt_amt</code>. If none are present, we pick the largest matching charity. If no keywords and no EINs, we pick the single largest charity overall.<br/>
+      </div>
+      <div id="controls">
+        <!-- EIN Input & Add Button -->
+        <label for="einInput">Add EIN:</label>
+        <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" />
+        <button id="addEinBtn">Add EIN</button>
+
+        <!-- Keyword Filter Input & Add Button -->
+        <label for="keywordInput">Add Keyword:</label>
+        <input type="text" id="keywordInput" placeholder="Keyword or phrase..." />
+        <button id="addFilterBtn">Add</button>
+
+        <div id="filters-container">
+          <!-- Active EINs -->
+          <div>EINs:</div>
+          <div id="activeEINs"></div>
+          <button id="clearEINsBtn">Clear EINs</button>
+
+          <!-- Active Keyword Filters -->
+          <div>Keywords:</div>
+          <div id="activeFilters"></div>
+          <button id="clearFiltersBtn">Clear Keywords</button>
+        </div>
+
+        <button id="generateBtn">Generate Graph</button>
+        <div id="status" style="margin-left:auto;"></div>
+      </div>
     </div>
 
     <div id="graph-container"></div>
-    <div id="excluded-info" style="display: none;">
+
+    <!-- Excluded info overlay -->
+    <div id="excluded-info">
       <div>501(c)(3)s not displayed: <span id="excluded501"></span></div>
       <div>Grants not displayed: <span id="excludedGrants"></span></div>
     </div>
 
     <script>
-      // BFS limit in each direction
-      const BFS_CAP = 10;
+      const BFS_CAP = 20;
 
-      // We'll store the parsed data in memory so we don't re-fetch on every click
-      let charities = {};              // ein -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
-      let edgeAccumulator = {};        // (filer, grantee) -> total grant amount
-      let totalCharitiesCount = 0;     // total charities read
-      let totalGrantsCount = 0;        // total edges read
+      // Full data structures
+      let charities = {};             // EIN -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt, ... }
+      let edgeAccumulator = {};       // "filer~grantee" -> totalGrant
+      let totalCharitiesCount = 0;    // total charities read
+      let totalGrantsCount = 0;       // total edges read from CSV
 
-      let dataReady = false;          // Flag indicating we've loaded & parsed data
-      let panZoomInstance = null;     // svg-pan-zoom instance
+      // Filter state
+      let activeEINs = [];
+      let activeKeywords = [];
 
-      // On page load, pre-fetch and parse the data
+      // For BFS
+      let dataReady = false;
+      let panZoomInstance = null;
+
       $(document).ready(function() {
-        loadData().then(() => {
-          dataReady = true;
-          $('#status').text('Data loaded. Ready.');
-        }).catch(err => {
-          console.error(err);
-          $('#status').text('Failed to load data.');
-        });
+        // Load the data once
+        loadData()
+          .then(() => {
+            dataReady = true;
+            $('#status').text('Data loaded.').css('color', 'black');
+            // Auto-generate graph once loaded
+            generateGraph();
+          })
+          .catch(err => {
+            console.error(err);
+            $('#status').text('Failed to load data.').css('color', 'red');
+          });
 
-        $('#generateBtn').on('click', function() {
+        // EIN add/remove
+        $('#addEinBtn').on('click', addEINFromInput);
+        $('#einInput').on('keypress', e => {
+          if (e.key === 'Enter') addEINFromInput();
+        });
+        $('#clearEINsBtn').on('click', () => {
+          activeEINs = [];
+          renderActiveEINs();
           generateGraph();
         });
+
+        // Keyword add/remove
+        $('#addFilterBtn').on('click', addKeywordFromInput);
+        $('#keywordInput').on('keypress', e => {
+          if (e.key === 'Enter') addKeywordFromInput();
+        });
+        $('#clearFiltersBtn').on('click', () => {
+          activeKeywords = [];
+          renderActiveKeywords();
+          generateGraph();
+        });
+
+        $('#generateBtn').on('click', generateGraph);
       });
 
-      /**
-       * Asynchronously loads charities.csv.zip and grants.csv.zip,
-       * unzips them, and populates the "charities" and "edgeAccumulator" data.
-       */
       async function loadData() {
-        $('#status').text('Loading data...');
+        $('#status').text('Loading data...').css('color', 'blue');
 
-        // 1) Load charities.csv.zip
+        // 1) Load & parse charities
         const charitiesZipBuf = await fetch('charities.csv.zip').then(r => r.arrayBuffer());
         const charitiesZip = await JSZip.loadAsync(charitiesZipBuf);
-        // Assume we have a file named 'charities.csv' in charities.csv.zip
         const charitiesCsvString = await charitiesZip.file('charities_truncated.csv').async('string');
 
-        // 2) Parse charities CSV
-        $('#status').text('Parsing charities.csv...');
         await new Promise((resolve, reject) => {
           Papa.parse(charitiesCsvString, {
             header: true,
             skipEmptyLines: true,
-            complete: function(results) {
-              // results.data is an array of objects
+            complete: results => {
               results.data.forEach(row => {
                 const ein = (row['filer_ein'] || '').trim();
                 if (!ein) return;
+                let rAmt = parseInt((row['receipt_amt'] || '0').trim(), 10);
+                if (isNaN(rAmt)) rAmt = 0;
                 charities[ein] = {
                   name: (row['filer_name'] || '').trim(),
-                  receipt_amt: (row['receipt_amt'] || '0').trim(),
-                  govt_amt: (row['govt_amt'] || '0').trim(),
-                  contrib_amt: (row['contrib_amt'] || '0').trim(),
+                  receipt_amt: rAmt,
+                  govt_amt: parseInt((row['govt_amt'] || '0').trim(), 10) || 0,
+                  contrib_amt: parseInt((row['contrib_amt'] || '0').trim(), 10) || 0,
                   grant_amt: 0
                 };
               });
               totalCharitiesCount = Object.keys(charities).length;
               resolve();
             },
-            error: (err) => reject(err)
+            error: err => reject(err)
           });
         });
 
-        // 3) Load grants.csv.zip
-        $('#status').text('Loading grants.csv...');
+        // 2) Load & parse grants
         const grantsZipBuf = await fetch('grants.csv.zip').then(r => r.arrayBuffer());
         const grantsZip = await JSZip.loadAsync(grantsZipBuf);
-        // Assume we have a file named 'grants.csv' in grants.csv.zip
         const grantsCsvString = await grantsZip.file('grants_truncated.csv').async('string');
 
-        // 4) Parse grants CSV and build edgeAccumulator
-        $('#status').text('Parsing grants.csv...');
         await new Promise((resolve, reject) => {
           Papa.parse(grantsCsvString, {
             header: true,
             skipEmptyLines: true,
-            complete: function(results) {
-              let localEdgeAccumulator = {};
-              let localGrantsCount = 0;
+            complete: results => {
+              let localEdges = {};
+              let count = 0;
               results.data.forEach(row => {
                 const filer = (row['filer_ein'] || '').trim();
                 const grantee = (row['grant_ein'] || '').trim();
-                let grantAmt = parseInt((row['grant_amt'] || '0').trim(), 10);
-                if (isNaN(grantAmt)) {
-                  grantAmt = 0;
-                }
-                localGrantsCount++;
+                let amt = parseInt((row['grant_amt'] || '0').trim(), 10);
+                if (isNaN(amt)) amt = 0;
+                count++;
 
-                // Only keep edges if both filer and grantee are in charities
                 if (charities[filer] && charities[grantee]) {
                   const key = `${filer}~${grantee}`;
-                  if (!localEdgeAccumulator[key]) {
-                    localEdgeAccumulator[key] = 0;
+                  if (!localEdges[key]) {
+                    localEdges[key] = 0;
                   }
-                  localEdgeAccumulator[key] += grantAmt;
-                  charities[filer].grant_amt += grantAmt;
+                  localEdges[key] += amt;
+                  charities[filer].grant_amt += amt;
                 }
               });
-              totalGrantsCount = localGrantsCount;
-              edgeAccumulator = localEdgeAccumulator;
+              edgeAccumulator = localEdges;
+              totalGrantsCount = count;
               resolve();
             },
-            error: (err) => reject(err)
+            error: err => reject(err)
           });
         });
       }
 
       /**
-       * Main entry point for generating the graph from the current EIN in the text field.
+       * Build a filtered subset of charities + edges up front,
+       * ignoring BFS for the moment. This subset includes:
+       *   - All charities whose names match at least one keyword (if keywords exist).
+       *   - Any charity in activeEINs (always included).
+       * Then we restrict edges to only those whose filer/grantee both appear in the filtered set.
+       */
+      function buildFilteredData() {
+        // 1) Filter charities
+        let filteredCharities = {};
+        const hasKeywords = (activeKeywords.length > 0);
+
+        for (const [ein, c] of Object.entries(charities)) {
+          // If it's in activeEINs, always keep
+          if (activeEINs.includes(ein)) {
+            filteredCharities[ein] = c;
+            continue;
+          }
+          // Otherwise, if we have keywords, the charity's name must contain at least one
+          if (hasKeywords) {
+            const nm = c.name.toLowerCase();
+            const match = activeKeywords.some(kw => nm.includes(kw));
+            if (match) {
+              filteredCharities[ein] = c;
+            }
+          } else {
+            // If we have no keywords at all, keep everything
+            filteredCharities[ein] = c;
+          }
+        }
+
+        // 2) Build edges among the filtered set
+        let filteredEdges = {};
+        for (const [key, amt] of Object.entries(edgeAccumulator)) {
+          const [filer, grantee] = key.split('~');
+          if (filteredCharities[filer] && filteredCharities[grantee]) {
+            filteredEdges[key] = amt;
+          }
+        }
+
+        return { filteredCharities, filteredEdges };
+      }
+
+      /**
+       * Picks BFS root according to the rules:
+       *   - If activeEINs is non-empty, pick the one with largest receipt_amt from the filtered set.
+       *   - Otherwise, pick the largest receipt_amt from the filtered set (which may be smaller if keywords apply).
+       *   - If the filtered set is empty for some reason, fallback to null.
+       */
+      function pickBFSRoot(filteredCharities) {
+        // If we have at least one active EIN in the filtered set, pick largest
+        const einSet = Object.keys(filteredCharities);
+
+        let candidateEINs = activeEINs.filter(e => einSet.includes(e));
+        if (candidateEINs.length > 0) {
+          let bestEIN = null;
+          let bestAmt = -1;
+          for (const e of candidateEINs) {
+            const amt = filteredCharities[e].receipt_amt;
+            if (amt > bestAmt) {
+              bestAmt = amt;
+              bestEIN = e;
+            }
+          }
+          return bestEIN;
+        }
+
+        // Otherwise pick largest from all filtered charities
+        let bestEIN = null;
+        let bestAmt = -1;
+        for (const e of einSet) {
+          const amt = filteredCharities[e].receipt_amt;
+          if (amt > bestAmt) {
+            bestAmt = amt;
+            bestEIN = e;
+          }
+        }
+        return bestEIN;  // could be null if filtered set is empty
+      }
+
+      /**
+       * Standard BFS over adjacency, up to BFS_CAP nodes visited,
+       * with no extra keyword checks. We already filtered the set.
+       */
+      function doBFS(root, adjacencyFwd, adjacencyRev) {
+        const visitedFwd = new Set();
+        const visitedRev = new Set();
+
+        // BFS forward
+        {
+          const queue = [root];
+          while (queue.length > 0 && visitedFwd.size < BFS_CAP) {
+            const curr = queue.shift();
+            if (!visitedFwd.has(curr)) {
+              visitedFwd.add(curr);
+              const neighbors = adjacencyFwd[curr] || [];
+              neighbors.forEach(n => {
+                if (!visitedFwd.has(n) && visitedFwd.size < BFS_CAP) {
+                  queue.push(n);
+                }
+              });
+            }
+          }
+        }
+
+        // BFS reverse
+        {
+          const queue = [root];
+          while (queue.length > 0 && visitedRev.size < BFS_CAP) {
+            const curr = queue.shift();
+            if (!visitedRev.has(curr)) {
+              visitedRev.add(curr);
+              const neighbors = adjacencyRev[curr] || [];
+              neighbors.forEach(n => {
+                if (!visitedRev.has(n) && visitedRev.size < BFS_CAP) {
+                  queue.push(n);
+                }
+              });
+            }
+          }
+        }
+
+        // union
+        return new Set([...visitedFwd, ...visitedRev]);
+      }
+
+      /**
+       * Generate the graph: 
+       *   - Filter data up front
+       *   - Pick BFS root
+       *   - Build adjacency from filteredEdges
+       *   - BFS
+       *   - Force user EINS in final subgraph
+       *   - Add direct edges between user EINS
+       *   - Render
        */
       function generateGraph() {
         if (!dataReady) {
@@ -212,7 +425,7 @@
           return;
         }
 
-        // Clear any previous SVG or excluded info
+        // Clear old
         $('#graph-container').empty();
         $('#excluded-info').hide();
         if (panZoomInstance) {
@@ -220,80 +433,106 @@
           panZoomInstance = null;
         }
 
-        const rootEin = $('#einInput').val().trim();
-        if (!rootEin) {
-          alert("Please enter an EIN.");
-          return;
-        }
-
-        // If the requested root EIN is not found, do nothing
-        if (!charities[rootEin]) {
-          alert(`Root EIN '${rootEin}' not found in charities.csv`);
-          return;
-        }
-
-        $('#status').text('Generating graph...').css('color', 'red');
+        $('#status').text('Generating...').css('color', 'red');
         $('#generateBtn').prop('disabled', true);
 
-        // Build adjacency lists
+        // 1) Build filtered data
+        const { filteredCharities, filteredEdges } = buildFilteredData();
+        const filteredEINs = Object.keys(filteredCharities);
+        if (filteredEINs.length === 0) {
+          // No charities matched. Show empty graph or a message
+          $('#status').text('No charities matched the filters.').css('color', 'black');
+          $('#generateBtn').prop('disabled', false);
+          return;
+        }
+
+        // 2) Pick BFS root
+        const rootEIN = pickBFSRoot(filteredCharities);
+        if (!rootEIN) {
+          // Means we have filtered data but somehow no BFS root was found
+          $('#status').text('No BFS root found.').css('color', 'black');
+          $('#generateBtn').prop('disabled', false);
+          return;
+        }
+
+        // 3) Build adjacency from filteredEdges
         const adjacencyFwd = {};
         const adjacencyRev = {};
-
-        Object.keys(edgeAccumulator).forEach(key => {
+        for (const [key, amt] of Object.entries(filteredEdges)) {
           const [filer, grantee] = key.split('~');
-          // Build adjacency for BFS forward
           if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
           adjacencyFwd[filer].push(grantee);
 
-          // Build adjacency for BFS reverse
           if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
           adjacencyRev[grantee].push(filer);
-        });
+        }
 
-        // BFS to find forward_visited
-        const forwardVisited = doBFS(adjacencyFwd, rootEin, BFS_CAP);
-        // BFS to find reverse_visited
-        const reverseVisited = doBFS(adjacencyRev, rootEin, BFS_CAP);
+        // 4) BFS from root
+        const visitedSet = doBFS(rootEIN, adjacencyFwd, adjacencyRev);
 
-        // Union
-        const subgraphNodes = new Set([...forwardVisited, ...reverseVisited]);
-        // Build subgraph edges
-        const subgraphEdges = [];
-
-        Object.keys(edgeAccumulator).forEach(key => {
-          const [filer, grantee] = key.split('~');
-          if (subgraphNodes.has(filer) && subgraphNodes.has(grantee)) {
-            subgraphEdges.push({ filer, grantee, amt: edgeAccumulator[key] });
+        // 5) Build final subgraph nodes = visitedSet ∪ activeEINs
+        //    (only those EINs which actually appear in filteredCharities)
+        for (const userEin of activeEINs) {
+          if (filteredCharities[userEin]) {
+            visitedSet.add(userEin);
           }
-        });
+        }
 
-        // Calculate how many charities & grants are excluded
-        // (i.e. not displayed in the BFS subgraph)
-        const excluded501 = totalCharitiesCount - subgraphNodes.size;
-        const displayedEdgesCount = subgraphEdges.length;
-        // totalGrantsCount is how many lines we read in CSV, including those that didn't map
-        // but only edges that had filer and grantee in charities. If you want to count
-        // *all* lines, you can do so, but here let's approximate:
-        const includedEdgesInAccumulator = Object.keys(edgeAccumulator).length;
-        const excludedGrants = includedEdgesInAccumulator - displayedEdgesCount;
+        // 6) Build final subgraph edges from the visited nodes, plus direct edges between user EINs
+        const finalEdges = [];
+        for (const [key, amt] of Object.entries(filteredEdges)) {
+          const [filer, grantee] = key.split('~');
+          if (visitedSet.has(filer) && visitedSet.has(grantee)) {
+            finalEdges.push({ filer, grantee, amt });
+          }
+        }
+        // Also forcibly include edges among user EINS if they exist in filteredEdges
+        for (let i = 0; i < activeEINs.length; i++) {
+          for (let j = i + 1; j < activeEINs.length; j++) {
+            const e1 = activeEINs[i];
+            const e2 = activeEINs[j];
+            if (filteredEdges[e1 + '~' + e2]) {
+              const amt = filteredEdges[e1 + '~' + e2];
+              if (!finalEdges.find(e => e.filer === e1 && e.grantee === e2)) {
+                finalEdges.push({ filer: e1, grantee: e2, amt });
+              }
+              visitedSet.add(e1);
+              visitedSet.add(e2);
+            }
+            if (filteredEdges[e2 + '~' + e1]) {
+              const amt = filteredEdges[e2 + '~' + e1];
+              if (!finalEdges.find(e => e.filer === e2 && e.grantee === e1)) {
+                finalEdges.push({ filer: e2, grantee: e1, amt });
+              }
+              visitedSet.add(e1);
+              visitedSet.add(e2);
+            }
+          }
+        }
 
-        // Build DOT source
-        const dotSource = buildDotSource(rootEin, subgraphNodes, subgraphEdges);
+        // 7) Excluded counts
+        const subgraphSize = visitedSet.size;
+        const excluded501 = totalCharitiesCount - subgraphSize;
+        const displayedEdgesCount = finalEdges.length;
+        const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
+        // If you prefer to show how many are excluded relative to entire dataset, use:
+        //   let includedEdgesInAccumulator = Object.keys(edgeAccumulator).length;
+        // but we’ll do relative to filteredEdges for clarity
+        const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
 
-        // Render as SVG using Viz
+        // 8) Build DOT
+        const dot = buildDot(rootEIN, visitedSet, finalEdges, filteredCharities);
+
+        // 9) Render
         const viz = new Viz();
-        viz.renderSVGElement(dotSource)
-          .then(svgElement => {
-            // Make sure the SVG fills the container and preserves aspect ratio
-            svgElement.setAttribute('width', '100%');
-            svgElement.setAttribute('height', '100%');
-            svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        viz.renderSVGElement(dot)
+          .then(svgEl => {
+            svgEl.setAttribute('width', '100%');
+            svgEl.setAttribute('height', '100%');
+            svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // Insert SVG into page
-            $('#graph-container').append(svgElement);
-
-            // Initialize pan-zoom
-            panZoomInstance = svgPanZoom(svgElement, {
+            $('#graph-container').append(svgEl);
+            panZoomInstance = svgPanZoom(svgEl, {
               zoomEnabled: true,
               controlIconsEnabled: true,
               fit: true,
@@ -306,7 +545,7 @@
             $('#excluded-info').show();
 
             // Done
-            $('#status').text('Graph generated.').css('color', 'black');
+            $('#status').text(`Graph generated. (BFS Root: ${rootEIN})`).css('color', 'black');
             $('#generateBtn').prop('disabled', false);
           })
           .catch(err => {
@@ -317,71 +556,108 @@
       }
 
       /**
-       * BFS function (up to BFS_CAP) for either forward or reverse adjacency.
+       * Build DOT string from final subgraph sets.
        */
-      function doBFS(adjacency, root, cap) {
-        const visited = new Set();
-        const queue = [root];
-        while (queue.length > 0 && visited.size < cap) {
-          const current = queue.shift();
-          if (!visited.has(current)) {
-            visited.add(current);
-            if (adjacency[current]) {
-              for (const neighbor of adjacency[current]) {
-                if (!visited.has(neighbor) && visited.size < cap) {
-                  queue.push(neighbor);
-                }
-              }
-            }
-          }
-        }
-        return visited;
-      }
-
-      /**
-       * Build a DOT string from the BFS subgraph.
-       */
-      function buildDotSource(rootEin, subgraphNodes, subgraphEdges) {
-        // Start with a Digraph
+      function buildDot(rootEin, nodeSet, edgeList, filteredCharities) {
         let dot = `digraph G {
   // Graph settings
   rankdir=LR;
   node [shape=ellipse, style=filled, fillcolor=lightblue, color=black];
-  // Label the graph
-  label="Charity Graph Rooted at EIN: ${rootEin}";
+  label="Charity Graph (root: ${rootEin})";
   labelloc="t";
 `;
 
-        // Add nodes
-        for (const ein of subgraphNodes) {
-          const c = charities[ein];
-          // Format numeric fields
+        // Nodes
+        for (const ein of nodeSet) {
+          const c = filteredCharities[ein];
           const receipts = formatNumber(c.receipt_amt);
           const govt = formatNumber(c.govt_amt);
           const contrib = formatNumber(c.contrib_amt);
-          const grantsGiven = formatNumber(c.grant_amt);
-
-          // Node label
-          const label = `${c.name}\\nGross Receipts: $${receipts}\\nGovernment Grants Received: $${govt}\\nContributions Received: $${contrib}\\nGrants Given: $${grantsGiven}`;
+          const grants = formatNumber(c.grant_amt);
+          const label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nGovt: $${govt}\\nContrib: $${contrib}\\nGrants Given: $${grants}`;
           dot += `  "${ein}" [label="${label}"];\n`;
         }
 
-        // Add edges
-        for (const e of subgraphEdges) {
-          const amtLabel = `$${formatNumber(e.amt)}`;
-          dot += `  "${e.filer}" -> "${e.grantee}" [label="${amtLabel}"];\n`;
+        // Edges
+        for (const e of edgeList) {
+          const amtStr = formatNumber(e.amt);
+          dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amtStr}"];\n`;
         }
 
         dot += `}\n`;
         return dot;
       }
 
-      /**
-       * Helper to format numeric strings with commas.
-       */
-      function formatNumber(nstr) {
-        const num = parseInt(nstr, 10) || 0;
-        return num.toLocaleString('en-US');
+      // Helpers
+      function formatNumber(x) {
+        const n = parseInt(x, 10) || 0;
+        return n.toLocaleString('en-US');
+      }
+
+      function addEINFromInput() {
+        let val = $('#einInput').val().trim();
+        // Remove dashes/spaces
+        val = val.replace(/[-\s]/g, '');
+        if (!/^\d{9}$/.test(val)) {
+          alert("EIN must be 9 digits after removing dashes/spaces.");
+          return;
+        }
+        if (!charities[val]) {
+          alert("EIN not found in charities.csv. Please try another.");
+          return;
+        }
+        if (!activeEINs.includes(val)) {
+          activeEINs.push(val);
+        }
+        $('#einInput').val('');
+        renderActiveEINs();
+        generateGraph();
+      }
+
+      function renderActiveEINs() {
+        const $c = $('#activeEINs');
+        $c.empty();
+        activeEINs.forEach(ein => {
+          const $tag = $('<div class="filter-tag"></div>');
+          const $text = $('<span></span>').text(ein);
+          const $rm = $('<span class="remove-filter">x</span>').attr('data-ein', ein);
+          $rm.on('click', function() {
+            const einToRemove = $(this).attr('data-ein');
+            activeEINs = activeEINs.filter(x => x !== einToRemove);
+            renderActiveEINs();
+            generateGraph();
+          });
+          $tag.append($text).append($rm);
+          $c.append($tag);
+        });
+      }
+
+      function addKeywordFromInput() {
+        const kw = $('#keywordInput').val().trim();
+        if (kw.length > 0) {
+          activeKeywords.push(kw.toLowerCase());
+          $('#keywordInput').val('');
+          renderActiveKeywords();
+          generateGraph();
+        }
+      }
+
+      function renderActiveKeywords() {
+        const $c = $('#activeFilters');
+        $c.empty();
+        activeKeywords.forEach(kw => {
+          const $tag = $('<div class="filter-tag"></div>');
+          const $text = $('<span></span>').text(kw);
+          const $rm = $('<span class="remove-filter">x</span>').attr('data-kw', kw);
+          $rm.on('click', function() {
+            const kwToRemove = $(this).attr('data-kw');
+            activeKeywords = activeKeywords.filter(x => x !== kwToRemove);
+            renderActiveKeywords();
+            generateGraph();
+          });
+          $tag.append($text).append($rm);
+          $c.append($tag);
+        });
       }
     </script>
   </body>
