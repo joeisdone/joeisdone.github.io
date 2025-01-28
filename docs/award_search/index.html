@@ -148,7 +148,7 @@
   (2) prefix matches (i.e., other keywords that start with that string).
   For performance reasons, only the first 100 matching rows are displayed.  
   <br><br>
-  You can search by EIN (e.g., 13-2574854), UEI (e.g., M2NYTB5V2D77) or keywords (e.g., unaccompanied refugee)
+  You can search by EIN (e.g., 13-2574854), UEI (e.g., M2NYTB5V2D77) or keywords (e.g., unaccompanied refugee).
 </p>
 
 <div id="searchContainer">
@@ -185,12 +185,31 @@
 
   // Once the document is ready, fetch and parse the master reverse index
   $(document).ready(async function() {
+    // -----------------------------------------------------
+    // ADDED: Read 'keywords' from the query string, if present
+    // -----------------------------------------------------
+    const params = new URLSearchParams(window.location.search);
+    const initKeywords = params.get('keywords') || '';
+    if (initKeywords) {
+      $('#searchBox').val(initKeywords);
+    }
+    // -----------------------------------------------------
+
     $('#statusMessage').text('Loading master reverse index...');
     try {
       await loadMasterReverseIndex('award_reverse_index.txt.zip');
       $('#statusMessage').text('Master index loaded. Ready to search.');
       $('#searchBox').prop('disabled', false);
       $('#searchButton').prop('disabled', false);
+
+      // -----------------------------------------------------
+      // ADDED: If we had keywords in the URL, auto-submit
+      // -----------------------------------------------------
+      if (initKeywords) {
+        $('#searchForm').trigger('submit');
+      }
+      // -----------------------------------------------------
+
     } catch (err) {
       console.error(err);
       $('#statusMessage').text('Error loading index: ' + err);
@@ -212,6 +231,17 @@
 
     try {
       const userInput = $('#searchBox').val().trim();
+
+      // -----------------------------------------------------
+      // ADDED: Update the query string to reflect new keywords
+      //        without forcing a page reload
+      // -----------------------------------------------------
+      const queryParams = new URLSearchParams(window.location.search);
+      queryParams.set('keywords', userInput);
+      const newUrl = window.location.pathname + '?' + queryParams.toString();
+      window.history.replaceState(null, '', newUrl);
+      // -----------------------------------------------------
+
       // 1) Parse user input => tokens
       const tokens = tokenizeInput(userInput);
       if (!tokens.length) {
@@ -359,7 +389,7 @@
         BATCHES[i].forEach(id => matchSet.add(id));
       }
 
-      // Intersect with running set (implementing AND logic)
+      // Intersect with running set (AND logic)
       if (runningSet === null) {
         runningSet = matchSet; // first token
       } else {
@@ -549,7 +579,6 @@
       const parsed = JSON.parse(rawEINData);
       // Build listing for each key
       const lines = Object.entries(parsed).map(([einID, data]) => {
-        // data.name, data.addr
         return `
           <div class="einEntry">
             <strong>EIN ID:</strong> ${escapeHtml(einID)}<br>
