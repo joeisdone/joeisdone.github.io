@@ -543,6 +543,7 @@
     // possible_eins is a JSON blob
     let einHtml = '';
     let rawEINData = row.possible_eins || '{}';
+    let noEINs = !row.possible_eins;
     let recipientAddr = row.recipient_addr || '';
     try {
       const parsed = JSON.parse(rawEINData);
@@ -566,6 +567,14 @@
       einHtml = `<div>(Could not parse possible_eins)</div>`;
     }
 
+    let einInfoHtml = noEINs ? '' : `
+        <!-- Collapsible EIN info -->
+        <div class="einToggle">Click for possible matching 501(c)(3) EINs</div>
+        <div class="einSection">
+          ${einHtml}
+        </div>
+    `;
+
     // The card layout
     return `
       <div class="resultItem">
@@ -587,12 +596,7 @@
         <div class="descriptionContainer">
           ${shortDescriptionHtml}
         </div>
-
-        <!-- Collapsible EIN info -->
-        <div class="einToggle">Click for possible matching 501(c)(3) EINs</div>
-        <div class="einSection">
-          ${einHtml}
-        </div>
+        ${einInfoHtml}
       </div>
     `;
   }
