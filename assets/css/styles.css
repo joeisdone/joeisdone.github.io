@@ -651,6 +651,9 @@ select {
 .col-span-5 {
   grid-column: span 5 / span 5;
 }
+.float-right {
+  float: right;
+}
 .m-0 {
   margin: 0px;
 }
@@ -681,6 +684,9 @@ select {
 }
 .mb-1 {
   margin-bottom: 0.25rem;
+}
+.mb-12 {
+  margin-bottom: 3rem;
 }
 .mb-2 {
   margin-bottom: 0.5rem;
@@ -740,6 +746,10 @@ select {
   width: 0.5rem;
   height: 0.5rem;
 }
+.size-24 {
+  width: 6rem;
+  height: 6rem;
+}
 .size-3 {
   width: 0.75rem;
   height: 0.75rem;
@@ -785,6 +795,9 @@ select {
 }
 .min-w-\[65px\] {
   min-width: 65px;
+}
+.max-w-2xl {
+  max-width: 42rem;
 }
 .max-w-7xl {
   max-width: 80rem;
@@ -855,6 +868,9 @@ select {
 }
 .rounded {
   border-radius: 0.25rem;
+}
+.rounded-full {
+  border-radius: 9999px;
 }
 .border {
   border-width: 1px;
@@ -977,6 +993,9 @@ select {
 .pt-2 {
   padding-top: 0.5rem;
 }
+.pt-8 {
+  padding-top: 2rem;
+}
 .text-center {
   text-align: center;
 }
@@ -1017,6 +1036,9 @@ select {
 }
 .capitalize {
   text-transform: capitalize;
+}
+.leading-9 {
+  line-height: 2.25rem;
 }
 .text-black {
   --tw-text-opacity: 1;
@@ -1175,12 +1197,20 @@ table {
     display: inline-flex;
   }
 
+  .md\:hidden {
+    display: none;
+  }
+
   .md\:w-auto {
     width: auto;
   }
 
   .md\:max-w-xs {
     max-width: 20rem;
+  }
+
+  .md\:flex-auto {
+    flex: 1 1 auto;
   }
 
   .md\:grid-cols-2 {
