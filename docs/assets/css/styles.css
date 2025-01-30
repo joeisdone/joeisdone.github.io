@@ -768,9 +768,6 @@ select {
 .min-h-\[44px\] {
   min-height: 44px;
 }
-.min-h-\[calc\(100vh-100px\)\] {
-  min-height: calc(100vh - 100px);
-}
 .min-h-\[calc\(100vh-200px\)\] {
   min-height: calc(100vh - 200px);
 }
@@ -1025,6 +1022,9 @@ select {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
+.text-black\/75 {
+  color: rgb(0 0 0 / 0.75);
+}
 .text-blue-500 {
   --tw-text-opacity: 1;
   color: rgb(59 130 246 / var(--tw-text-opacity));
@@ -1048,9 +1048,6 @@ select {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-.text-black\/75 {
-  color: rgb(0 0 0 / 0.75);
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
