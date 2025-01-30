@@ -22,8 +22,9 @@ title: How to run the site locally
 
 1. Install project dependencies:
    ```bash
-   bundle install    # Install Ruby dependencies
-   yarn install     # Install Node.js dependencies
+   bundle add webrick     # Add webrick dependency (required for Ruby 3.x)
+   bundle install        # Install Ruby dependencies
+   yarn install         # Install Node.js dependencies
    ```
 
 ## Run the site
@@ -53,3 +54,9 @@ If you're having dependency issues, try these steps:
 2. Switch to Ruby 3.1.4: `rbenv local 3.1.4`
 3. Install latest compatible bundler: `gem install bundler`
 4. Reinstall dependencies: `bundle install`
+
+If you see an error about "cannot load such file -- webrick", run:
+```bash
+bundle add webrick
+bundle install
+```

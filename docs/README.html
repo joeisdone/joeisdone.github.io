@@ -118,8 +118,9 @@
 
 <ol>
   <li>Install project dependencies:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span>    <span class="c"># Install Ruby dependencies</span>
-yarn <span class="nb">install</span>     <span class="c"># Install Node.js dependencies</span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle add webrick     <span class="c"># Add webrick dependency (required for Ruby 3.x)</span>
+bundle <span class="nb">install</span>        <span class="c"># Install Ruby dependencies</span>
+yarn <span class="nb">install</span>         <span class="c"># Install Node.js dependencies</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -162,6 +163,11 @@ yarn <span class="nb">install</span>     <span class="c"># Install Node.js depen
   <li>Install latest compatible bundler: <code class="language-plaintext highlighter-rouge">gem install bundler</code></li>
   <li>Reinstall dependencies: <code class="language-plaintext highlighter-rouge">bundle install</code></li>
 </ol>
+
+<p>If you see an error about “cannot load such file – webrick”, run:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle add webrick
+bundle <span class="nb">install</span>
+</code></pre></div></div>
 
   </main>
 </body>
