@@ -11,9 +11,12 @@
 <body>
   {% include header.html %}
 
-  <main class="w-full lg:max-w-7xl mx-auto">
+  <main class="w-full lg:max-w-7xl mx-auto min-h-[calc(100vh-200px)]">
     {{ content }}
   </main>
+
+  {% include footer.html %}
+  
 </body>
 
 </html>
