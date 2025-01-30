@@ -1,6 +1,6 @@
 title: DataRepublican
 baseurl: ""
-url: "https://datarepublican.com/"
+url: "https://datarepublican.com"
 destination: docs
 
 defaults:
@@ -9,6 +9,11 @@ defaults:
     values:
       image: /assets/images/default.png
 
+development:
+  url: "http://localhost:4000"
+production:
+  url: "https://datarepublican.com"
+  
 include:
   - florida
 
