@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Award search
+title: Government grant award search
 ---
 
 <script src="jquery.min.js"></script>
@@ -8,7 +8,7 @@ title: Award search
 <script src="papaparse.min.js"></script>
 
 
-<h1>Award Search</h1>
+<h1>Federal government grant award search</h1>
 <p>
   Below is a keyword search over a selection of active federal government grants.
   Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
@@ -21,22 +21,26 @@ title: Award search
 </p>
 
 <div id="searchContainer">
-  <form id="searchForm">
-    <label for="searchBox">Enter keywords:</label>
-    <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" />
-    <button type="submit" id="searchButton" disabled>Search</button>
-  </form>
+  <div class="flex items-center gap-1 justify-between">
+    <form id="searchForm" class="flex items-center gap-1">
+      <label for="searchBox">Enter keywords:</label>
+      <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
+      <button type="submit" id="searchButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded mr-2" disabled>
+        <span class="button-text">Search</span>
+        <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;" alt="Loading..." />
+      </button>
+      <span id="statusMessage"></span>
+    </form>
+    <div>
+      <div id="resultsStatus"></div>
+    </div>
+  </div>
 </div>
 
-<div id="statusMessage"></div>
-<div id="statsBox"></div> <!-- Will display the sum of award_amount here -->
 
-<table id="resultsTable">
-  <thead>
-    <tr>
-      <th>Search Results</th>
-    </tr>
-  </thead>
+<div id="statsBox" class="py-2 empty:hidden"></div> <!-- Will display the sum of award_amount here -->
+
+<table id="resultsTable" style="display: none;">
   <tbody></tbody>
 </table>
 
@@ -54,11 +58,20 @@ title: Award search
 
   // Once the document is ready, fetch and parse the master reverse index
   $(document).ready(async function() {
-    $('#statusMessage').text('Loading master reverse index...');
+    $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
     try {
+      // Show loading spinner in button while loading
+      $('#searchButton .button-text').hide();
+      $('#searchButton .loading-spinner').show();
+      
       await loadMasterReverseIndex('award_reverse_index.txt.zip');
-      $('#statusMessage').text('Master index loaded. Ready to search.');
-      $('#searchBox').prop('disabled', false);
+      
+      // Hide loading spinner and show text when done
+      $('#searchButton .loading-spinner').hide();
+      $('#searchButton .button-text').show();
+      
+      $('#statusMessage').hide();
+      $('#searchBox').prop('disabled', false).focus();
       $('#searchButton').prop('disabled', false);
       
       // After index is loaded, check URL parameters and perform search if needed
@@ -79,13 +92,16 @@ title: Award search
     e.preventDefault();
     // Clear previous results
     $('#resultsTable tbody').empty();
-    $('#statusMessage').text('Searching...').show();
     $('#statsBox').text('');
     totalAwardAmount = 0; // reset the sum
 
     // Disable search while performing the operation
     $('#searchBox').prop('disabled', true);
     $('#searchButton').prop('disabled', true);
+
+    // Show loading spinner while searching
+    $('#searchButton .button-text').hide();
+    $('#searchButton .loading-spinner').show();
 
     try {
       const userInput = $('#searchBox').val().trim();
@@ -102,7 +118,11 @@ title: Award search
       // 1) Parse user input => tokens
       const tokens = tokenizeInput(userInput);
       if (!tokens.length) {
-        $('#statusMessage').text('No valid keywords to search for.');
+        $('#resultsTable').hide();
+        $('#resultsTable tbody').html(
+          '<tr><td class="p-4 text-center">No valid keywords to search for.</td></tr>'
+        ).parent().show();
+        $('#resultsStatus').empty();
       } else {
         // 2) For each token, gather the union of exact + prefix matches => then intersect across tokens
         const finalBatchIDs = getFinalBatchIntersection(tokens);
@@ -115,20 +135,31 @@ title: Award search
           totalRowsDisplayed += await processBatch(batchId, tokens, 100 - totalRowsDisplayed);
         }
 
-        // Update status
-        $('#statusMessage').text(
-          'Search complete. Displayed ' + totalRowsDisplayed + 
-          (totalRowsDisplayed === 100 ? ' (limit reached).' : ' row(s).')
-        );
-        // Update the sum in #statsBox
+        // Update status based on results
         if (totalRowsDisplayed > 0) {
-          $('#statsBox').html(`Taxpayer Money Spent: ${formatCurrency(totalAwardAmount)}`);
+          $('#resultsTable').show();
+          $('#resultsStatus').html(
+            `<span class="text-sm">Showing ${totalRowsDisplayed}${totalRowsDisplayed === 100 ? ' (limit)' : ''} results</span>`
+          );
+          $('#statsBox').html(`<span class="text-black text-[15px]">Taxpayer money spent:</span> <strong class="text-red-500">${formatCurrency(totalAwardAmount)}</strong>`);
+        } else {
+          $('#resultsTable tbody').html(
+            '<tr><td class="p-4 text-center">No results found.</td></tr>'
+          ).parent().show();
+          $('#resultsStatus').empty();
         }
       }
     } catch (err) {
       console.error(err);
-      $('#statusMessage').text('Error during search: ' + err);
+      $('#resultsTable tbody').html(
+        `<tr><td class="p-4 text-center">Error during search: ${err}</td></tr>`
+      ).parent().show();
+      $('#resultsStatus').empty();
     }
+
+    // Hide loading spinner when done
+    $('#searchButton .loading-spinner').hide();
+    $('#searchButton .button-text').show();
 
     // Re-enable search
     $('#searchBox').prop('disabled', false);
