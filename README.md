@@ -42,6 +42,11 @@ The above command runs everything, but if you need to run things separately:
 
 2. `yarn run watch:css` (only needed if modifying CSS)
 
+## Build the site
+
+1. `bundle exec jekyll clean`
+1. `bundle exec jekyll build JEKYLL_ENV=production`
+
 ## Troubleshooting
 
 If you see "jekyll: command not found", make sure you:
