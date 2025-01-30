@@ -60,6 +60,14 @@ title: Award search
       $('#statusMessage').text('Master index loaded. Ready to search.');
       $('#searchBox').prop('disabled', false);
       $('#searchButton').prop('disabled', false);
+      
+      // After index is loaded, check URL parameters and perform search if needed
+      const urlParams = new URLSearchParams(window.location.search);
+      const keywords = urlParams.get('keywords');
+      if (keywords) {
+        $('#searchBox').val(keywords);
+        $('#searchForm').trigger('submit');
+      }
     } catch (err) {
       console.error(err);
       $('#statusMessage').text('Error loading index: ' + err);
@@ -81,6 +89,16 @@ title: Award search
 
     try {
       const userInput = $('#searchBox').val().trim();
+      
+      // Update URL with search terms without triggering page reload
+      const newUrl = new URL(window.location);
+      if (userInput) {
+        newUrl.searchParams.set('keywords', userInput);
+      } else {
+        newUrl.searchParams.delete('keywords');
+      }
+      window.history.pushState({}, '', newUrl);
+
       // 1) Parse user input => tokens
       const tokens = tokenizeInput(userInput);
       if (!tokens.length) {
@@ -274,7 +292,7 @@ title: Award search
   // 4) PROCESS A BATCH
   //    - fetch award_batch_XXX.csv.zip
   //    - parse its .txt to get rowIDs, then load CSV with PapaParse
-  //    - build a nice “card” layout for each matched row
+  //    - build a nice "card" layout for each matched row
   // ============================================================
   async function processBatch(batchId, tokens, maxNeeded) {
     const zipFileName = `award_batch_${String(batchId).padStart(3, '0')}.csv.zip`;
@@ -466,7 +484,7 @@ title: Award search
     `;
   }
 
-  // Creates a truncated description with “Read more” link if beyond a threshold
+  // Creates a truncated description with "Read more" link if beyond a threshold
   function truncatedDescription(desc, limit) {
     if (desc.length <= limit) {
       // No need to truncate
