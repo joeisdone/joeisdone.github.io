@@ -3,8 +3,16 @@ baseurl: ""
 url: "https://datarepublican.com/"
 destination: docs
 
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/default.png
+
 include:
   - florida
+
+favicon: /assets/images/favicon.png
 
 exclude:
   - node_modules
