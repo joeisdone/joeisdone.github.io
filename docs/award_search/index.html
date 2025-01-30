@@ -144,26 +144,29 @@
 
 
 <h1>Federal government grant award search</h1>
-<p>
+<p class="text-sm md:text-[15px]">
   Below is a keyword search over a selection of active federal government grants.
   Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
   This search runs in two passes per keyword:
   (1) exact keyword match,
   (2) prefix matches (i.e., other keywords that start with that string).
   For performance reasons, only the first 100 matching rows are displayed.  
-  <br><br>
+</p>
+<p class="text-sm md:text-[15px] mb-4">
   You can search by EIN (e.g., 13-2574854), UEI (e.g., M2NYTB5V2D77) or keywords (e.g., unaccompanied refugee)
 </p>
 
-<div id="searchContainer">
-  <div class="flex items-center gap-1 justify-between">
-    <form id="searchForm" class="flex items-center gap-1">
-      <label for="searchBox">Enter keywords:</label>
+<div id="searchContainer" class="mb-2">
+  <div class="flex flex-col md:flex-row md:items-center gap-1 justify-between">
+    <form id="searchForm" class="flex flex-col md:flex-row md:items-center gap-1 w-full">
+      <label for="searchBox" class="text-sm md:text-[15px]">Enter keywords:</label>
+      <span class="flex items-center gap-1">
       <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
-      <button type="submit" id="searchButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded mr-2" disabled>
+      <button type="submit" id="searchButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded md:mr-2 min-w-[65px]" disabled>
         <span class="button-text">Search</span>
-        <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;" alt="Loading..." />
+        <img src="/assets/images/loading-white.svg" class="loading-spinner size-6 mx-auto" style="display: none;" alt="Loading..." />
       </button>
+      </span>
       <span id="statusMessage"></span>
     </form>
     <div>
@@ -173,11 +176,9 @@
 </div>
 
 
-<div id="statsBox" class="py-2 empty:hidden"></div> <!-- Will display the sum of award_amount here -->
+<div id="statsBox" class="empty:hidden my-2"></div> <!-- Will display the sum of award_amount here -->
 
-<table id="resultsTable" style="display: none;">
-  <tbody></tbody>
-</table>
+<div id="resultsContainer" class="flex flex-col gap-2"></div>
 
 <script>
   // These will be filled after we parse award_reverse_index.txt.zip
@@ -226,7 +227,7 @@
   $('#searchForm').on('submit', async function(e) {
     e.preventDefault();
     // Clear previous results
-    $('#resultsTable tbody').empty();
+    $('#resultsContainer').empty();
     $('#statsBox').text('');
     totalAwardAmount = 0; // reset the sum
 
@@ -253,10 +254,10 @@
       // 1) Parse user input => tokens
       const tokens = tokenizeInput(userInput);
       if (!tokens.length) {
-        $('#resultsTable').hide();
-        $('#resultsTable tbody').html(
-          '<tr><td class="p-4 text-center">No valid keywords to search for.</td></tr>'
-        ).parent().show();
+        $('#resultsContainer').hide();
+        $('#resultsContainer').html(
+          '<div class="p-4 text-center">No valid keywords to search for.</div>'
+        ).show();
         $('#resultsStatus').empty();
       } else {
         // 2) For each token, gather the union of exact + prefix matches => then intersect across tokens
@@ -272,23 +273,23 @@
 
         // Update status based on results
         if (totalRowsDisplayed > 0) {
-          $('#resultsTable').show();
+          $('#resultsContainer').show();
           $('#resultsStatus').html(
-            `<span class="text-sm">Showing ${totalRowsDisplayed}${totalRowsDisplayed === 100 ? ' (limit)' : ''} results</span>`
+            `<span class="text-sm whitespace-nowrap">Showing ${totalRowsDisplayed}${totalRowsDisplayed === 100 ? ' (limit)' : ''} results</span>`
           );
-          $('#statsBox').html(`<span class="text-black text-[15px]">Taxpayer money spent:</span> <strong class="text-red-500">${formatCurrency(totalAwardAmount)}</strong>`);
+          $('#statsBox').html(`<div class="p-2 rounded border border-gray-200 bg-white text-center md:text-left"><span class="text-black text-sm">Taxpayer money spent:</span> <strong class="text-red-500">${formatCurrency(totalAwardAmount)}</strong></div>`);
         } else {
-          $('#resultsTable tbody').html(
-            '<tr><td class="p-4 text-center">No results found.</td></tr>'
-          ).parent().show();
+          $('#resultsContainer').html(
+            '<div class="p-4 text-center">No results found.</div>'
+          ).show();
           $('#resultsStatus').empty();
         }
       }
     } catch (err) {
       console.error(err);
-      $('#resultsTable tbody').html(
-        `<tr><td class="p-4 text-center">Error during search: ${err}</td></tr>`
-      ).parent().show();
+      $('#resultsContainer').html(
+        '<div class="p-4 text-center">Error during search: ' + err + '</div>'
+      ).show();
       $('#resultsStatus').empty();
     }
 
@@ -507,10 +508,8 @@
         // Build the UI block for this row
         const htmlBlock = buildResultItem(rowObject);
 
-        // Append to table
-        $('#resultsTable tbody').append(
-          `<tr><td>${htmlBlock}</td></tr>`
-        );
+        // Append directly to container
+        $('#resultsContainer').append(htmlBlock);
 
         // Add to total if award_amount is present
         const amt = parseFloat(rowObject.award_amount || '0');
@@ -603,48 +602,62 @@
       const lines = Object.entries(parsed).map(([einID, data]) => {
         // data.name, data.addr
         return `
-          <div class="einEntry">
-            <strong>EIN ID:</strong> ${escapeHtml(einID)}<br>
-            <strong>Name:</strong> ${escapeHtml(data.name || '')}<br>
-            <strong>Address:</strong> ${escapeHtml(data.addr || '')}
-          </div>
+          <span class="text-sm opacity-80">${escapeHtml(einID)}</span>
+          <strong class="md:col-span-2">${escapeHtml(data.name || '')}</strong>
+          <span class="md:col-span-2 mb-4 md:mb-0">${escapeHtml(data.addr || '')}</span>
         `;
       }).join('');
       einHtml = `
-        <div><strong>UEI Address:</strong> ${escapeHtml(recipientAddr)}</div>
-        <hr>
-        ${lines}
+        <div class="p-4 grid grid-cols-1 md:grid-cols-5 gap-x-2 gap-y-1 md:gap-y-1.5 text-sm">
+          <div class="md:col-span-5 text-sm pt-2 pb-2 mb-1 border-b border-gray-200"><strong>Recipient address</strong></div>
+          <span class="hidden md:block">&nbsp;</span>
+          <span class="md:col-span-2">${escapeHtml(recipientName)}</span>
+          <span class="md:col-span-2 text-sm opacity-80">${escapeHtml(recipientAddr)}</span>
+          <div class="md:col-span-5 text-sm pt-2 pb-2 mb-1 border-b border-gray-200"><strong>Possible EINs</strong></div>
+          ${lines}
+        </div>
       `;
     } catch(e) {
-      einHtml = `<div>(Could not parse possible_eins)</div>`;
+      einHtml = `<div class="md:col-span-5">(Could not parse possible EINs)</div>`;
     }
 
     // The card layout
     return `
-      <div class="resultItem">
-        <!-- A small-print header with recipient, UEI, award, end date -->
-        <div class="resultHeader">
-          ${escapeHtml(recipientName)} (${escapeHtml(recipientUEI)})<br>
-          Award: ${escapeHtml(awardID)} | Ends: ${escapeHtml(endDate)}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border border-gray-200 rounded p-4">
+        <div class="flex flex-col gap-2">
+          <div>
+            <span class="text-sm opacity-80">Recipient</span>
+            <div class="font-bold text-[15px]">${escapeHtml(recipientName)}</div>
+            <div class="text-sm opacity-80"><abbr title="Unique Entity Identifier">UEI</abbr>: ${escapeHtml(recipientUEI)}</div>
+          </div>
+
+          <div>
+            <span class="text-sm opacity-80">Amount</span>
+            <div class="text-base font-bold text-red-500">${formatCurrency(awardAmount)}</div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <div>
+            <span class="text-sm opacity-80">Awarded by</span>
+            <div class="font-bold text-[15px]">${escapeHtml(fundingAgencyTop)} : ${escapeHtml(fundingAgencySub)}</div>
+          </div>
+
+          <div>
+            <span class="text-sm opacity-80">Ends</span>
+            <div class="text-sm">${escapeHtml(endDate)}</div>
+          </div>
+
+          <div>
+            <span class="text-sm opacity-80">Description</span>
+            <div class="text-sm">${truncatedDescription(fullDescription, 300)}</div>
+          </div>
         </div>
 
-        <!-- Award amount prominently, with smaller funding agency -->
-        <div>
-          <span class="awardAmount">${formatCurrency(awardAmount)}</span>
-          <span class="fundingAgency">
-            ${escapeHtml(fundingAgencyTop)} : ${escapeHtml(fundingAgencySub)}
-          </span>
-        </div>
-
-        <!-- Description with show/hide (if too large) -->
-        <div class="descriptionContainer">
-          ${shortDescriptionHtml}
-        </div>
-
-        <!-- Collapsible EIN info -->
-        <div class="einToggle">Click for possible matching 501(c)(3) EINs</div>
-        <div class="einSection hidden">
-          ${einHtml}
+        <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
+          <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
+          <div class="einSection" style="display:none;" class="p-4">
+          <div class="test">${einHtml}</div>
+          </div>
         </div>
       </div>
     `;
@@ -654,7 +667,7 @@
   function truncatedDescription(desc, limit) {
     if (desc.length <= limit) {
       // No need to truncate
-      return `<div class="descriptionShort">${escapeHtml(desc)}</div>`;
+      return `<div class="descriptionShort capitalize">${escapeHtml(desc)}</div>`;
     }
     // Truncate
     const shortText = desc.substring(0, limit);
