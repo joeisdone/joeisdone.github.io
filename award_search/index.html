@@ -1,143 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Award Search</title>
+---
+layout: default
+title: Award search
+---
 
-  <!-- jQuery -->
-  <script src="jquery.min.js"></script>
-  <!-- JSZip to parse the .zip files in the browser -->
-  <script src="jszip.min.js"></script>
-  <!-- Papa Parse to handle CSV with embedded newlines -->
-  <script src="papaparse.min.js"></script>
+<script src="jquery.min.js"></script>
+<script src="jszip.min.js"></script>
+<script src="papaparse.min.js"></script>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      margin-bottom: 0.5em;
-    }
-    #searchContainer {
-      margin-bottom: 1em;
-      background-color: #fff;
-      padding: 1em;
-      border: 1px solid #ccc;
-    }
-    #searchBox {
-      width: 300px;
-    }
-    #searchButton:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-    #statusMessage {
-      margin-top: 1em;
-      color: #333;
-    }
-
-    /* Summation display box */
-    #statsBox {
-      margin-top: 1em;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: red; /* bold red per request */
-    }
-
-    /* The table wrapper for results, but each row will hold a "card" */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
-    }
-    thead {
-      background-color: #eee;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    /* A "card" or container for each search result */
-    .resultItem {
-      padding: 1em;
-      border: 1px solid #ccc;
-      margin-bottom: 1em;
-      border-radius: 4px;
-      background-color: #fafafa;
-    }
-    .resultHeader {
-      font-size: 0.9em;
-      color: #555;
-      margin-bottom: 0.5em;
-    }
-    .awardAmount {
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333;
-      margin-right: 1em;
-    }
-    .fundingAgency {
-      font-size: 0.9em;
-      color: #333;
-      display: inline-block;
-      margin-left: 1em;
-    }
-
-    /* Description area and the "Read More" link */
-    .descriptionContainer {
-      margin-top: 0.5em;
-      margin-bottom: 0.5em;
-      line-height: 1.3em;
-      position: relative;
-    }
-    .descriptionShort {
-      /* the shortened text is displayed by default */
-    }
-    .descriptionFull {
-      display: none; /* hidden until expanded */
-    }
-    .readMoreLink {
-      color: #007BFF;
-      text-decoration: none;
-      cursor: pointer;
-      margin-left: 0.3em;
-    }
-    .readMoreLink:hover {
-      text-decoration: underline;
-    }
-
-    /* Collapsible 501(c)(3) container */
-    .einToggle {
-      margin-top: 0.5em;
-      color: #007BFF;
-      text-decoration: underline;
-      cursor: pointer;
-      font-size: 0.9em;
-    }
-    .einSection {
-      display: none; /* collapsed by default */
-      margin-top: 0.5em;
-      padding: 0.5em;
-      border: 1px solid #ccc;
-      background-color: #fff;
-    }
-    .einEntry {
-      margin-bottom: 0.5em;
-      font-size: 0.9em;
-    }
-    .einEntry strong {
-      display: inline-block;
-      width: 90px;
-    }
-
-  </style>
-</head>
-<body>
 
 <h1>Award Search</h1>
 <p>
@@ -154,7 +23,7 @@
 <div id="searchContainer">
   <form id="searchForm">
     <label for="searchBox">Enter keywords:</label>
-    <input type="text" id="searchBox" />
+    <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" />
     <button type="submit" id="searchButton" disabled>Search</button>
   </form>
 </div>
@@ -590,7 +459,7 @@
 
         <!-- Collapsible EIN info -->
         <div class="einToggle">Click for possible matching 501(c)(3) EINs</div>
-        <div class="einSection">
+        <div class="einSection hidden">
           ${einHtml}
         </div>
       </div>
@@ -656,6 +525,3 @@
       .replace(/"/g, '&quot;');
   }
 </script>
-
-</body>
-</html>
