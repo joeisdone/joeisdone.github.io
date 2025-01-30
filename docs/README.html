@@ -95,24 +95,45 @@
 </header>
 
   <main class="w-full lg:max-w-7xl mx-auto">
-    <h2 id="setup">Setup</h2>
-
-<p>In terminal:</p>
+    <h2 id="prerequisites">Prerequisites</h2>
 
 <ol>
-  <li><code class="language-plaintext highlighter-rouge">npm install --global yarn</code></li>
+  <li>Install Ruby (recommended version 3.1.x)
+    <ul>
+      <li>On macOS with rbenv: <code class="language-plaintext highlighter-rouge">rbenv install 3.1.4</code></li>
+      <li>Set it as your local version: <code class="language-plaintext highlighter-rouge">rbenv local 3.1.4</code></li>
+    </ul>
+  </li>
+  <li>Install Jekyll and Bundler
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem <span class="nb">install </span>jekyll bundler
+</code></pre></div>    </div>
+  </li>
+  <li>Install Node.js and yarn
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span> <span class="nt">--global</span> yarn
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="setup">Setup</h2>
+
+<ol>
+  <li>Install project dependencies:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span>    <span class="c"># Install Ruby dependencies</span>
+yarn <span class="nb">install</span>     <span class="c"># Install Node.js dependencies</span>
+</code></pre></div>    </div>
+  </li>
 </ol>
 
 <h2 id="run-the-site">Run the site</h2>
 
 <ol>
-  <li><code class="language-plaintext highlighter-rouge">yarn &amp;&amp; yarn start</code></li>
+  <li><code class="language-plaintext highlighter-rouge">yarn start</code></li>
   <li>Open the site at <code class="language-plaintext highlighter-rouge">http://localhost:4000</code></li>
 </ol>
 
 <h2 id="advanced">Advanced</h2>
 
-<p>The above command should run everything, but if you need to run things separately:</p>
+<p>The above command runs everything, but if you need to run things separately:</p>
 
 <ol>
   <li>
@@ -123,6 +144,23 @@
   <li>
     <p><code class="language-plaintext highlighter-rouge">yarn run watch:css</code> (only needed if modifying CSS)</p>
   </li>
+</ol>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>If you see “jekyll: command not found”, make sure you:</p>
+<ol>
+  <li>Have Ruby installed and selected the correct version with rbenv</li>
+  <li>Have run <code class="language-plaintext highlighter-rouge">gem install jekyll bundler</code></li>
+  <li>Have run <code class="language-plaintext highlighter-rouge">bundle install</code></li>
+</ol>
+
+<p>If you’re having dependency issues, try these steps:</p>
+<ol>
+  <li>Install Ruby 3.1.4: <code class="language-plaintext highlighter-rouge">rbenv install 3.1.4</code></li>
+  <li>Switch to Ruby 3.1.4: <code class="language-plaintext highlighter-rouge">rbenv local 3.1.4</code></li>
+  <li>Install latest compatible bundler: <code class="language-plaintext highlighter-rouge">gem install bundler</code></li>
+  <li>Reinstall dependencies: <code class="language-plaintext highlighter-rouge">bundle install</code></li>
 </ol>
 
   </main>
