@@ -45,6 +45,403 @@ title: Government grant award search
 <div id="resultsContainer" class="flex flex-col gap-2"></div>
 
 <script>
+  const ITU_TO_NAME = {
+    // -----------------------------------------
+    //  A
+    // -----------------------------------------
+    "ABW": "Aruba",
+    "AFG": "Afghanistan",
+    "AIA": "Anguilla",
+    "ALA": "Åland Islands",
+    "ALB": "Albania",
+    "ALS": "Alaska",
+    "AND": "Andorra",
+    "AOE": "Western Sahara",
+    "ARG": "Argentina",
+    "ARM": "Armenia",
+    "ASM": "American Samoa",
+    "ASC": "Ascension Island",
+    "ATA": "Antarctica",
+    "ATF": "French Southern Territories",
+    "ATG": "Antigua and Barbuda",
+    "AUS": "Australia",
+    "AUT": "Austria",
+    "AZE": "Azerbaijan",
+    "AZR": "Azores",
+
+    // -----------------------------------------
+    //  B
+    // -----------------------------------------
+    "BDI": "Burundi",
+    "BEL": "Belgium",
+    "BEN": "Benin",
+    "BER": "Bermuda",
+    "BES": "Bonaire, Sint Eustatius and Saba",
+    "BFA": "Burkina Faso",
+    "BGD": "Bangladesh",
+    "BGR": "Bulgaria",
+    "BHR": "Bahrain",
+    "BHS": "Bahamas",
+    "BIH": "Bosnia and Herzegovina",
+    "BIO": "Chagos Islands",
+    "BLM": "Saint Barthélemy",
+    "BLR": "Belarus",
+    "BLZ": "Belize",
+    "BMU": "Bermuda",
+    "BOL": "Bolivia",
+    "BRA": "Brazil",
+    "BRB": "Barbados",
+    "BRN": "Brunei Darussalam",
+    "BTN": "Bhutan",
+    "BVT": "Bouvet Island",
+    "BWA": "Botswana",
+
+    // -----------------------------------------
+    //  C
+    // -----------------------------------------
+    "CAF": "Central African Republic",
+    "CAN": "Canada",
+    "CCK": "Cocos (Keeling) Islands",
+    "CG7": "Guantánamo",
+    "CHE": "Switzerland",
+    "CHL": "Chile",
+    "CHN": "China",
+    "CHR": "Christmas Island",
+    "CIV": "Côte d'Ivoire",
+    "CMR": "Cameroon",
+    "CNR": "Canary Islands",
+    "COD": "Congo, Democratic Republic of the",
+    "COG": "Congo",
+    "COK": "Cook Islands",
+    "COL": "Colombia",
+    "COM": "Comoros",
+    "CPV": "Cabo Verde",
+    "CPT": "Clipperton Island",
+    "CRI": "Costa Rica",
+    "CRO": "Crozet Archipelago",
+    "CUB": "Cuba",
+    "CUW": "Curaçao",
+    "CYM": "Cayman Islands",
+    "CYP": "Cyprus",
+    "CZE": "Czechia",
+
+    // -----------------------------------------
+    //  D
+    // -----------------------------------------
+    "DEU": "Germany",
+    "DJI": "Djibouti",
+    "DMA": "Dominica",
+    "DGA": "Diego Garcia",
+    "DNK": "Denmark",
+    "DOM": "Dominican Republic",
+    "DZA": "Algeria",
+
+    // -----------------------------------------
+    //  E
+    // -----------------------------------------
+    "ECU": "Ecuador",
+    "EGY": "Egypt",
+    "ERI": "Eritrea",
+    "ESH": "Western Sahara",
+    "ESP": "Spain",
+    "EST": "Estonia",
+    "ETH": "Ethiopia",
+
+    // -----------------------------------------
+    //  F
+    // -----------------------------------------
+    "FIN": "Finland",
+    "FLK": "Falkland Islands",
+    "FRA": "France",
+    "FRO": "Faroe Islands",
+    "FSM": "Micronesia",
+
+    // -----------------------------------------
+    //  G
+    // -----------------------------------------
+    "GAB": "Gabon",
+    "GCA": "United Kingdom (Non-metropolitan) – Region 1",
+    "GCC": "United Kingdom – Region 3",
+    "GBR": "United Kingdom of Great Britain and Northern Ireland",
+    "GEO": "Georgia",
+    "GHA": "Ghana",
+    "GIB": "Gibraltar",
+    "GIN": "Guinea",
+    "GLP": "Guadeloupe",
+    "GMB": "Gambia",
+    "GRC": "Greece",
+    "GRD": "Grenada",
+    "GRL": "Greenland",
+    "GTM": "Guatemala",
+    "GUF": "French Guiana",
+    "GUM": "Guam",
+    "GUY": "Guyana",
+
+    // -----------------------------------------
+    //  H
+    // -----------------------------------------
+    "HKG": "Hong Kong",
+    "HMD": "Heard and McDonald Islands",
+    "HND": "Honduras",
+    "HRV": "Croatia",
+    "HTI": "Haiti",
+    "HWA": "Hawaii",
+    "HWL": "Howland Island",
+    "HUN": "Hungary",
+
+    // -----------------------------------------
+    //  I
+    // -----------------------------------------
+    "ICO": "Cocos (Keeling) Islands",
+    "IND": "India",
+    "IOT": "British Indian Ocean Territory",
+    "IRL": "Ireland",
+    "IRN": "Iran",
+    "IRQ": "Iraq",
+    "ISR": "Israel",
+    "ISL": "Iceland",
+    "ITA": "Italy",
+
+    // -----------------------------------------
+    //  J
+    // -----------------------------------------
+    "JAM": "Jamaica",
+    "JAR": "Jarvis Island",
+    "JEY": "Jersey",
+    "JON": "Johnston Island",
+    "JOR": "Jordan",
+    "JPN": "Japan",
+
+    // -----------------------------------------
+    //  K
+    // -----------------------------------------
+    "KAZ": "Kazakhstan",
+    "KEN": "Kenya",
+    "KER": "Kerguelen Islands",
+    "KGZ": "Kyrgyzstan",
+    "KHM": "Cambodia",
+    "KIR": "Kiribati",
+    "KNA": "Saint Kitts and Nevis",
+    "KOR": "Korea, Republic of",
+    "KWT": "Kuwait",
+    "LAO": "Lao People's Democratic Republic",
+
+    // -----------------------------------------
+    //  L
+    // -----------------------------------------
+    "LBN": "Lebanon",
+    "LBR": "Liberia",
+    "LBY": "Libya",
+    "LCA": "Saint Lucia",
+    "LIE": "Liechtenstein",
+    "LKA": "Sri Lanka",
+    "LSO": "Lesotho",
+    "LTU": "Lithuania",
+    "LUX": "Luxembourg",
+    "LVA": "Latvia",
+
+    // -----------------------------------------
+    //  M
+    // -----------------------------------------
+    "MAC": "Macau",
+    "MAF": "Saint Martin",
+    "MAR": "Morocco",
+    "MCO": "Monaco",
+    "MDA": "Moldova, Republic of",
+    "MDG": "Madagascar",
+    "MDR": "Madeira",
+    "MDV": "Maldives",
+    "MDW": "Midway Islands",
+    "MEX": "Mexico",
+    "MHL": "Marshall Islands",
+    "MKD": "North Macedonia",
+    "MLI": "Mali",
+    "MLT": "Malta",
+    "MMR": "Myanmar",
+    "MNE": "Montenegro",
+    "MNP": "Northern Mariana Islands",
+    "MRA": "Northern Mariana Islands",
+    "MRN": "Marion Island",
+    "MRT": "Martinique",
+    "MSR": "Montserrat",
+    "MTQ": "Martinique",
+    "MUS": "Mauritius",
+    "MWI": "Malawi",
+    "MYS": "Malaysia",
+    "MYT": "Mayotte",
+
+    // -----------------------------------------
+    //  N
+    // -----------------------------------------
+    "NAM": "Namibia",
+    "NCL": "New Caledonia",
+    "NER": "Niger",
+    "NFK": "Norfolk Island",
+    "NGA": "Nigeria",
+    "NIC": "Nicaragua",
+    "NIU": "Niue",
+    "NLD": "Netherlands",
+    "NOR": "Norway",
+    "NPL": "Nepal",
+    "NRU": "Nauru",
+    "NZL": "New Zealand",
+
+    // -----------------------------------------
+    //  O
+    // -----------------------------------------
+    "OCE": "French Polynesia",
+    "OMN": "Oman",
+
+    // -----------------------------------------
+    //  P
+    // -----------------------------------------
+    "PAK": "Pakistan",
+    "PAN": "Panama",
+    "PAQ": "Easter Island",
+    "PCN": "Pitcairn",
+    "PER": "Peru",
+    "PHL": "Philippines",
+    "PHX": "Phoenix Islands",
+    "PLM": "Palmyra Island",
+    "PLW": "Palau",
+    "POL": "Poland",
+    "PRI": "Puerto Rico",
+    "PRK": "Korea",
+    "PRT": "Portugal",
+    "PRY": "Paraguay",
+    "PTR": "Puerto Rico",
+    "PSE": "Palestine, State of",
+
+    // -----------------------------------------
+    //  Q
+    // -----------------------------------------
+    "QAT": "Qatar",
+
+    // -----------------------------------------
+    //  R
+    // -----------------------------------------
+    "REU": "Réunion",
+    "ROD": "Rodrigues",
+    "ROU": "Romania",
+    "RUS": "Russian Federation",
+    "RWA": "Rwanda",
+
+    // -----------------------------------------
+    //  S
+    // -----------------------------------------
+    "SAU": "Saudi Arabia",
+    "SCG": "ex Serbia and Montenegro",
+    "SDN": "Sudan",
+    "SEN": "Senegal",
+    "SGP": "Singapore",
+    "SGS": "South Georgia and the South Sandwich Islands",
+    "SHN": "Saint Helena, Ascension and Tristan da Cunha",
+    "SJM": "Svalbard and Jan Mayen",
+    "SLE": "Sierra Leone",
+    "SLV": "El Salvador",
+    "SMA": "American Samoa",
+    "SMR": "San Marino",
+    "SOM": "Somalia",
+    "SPM": "Saint Pierre and Miquelon",
+    "SRB": "Serbia",
+    "SSD": "South Sudan",
+    "STP": "Sao Tome and Principe",
+    "SUR": "Suriname",
+    "SVK": "Slovakia",
+    "SVN": "Slovenia",
+    "SWE": "Sweden",
+    "SWN": "Swan Islands",
+    "SWZ": "Eswatini",
+    "SXM": "Sint Maarten",
+    "SYC": "Seychelles",
+    "SYR": "Syrian Arab Republic",
+
+    // -----------------------------------------
+    //  T
+    // -----------------------------------------
+    "TCA": "Turks and Caicos Islands",
+    "TCD": "Chad",
+    "TGO": "Togo",
+    "THA": "Thailand",
+    "TJK": "Tajikistan",
+    "TKL": "Tokelau",
+    "TKM": "Turkmenistan",
+    "TLS": "Timor-Leste",
+    "TON": "Tonga",
+    "TRC": "Tristan da Cunha",
+    "TTO": "Trinidad and Tobago",
+    "TUN": "Tunisia",
+    "TUR": "Türkiye",
+    "TUV": "Tuvalu",
+    "TWN": "Taiwan, Province of China",
+    "TZA": "Tanzania, United Republic of",
+
+    // -----------------------------------------
+    //  U
+    // -----------------------------------------
+    "UGA": "Uganda",
+    "UKR": "Ukraine",
+    "UMI": "United States Minor Outlying Islands",
+    "UNI": "N/A",
+    "URY": "Uruguay",
+    "USA": "United States of America",
+    "UZB": "Uzbekistan",
+
+    // -----------------------------------------
+    //  V
+    // -----------------------------------------
+    "VAT": "Holy See",
+    "VCT": "Saint Vincent and the Grenadines",
+    "VEN": "Venezuela",
+    "VGB": "Virgin Islands",
+    "VIR": "United States Virgin Islands",
+    "VNM": "Viet Nam",
+    "VUT": "Vanuatu",
+    "VRG": "British Virgin Islands",
+
+    // -----------------------------------------
+    //  W
+    // -----------------------------------------
+    "WAK": "Wake Island",
+    "WAL": "Wallis and Futuna Islands",
+    "WLF": "Wallis and Futuna",
+
+    // -----------------------------------------
+    //  X (Special-purpose codes)
+    // -----------------------------------------
+    "XAA": "Shared throughout the world",
+    "XAX": "Shared by several countries, restricted area",
+    "XBR": "Special use",
+    "XBY": "Abyei area",
+    "XCQ": "ex Caroline Islands → FSM + PLW",
+    "XCS": "ex TCH",
+    "XGZ": "Gaza Strip",
+    "XMM": "Inter-ship communications",
+    "XOA": "International Civil Aviation Organization",
+    "XR1": "Region 1",
+    "XR2": "Region 2",
+    "XR3": "Region 3",
+    "XRY": "Antarctic Region",
+    "XSC": "ex SCG",
+    "XSD": "ex Republic of the Sudan before 14 July 2011 → SDN + SSD",
+    "XSP": "Spratly Islands",
+    "XSU": "ex URS",
+    "XUN": "United Nations",
+    "XWB": "West Bank",
+    "XWM": "World Meteorological Organization",
+    "XYU": "ex YUG",
+    "XYZ": "Pending further developments regarding the administration responsible",
+    "XZZ": "Administrative status subject to special arrangements"
+  };
+
+  function getITUCountryName(code) {
+      // Ensure input is a string, trim whitespace, and convert to uppercase
+      const formattedCode = String(code).trim().toUpperCase();
+
+      // Lookup in the ITU_TO_NAME map
+      return ITU_TO_NAME[formattedCode] || "Unknown ITU Code";
+  }
+
   // These will be filled after we parse award_reverse_index.txt.zip
   let KEYWORDS = [];
   let BATCHES  = [];
@@ -471,6 +868,8 @@ title: Government grant award search
     const fundingAgencyTop = row.funding_toptier_agency_name || '';
     const fundingAgencySub = row.funding_subtier_agency_name || '';
     const fullDescription = row.description || '';
+    const countryCode = row.country_code || '';
+    const countryName = getITUCountryName(countryCode) || 'Unknown';
 
     // possible_eins is a JSON blob
     let einHtml = '';
@@ -506,6 +905,7 @@ title: Government grant award search
             <span class="text-sm opacity-80">Recipient</span>
             <div class="font-bold text-[15px]">${escapeHtml(recipientName)}</div>
             <div class="text-sm opacity-80"><abbr title="Unique Entity Identifier">UEI</abbr>: ${escapeHtml(recipientUEI)}</div>
+            <div class="text-sm opacity-80"><abbr title="Location of grant">Locale</abbr>: ${escapeHtml(countryName)}</div>
           </div>
 
           <div>
@@ -517,6 +917,7 @@ title: Government grant award search
           <div>
             <span class="text-sm opacity-80">Awarded by</span>
             <div class="font-bold text-[15px]">${escapeHtml(fundingAgencyTop)} : ${escapeHtml(fundingAgencySub)}</div>
+            <div class="text-sm opacity-80">${escapeHtml(awardID)}</div>
           </div>
 
           <div>
