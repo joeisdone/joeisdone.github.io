@@ -1,4 +1,4 @@
-*Visit the legacy site [here](legacy.html). Until the next election season rolls around, please take a moment to read my pastor's essay.*
+*Please take a moment to read my pastor's essay.*
 
 # The Historical Case for Christianity
 

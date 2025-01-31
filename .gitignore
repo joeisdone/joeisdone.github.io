@@ -4,6 +4,8 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+docs/charity
+docs/pa
 
 # Environment files
 .bundle
