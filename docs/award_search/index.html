@@ -393,11 +393,11 @@ $(document).ready(function() {
     "KNA": "Saint Kitts and Nevis",
     "KOR": "Korea, Republic of",
     "KWT": "Kuwait",
-    "LAO": "Lao People's Democratic Republic",
 
     // -----------------------------------------
     //  L
     // -----------------------------------------
+    "LAO": "Lao People's Democratic Republic",    
     "LBN": "Lebanon",
     "LBR": "Liberia",
     "LBY": "Libya",
@@ -428,6 +428,7 @@ $(document).ready(function() {
     "MLT": "Malta",
     "MMR": "Myanmar",
     "MNE": "Montenegro",
+    "MOZ": "Mozambique",
     "MNP": "Northern Mariana Islands",
     "MRA": "Northern Mariana Islands",
     "MRN": "Marion Island",
@@ -799,9 +800,14 @@ $(document).ready(function() {
   }
 
   function couldPrefixMatch(token) {
+    // don't prefix on tiny words or ITU
     // Binary-search approach to see if there's any keyword that starts with 'token'
     const startIdx = findInsertionIndex(KEYWORDS, token);
     if (startIdx >= KEYWORDS.length) return false;
+
+    // now if it is of a certain length and not an exact match, return false.
+    if (token.length < 4 && token !==KEYWORDS[startIdx]) return false;
+
     return KEYWORDS[startIdx].startsWith(token);
   }
 
@@ -878,6 +884,12 @@ $(document).ready(function() {
 
   function findPrefixRange(prefix) {
     const startIdx = findInsertionIndex(KEYWORDS, prefix);
+
+    // match exact on short keywords
+    if (prefix.length < 4) {
+      return { start: startIdx, end: startIdx };      
+    }
+
     let endIdx = startIdx;
     while (endIdx < KEYWORDS.length && KEYWORDS[endIdx].startsWith(prefix)) {
       endIdx++;
