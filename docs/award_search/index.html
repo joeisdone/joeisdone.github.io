@@ -36,21 +36,21 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Government grant award search | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.9.5" />
+<meta name="generator" content="Jekyll v3.10.0" />
 <meta property="og:title" content="Government grant award search" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Joe Is Done" />
 <meta property="og:description" content="Joe Is Done" />
-<link rel="canonical" href="https://datarepublican.com/award_search/" />
-<meta property="og:url" content="https://datarepublican.com/award_search/" />
+<link rel="canonical" href="http://localhost:4000/award_search/" />
+<meta property="og:url" content="http://localhost:4000/award_search/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/default.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/default.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/default.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/default.png" />
 <meta property="twitter:title" content="Government grant award search" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Joe Is Done","headline":"Government grant award search","image":"https://datarepublican.com/assets/images/default.png","url":"https://datarepublican.com/award_search/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Joe Is Done","headline":"Government grant award search","image":"http://localhost:4000/assets/images/default.png","url":"http://localhost:4000/award_search/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -490,41 +490,58 @@ $(document).ready(function() {
 
   // ============================================================
   // 4) PROCESS A BATCH
-  //    - fetch award_batch_XXX.csv.zip
-  //    - parse its .txt to get rowIDs, then load CSV with PapaParse
-  //    - build a nice "card" layout for each matched row
+  //    - fetch award_batch_XXX_reverse_index.txt.zip
+  //    - parse it to see if there's any row-level match
+  //      (i.e. intersection of all tokens in a single row)
+  //    - if none => skip
+  //    - if some => fetch award_batch_XXX.csv.zip, parse matched rows
   // ============================================================
   async function processBatch(batchId, tokens, maxNeeded) {
-    const zipFileName = `award_batch_${String(batchId).padStart(3, '0')}.csv.zip`;
-    const response = await fetch(zipFileName);
-    if (!response.ok) {
-      console.warn('Could not fetch batch file: ' + zipFileName);
+    // 1) First fetch the batch-level reverse index
+    const revZipName = `award_batch_${String(batchId).padStart(3, '0')}_reverse_index.txt.zip`;
+    const revResponse = await fetch(revZipName);
+    if (!revResponse.ok) {
+      console.warn('Could not fetch batch reverse index file: ' + revZipName);
       return 0;
     }
-    const arrayBuffer = await response.arrayBuffer();
+    const revArrayBuffer = await revResponse.arrayBuffer();
     const jsZip = new JSZip();
-    const batchZip = await jsZip.loadAsync(arrayBuffer);
+    const revZip = await jsZip.loadAsync(revArrayBuffer);
 
-    // The zip should contain:
-    //   award_batch_XXX.csv
-    //   award_batch_XXX_reverse_index.txt
-    const reverseIndexName  = `award_batch_${String(batchId).padStart(3, '0')}_reverse_index.txt`;
-    const csvFileName       = `award_batch_${String(batchId).padStart(3, '0')}.csv`;
-
-    if (!batchZip.file(reverseIndexName) || !batchZip.file(csvFileName)) {
-      console.warn(`Batch zip missing expected files: ${reverseIndexName}, ${csvFileName}`);
+    // 2) We expect a single text file inside: "award_batch_XXX_reverse_index.txt"
+    const reverseIndexName = `award_batch_${String(batchId).padStart(3, '0')}_reverse_index.txt`;
+    if (!revZip.file(reverseIndexName)) {
+      console.warn(`Batch reverse index zip missing expected file: ${reverseIndexName}`);
       return 0;
     }
 
-    const reverseIndexText = await batchZip.file(reverseIndexName).async('string');
-    // Collect rowIDs that match ANY of the user tokens in EXACT or PREFIX form
-    const rowIDs = getMatchingRowsInBatch(reverseIndexText, tokens);
+    const reverseIndexText = await revZip.file(reverseIndexName).async('string');
 
+    // 3) Determine which rowIDs have matches for *all* tokens
+    //    (i.e. intersection across exact + prefix sets)
+    const rowIDs = getMatchingRowsInBatch(reverseIndexText, tokens);
     if (!rowIDs.size) {
-      return 0; // no matches in this batch
+      // No row-level matches => skip downloading the CSV
+      return 0;
     }
 
-    // Now load the CSV
+    // 4) Since we have row-level matches, download and parse the CSV
+    const csvZipName = `award_batch_${String(batchId).padStart(3, '0')}.csv.zip`;
+    const csvResponse = await fetch(csvZipName);
+    if (!csvResponse.ok) {
+      console.warn('Could not fetch batch CSV file: ' + csvZipName);
+      return 0;
+    }
+    const csvArrayBuffer = await csvResponse.arrayBuffer();
+    const batchZip = await jsZip.loadAsync(csvArrayBuffer);
+
+    // 5) The CSV zip should contain a single .csv: "award_batch_XXX.csv"
+    const csvFileName = `award_batch_${String(batchId).padStart(3, '0')}.csv`;
+    if (!batchZip.file(csvFileName)) {
+      console.warn(`Batch CSV zip missing expected file: ${csvFileName}`);
+      return 0;
+    }
+
     const csvData = await batchZip.file(csvFileName).async('string');
     // Parse it with Papa Parse
     const parseResult = Papa.parse(csvData, {
@@ -533,15 +550,17 @@ $(document).ready(function() {
       dynamicTyping: false
     });
 
+    // 6) Build and display the matched rows
     let displayed = 0;
     for (const rowId of rowIDs) {
-      // IMPORTANT: preserve original offset => rowId-1
-      if (rowId - 1 >= 0 && rowId - 1 < parseResult.data.length) {
-        const rowObject = parseResult.data[rowId - 1];
-        // Build the UI block for this row
+      if (displayed >= maxNeeded) break;
+
+      // Note rowId is 1-based in the text index
+      const idx = rowId - 1;
+      if (idx >= 0 && idx < parseResult.data.length) {
+        const rowObject = parseResult.data[idx];
         const htmlBlock = buildResultItem(rowObject);
 
-        // Append directly to container
         $('#resultsContainer').append(htmlBlock);
 
         // Add to total if award_amount is present
@@ -551,20 +570,18 @@ $(document).ready(function() {
         }
 
         displayed++;
-        if (displayed >= maxNeeded) break;
       }
     }
 
-    // Attach event handlers for "Read more" links and EIN collapses
-    // We do this after appending all rows from this batch.
+    // Attach event handlers for newly added items
     initDynamicEventHandlers();
 
     return displayed;
   }
 
   function getMatchingRowsInBatch(reverseIndexText, tokens) {
-    // Parse the batch-level reverse index:
-    //   keyword:row_id1,row_id2,...
+    // Parse the batch-level reverse index (keyword => row_ids)
+    // e.g.  keyword:1,10,22
     const batchIndexMap = new Map();
     const lines = reverseIndexText.split(/\r?\n/);
     for (const line of lines) {
@@ -623,7 +640,6 @@ $(document).ready(function() {
     const fundingAgencyTop = row.funding_toptier_agency_name || '';
     const fundingAgencySub = row.funding_subtier_agency_name || '';
     const fullDescription = row.description || '';
-    const shortDescriptionHtml = truncatedDescription(fullDescription, 300);
 
     // possible_eins is a JSON blob
     let einHtml = '';
@@ -631,9 +647,7 @@ $(document).ready(function() {
     let recipientAddr = row.recipient_addr || '';
     try {
       const parsed = JSON.parse(rawEINData);
-      // Build listing for each key
       const lines = Object.entries(parsed).map(([einID, data]) => {
-        // data.name, data.addr
         return `
           <span class="text-sm opacity-80">${escapeHtml(einID)}</span>
           <strong class="md:col-span-2">${escapeHtml(data.name || '')}</strong>
@@ -654,7 +668,6 @@ $(document).ready(function() {
       einHtml = `<div class="md:col-span-5">(Could not parse possible EINs)</div>`;
     }
 
-    // The card layout
     return `
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border border-gray-200 rounded p-4">
         <div class="flex flex-col gap-2">
@@ -689,7 +702,7 @@ $(document).ready(function() {
         <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
           <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
           <div class="einSection" style="display:none;" class="p-4">
-          <div class="test">${einHtml}</div>
+            <div class="test">${einHtml}</div>
           </div>
         </div>
       </div>
@@ -699,10 +712,8 @@ $(document).ready(function() {
   // Creates a truncated description with "Read more" link if beyond a threshold
   function truncatedDescription(desc, limit) {
     if (desc.length <= limit) {
-      // No need to truncate
       return `<div class="descriptionShort capitalize">${escapeHtml(desc)}</div>`;
     }
-    // Truncate
     const shortText = desc.substring(0, limit);
     const remainder = desc.substring(limit);
     return `
@@ -724,7 +735,6 @@ $(document).ready(function() {
       const $link = $(this);
       const $fullDesc = $link.next('.descriptionFull');
       $fullDesc.show();
-      // Remove the "Read more" link or hide it
       $link.hide();
     });
 
@@ -732,7 +742,7 @@ $(document).ready(function() {
     $('.einToggle').off('click').on('click', function() {
       const $toggle = $(this);
       const $section = $toggle.next('.einSection');
-      $section.slideToggle(200); // jQuery animate
+      $section.slideToggle(200);
     });
   }
 
