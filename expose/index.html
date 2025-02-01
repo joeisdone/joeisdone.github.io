@@ -93,7 +93,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   </div>
 </div>
 
-<div id="excluded-info" class="max-w-7xl mx-auto mb-4 px-3 pt-3 pb-1 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
+<div id="excluded-info" class="max-w-7xl -mx-4 md:mx-auto mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
 
   {% include stat.html label="501(c)(3)s <em>not</em> displayed" valueId="excluded501" %}
 
@@ -563,7 +563,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         $('#excluded501').text(excluded501.toLocaleString());
         $('#excludedGrants').text(excludedGrants.toLocaleString());
         $('#taxpayerTotal').html(
-          `<span class="text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
+          `<span class="md:text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
         );
         $('#excluded-info').show();
 
