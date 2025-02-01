@@ -851,9 +851,6 @@ select {
 .min-h-\[44px\] {
   min-height: 44px;
 }
-.min-h-\[75vh\] {
-  min-height: 75vh;
-}
 .min-h-\[calc\(100vh-200px\)\] {
   min-height: calc(100vh - 200px);
 }
@@ -877,6 +874,9 @@ select {
 }
 .w-screen {
   width: 100vw;
+}
+.min-w-\[65px\] {
+  min-width: 65px;
 }
 .max-w-2xl {
   max-width: 42rem;
@@ -1354,12 +1354,12 @@ table {
     display: none;
   }
 
-  .md\:w-auto {
-    width: auto;
+  .md\:min-h-\[50vh\] {
+    min-height: 50vh;
   }
 
-  .md\:min-w-\[65px\] {
-    min-width: 65px;
+  .md\:w-auto {
+    width: auto;
   }
 
   .md\:max-w-xs {

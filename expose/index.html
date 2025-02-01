@@ -93,7 +93,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   </div>
 </div>
 
-<div id="excluded-info" class="max-w-7xl mx-auto mb-4 px-2 pt-3 pb-1 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
+<div id="excluded-info" class="max-w-7xl mx-auto mb-4 px-3 pt-3 pb-1 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
 
   {% include stat.html label="501(c)(3)s <em>not</em> displayed" valueId="excluded501" %}
 
@@ -103,7 +103,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
 </div>
 
-<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white md:min-h-[75vh] flex items-center justify-center">
+<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white md:min-h-[50vh] flex items-center justify-center">
   <div class="">
     <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
@@ -375,7 +375,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       // BFS from that root
       bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
 
-      // Then remove that root from the sorted array’s priority
+      // Then remove that root from the sorted array's priority
       sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
     }
 
@@ -585,7 +585,16 @@ title: Charity graph - multi-root BFS & taxpayer totals
     let dot = `digraph G {
 // Graph settings
 rankdir=LR;
-node [shape=ellipse, style=filled, fillcolor=lightblue, color=black];
+node [
+  shape=ellipse, 
+  style=filled, 
+  fillcolor=lightblue, 
+  color=black,
+  fontname="SF Pro, Helvetica, sans-serif",
+  fontsize=14
+];
+edge [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
+graph [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
 label="Charity Graph (multi-root BFS)";
 labelloc="t";
 `;
