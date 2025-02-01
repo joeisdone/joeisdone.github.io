@@ -502,6 +502,7 @@ video {
 body {
   margin: 1rem;
   margin-bottom: 1rem;
+  min-height: 100vh;
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
   padding-top: 0.125rem;
@@ -775,11 +776,17 @@ select {
 .h-5 {
   height: 1.25rem;
 }
+.h-full {
+  height: 100%;
+}
 .min-h-\[44px\] {
   min-height: 44px;
 }
 .min-h-\[calc\(100vh-200px\)\] {
   min-height: calc(100vh - 200px);
+}
+.min-h-screen {
+  min-height: 100vh;
 }
 .w-16 {
   width: 4rem;
@@ -807,6 +814,9 @@ select {
 }
 .flex-1 {
   flex: 1 1 0%;
+}
+.flex-\[0_0_auto\] {
+  flex: 0 0 auto;
 }
 .shrink-0 {
   flex-shrink: 0;
