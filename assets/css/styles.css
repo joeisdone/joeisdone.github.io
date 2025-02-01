@@ -1123,6 +1123,10 @@ select {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+.px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
 .pb-1 {
   padding-bottom: 0.25rem;
 }
@@ -1143,6 +1147,9 @@ select {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.pr-2 {
+  padding-right: 0.5rem;
 }
 .text-center {
   text-align: center;
@@ -1475,6 +1482,10 @@ table {
 
   .md\:pl-4 {
     padding-left: 1rem;
+  }
+
+  .md\:pl-1 {
+    padding-left: 0.25rem;
   }
 
   .md\:text-left {

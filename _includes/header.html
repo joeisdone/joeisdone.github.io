@@ -10,7 +10,7 @@
         <span>Menu</span>
       </button>
     </div>
-    <div id="menu-items" class="flex-1 hidden md:flex md:gap-1 sm:gap-2 -mx-4 px-2">
+    <div id="menu-items" class="flex-1 hidden md:flex md:gap-1 sm:gap-2">
       <a href="{{ '/expose' | relative_url }}"
       class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap {% if page.url contains '/expose' %}font-bold text-black{% else %}text-gray-600 hover:text-black{% endif %}">
         <svg xmlns="http://www.w3.org/2000/svg" class="opacity-80 group-hover:opacity-100 relative left-1" height="24" width="24" viewBox="0 0 100 100"><path d="M17 50c0 5.523 4.477 10 10 10 4.832 0 8.848-3.441 9.781-8h12.22v34h16v7h18V75H65v7H53V52h12v7h18V41H65v7H53V18h12v7h18V7H65v7H49v34H36.78c-.933-4.559-4.949-8-9.781-8-5.523 0-10 4.477-10 10z"/></svg>
@@ -84,7 +84,7 @@
         </div>
       </div>
       <a href="{{ '/tip' | relative_url }}"
-      class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-green-600 hover:text-green-600 font-semibold {% if page.url contains '/tip' %}font-bold text-black{% else %}text-gray-600 hover:text-black{% endif %}">
+      class="group px-2 md:pl-1 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-green-600 hover:text-green-600 font-semibold {% if page.url contains '/tip' %}font-bold text-black{% else %}text-gray-600 hover:text-black{% endif %}">
         <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14.563 13.58c.037-.32-.134-.648-.455-.678l-.018-.001-4.893-.388a4.195 4.195 0 0 0-1.597.182l-3.902 1.237a1 1 0 0 0-.698.953v5.135a1 1 0 0 0 1 1h.838l.013.004a27.392 27.392 0 0 0 2.02.532c1.22.27 2.854.54 4.228.41 1.47-.14 3.289-.83 4.859-1.542a48.75 48.75 0 0 0 3.894-2.005A2.242 2.242 0 0 0 21 16.472c0-1.546-1.443-1.916-3-1.472l-2.5.75c-1 1.25-1.55 1.566-3.125 1.903l-1.258.269a.715.715 0 0 1-.3-1.398l1.229-.263c1.356-.29 2.367-1.367 2.517-2.681ZM18 7.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM12.073 3.127a4.999 4.999 0 0 0-2.346 5.866 3.5 3.5 0 1 1 2.346-5.865Z"/></svg>
         <span>Support my work</span>
       </a>
@@ -104,7 +104,7 @@
         </svg>
       </button>
     </div>
-    <div class="p-4 flex flex-col gap-4">
+    <div class="py-4 px-0 flex flex-col gap-4">
       <!-- Mobile menu items will be populated by JavaScript -->
     </div>
   </div>
@@ -115,7 +115,7 @@ $(document).ready(function() {
   // Mobile menu functionality
   const $menuItems = $('#menu-items');
   const $mobileMenu = $('#mobile-menu');
-  const $mobileMenuContent = $('#mobile-menu .p-4.flex.flex-col');
+  const $mobileMenuContent = $('#mobile-menu .py-4.px-0.flex.flex-col');
   let $clonedItems = null;
 
   function handleResize() {
