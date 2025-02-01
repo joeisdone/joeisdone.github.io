@@ -562,6 +562,10 @@ button {
   }
 
     &.frameless {
+    min-width: 0px;
+  }
+
+    &.frameless {
     border-style: none;
   }
 
@@ -763,6 +767,9 @@ select {
 }
 .ml-4 {
   margin-left: 1rem;
+}
+.mr-0 {
+  margin-right: 0px;
 }
 .mr-0\.5 {
   margin-right: 0.125rem;
@@ -1260,6 +1267,11 @@ table {
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
+.hover\:text-green-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
 .hover\:opacity-100:hover {
   opacity: 1;
 }
@@ -1435,11 +1447,6 @@ table {
   .md\:px-0 {
     padding-left: 0px;
     padding-right: 0px;
-  }
-
-  .md\:px-2 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
   }
 
   .md\:px-4 {
