@@ -35,7 +35,7 @@
     }
 
     &.frameless {
-      @apply bg-transparent text-[13px] text-blue-600 p-1 -mt-1 border-none;
+      @apply bg-transparent text-[13px] text-blue-600 p-0 m-0 border-none;
     }
   }
 

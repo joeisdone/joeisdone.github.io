@@ -295,11 +295,6 @@ $(document).ready(function() {
     padding: 6px 12px;
     cursor: pointer;
   }
-  #status {
-    margin-left: auto;
-    color: #444;
-    font-size: 0.9em;
-  }
 
   #activeEINs, #activeFilters {
     display: flex;
@@ -317,53 +312,68 @@ $(document).ready(function() {
 
 
 
-<div id="topbar" class="max-w-7xl mx-auto flex-[0_0_auto]">
+<div id="topbar" class="max-w-7xl mx-auto">
   <div id="explanation">
     <strong>Multi-root BFS & Taxpayer Totals:</strong><br/>
     1) We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).<br/>
     2) We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.<br/>
     3) We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.<br/>
   </div>
-  <div id="controls" class="mb-4 flex flex-col md:items-start md:flex-row gap-2">
+  <div id="controls" class="mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-2 md:gap-4">
     <!-- EIN Input & Add Button -->
      <div class="relative flex flex-col gap-2">
-      <div class="flex flex-wrap gap-1">
-  <label class="block text-sm flex-1 basis-full shrink-0" for="einInput">Add EIN</label>
-  <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="text-sm" />
-  <button id="addEinBtn">Add EIN</button>
+      <div class="inline-flex flex-col gap-1">
+  <div class="">
+    <label class="text-sm font-semibold" for="einInput">Add EIN</label>
+    
+    <span class="inline-block ml-1"><button id='clearEINsBtn' class='frameless'>Clear EINs</button></span>
+    
+  </div>
+  <div class="flex items-center gap-1.5">
+    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="text-sm" />
+    <button id="addEinBtn">Add EIN</button>
+  </div>
 </div>
 
 
       <div id="activeEINs"></div>
-      <button id="clearEINsBtn" class="frameless absolute top-0 right-0">Clear EINs</button>
     </div>
 
     <div class="relative flex flex-col gap-2">
-      <div class="flex flex-wrap gap-1">
-  <label class="block text-sm flex-1 basis-full shrink-0" for="keywordInput">Add Keyword</label>
-  <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="text-sm" />
-  <button id="addFilterBtn">Add</button>
+      <div class="inline-flex flex-col gap-1">
+  <div class="">
+    <label class="text-sm font-semibold" for="keywordInput">Add Keyword</label>
+    
+    <span class="inline-block ml-1"><button id='clearFiltersBtn' class='frameless'>Clear keywords</button></span>
+    
+  </div>
+  <div class="flex items-center gap-1.5">
+    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="text-sm" />
+    <button id="addFilterBtn">Add</button>
+  </div>
 </div>
 
 
       <div id="activeFilters"></div>
-      <button id="clearFiltersBtn" class="frameless absolute top-0 right-0">Clear Keywords</button>
+      
     </div>
 
-    <div>
+    
+    <div class="flex-1 text-right flex flex-col items-end justify-end gap-1 self-end">
+      <!-- <button id="generateBtn">Generate Graph</button> -->
+      <button id="downloadBtn" class="frameless" style="display: none;">
+        <span class="flex items-center gap-1 text-sm text-gray-500 font-semibold">
+          <img src="/assets/images/download.svg" class="size-5" alt="Download SVG">
+          Download SVG
+        </span>
+      </button>
+      <div id="status" class=""></div>
 
-      <button id="generateBtn">Generate Graph</button>
-
-      <!-- ADDED: Download button -->
-      <button id="downloadBtn">Download SVG</button> <!-- ADDED -->
     </div>
-
-    <div id="status" class="flex-1 text-right"></div>
   </div>
 </div>
 
-<!-- Excluded info overlay -->
-<div id="excluded-info" class="max-w-7xl mx-auto mb-4 p-2 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
+<div id="excluded-info" class="max-w-7xl mx-auto mb-4 px-2 pt-3 pb-1 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
 
   <div>
   <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 ">501(c)(3)s <em>not</em> displayed</h3> 
@@ -385,7 +395,11 @@ $(document).ready(function() {
 
 </div>
 
-<div id="graph-container" class="flex-1 -mx-4"></div>
+<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white min-h-[75vh] flex items-center justify-center">
+  <div class="">
+    <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
+  </div>
+</div>
 
 
 <script>
@@ -515,7 +529,7 @@ $(document).ready(function() {
    * Load charities + grants from the CSV zips.
    */
   async function loadData() {
-    $('#status').text('Loading data...').css('color', 'blue');
+    $('#status').html('<span class="flex items-center text-sm"><img src="/assets/images/loading.svg" class="size-6" alt="Loading..."> Loading data...</span>');
 
     // 1) charities
     const charitiesZipBuf = await fetch('charities.csv.zip').then(r => r.arrayBuffer());
@@ -839,13 +853,14 @@ $(document).ready(function() {
 
         // Show excluded info
         $('#excluded501').text(excluded501.toLocaleString());
-        $('#excludedGrants').text(excludedGrants);
+        $('#excludedGrants').text(excludedGrants.toLocaleString());
         $('#taxpayerTotal').html(
           `<span class="text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
         );
         $('#excluded-info').show();
 
-        $('#status').text(`Graph done. ${visitedSet.size} charities displayed.`).css('color','black');
+        $('#status').html(`<span class="text-sm text-green-600 font-semibold">${visitedSet.size} charities displayed</span>`);
+        $('#downloadBtn').show();
         $('#generateBtn').prop('disabled', false);
       })
       .catch(err => {

@@ -1,5 +1,12 @@
-<div class="flex flex-wrap gap-1">
-  <label class="block text-sm flex-1 basis-full shrink-0" for="{{ include.id }}">{{ include.label }}</label>
-  <input type="text" id="{{ include.id }}" placeholder="{{ include.placeholder }}" class="text-sm" />
-  <button id="{{ include.buttonId }}">{{ include.buttonLabel }}</button>
+<div class="inline-flex flex-col gap-1">
+  <div class="">
+    <label class="text-sm font-semibold" for="{{ include.id }}">{{ include.label }}</label>
+    {% if include.actions %}
+    <span class="inline-block ml-1">{{ include.actions }}</span>
+    {% endif %}
+  </div>
+  <div class="flex items-center gap-1.5">
+    <input type="text" id="{{ include.id }}" placeholder="{{ include.placeholder }}" class="text-sm" />
+    <button id="{{ include.buttonId }}">{{ include.buttonLabel }}</button>
+  </div>
 </div>
