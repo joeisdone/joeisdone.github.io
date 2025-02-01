@@ -885,6 +885,7 @@ title: Government grant award search
 
     // possible_eins is a JSON blob
     let einHtml = '';
+    let hasEINs = row.possible_eins || '';
     let rawEINData = row.possible_eins || '{}';
     let recipientAddr = row.recipient_addr || '';
     try {
@@ -909,6 +910,15 @@ title: Government grant award search
     } catch(e) {
       einHtml = `<div class="md:col-span-5">(Could not parse possible EINs)</div>`;
     }
+
+    let einButton = hasEINs ? `
+        <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
+          <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
+          <div class="einSection" style="display:none;" class="p-4">
+            <div class="test">${einHtml}</div>
+          </div>
+        </div>
+    ` : '';
 
     return `
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border border-gray-200 rounded p-4">
@@ -943,12 +953,7 @@ title: Government grant award search
           <div class="text-sm">${truncatedDescription(fullDescription, 300)}</div>
         </div>
 
-        <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
-          <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
-          <div class="einSection" style="display:none;" class="p-4">
-            <div class="test">${einHtml}</div>
-          </div>
-        </div>
+        ${einButton}
       </div>
     `;
   }
