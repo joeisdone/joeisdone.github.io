@@ -878,9 +878,6 @@ select {
 .w-screen {
   width: 100vw;
 }
-.min-w-\[65px\] {
-  min-width: 65px;
-}
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -920,6 +917,9 @@ select {
 }
 .resize {
   resize: both;
+}
+.\!list-decimal {
+  list-style-type: decimal !important;
 }
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1358,6 +1358,10 @@ table {
     width: auto;
   }
 
+  .md\:min-w-\[65px\] {
+    min-width: 65px;
+  }
+
   .md\:max-w-xs {
     max-width: 20rem;
   }
@@ -1378,12 +1382,20 @@ table {
     flex-direction: row;
   }
 
+  .md\:flex-col {
+    flex-direction: column;
+  }
+
   .md\:items-start {
     align-items: flex-start;
   }
 
   .md\:items-center {
     align-items: center;
+  }
+
+  .md\:justify-between {
+    justify-content: space-between;
   }
 
   .md\:gap-1 {
@@ -1404,6 +1416,10 @@ table {
 
   .md\:gap-y-1\.5 {
     row-gap: 0.375rem;
+  }
+
+  .md\:self-end {
+    align-self: flex-end;
   }
 
   .md\:border-x {

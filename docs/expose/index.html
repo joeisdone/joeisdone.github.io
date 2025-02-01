@@ -283,18 +283,7 @@ $(document).ready(function() {
 
 <style>
   
-  #explanation {
-    font-size: 0.8em;
-    margin-bottom: 1em;
-    color: #555;
-  }
-  input[type="text"] {
-    padding: 4px;
-  }
-  button {
-    padding: 6px 12px;
-    cursor: pointer;
-  }
+
 
   #activeEINs, #activeFilters {
     display: flex;
@@ -314,14 +303,16 @@ $(document).ready(function() {
 
 <div id="topbar" class="max-w-7xl mx-auto">
   <div id="explanation">
-    <strong>Multi-root BFS & Taxpayer Totals:</strong><br/>
-    1) We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).<br/>
-    2) We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.<br/>
-    3) We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.<br/>
+    <h2><abbr title="BFS (Breadth-First Search) is a variation of the standard BFS algorithm where the traversal starts from multiple sources (roots) simultaneously instead of a single source.">Multi-root BFS</abbr> & taxpayer totals</h2>
+    <ol class="!list-decimal ml-4 space-y-1 mb-4 text-sm">
+      <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
+      <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
+      <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
+    </ol>
   </div>
-  <div id="controls" class="mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-2 md:gap-4">
+  <div id="controls" class="mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-4">
     <!-- EIN Input & Add Button -->
-     <div class="relative flex flex-col gap-2">
+     <div class="relative flex flex-col gap-2 max-w-lg">
       <div class="inline-flex flex-col gap-1">
   <div class="">
     <label class="text-sm font-semibold" for="einInput">Add EIN</label>
@@ -330,7 +321,7 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="text-sm" />
+    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-1 rounded text-sm border border-gray-300" />
     <button id="addEinBtn">Add EIN</button>
   </div>
 </div>
@@ -339,7 +330,7 @@ $(document).ready(function() {
       <div id="activeEINs"></div>
     </div>
 
-    <div class="relative flex flex-col gap-2">
+    <div class="relative flex flex-col gap-2 max-w-lg">
       <div class="inline-flex flex-col gap-1">
   <div class="">
     <label class="text-sm font-semibold" for="keywordInput">Add Keyword</label>
@@ -348,7 +339,7 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="text-sm" />
+    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-1 rounded text-sm border border-gray-300" />
     <button id="addFilterBtn">Add</button>
   </div>
 </div>
@@ -359,7 +350,7 @@ $(document).ready(function() {
     </div>
 
     
-    <div class="flex-1 text-right flex flex-col items-end justify-end gap-1 self-end">
+    <div class="flex-1 text-right flex flex-row-reverse md:flex-col items-end justify-between md:justify-end gap-1 md:self-end">
       <!-- <button id="generateBtn">Generate Graph</button> -->
       <button id="downloadBtn" class="frameless" style="display: none;">
         <span class="flex items-center gap-1 text-sm text-gray-500 font-semibold">
@@ -395,7 +386,7 @@ $(document).ready(function() {
 
 </div>
 
-<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white min-h-[75vh] flex items-center justify-center">
+<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white md:min-h-[75vh] flex items-center justify-center">
   <div class="">
     <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
