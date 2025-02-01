@@ -145,6 +145,10 @@
         </div>
 
         <button id="generateBtn">Generate Graph</button>
+
+        <!-- ADDED: Download button -->
+        <button id="downloadBtn">Download SVG</button> <!-- ADDED -->
+
         <div id="status" style="margin-left:auto;"></div>
       </div>
     </div>
@@ -176,11 +180,16 @@
       let panZoomInstance = null;
 
       $(document).ready(function() {
+
+        // ADDED: Parse query params first
+        parseQueryParams(); // ADDED
+
         // Load once
         loadData().then(() => {
           dataReady = true;
           $('#status').text('Data loaded.').css('color', 'black');
-          generateGraph(); // auto-generate on load
+          // Generate graph right away (which will respect any pre-parsed EINs/keywords)
+          generateGraph();
         }).catch(err => {
           console.error(err);
           $('#status').text('Failed to load data.').css('color', 'red');
@@ -194,6 +203,7 @@
         $('#clearEINsBtn').on('click', () => {
           activeEINs = [];
           renderActiveEINs();
+          updateQueryParams(); // ADDED
           generateGraph();
         });
 
@@ -205,12 +215,75 @@
         $('#clearFiltersBtn').on('click', () => {
           activeKeywords = [];
           renderActiveKeywords();
+          updateQueryParams(); // ADDED
           generateGraph();
         });
 
         // Generate
         $('#generateBtn').on('click', generateGraph);
+
+        // ADDED: Download SVG
+        $('#downloadBtn').on('click', downloadSVG); // ADDED
       });
+
+      /**
+       * ADDED:
+       * Parse query parameters (eins & keywords) and populate activeEINs, activeKeywords
+       * Then render them in the UI so the user sees them.
+       */
+      function parseQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+
+        // EINs
+        const einParam = params.get('eins');
+        if (einParam) {
+          // e.g. eins=12-3456789,11-1111111 => after removing dashes => 9-digit check
+          let list = einParam.split(',');
+          list.forEach(e => {
+            // remove dashes
+            let v = e.replace(/[-\s]/g, '');
+            if (/^\d{9}$/.test(v)) {
+              // We'll add it if it’s in our CSV or not - user might want it anyway
+              if (!activeEINs.includes(v)) {
+                activeEINs.push(v);
+              }
+            }
+          });
+        }
+
+        // Keywords
+        const kwParam = params.get('keywords');
+        if (kwParam) {
+          let kws = kwParam.split(',');
+          kws.forEach(k => {
+            k = k.trim().toLowerCase();
+            if (k && !activeKeywords.includes(k)) {
+              activeKeywords.push(k);
+            }
+          });
+        }
+
+        // Render them into their respective boxes
+        renderActiveEINs();
+        renderActiveKeywords();
+      }
+
+      /**
+       * ADDED:
+       * Update the query parameters to reflect the current activeEINs and activeKeywords.
+       */
+      function updateQueryParams() {
+        const params = new URLSearchParams();
+        if (activeEINs.length > 0) {
+          // We'll allow the user to see them with dashes removed
+          params.set('eins', activeEINs.join(','));
+        }
+        if (activeKeywords.length > 0) {
+          params.set('keywords', activeKeywords.join(','));
+        }
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.history.replaceState({}, '', newUrl);
+      }
 
       /**
        * Load charities + grants from the CSV zips.
@@ -354,7 +427,7 @@
           // BFS from that root
           bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
 
-          // Then we remove that root from the sorted array’s priority
+          // Then remove that root from the sorted array’s priority
           sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
         }
 
@@ -368,7 +441,6 @@
           idx++;
         }
 
-        // Return the visited set after we try as many BFS expansions as needed
         return visited;
       }
 
@@ -376,7 +448,7 @@
        * BFS forward + reverse from a single root, union results into visited.
        */
       function bfsFromRoot(root, adjacencyFwd, adjacencyRev, visited) {
-        if (!root) return; // safety
+        if (!root) return;
         // forward BFS
         let queue = [root];
         const localFwd = new Set();
@@ -407,7 +479,7 @@
             }
           }
         }
-        // union into visited
+        // union
         for (let x of localFwd) visited.add(x);
         for (let x of localRev) visited.add(x);
       }
@@ -540,7 +612,9 @@
             // Show excluded info
             $('#excluded501').text(excluded501);
             $('#excludedGrants').text(excludedGrants);
-            $('#taxpayerTotal').html(`<b style="color:red; font-size:1.2em;">Taxpayer Total: $${formatNumber(taxpayerTotal)}</b>`);
+            $('#taxpayerTotal').html(
+              `<b style="color:red; font-size:1.2em;">Taxpayer Total: $${formatNumber(taxpayerTotal)}</b>`
+            );
             $('#excluded-info').show();
 
             $('#status').text(`Graph done. ${visitedSet.size} charities displayed.`).css('color','black');
@@ -572,10 +646,9 @@
           const govt = formatNumber(c.govt_amt);
           const contrib = formatNumber(c.contrib_amt);
           const grants = formatNumber(c.grant_amt);
-          // Emphasize taxpayer funds
           const taxpayerAlert = c.govt_amt > 10000000 ? '\\n🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨' : '';
-          var label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}${taxpayerAlert}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
-          const fillColor = c.govt_amt > 1000000 ? "#FFAD99" : "lightblue"; // Use red for high taxpayer funds
+          const label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}${taxpayerAlert}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
+          const fillColor = c.govt_amt > 1000000 ? "#FFAD99" : "lightblue";
           dot += `  "${ein}" [label="${label}", style=filled, fillcolor="${fillColor}"];\n`;
         }
 
@@ -606,14 +679,15 @@
           return;
         }
         if (!charities[val]) {
-          alert("EIN not found in charities.csv.");
-          return;
+          // Not found in CSV, but let's allow it anyway if user insists
+          console.warn("EIN not found in charities.csv (still adding).");
         }
         if (!activeEINs.includes(val)) {
           activeEINs.push(val);
         }
         $('#einInput').val('');
         renderActiveEINs();
+        updateQueryParams(); // ADDED
         generateGraph();
       }
 
@@ -628,6 +702,7 @@
             const rem = $(this).attr('data-ein');
             activeEINs = activeEINs.filter(x => x !== rem);
             renderActiveEINs();
+            updateQueryParams(); // ADDED
             generateGraph();
           });
           $tag.append($text).append($rm);
@@ -644,6 +719,7 @@
           activeKeywords.push(kw.toLowerCase());
           $('#keywordInput').val('');
           renderActiveKeywords();
+          updateQueryParams(); // ADDED
           generateGraph();
         }
       }
@@ -659,11 +735,35 @@
             const rem = $(this).attr('data-kw');
             activeKeywords = activeKeywords.filter(x => x !== rem);
             renderActiveKeywords();
+            updateQueryParams(); // ADDED
             generateGraph();
           });
           $tag.append($text).append($rm);
           $c.append($tag);
         });
+      }
+
+      /**
+       * ADDED:
+       * Download the currently displayed SVG as a file named "charity_graph.svg".
+       */
+      function downloadSVG() {
+        const svgEl = document.querySelector('#graph-container svg');
+        if (!svgEl) {
+          alert('No SVG to download yet.');
+          return;
+        }
+        const svgData = new XMLSerializer().serializeToString(svgEl);
+        const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'charity_graph.svg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
     </script>
   </body>
