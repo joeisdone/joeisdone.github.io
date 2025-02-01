@@ -27,15 +27,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
     margin-bottom: 1em;
     color: #555;
   }
-  #controls {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    flex-wrap: wrap;
-  }
-  #controls label {
-    margin-right: 0.5em;
-  }
   input[type="text"] {
     padding: 4px;
   }
@@ -49,50 +40,18 @@ title: Charity graph - multi-root BFS & taxpayer totals
     font-size: 0.9em;
   }
 
-  /* Filters/EINs box */
-  #filters-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-top: 0.5em;
-  }
   #activeEINs, #activeFilters {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
   }
-  .filter-tag {
-    background: #e0e0ff;
-    border: 1px solid #888;
-    border-radius: 4px;
-    padding: 2px 6px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .filter-tag span.remove-filter {
-    color: #c00;
-    cursor: pointer;
-    font-weight: bold;
-  }
+
 
   
   #graph-container {
     overflow: hidden; /* Hide scrollbars */
   }
 
-  /* Exclusion info overlay */
-  #excluded-info {
-    position: absolute;
-    top: 120px;
-    right: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid #ccc;
-    padding: 4px 8px;
-    font-size: 0.8em;
-    border-radius: 4px;
-    display: none;
-  }
 </style>
 
 
@@ -104,46 +63,59 @@ title: Charity graph - multi-root BFS & taxpayer totals
     2) We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.<br/>
     3) We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.<br/>
   </div>
-  <div id="controls">
+  <div id="controls" class="mb-4 flex flex-col md:items-start md:flex-row gap-2">
     <!-- EIN Input & Add Button -->
-    <label for="einInput">Add EIN:</label>
-    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" />
-    <button id="addEinBtn">Add EIN</button>
+     <div class="relative flex flex-col gap-2">
+      {% include input.html 
+        label="Add EIN" 
+        id="einInput" 
+        placeholder="XX-XXXXXXX or 9 digits" 
+        buttonLabel="Add EIN" 
+        buttonId="addEinBtn" 
+      %}
 
-    <!-- Keyword Filter Input & Add Button -->
-    <label for="keywordInput">Add Keyword:</label>
-    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." />
-    <button id="addFilterBtn">Add</button>
-
-    <div id="filters-container">
-      <!-- Active EINs -->
-      <div>EINs:</div>
       <div id="activeEINs"></div>
-      <button id="clearEINsBtn">Clear EINs</button>
-
-      <!-- Active Keyword Filters -->
-      <div>Keywords:</div>
-      <div id="activeFilters"></div>
-      <button id="clearFiltersBtn">Clear Keywords</button>
+      <button id="clearEINsBtn" class="frameless absolute top-0 right-0">Clear EINs</button>
     </div>
 
-    <button id="generateBtn">Generate Graph</button>
+    <div class="relative flex flex-col gap-2">
+      {% include input.html 
+        label="Add Keyword" 
+        id="keywordInput" 
+        placeholder="Keyword or phrase..." 
+        buttonLabel="Add" 
+        buttonId="addFilterBtn" 
+      %}
 
-    <!-- ADDED: Download button -->
-    <button id="downloadBtn">Download SVG</button> <!-- ADDED -->
+      <div id="activeFilters"></div>
+      <button id="clearFiltersBtn" class="frameless absolute top-0 right-0">Clear Keywords</button>
+    </div>
 
-    <div id="status" style="margin-left:auto;"></div>
+    <div>
+
+      <button id="generateBtn">Generate Graph</button>
+
+      <!-- ADDED: Download button -->
+      <button id="downloadBtn">Download SVG</button> <!-- ADDED -->
+    </div>
+
+    <div id="status" class="flex-1 text-right"></div>
   </div>
+</div>
+
+<!-- Excluded info overlay -->
+<div id="excluded-info" class="max-w-7xl mx-auto mb-4 p-2 flex gap-4 md:gap-8 rounded border border-gray-200 bg-white" style="display: none;">
+
+  {% include stat.html label="501(c)(3)s <em>not</em> displayed" valueId="excluded501" %}
+
+  {% include stat.html label="Grants <em>not</em> displayed" valueId="excludedGrants" %}
+
+  {% include stat.html label="<strong>Taxpayer total in subgraph</strong>" labelColor="text-red-500" valueId="taxpayerTotal" %}
+
 </div>
 
 <div id="graph-container" class="flex-1 -mx-4"></div>
 
-<!-- Excluded info overlay -->
-<div id="excluded-info">
-  <div>501(c)(3)s <em>not</em> displayed: <span id="excluded501"></span></div>
-  <div>Grants <em>not</em> displayed: <span id="excludedGrants"></span></div>
-  <div>🚨 <strong>Taxpayer Dollars in Subgraph:</strong> <span id="taxpayerTotal"></span></div>
-</div>
 
 <script>
   const BFS_CAP = 20;
@@ -595,10 +567,10 @@ title: Charity graph - multi-root BFS & taxpayer totals
         });
 
         // Show excluded info
-        $('#excluded501').text(excluded501);
+        $('#excluded501').text(excluded501.toLocaleString());
         $('#excludedGrants').text(excludedGrants);
         $('#taxpayerTotal').html(
-          `<b style="color:red; font-size:1.2em;">Taxpayer Total: $${formatNumber(taxpayerTotal)}</b>`
+          `<span class="text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
         );
         $('#excluded-info').show();
 
@@ -680,9 +652,9 @@ labelloc="t";
     const $c = $('#activeEINs');
     $c.empty();
     activeEINs.forEach(ein => {
-      const $tag = $('<div class="filter-tag"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
       const $text = $('<span></span>').text(ein);
-      const $rm = $('<span class="remove-filter">x</span>').attr('data-ein', ein);
+      const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer">{% include close.html %}</span>').attr('data-ein', ein);
       $rm.on('click', function() {
         const rem = $(this).attr('data-ein');
         activeEINs = activeEINs.filter(x => x !== rem);
@@ -713,9 +685,9 @@ labelloc="t";
     const $c = $('#activeFilters');
     $c.empty();
     activeKeywords.forEach(kw => {
-      const $tag = $('<div class="filter-tag"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
-      const $rm = $('<span class="remove-filter">x</span>').attr('data-kw', kw);
+      const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer">{% include close.html %}</span>').attr('data-kw', kw);
       $rm.on('click', function() {
         const rem = $(this).attr('data-kw');
         activeKeywords = activeKeywords.filter(x => x !== rem);

@@ -28,10 +28,14 @@
   }
 
   button {
-    @apply border border-black bg-gray-200 p-1 text-sm;
+    @apply bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded md:mr-2 min-w-[65px];
 
     &.active {
       @apply font-bold;
+    }
+
+    &.frameless {
+      @apply bg-transparent text-[13px] text-blue-600 p-1 -mt-1 border-none;
     }
   }
 
