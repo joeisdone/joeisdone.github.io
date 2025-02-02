@@ -59,17 +59,28 @@ $(document).ready(function() {
   <header
   class="max-w-7xl mx-auto border-b border-gray-300 pb-2 mb-4 text-[13px] md:text-sm">
   <div class="flex flex-col sm:flex-row gap-2 sm:items-center">
-    <div class="flex w-full md:w-auto items-center">
-      <strong class="flex-1 md:flex-0 text-lg inline-block mr-2">DataRepublican</strong>
-      <div class="md:hidden">
-        <a href="/tip"
-        class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-gray-600 hover:text-black">
-          <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M14.563 13.58c.037-.32-.134-.648-.455-.678l-.018-.001-4.893-.388a4.195 4.195 0 0 0-1.597.182l-3.902 1.237a1 1 0 0 0-.698.953v5.135a1 1 0 0 0 1 1h.838l.013.004a27.392 27.392 0 0 0 2.02.532c1.22.27 2.854.54 4.228.41 1.47-.14 3.289-.83 4.859-1.542a48.75 48.75 0 0 0 3.894-2.005A2.242 2.242 0 0 0 21 16.472c0-1.546-1.443-1.916-3-1.472l-2.5.75c-1 1.25-1.55 1.566-3.125 1.903l-1.258.269a.715.715 0 0 1-.3-1.398l1.229-.263c1.356-.29 2.367-1.367 2.517-2.681ZM18 7.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM12.073 3.127a4.999 4.999 0 0 0-2.346 5.866 3.5 3.5 0 1 1 2.346-5.865Z"/></svg>
-          <span>Send a tip</span>
-        </a>
+    <div class="flex w-full items-center justify-between">
+      <div class="flex-1 md:flex-0 flex gap-2 items-center">
+        <div class="hidden md:block">
+          <img src="/assets/images/logo.png" alt="DataRepublican" class="h-[82px]" />
+        </div>
+        <div class="md:hidden">
+          <img src="/assets/images/logo-mobile.png" alt="DataRepublican" class="h-[59px]" />
+        </div>
       </div>
+      <button id="mobile-menu-button" class="md:hidden px-2 py-1.5 rounded text-gray-600 bg-transparent hover:bg-gray-200 flex items-center gap-2 font-semibold">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <span>Menu</span>
+      </button>
     </div>
-    <div class="flex-1 flex md:gap-1 sm:gap-2 -mx-4 px-2 md:px-4">
+    <div id="menu-items" class="flex-1 hidden md:flex md:gap-1 sm:gap-2">
+      <a href="/expose"
+      class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-gray-600 hover:text-black">
+        <svg xmlns="http://www.w3.org/2000/svg" class="opacity-80 group-hover:opacity-100 relative left-1" height="24" width="24" viewBox="0 0 100 100"><path d="M17 50c0 5.523 4.477 10 10 10 4.832 0 8.848-3.441 9.781-8h12.22v34h16v7h18V75H65v7H53V52h12v7h18V41H65v7H53V18h12v7h18V7H65v7H49v34H36.78c-.933-4.559-4.949-8-9.781-8-5.523 0-10 4.477-10 10z"/></svg>
+        <span>Charity graph</span>
+      </a>
       <a href="/award_search"
         class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-gray-600 hover:text-black">
         <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm10-6.403a.75.75 0 0 1 .75.75v.864c.857.166 1.612.614 2.084 1.266a.75.75 0 0 1-1.216.88c-.283-.392-.87-.718-1.618-.718h-.286c-1.011 0-1.533.63-1.533 1.077v.078c0 .343.25.77.845 1.009l2.505 1.002c1.019.407 1.788 1.3 1.788 2.4 0 1.42-1.212 2.397-2.569 2.612v.836a.75.75 0 0 1-1.5 0v-.864c-.857-.166-1.612-.614-2.083-1.266a.75.75 0 1 1 1.215-.88c.283.392.87.718 1.618.718h.187c1.067 0 1.632-.665 1.632-1.155 0-.343-.25-.77-.845-1.009l-2.505-1.002c-1.019-.407-1.788-1.3-1.788-2.4v-.079c0-1.41 1.226-2.364 2.569-2.546v-.823a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd"/></svg>
@@ -87,7 +98,7 @@ $(document).ready(function() {
       </a>
       <div class="relative group">
         <button 
-          class="group px-2 py-1.5 text-[13px] md:text-sm rounded border border-transparent bg-transparent focus:bg-gray-200 focus:border-gray-600 hover:bg-gray-200 flex items-center gap-1 text-gray-600 hover:text-black focus:text-black"
+          class="group md:py-1.5 text-base mr-0 md:text-sm rounded border border-transparent bg-transparent focus:bg-gray-200 focus:border-gray-600 hover:bg-gray-200 flex items-center gap-1 text-gray-600 hover:text-black focus:text-black"
           id="election-results-button"
           aria-haspopup="true"
           aria-expanded="false"
@@ -133,42 +144,131 @@ $(document).ready(function() {
             d="M28.065,17.222l-0.047,0.047l-0.14,0.117l-0.094,0.047l-0.117,0.187l-0.093,0.047l-0.07,0.047 l-0.047,0.117l0.023,0.14l0.047,0.117l-0.047,0.07l-0.257,0.164l-0.164,0.14l-0.094,0.047l-0.117-0.023l-0.257,0.21l-0.07,0.024 l-0.07,0.047l-0.07,0.187l-0.093-0.047l-0.14-0.047l-0.187-0.023h-0.21l-0.211,0.07l-0.094,0.023L25.304,19l-0.07,0.07l-0.07,0.093 l-0.07,0.094l-0.07,0.21l-0.07,0.187l-0.07,0.187H24.86l-0.538,0.117l-0.514,0.117l-0.515,0.093l-0.515,0.117l-0.515,0.117 l-0.515,0.094l-0.515,0.117l-0.538,0.117l-0.515,0.094l-0.514,0.117l-0.515,0.093l-0.515,0.094l-0.515,0.117l-0.538,0.093 l-0.515,0.117l-0.515,0.094l-0.514,0.094l-0.538,0.117l-0.514,0.093l-0.515,0.094l-0.515,0.093l-0.515,0.117l-0.538,0.094 l-0.515,0.094l-0.515,0.093l-0.514,0.094l-0.538,0.093l-0.514,0.094l-0.515,0.094l-0.538,0.093L8.743,23l-0.515,0.093l-0.585,0.094 l-0.585,0.117l-0.608,0.094l-0.585,0.093l-0.585,0.117l-0.585,0.094l-0.585,0.093l-0.608,0.094l-0.047-0.398l-0.07-0.421 l-0.07-0.421l-0.07-0.398l-0.07-0.468l-0.094-0.491l-0.07-0.468l-0.07-0.468l-0.094-0.468l-0.07-0.491l-0.07-0.468l-0.094-0.468 v-0.023L2.52,17.807l-0.117-0.608L2.31,16.567l-0.094-0.608l-0.117-0.632l-0.093-0.608l-0.094-0.632L1.795,13.48l-0.094-0.608 L1.608,12.24l-0.117-0.608L1.398,11l-0.094-0.608L1.187,9.76L1.094,9.152L1,8.52l0.047-0.023l0.562-0.211l0.538-0.187l0.608-0.445 l0.608-0.444l0.632-0.421l0.094-0.07l0.023,0.187l0.047,0.211l0.023,0.187l0.047,0.211l0.024,0.21l0.023,0.187l0.047,0.21 L4.345,8.31l0.047,0.187l0.023,0.164l0.024,0.164l0.023,0.187l0.047,0.164l0.023,0.164l0.024,0.187L4.602,9.69l0.023,0.187 L4.79,9.854L5.374,9.76l0.608-0.117L6.567,9.55l0.608-0.117L7.76,9.339l0.608-0.117l0.585-0.094l0.585-0.117l0.608-0.117 l0.585-0.093l0.608-0.117l0.585-0.117l0.585-0.117l0.608-0.094l0.585-0.117l0.608-0.117l0.585-0.117l0.585-0.117l0.608-0.117 l0.585-0.117l0.585-0.14l0.608-0.117l0.585-0.117l0.585-0.117l0.608-0.117l0.585-0.14l0.585-0.117l0.585-0.117l0.608-0.14 l0.585-0.117l0.585-0.14l0.585-0.117l0.117-0.024l0.047-0.023l0.023,0.093l0.117,0.047l0.14,0.047l0.117,0.047l0.047,0.093 l0.047,0.14l0.047,0.117l0.07,0.047l0.234-0.094h0.07l0.117,0.07l0.117,0.024l0.094,0.093l0.047,0.024h0.07l-0.024,0.047 l-0.07,0.164l0.117,0.024l0.07,0.023l0.07,0.023l0.047,0.14v0.047l-0.047,0.07v0.047l0.093,0.21l0.024,0.117l0.047,0.304l0.024,0.07 l0.07,0.047l0.328,0.421l0.093,0.07l0.07,0.047l0.211,0.023l0.07,0.023l0.047,0.07l0.094,0.047h0.093l0.211-0.07l0.117,0.024 l0.047,0.047h0.047l0.047-0.047l0.047-0.024l0.047,0.024l0.023,0.047l0.047,0.07l0.07,0.047l0.094,0.117l0.047,0.117l-0.07,0.07 l-0.094,0.047l-0.047,0.024l-0.047,0.07h-0.047l-0.024,0.023v0.024l-0.023,0.07v0.023l-0.187,0.281v0.07v0.047v0.164l-0.047,0.281 l-0.164,0.374l-0.047,0.047l-0.023,0.023l-0.047,0.047l-0.023,0.047L26.638,11l0.024,0.07v0.023h-0.024l-0.117,0.281l-0.07,0.07 l-0.093,0.07l-0.07,0.024l-0.07,0.093l-0.093,0.117L26.1,11.865l0.024,0.024l0.047,0.047l0.047,0.07l0.024,0.023v0.023v0.024h0.023 h0.023h0.024h0.023l0.023,0.047l0.047,0.047l0.07,0.047l0.094,0.094l0.047,0.117l-0.024,0.093l-0.047,0.07l-0.047,0.07v0.14v0.117 l-0.07,0.07l-0.07,0.024l-0.093-0.024l-0.024,0.117l-0.023,0.047l-0.023,0.024l-0.024,0.023l0.024,0.047l0.023,0.047h0.023 l-0.023,0.187v0.07l0.023,0.07l0.024,0.07v0.047l0.023,0.047l0.047,0.187v0.07l0.023,0.047l0.024,0.07l0.07,0.14l0.07,0.023 l0.117-0.07l0.234,0.023l0.117,0.14l0.14,0.444l0.07,0.094l0.093,0.117l0.117,0.047L27.573,15l0.07,0.093l0.117,0.211l0.281,0.164 l0.047,0.047l0.023,0.023l0.211,0.187l0.164,0.14l0.304,0.14l0.14,0.094L29,16.216l-0.023,0.14l-0.117,0.117l-0.14,0.07 l-0.117,0.047l-0.024,0.023l-0.117,0.187l-0.047,0.023l-0.164,0.094l-0.047,0.07L28.065,17.222L28.065,17.222z">
           </path>
         </svg>
+            
             <span>Pennsylvania</span>
           </a>
         </div>
       </div>
-    </div>
-    <div class="hidden md:inline-flex">
       <a href="/tip"
-      class="group px-2 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-gray-600 hover:text-black">
-        <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24"><path fill="#000" d="M14.563 13.58c.037-.32-.134-.648-.455-.678l-.018-.001-4.893-.388a4.195 4.195 0 0 0-1.597.182l-3.902 1.237a1 1 0 0 0-.698.953v5.135a1 1 0 0 0 1 1h.838l.013.004a27.392 27.392 0 0 0 2.02.532c1.22.27 2.854.54 4.228.41 1.47-.14 3.289-.83 4.859-1.542a48.75 48.75 0 0 0 3.894-2.005A2.242 2.242 0 0 0 21 16.472c0-1.546-1.443-1.916-3-1.472l-2.5.75c-1 1.25-1.55 1.566-3.125 1.903l-1.258.269a.715.715 0 0 1-.3-1.398l1.229-.263c1.356-.29 2.367-1.367 2.517-2.681ZM18 7.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM12.073 3.127a4.999 4.999 0 0 0-2.346 5.866 3.5 3.5 0 1 1 2.346-5.865Z"/></svg>
-        <span>Send a tip</span>
+      class="group px-2 md:pl-1 py-1.5 rounded hover:bg-gray-200 flex items-center gap-2 no-underline whitespace-nowrap text-green-600 hover:text-green-600 font-semibold text-gray-600 hover:text-black">
+        <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14.563 13.58c.037-.32-.134-.648-.455-.678l-.018-.001-4.893-.388a4.195 4.195 0 0 0-1.597.182l-3.902 1.237a1 1 0 0 0-.698.953v5.135a1 1 0 0 0 1 1h.838l.013.004a27.392 27.392 0 0 0 2.02.532c1.22.27 2.854.54 4.228.41 1.47-.14 3.289-.83 4.859-1.542a48.75 48.75 0 0 0 3.894-2.005A2.242 2.242 0 0 0 21 16.472c0-1.546-1.443-1.916-3-1.472l-2.5.75c-1 1.25-1.55 1.566-3.125 1.903l-1.258.269a.715.715 0 0 1-.3-1.398l1.229-.263c1.356-.29 2.367-1.367 2.517-2.681ZM18 7.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM12.073 3.127a4.999 4.999 0 0 0-2.346 5.866 3.5 3.5 0 1 1 2.346-5.865Z"/></svg>
+        <span>Support my work</span>
       </a>
     </div>
   </div>
 </header>
 
+<!-- Add mobile menu -->
+<div id="mobile-menu" class="hidden md:hidden fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-black opacity-50"></div>
+  <div class="absolute right-0 top-0 h-full w-64 bg-white shadow-lg">
+    <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+      <h2 class="text-lg font-bold m-0">Menu</h2>
+      <button id="close-mobile-menu" class="p-2 hover:bg-gray-200 rounded frameless">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="py-4 px-0 flex flex-col gap-4">
+      <!-- Mobile menu items will be populated by JavaScript -->
+    </div>
+  </div>
+</div>
+
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const button = document.getElementById('election-results-button');
-    const dropdown = document.getElementById('election-results-dropdown');
-    let isOpen = false;
+$(document).ready(function() {
+  // Mobile menu functionality
+  const $menuItems = $('#menu-items');
+  const $mobileMenu = $('#mobile-menu');
+  const $mobileMenuContent = $('#mobile-menu .py-4.px-0.flex.flex-col');
+  let $clonedItems = null;
 
-    button.addEventListener('click', function(e) {
-      e.stopPropagation();
-      isOpen = !isOpen;
-      button.setAttribute('aria-expanded', isOpen);
-      dropdown.classList.toggle('hidden');
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-        isOpen = false;
-        button.setAttribute('aria-expanded', false);
-        dropdown.classList.add('hidden');
+  function handleResize() {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      if (!$clonedItems) {
+        // Clone menu items for mobile
+        $clonedItems = $menuItems.children().clone(true);
+        
+        // Modify classes for mobile layout
+        $clonedItems.find('a, button').removeClass('px-2').addClass('');
+        
+        // Keep dropdown structure but modify for mobile
+        const $electionDropdown = $clonedItems.find('.relative.group');
+        const $dropdownButton = $electionDropdown.children('button');
+        const $dropdownContent = $electionDropdown.find('#election-results-dropdown');
+        
+        // Clear existing click handlers
+        $dropdownButton.off('click');
+        
+        // Modify button for mobile
+        $dropdownButton
+          .removeClass('group')
+          .addClass('w-full flex justify-between items-center')
+          .find('svg.w-4').removeClass('rotate-180');
+        
+        // Modify dropdown content for mobile
+        $dropdownContent
+          .removeClass('absolute left-0 mt-1 bg-white border border-gray-200 rounded shadow-lg z-50')
+          .addClass('mt-2 ml-4 border-l-2 border-gray-200');
+        
+        // Empty and append content first
+        $mobileMenuContent.empty().append($clonedItems);
+        
+        // Add click handler after elements are in the DOM
+        $('#mobile-menu button#election-results-button').on('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const $content = $('#mobile-menu #election-results-dropdown');
+          $(this).find('svg.w-4').toggleClass('rotate-180');
+          $content.toggleClass('hidden');
+        });
       }
-    });
+      $menuItems.addClass('hidden');
+    } else {
+      $menuItems.removeClass('hidden');
+      $mobileMenu.addClass('hidden');
+    }
+  }
+
+  // Initial setup
+  handleResize();
+  
+  // Handle window resize
+  $(window).on('resize', handleResize);
+
+  // Toggle mobile menu
+  $('#mobile-menu-button').on('click', function() {
+    $mobileMenu.removeClass('hidden');
   });
+
+  // Close mobile menu
+  $('#close-mobile-menu, #mobile-menu .opacity-50').on('click', function() {
+    $mobileMenu.addClass('hidden');
+  });
+
+  // Desktop dropdown functionality
+  const $button = $('#election-results-button');
+  const $dropdown = $('#election-results-dropdown');
+  let isOpen = false;
+
+  $button.on('click', function(e) {
+    e.stopPropagation();
+    isOpen = !isOpen;
+    $button.attr('aria-expanded', isOpen);
+    $dropdown.toggleClass('hidden');
+  });
+
+  $(document).on('click', function(e) {
+    if (!$dropdown.is(e.target) && !$button.is(e.target) && $dropdown.has(e.target).length === 0) {
+      isOpen = false;
+      $button.attr('aria-expanded', false);
+      $dropdown.addClass('hidden');
+    }
+  });
+});
 </script>
 
   <main class="w-full lg:max-w-7xl mx-auto min-h-[calc(100vh-200px)]">
@@ -264,7 +364,7 @@ $(document).ready(function() {
       <div class="flex gap-1 w-full md:w-auto">
         <input type="text" id="filterInput" placeholder="Type your filter..."
           class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
-        <button id="filterButton" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded">
+        <button id="filterButton">
           <span class="button-text">Filter</span>
           <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;"
             alt="Loading..." />
@@ -303,7 +403,7 @@ $(document).ready(function() {
 </div>
 
 <div class="flex justify-center py-8">
-  <button id="backToTop" class="bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded">
+  <button id="backToTop">
     <span class="button-text">Back to top</span>
   </button>
 </div>
