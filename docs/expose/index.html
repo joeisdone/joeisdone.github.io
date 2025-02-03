@@ -950,16 +950,30 @@ labelloc="t";
         </TR>
       </TABLE>>`;
       
-      // Style based on taxpayer funds
+      // Style based on taxpayer funds AND user search
       let nodeStyle = '';
-      if (c.govt_amt > 10000000) {
-        nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
-      } else if (c.govt_amt > 1000000) {
-        nodeStyle = 'fillcolor="#FEF3C7" color="#D97706"';
-      } else if (c.govt_amt > 0) {
-        nodeStyle = 'fillcolor="#F3F4F6" color="#4B5563"';
+      if (activeEINs.includes(ein)) {
+        // Highlight user-searched nodes with a thicker border and different color
+        if (c.govt_amt > 10000000) {
+          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626" penwidth=3';
+        } else if (c.govt_amt > 1000000) {
+          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706" penwidth=3';
+        } else if (c.govt_amt > 0) {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
+        } else {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
+        }
       } else {
-        nodeStyle = 'fillcolor="#F3F4F6" color="#94A3B8"';
+        // Normal styling for other nodes
+        if (c.govt_amt > 10000000) {
+          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
+        } else if (c.govt_amt > 1000000) {
+          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706"';
+        } else if (c.govt_amt > 0) {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#4B5563"';
+        } else {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#94A3B8"';
+        }
       }
 
       dot += `  "${ein}" [${nodeStyle}, label=${label}];\n`;
