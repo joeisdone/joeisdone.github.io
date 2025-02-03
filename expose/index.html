@@ -191,7 +191,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         // remove dashes
         let v = e.replace(/[-\s]/g, '');
         if (/^\d{9}$/.test(v)) {
-          // We'll add it if it’s in our CSV or not - user might want it anyway
+          // We'll add it if it's in our CSV or not - user might want it anyway
           if (!activeEINs.includes(v)) {
             activeEINs.push(v);
           }
@@ -585,37 +585,154 @@ title: Charity graph - multi-root BFS & taxpayer totals
     let dot = `digraph G {
 // Graph settings
 rankdir=LR;
+nodesep=0.5;  // Increase horizontal spacing between nodes
+ranksep=0.5;  // Increase vertical spacing between ranks
 node [
-  shape=ellipse, 
-  style=filled, 
-  fillcolor=lightblue, 
-  color=black,
+  shape=box,
+  style="filled",
+  fillcolor="#F3F4F6",
+  color="#94A3B8",
   fontname="SF Pro, Helvetica, sans-serif",
-  fontsize=14
+  fontsize=14,
+  margin=0.1,
+  penwidth=1
 ];
-edge [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
-graph [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
-label="Charity Graph (multi-root BFS)";
+edge [
+  fontname="SF Pro, Helvetica, sans-serif",
+  color="#94A3B8",
+  penwidth=1.5,
+  fontsize=11,
+  decorate=true,
+  labelangle=0,
+  labeldistance=2
+];
+graph [
+  fontname="SF Pro, Helvetica, sans-serif",
+  splines=polyline
+];
 labelloc="t";
 `;
 
     // Add nodes
     for (const ein of nodeSet) {
       const c = filteredCharities[ein];
+      
+      // First escape special characters
+      let escapedName = c.name.replace(/[&<>"']/g, char => {
+        switch (char) {
+          case '&': return '&amp;';
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '"': return '&quot;';
+          case "'": return '&apos;';
+          default: return char;
+        }
+      });
+
+      // Highlight keywords in the name
+      if (activeKeywords.length > 0) {
+        activeKeywords.forEach(kw => {
+          // Case-insensitive search, preserve leading and trailing whitespace
+          const regex = new RegExp(`(\\s*)(${kw})`, 'gi');
+          escapedName = escapedName.replace(regex, '$1<B><FONT COLOR="#2563EB">$2</FONT></B> ').trim();
+        });
+      }
+      
       const receipts = formatNumber(c.receipt_amt);
       const govt = formatNumber(c.govt_amt);
       const contrib = formatNumber(c.contrib_amt);
       const grants = formatNumber(c.grant_amt);
-      const taxpayerAlert = c.govt_amt > 10000000 ? '\\n🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨' : '';
-      const label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}${taxpayerAlert}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
-      const fillColor = c.govt_amt > 1000000 ? "#FFAD99" : "lightblue";
-      dot += `  "${ein}" [label="${label}", style=filled, fillcolor="${fillColor}"];\n`;
+      
+      // Enhanced table formatting
+      const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" cellpadding="2">
+        ${c.govt_amt > 10000000 ? `<tr>
+          <td colspan="4">
+          <table border="0" cellspacing="0" cellpadding="5"><TR><TD COLSPAN="2" BGCOLOR="#DC2626">
+          <FONT COLOR="white"><B>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</B></FONT>
+          </TD></TR></table></td></tr>` : ''}
+        <tr>
+          <td colspan="4">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR><TD COLSPAN="4" HEIGHT="2"></TD></TR>
+          </table>
+          </td>
+        </tr>
+        <TR><TD COLSPAN="3" align="left"><b>${escapedName}</b></TD><td>&nbsp;</td></TR>
+        <TR>
+          <TD colspan="3" align="left">EIN: ${ein.slice(0,2)}-${ein.slice(2)}</TD>
+          <td>&nbsp;</td>
+        </TR>
+        <tr>
+          <td colspan="4">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR><TD COLSPAN="2" BGCOLOR="#000000" HEIGHT="2"></TD></TR>
+          </table>
+          </td>
+        </tr>
+        <TR>
+          <TD align="left">Gross receipts</TD>
+          <td>&nbsp;</td>
+          <TD align="right">$${receipts}</TD>
+          <td>&nbsp;</td>
+        </TR>
+        <TR>
+          <TD align="left">Contributions</TD>
+          <td>&nbsp;</td>
+          <TD align="right">$${contrib}</TD>
+          <td>&nbsp;</td>
+        </TR>
+        <TR>
+          <TD align="left">Grants given</TD>
+          <td>&nbsp;</td>
+          <TD align="right">$${grants}</TD>
+          <td>&nbsp;</td>
+        </TR>
+        <tr>
+          <td colspan="3">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR>
+              <TD align="left"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="left">Taxpayer funds</B></FONT></TD>
+              <TD align="right"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="right">$${govt}</B></FONT></TD>
+            </TR>
+          </table>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+      </TABLE>>`;
+      
+      // Style based on taxpayer funds AND user search
+      let nodeStyle = '';
+      if (activeEINs.includes(ein)) {
+        // Highlight user-searched nodes with a thicker border and different color
+        if (c.govt_amt > 10000000) {
+          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626" penwidth=3';
+        } else if (c.govt_amt > 1000000) {
+          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706" penwidth=3';
+        } else if (c.govt_amt > 0) {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
+        } else {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
+        }
+      } else {
+        // Normal styling for other nodes
+        if (c.govt_amt > 10000000) {
+          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
+        } else if (c.govt_amt > 1000000) {
+          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706"';
+        } else if (c.govt_amt > 0) {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#4B5563"';
+        } else {
+          nodeStyle = 'fillcolor="#F3F4F6" color="#94A3B8"';
+        }
+      }
+
+      dot += `  "${ein}" [${nodeStyle}, label=${label}];\n`;
     }
 
-    // Add edges
+    // Add edges - explicitly set color for each edge
     for (const e of edgeList) {
       const amt = formatNumber(e.amt);
-      dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}"];\n`;
+      dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}", color="#94A3B8"];\n`;
     }
 
     dot += `}\n`;
@@ -654,9 +771,13 @@ labelloc="t";
   function renderActiveEINs() {
     const $c = $('#activeEINs');
     $c.empty();
+    
+    // Show/hide Clear EINs button based on activeEINs length
+    $('#clearEINsBtn').toggle(activeEINs.length > 0);
+    
     activeEINs.forEach(ein => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
-      const $text = $('<span></span>').text(ein);
+      const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer">{% include close.html %}</span>').attr('data-ein', ein);
       $rm.on('click', function() {
         const rem = $(this).attr('data-ein');
@@ -687,6 +808,10 @@ labelloc="t";
   function renderActiveKeywords() {
     const $c = $('#activeFilters');
     $c.empty();
+    
+    // Show/hide Clear keywords button based on activeKeywords length
+    $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
+    
     activeKeywords.forEach(kw => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
