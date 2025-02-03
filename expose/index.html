@@ -616,7 +616,8 @@ labelloc="t";
     for (const ein of nodeSet) {
       const c = filteredCharities[ein];
       
-      const escapedName = c.name.replace(/[&<>"']/g, char => {
+      // First escape special characters
+      let escapedName = c.name.replace(/[&<>"']/g, char => {
         switch (char) {
           case '&': return '&amp;';
           case '<': return '&lt;';
@@ -626,15 +627,24 @@ labelloc="t";
           default: return char;
         }
       });
+
+      // Highlight keywords in the name
+      if (activeKeywords.length > 0) {
+        activeKeywords.forEach(kw => {
+          // Case-insensitive search, preserve leading and trailing whitespace
+          const regex = new RegExp(`(\\s*)(${kw})`, 'gi');
+          escapedName = escapedName.replace(regex, '$1<B><FONT COLOR="#2563EB">$2</FONT></B> ').trim();
+        });
+      }
       
       const receipts = formatNumber(c.receipt_amt);
       const govt = formatNumber(c.govt_amt);
       const contrib = formatNumber(c.contrib_amt);
       const grants = formatNumber(c.grant_amt);
       
-      // Enhanced table formatting
+      // Enhanced table formatting - removed outer <B> tags
       const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="3" CELLPADDING="4">
-        <TR><TD COLSPAN="2"><B>${escapedName}</B></TD></TR>
+        <TR><TD COLSPAN="2">${escapedName}</TD></TR>
         <TR>
           <TD ALIGN="LEFT"><FONT POINT-SIZE="12">EIN:</FONT></TD>
           <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">${ein}</FONT></TD>
