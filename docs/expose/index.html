@@ -947,6 +947,10 @@ labelloc="t";
           </td>
         </tr>
         <TR><TD COLSPAN="3" align="left"><b>${escapedName}</b></TD><td>&nbsp;</td></TR>
+        <TR>
+          <TD colspan="3" align="left">EIN: ${ein.slice(0,2)}-${ein.slice(2)}</TD>
+          <td>&nbsp;</td>
+        </TR>
         <tr>
           <td colspan="4">
           <table border="0" cellspacing="0" cellpadding="0">
@@ -954,12 +958,6 @@ labelloc="t";
           </table>
           </td>
         </tr>
-        <TR>
-          <TD align="left">EIN</TD>
-          <td>&nbsp;</td>
-          <TD align="right">${ein.slice(0,2)}-${ein.slice(2)}</TD>
-          <td>&nbsp;</td>
-        </TR>
         <TR>
           <TD align="left">Gross receipts</TD>
           <td>&nbsp;</td>
@@ -982,8 +980,8 @@ labelloc="t";
           <td colspan="3">
           <table border="0" cellspacing="0" cellpadding="0">
             <TR>
-              <TD align="left" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}><B align="left">Taxpayer funds</B></TD>
-              <TD align="right" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}><B align="right">$${govt}</B></TD>
+              <TD align="left"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="left">Taxpayer funds</B></FONT></TD>
+              <TD align="right"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="right">$${govt}</B></FONT></TD>
             </TR>
           </table>
           </td>
@@ -1062,9 +1060,13 @@ labelloc="t";
   function renderActiveEINs() {
     const $c = $('#activeEINs');
     $c.empty();
+    
+    // Show/hide Clear EINs button based on activeEINs length
+    $('#clearEINsBtn').toggle(activeEINs.length > 0);
+    
     activeEINs.forEach(ein => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
-      const $text = $('<span></span>').text(ein);
+      const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.53-3.53a.75.75 0 0 0-1.06 1.06L10.94 12l-2.47 2.47a.75.75 0 1 0 1.06 1.06L12 13.06l2.47 2.47a.75.75 0 1 0 1.06-1.06L13.06 12l2.47-2.47a.75.75 0 0 0-1.06-1.06L12 10.94 9.53 8.47Z" clip-rule="evenodd"/></svg></span>').attr('data-ein', ein);
       $rm.on('click', function() {
         const rem = $(this).attr('data-ein');
@@ -1095,6 +1097,10 @@ labelloc="t";
   function renderActiveKeywords() {
     const $c = $('#activeFilters');
     $c.empty();
+    
+    // Show/hide Clear keywords button based on activeKeywords length
+    $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
+    
     activeKeywords.forEach(kw => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
