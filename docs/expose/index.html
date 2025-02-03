@@ -936,20 +936,20 @@ labelloc="t";
       // Enhanced table formatting
       const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" cellpadding="2">
         ${c.govt_amt > 10000000 ? `<tr>
-          <td colspan="2">
+          <td colspan="4">
           <table border="0" cellspacing="0" cellpadding="5"><TR><TD COLSPAN="2" BGCOLOR="#DC2626">
           <FONT COLOR="white"><B>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</B></FONT>
           </TD></TR></table></td></tr>` : ''}
         <tr>
-          <td colspan="2">
+          <td colspan="4">
           <table border="0" cellspacing="0" cellpadding="0">
-            <TR><TD COLSPAN="2" HEIGHT="2"></TD></TR>
+            <TR><TD COLSPAN="4" HEIGHT="2"></TD></TR>
           </table>
           </td>
         </tr>
-        <TR><TD COLSPAN="2" align="left"><b>${escapedName}</b></TD></TR>
+        <TR><TD COLSPAN="3" align="left"><b>${escapedName}</b></TD><td>&nbsp;</td></TR>
         <tr>
-          <td colspan="2">
+          <td colspan="4">
           <table border="0" cellspacing="0" cellpadding="0">
             <TR><TD COLSPAN="2" BGCOLOR="#000000" HEIGHT="2"></TD></TR>
           </table>
@@ -957,22 +957,30 @@ labelloc="t";
         </tr>
         <TR>
           <TD align="left">EIN</TD>
+          <td>&nbsp;</td>
           <TD align="right">${ein.slice(0,2)}-${ein.slice(2)}</TD>
+          <td>&nbsp;</td>
         </TR>
         <TR>
           <TD align="left">Gross receipts</TD>
+          <td>&nbsp;</td>
           <TD align="right">$${receipts}</TD>
+          <td>&nbsp;</td>
         </TR>
         <TR>
           <TD align="left">Contributions</TD>
+          <td>&nbsp;</td>
           <TD align="right">$${contrib}</TD>
+          <td>&nbsp;</td>
         </TR>
         <TR>
           <TD align="left">Grants given</TD>
+          <td>&nbsp;</td>
           <TD align="right">$${grants}</TD>
+          <td>&nbsp;</td>
         </TR>
         <tr>
-          <td colspan="2">
+          <td colspan="3">
           <table border="0" cellspacing="0" cellpadding="0">
             <TR>
               <TD align="left" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}><B align="left">Taxpayer funds</B></TD>
@@ -980,6 +988,7 @@ labelloc="t";
             </TR>
           </table>
           </td>
+          <td>&nbsp;</td>
         </tr>
       </TABLE>>`;
       
