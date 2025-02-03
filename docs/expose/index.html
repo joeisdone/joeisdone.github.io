@@ -41,16 +41,16 @@ $(document).ready(function() {
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Joe Is Done" />
 <meta property="og:description" content="Joe Is Done" />
-<link rel="canonical" href="https://datarepublican.com/expose/" />
-<meta property="og:url" content="https://datarepublican.com/expose/" />
+<link rel="canonical" href="http://localhost:4000/expose/" />
+<meta property="og:url" content="http://localhost:4000/expose/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/default.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/default.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/default.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/default.png" />
 <meta property="twitter:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Joe Is Done","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"https://datarepublican.com/assets/images/default.png","url":"https://datarepublican.com/expose/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Joe Is Done","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"http://localhost:4000/assets/images/default.png","url":"http://localhost:4000/expose/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -480,7 +480,7 @@ $(document).ready(function() {
         // remove dashes
         let v = e.replace(/[-\s]/g, '');
         if (/^\d{9}$/.test(v)) {
-          // We'll add it if it’s in our CSV or not - user might want it anyway
+          // We'll add it if it's in our CSV or not - user might want it anyway
           if (!activeEINs.includes(v)) {
             activeEINs.push(v);
           }
@@ -875,15 +875,28 @@ $(document).ready(function() {
 // Graph settings
 rankdir=LR;
 node [
-  shape=ellipse, 
-  style=filled, 
-  fillcolor=lightblue, 
-  color=black,
+  shape=box,
+  style="rounded,filled",
+  fillcolor="#F3F4F6",
+  color="#94A3B8",
   fontname="SF Pro, Helvetica, sans-serif",
-  fontsize=14
+  fontsize=14,
+  margin=0.4,
+  penwidth=1.5
 ];
-edge [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
-graph [fontname="Libre Franklin, SF Pro, Helvetica, sans-serif"];
+edge [
+  fontname="SF Pro, Helvetica, sans-serif",
+  color="#94A3B8",
+  penwidth=1.5,
+  fontsize=11,
+  decorate=true,
+  labelangle=0,
+  labeldistance=2
+];
+graph [
+  fontname="SF Pro, Helvetica, sans-serif",
+  splines=polyline
+];
 label="Charity Graph (multi-root BFS)";
 labelloc="t";
 `;
@@ -891,20 +904,71 @@ labelloc="t";
     // Add nodes
     for (const ein of nodeSet) {
       const c = filteredCharities[ein];
+      
+      const escapedName = c.name.replace(/[&<>"']/g, char => {
+        switch (char) {
+          case '&': return '&amp;';
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '"': return '&quot;';
+          case "'": return '&apos;';
+          default: return char;
+        }
+      });
+      
       const receipts = formatNumber(c.receipt_amt);
       const govt = formatNumber(c.govt_amt);
       const contrib = formatNumber(c.contrib_amt);
       const grants = formatNumber(c.grant_amt);
-      const taxpayerAlert = c.govt_amt > 10000000 ? '\\n🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨' : '';
-      const label = `${c.name}\\nEIN: ${ein}\\nGross Receipts: $${receipts}\\nTaxpayer Funds Received: $${govt}${taxpayerAlert}\\nContributions: $${contrib}\\nGrants Given: $${grants}`;
-      const fillColor = c.govt_amt > 1000000 ? "#FFAD99" : "lightblue";
-      dot += `  "${ein}" [label="${label}", style=filled, fillcolor="${fillColor}"];\n`;
+      
+      // Enhanced table formatting
+      const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="3" CELLPADDING="4">
+        <TR><TD COLSPAN="2"><B>${escapedName}</B></TD></TR>
+        <TR>
+          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">EIN:</FONT></TD>
+          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">${ein}</FONT></TD>
+        </TR>
+        <TR>
+          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Gross Receipts:</FONT></TD>
+          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${receipts}</FONT></TD>
+        </TR>
+        <TR>
+          <TD ALIGN="LEFT" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}>
+            <FONT POINT-SIZE="12"><B>Taxpayer Funds:</B></FONT>
+          </TD>
+          <TD ALIGN="RIGHT" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}>
+            <FONT POINT-SIZE="12"><B>$${govt}</B></FONT>
+          </TD>
+        </TR>
+        <TR>
+          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Contributions:</FONT></TD>
+          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${contrib}</FONT></TD>
+        </TR>
+        <TR>
+          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Grants Given:</FONT></TD>
+          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${grants}</FONT></TD>
+        </TR>
+      </TABLE>>`;
+      
+      // Style based on taxpayer funds
+      let nodeStyle = '';
+      if (c.govt_amt > 10000000) {
+        nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
+      } else if (c.govt_amt > 1000000) {
+        nodeStyle = 'fillcolor="#FEF3C7" color="#D97706"';
+      } else if (c.govt_amt > 0) {
+        nodeStyle = 'fillcolor="#F3F4F6" color="#4B5563"';
+      } else {
+        nodeStyle = 'fillcolor="#F3F4F6" color="#94A3B8"';
+      }
+
+      dot += `  "${ein}" [${nodeStyle}, label=${label}];\n`;
     }
 
-    // Add edges
+    // Add edges - explicitly set color for each edge
     for (const e of edgeList) {
       const amt = formatNumber(e.amt);
-      dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}"];\n`;
+      dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}", color="#94A3B8"];\n`;
     }
 
     dot += `}\n`;
