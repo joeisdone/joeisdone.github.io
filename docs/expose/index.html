@@ -874,15 +874,17 @@ $(document).ready(function() {
     let dot = `digraph G {
 // Graph settings
 rankdir=LR;
+nodesep=0.5;  // Increase horizontal spacing between nodes
+ranksep=0.5;  // Increase vertical spacing between ranks
 node [
   shape=box,
-  style="rounded,filled",
+  style="filled",
   fillcolor="#F3F4F6",
   color="#94A3B8",
   fontname="SF Pro, Helvetica, sans-serif",
   fontsize=14,
-  margin=0.2,
-  penwidth=1.5
+  margin=0.1,
+  penwidth=1
 ];
 edge [
   fontname="SF Pro, Helvetica, sans-serif",
@@ -931,33 +933,54 @@ labelloc="t";
       const contrib = formatNumber(c.contrib_amt);
       const grants = formatNumber(c.grant_amt);
       
-      // Enhanced table formatting - removed outer <B> tags
-      const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="3" CELLPADDING="2">
-        <TR><TD COLSPAN="2">${escapedName}</TD></TR>
+      // Enhanced table formatting
+      const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" cellpadding="2">
+        ${c.govt_amt > 10000000 ? `<tr>
+          <td colspan="2">
+          <table border="0" cellspacing="0" cellpadding="5"><TR><TD COLSPAN="2" BGCOLOR="#DC2626">
+          <FONT COLOR="white"><B>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</B></FONT>
+          </TD></TR></table></td></tr>` : ''}
+        <tr>
+          <td colspan="2">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR><TD COLSPAN="2" HEIGHT="2"></TD></TR>
+          </table>
+          </td>
+        </tr>
+        <TR><TD COLSPAN="2" align="left"><b>${escapedName}</b></TD></TR>
+        <tr>
+          <td colspan="2">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR><TD COLSPAN="2" BGCOLOR="#000000" HEIGHT="2"></TD></TR>
+          </table>
+          </td>
+        </tr>
         <TR>
-          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">EIN:</FONT></TD>
-          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">${ein}</FONT></TD>
+          <TD align="left">EIN</TD>
+          <TD align="right">${ein.slice(0,2)}-${ein.slice(2)}</TD>
         </TR>
         <TR>
-          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Gross Receipts:</FONT></TD>
-          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${receipts}</FONT></TD>
+          <TD align="left">Gross receipts</TD>
+          <TD align="right">$${receipts}</TD>
         </TR>
         <TR>
-          <TD ALIGN="LEFT" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}>
-            <FONT POINT-SIZE="12"><B>Taxpayer Funds:</B></FONT>
-          </TD>
-          <TD ALIGN="RIGHT" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}>
-            <FONT POINT-SIZE="12"><B>$${govt}</B></FONT>
-          </TD>
+          <TD align="left">Contributions</TD>
+          <TD align="right">$${contrib}</TD>
         </TR>
         <TR>
-          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Contributions:</FONT></TD>
-          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${contrib}</FONT></TD>
+          <TD align="left">Grants given</TD>
+          <TD align="right">$${grants}</TD>
         </TR>
-        <TR>
-          <TD ALIGN="LEFT"><FONT POINT-SIZE="12">Grants Given:</FONT></TD>
-          <TD ALIGN="RIGHT"><FONT POINT-SIZE="12">$${grants}</FONT></TD>
-        </TR>
+        <tr>
+          <td colspan="2">
+          <table border="0" cellspacing="0" cellpadding="0">
+            <TR>
+              <TD align="left" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}><B align="left">Taxpayer funds</B></TD>
+              <TD align="right" ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : ''}><B align="right">$${govt}</B></TD>
+            </TR>
+          </table>
+          </td>
+        </tr>
       </TABLE>>`;
       
       // Style based on taxpayer funds AND user search
