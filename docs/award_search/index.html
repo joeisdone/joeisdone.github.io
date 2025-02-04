@@ -56,7 +56,7 @@ $(document).ready(function() {
 </head>
 
 <body class="m-0 p-0 flex flex-col md:flex-row">
-  <header class="md:flex-[0_0_300px] flex flex-col gap-4 bg-navy md:h-screen md:overflow-auto md:mx-auto p-2 md:pt-4 text-white">
+  <header class="md:fixed md:flex-[0_0_300px] flex flex-col gap-4 bg-navy md:h-screen md:overflow-auto md:mx-auto p-2 md:pt-4 text-white">
   <div class="flex-[0_0_auto] flex md:flex-col gap-2 items-center">
     
     <div class="flex-1">
@@ -128,11 +128,11 @@ $(document).ready(function() {
 </a> 
     <button 
       id="election-results-dropdown-button"
-      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 border-transparent hover:border-white/75 hover:bg-white/10 relative group"
+      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 mr-0 border-transparent hover:border-white/75 hover:bg-white/10 relative group"
       
     >
-      <strong class="text-sm">Voter turnout analysis</strong>
-      <span class="opacity-70 text-[13px]">2024 vs. previous elections</span>
+      <strong class="text-base md:text-sm">Voter turnout analysis</strong>
+      <span class="opacity-70 text-sm md:text-[13px]">2024 vs. previous elections</span>
       <span class="absolute top-[calc(50%-.625rem)] right-2 size-5 opacity-50 group-hover:opacity-100 transition-transform rotate-90">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
       </span>
@@ -328,8 +328,8 @@ $(document).ready(function() {
 
 
 
-  <div class="@container flex-1">
-    <main class="p-4 xl:p-6">
+  <div class="md:ml-[275px] flex-1">
+    <main class="@container p-4 xl:p-6">
       <script src="jquery.min.js"></script>
 <script src="jszip.min.js"></script>
 <script src="papaparse.min.js"></script>

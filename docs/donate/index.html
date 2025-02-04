@@ -56,7 +56,7 @@ $(document).ready(function() {
 </head>
 
 <body class="m-0 p-0 flex flex-col md:flex-row">
-  <header class="md:flex-[0_0_300px] flex flex-col gap-4 bg-navy md:h-screen md:overflow-auto md:mx-auto p-2 md:pt-4 text-white">
+  <header class="md:fixed md:flex-[0_0_300px] flex flex-col gap-4 bg-navy md:h-screen md:overflow-auto md:mx-auto p-2 md:pt-4 text-white">
   <div class="flex-[0_0_auto] flex md:flex-col gap-2 items-center">
     
     <div class="flex-1">
@@ -128,11 +128,11 @@ $(document).ready(function() {
 </a> 
     <button 
       id="election-results-dropdown-button"
-      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 border-transparent hover:border-white/75 hover:bg-white/10 relative group"
+      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 mr-0 border-transparent hover:border-white/75 hover:bg-white/10 relative group"
       
     >
-      <strong class="text-sm">Voter turnout analysis</strong>
-      <span class="opacity-70 text-[13px]">2024 vs. previous elections</span>
+      <strong class="text-base md:text-sm">Voter turnout analysis</strong>
+      <span class="opacity-70 text-sm md:text-[13px]">2024 vs. previous elections</span>
       <span class="absolute top-[calc(50%-.625rem)] right-2 size-5 opacity-50 group-hover:opacity-100 transition-transform rotate-90">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
       </span>
@@ -328,48 +328,54 @@ $(document).ready(function() {
 
 
 
-  <div class="@container flex-1">
-    <main class="p-4 xl:p-6">
-      <div class="max-w-2xl mx-auto">
+  <div class="md:ml-[275px] flex-1">
+    <main class="@container p-4 xl:p-6">
+      <div class="max-w-3xl mx-auto">
   <p class="text-sm text-gray-500 pt-8">Donate</p>
 
-  <svg class="opacity-80 group-hover:opacity-100 relative left-1" xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M14.563 13.58c.037-.32-.134-.648-.455-.678l-.018-.001-4.893-.388a4.195 4.195 0 0 0-1.597.182l-3.902 1.237a1 1 0 0 0-.698.953v5.135a1 1 0 0 0 1 1h.838l.013.004a27.392 27.392 0 0 0 2.02.532c1.22.27 2.854.54 4.228.41 1.47-.14 3.289-.83 4.859-1.542a48.75 48.75 0 0 0 3.894-2.005A2.242 2.242 0 0 0 21 16.472c0-1.546-1.443-1.916-3-1.472l-2.5.75c-1 1.25-1.55 1.566-3.125 1.903l-1.258.269a.715.715 0 0 1-.3-1.398l1.229-.263c1.356-.29 2.367-1.367 2.517-2.681ZM18 7.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0ZM12.073 3.127a4.999 4.999 0 0 0-2.346 5.866 3.5 3.5 0 1 1 2.346-5.865Z"/></svg>
-  
 <h1 class="mt-0">Support our work</h1>
 <div class="md:float-right mb-2 md:ml-4">
-<img src="/assets/images/logo-detailed.png" alt="DataRepublican" width="309.5px" class="rounded">
+<img src="/assets/images/avatar.jpg" alt="DataRepublican" width="200" class="rounded">
 </div>
 <p>
-  I'm <a href="https://x.com/datarepublican" target="_blank" class="text-blue-500"></a>DataRepublican</a>, working hard to bring you the most transparent and insightful data on government spending and contracts.
+  I'm <a href="https://x.com/datarepublican" target="_blank" class="text-blue">@DataRepublican</a>, working hard to bring you the most transparent and insightful data on government spending and contracts.
   </p>
   <p>
     While I'm grateful for the support from those who appreciate my work, I'm just a small part of a larger movement towards accountability.
   </p>
   <p>
-    If you find value in what I do, consider leaving a tip. It helps me continue this journey, ensuring that I can keep providing these insights independently. Every little bit supports the mission, and I truly appreciate your consideration.
+    If you find value in what I do, would you consider supporting financially? It helps me continue this journey, ensuring that I can keep providing these insights independently. Every little bit supports the mission, and I truly appreciate your consideration.
   </p>
   <p>
     Thank you for being part of this with me.
   </p>
 
-  <h3 class="border-b border-gray-200 pb-2 mb-4">Send a one-time tip</h3>
+  <h3 class="border-b border-gray-300 pb-2 mb-4">Send a one-time donation</h3>
 <p class="mb-12 leading-9">
-  <a href="https://buy.stripe.com/eVacOd7Rr78l8JW4gh" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $10</a>
-  <a href="https://buy.stripe.com/00gdSh8VvdwJ0dq7su" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $25</a>
-  <a href="https://buy.stripe.com/cN2cOdefPeANd0c8wz" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $50</a>
-  <a href="https://buy.stripe.com/eVa6pP6Nn64h0dqeUY" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $100</a>
-  <a href="https://donate.stripe.com/3cs5lL8Vv9gtbW8aEE" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Custom tip amount</a>
+  <a href="https://buy.stripe.com/eVacOd7Rr78l8JW4gh" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $10</a>
+  <a href="https://buy.stripe.com/00gdSh8VvdwJ0dq7su" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $25</a>
+  <a href="https://buy.stripe.com/cN2cOdefPeANd0c8wz" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $50</a>
+  <a href="https://buy.stripe.com/eVa6pP6Nn64h0dqeUY" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $100</a>
+  <a href="https://buy.stripe.com/5kA4hH2x73W92ly3cn" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $250</a>
+  <a href="https://buy.stripe.com/aEU8xX0oZ2S55xK4gs" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $500</a>
+  <a href="https://buy.stripe.com/6oE5lL1t3fER1hucMZ" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $1000</a>
+  <a href="https://donate.stripe.com/3cs5lL8Vv9gtbW8aEE" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Custom amount</a>
 </p>
   
 
-  <h3 class="border-b border-gray-200 mt-8 pb-2 mb-4">Set up a recurring tip (monthly)</h3>
+  <h3 class="border-b border-gray-300 mt-8 pb-2 mb-4">Set up a recurring donation (monthly)</h3>
   <p class="leading-9">
-  <a href="https://buy.stripe.com/eVa9C18VveAN0dqaEJ" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $10/mo</a>
-  <a href="https://buy.stripe.com/4gw29z8Vv0JX6BOcMS" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $25/mo</a>
-  <a href="https://buy.stripe.com/dR629zfjTboBd0caEL" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $50/mo</a>
-  <a href="https://buy.stripe.com/8wMg0pdbL1O1gco6ow" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $100/mo</a>
-  <a href="https://buy.stripe.com/bIY9C18VvboB2ly28h" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $250/mo</a>
-  <a href="https://buy.stripe.com/dR601rfjTfERd0c7sC" target="_blank" class="bg-slate-900 p-2 text-sm font-semibold text-white whitespace-nowrap rounded no-underline text-center">Send $500/mo</a>
+  <a href="https://buy.stripe.com/eVa9C18VveAN0dqaEJ" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $10/mo</a>
+  <a href="https://buy.stripe.com/4gw29z8Vv0JX6BOcMS" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $25/mo</a>
+  <a href="https://buy.stripe.com/dR629zfjTboBd0caEL" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $50/mo</a>
+  <a href="https://buy.stripe.com/8wMg0pdbL1O1gco6ow" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $100/mo</a>
+  <a href="https://buy.stripe.com/bIY9C18VvboB2ly28h" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $250/mo</a>
+  <a href="https://buy.stripe.com/dR601rfjTfERd0c7sC" target="_blank" class="border border-green bg-white text-sm font-medium text-green px-2 py-1 rounded-full hover:bg-green hover:text-white whitespace-nowrap no-underline text-center">Send $500/mo</a>
+</p>
+
+
+<p class="text-[13px] text-gray-500 mt-12 pt-8 border-t border-gray-300">
+  All payments are securely processed by Stripe. <em>Donations are not tax-deductible.</em>
 </p>
 
 </div>
