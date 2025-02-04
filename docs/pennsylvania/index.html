@@ -589,7 +589,7 @@ const greenGradient = ["#007B10", "#008C12",
 
 
 		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
-		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+		var pctGapColor = pctPctGap < 0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 		var gap2020Desc = "2020 D-R ratio: " + pctToString((demEarly2020Total + 0.0) / (early2020Total + 0.0)) + " D - " +
 			pctToString((repEarly2020Total + 0.0) / (early2020Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
@@ -694,7 +694,7 @@ const greenGradient = ["#007B10", "#008C12",
 
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
 			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
-			var pctDescColor = gap <= 0.0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+			var pctDescColor = gap <= 0.0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 
 			// raw votes 
 			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
@@ -834,7 +834,7 @@ const greenGradient = ["#007B10", "#008C12",
   alt="info" class="lucide-icon -mt-1 opacity-50 size-5" />
   </div>
   <div class="flex-1">
-    <p><strong>Oct. 26 2024 update:</strong> This map is updating for
+    <p class="mb-0"><strong>Oct. 26 2024 update:</strong> This map is updating for
       2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
           rel="noopener noreferrer">@DataRepublican</a> in case the site goes down.</strong></p>
   </div>

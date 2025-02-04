@@ -587,7 +587,7 @@ const greenGradient = ["#007B10", "#008C12",
 			"<div class='border-t border-gray-200 pt-2 mt-2 text-xs text-opacity-75'>Estimated by proportional assignment of NPAs by county R/D share</div></div>";
 
 		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
-		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+		var pctGapColor = pctPctGap < 0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 		var gap2016Desc = "2016 D-R ratio: " + pctToString((demEarly2016Total + 0.0) / (early2016Total + 0.0)) + " D - " +
 			pctToString((repEarly2016Total + 0.0) / (early2016Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
@@ -848,8 +848,8 @@ const greenGradient = ["#007B10", "#008C12",
 </script>
 
 <h1>Florida early voting statistics</h1>
-<p class="text-sm">Auto-updated: <span id="timestamp"></span></p>
-<p class="text-sm mb-4">Data updates every 5 minutes (computer uptime permitting). <a
+<p class="hidden text-sm">Auto-updated: <span id="timestamp"></span></p>
+<p class="hidden text-sm mb-4">Data updates every 5 minutes (computer uptime permitting). <a
 		href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
 		feed directly</a> if you have caching issues.
 </p>
@@ -860,7 +860,7 @@ const greenGradient = ["#007B10", "#008C12",
   alt="info" class="lucide-icon -mt-1 opacity-50 size-5" />
   </div>
   <div class="flex-1">
-    <p><strong>Oct. 26 2024 update:</strong> This map is updating for
+    <p class="mb-0"><strong>Oct. 26 2024 update:</strong> This map is updating for
       2024. <strong>Follow <a href="https://twitter.com/DataRepublican" target="_blank"
           rel="noopener noreferrer">@DataRepublican</a> in case the site goes down.</strong></p>
   </div>

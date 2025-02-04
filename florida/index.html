@@ -248,7 +248,7 @@ redirect_from: /florida/has
 			"<div class='border-t border-gray-200 pt-2 mt-2 text-xs text-opacity-75'>Estimated by proportional assignment of NPAs by county R/D share</div></div>";
 
 		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
-		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+		var pctGapColor = pctPctGap < 0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 		var gap2016Desc = "2016 D-R ratio: " + pctToString((demEarly2016Total + 0.0) / (early2016Total + 0.0)) + " D - " +
 			pctToString((repEarly2016Total + 0.0) / (early2016Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
@@ -509,8 +509,8 @@ redirect_from: /florida/has
 </script>
 
 <h1>Florida early voting statistics</h1>
-<p class="text-sm">Auto-updated: <span id="timestamp"></span></p>
-<p class="text-sm mb-4">Data updates every 5 minutes (computer uptime permitting). <a
+<p class="hidden text-sm">Auto-updated: <span id="timestamp"></span></p>
+<p class="hidden text-sm mb-4">Data updates every 5 minutes (computer uptime permitting). <a
 		href="https://raw.githubusercontent.com/joeisdone/joeisdone.github.io/master/json/florida.json">Try refreshing the
 		feed directly</a> if you have caching issues.
 </p>
