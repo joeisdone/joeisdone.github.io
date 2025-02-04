@@ -11,12 +11,11 @@
 <body class="m-0 p-0 flex flex-col md:flex-row">
   {% include header.html %}
 
-  <main class="">
-    {{ content }}
-  </main>
-
-  {% include footer.html %}
-  
+  <div class="@container flex-1">
+    <main class="p-4 xl:p-6">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </div>
 </body>
-
 </html>

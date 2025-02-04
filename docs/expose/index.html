@@ -80,7 +80,7 @@ $(document).ready(function() {
     <div class="flex-1 flex flex-col gap-0.5">
     <a 
   href="/expose" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white select-none "
   
 >
   
@@ -92,7 +92,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="#" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -104,7 +104,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="/award_search" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -116,7 +116,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="/nonprofit" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -144,7 +144,7 @@ $(document).ready(function() {
     >
       <a 
   href="/florida" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -160,7 +160,7 @@ $(document).ready(function() {
 </a> 
       <a 
   href="/northcarolina" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -176,7 +176,7 @@ $(document).ready(function() {
 </a> 
       <a 
   href="/pennsylvania" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -196,7 +196,7 @@ $(document).ready(function() {
   <div class="flex flex-col gap-0.5">
     <a 
   href="/donate" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white !border-green bg-green/20 hover:bg-green hover:text-navy relative [&_.right-icon]:text-green"
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none !border-green bg-green/20 hover:bg-green hover:text-navy relative [&_.right-icon]:text-green"
   
 >
   
@@ -210,7 +210,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="https://x.com/datarepublican" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white relative "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none relative "
   target="_blank"
 >
   
@@ -328,8 +328,9 @@ $(document).ready(function() {
 
 
 
-  <main class="">
-    <!-- jQuery for convenience -->
+  <div class="@container flex-1">
+    <main class="p-4 xl:p-6">
+      <!-- jQuery for convenience -->
 <script src="jquery.min.js"></script>
 
 <!-- Viz.js (core + full render) -->
@@ -363,20 +364,25 @@ $(document).ready(function() {
 
 </style>
 
-
-
-<div id="topbar" class="max-w-7xl mx-auto">
+<div id="topbar" class="">
   <div id="explanation">
-    <svg xmlns="http://www.w3.org/2000/svg" class="opacity-80 group-hover:opacity-100 relative left-1" height="24" width="24" viewBox="0 0 100 100"><path d="M17 50c0 5.523 4.477 10 10 10 4.832 0 8.848-3.441 9.781-8h12.22v34h16v7h18V75H65v7H53V52h12v7h18V41H65v7H53V18h12v7h18V7H65v7H49v34H36.78c-.933-4.559-4.949-8-9.781-8-5.523 0-10 4.477-10 10z"/></svg>
-
-    <h2><abbr title="BFS (Breadth-First Search) is a variation of the standard BFS algorithm where the traversal starts from multiple sources (roots) simultaneously instead of a single source.">Multi-root BFS</abbr> & taxpayer totals</h2>
-    <ol class="!list-decimal ml-4 space-y-1 mb-4 text-sm">
-      <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
-      <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
-      <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
-    </ol>
+    <h1 class="mb-1">Charity graph</h1>
+    <p class="opacity-80 mb-0">
+      This graph shows the connections between charities based on the money they receive from each other.
+    </p>
+    <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+    <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+      <div class="p-4 border border-gray-200 rounded-md bg-white">
+        <h3 class="mt-0">How it works</h3>
+        <ol class="!list-decimal space-y-1 text-sm pl-4">
+          <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
+          <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
+          <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
+        </ol>
+      </div>
+    </div>
   </div>
-  <div id="controls" class="mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-4">
+  <div id="controls" class="mt-2 mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-4">
     <!-- EIN Input & Add Button -->
      <div class="relative flex flex-col gap-2 max-w-lg">
       <div class="inline-flex flex-col gap-1">
@@ -430,7 +436,7 @@ $(document).ready(function() {
   </div>
 </div>
 
-<div id="excluded-info" class="max-w-7xl -mx-4 md:mx-auto mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
+<div id="excluded-info" class="mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
 
   <div>
   <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 ">501(c)(3)s <em>not</em> displayed</h3> 
@@ -445,14 +451,14 @@ $(document).ready(function() {
 </div>
 
   <div>
-  <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 text-red-500"><strong>Taxpayer total in subgraph</strong></h3> 
+  <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 text-red"><strong>Taxpayer total in subgraph</strong></h3> 
   <!-- placeholder: <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span> -->
   <span class="text-[15px] md:text-base font-bold" id="taxpayerTotal"></span>
 </div>
 
 </div>
 
-<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white md:min-h-[50vh] flex items-center justify-center">
+<div id="graph-container" class="flex-1 border-y border-gray-200 bg-white md:min-h-[50vh] flex items-center justify-center">
   <div class="">
     <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
@@ -521,6 +527,25 @@ $(document).ready(function() {
 
     // ADDED: Download SVG
     $('#downloadBtn').on('click', downloadSVG); // ADDED
+
+    // Add this near the top of your existing document.ready function
+    $('#howItWorksBtn').on('click', function() {
+        const $list = $('#howItWorksList');
+        const $btn = $(this);
+        
+        if ($list.height() === 0) {
+            // Expand
+            $list.css('height', 'auto');
+            const autoHeight = $list.height();
+            $list.height(0);
+            $list.height(autoHeight);
+            $btn.text('Hide details');
+        } else {
+            // Collapse
+            $list.height(0);
+            $btn.text('How it works');
+        }
+    });
   });
 
   /**
@@ -912,7 +937,7 @@ $(document).ready(function() {
         $('#excluded501').text(excluded501.toLocaleString());
         $('#excludedGrants').text(excludedGrants.toLocaleString());
         $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
+          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
         );
         $('#excluded-info').show();
 
@@ -1125,7 +1150,7 @@ labelloc="t";
     $('#clearEINsBtn').toggle(activeEINs.length > 0);
     
     activeEINs.forEach(ein => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.53-3.53a.75.75 0 0 0-1.06 1.06L10.94 12l-2.47 2.47a.75.75 0 1 0 1.06 1.06L12 13.06l2.47 2.47a.75.75 0 1 0 1.06-1.06L13.06 12l2.47-2.47a.75.75 0 0 0-1.06-1.06L12 10.94 9.53 8.47Z" clip-rule="evenodd"/></svg></span>').attr('data-ein', ein);
       $rm.on('click', function() {
@@ -1162,7 +1187,7 @@ labelloc="t";
     $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
     
     activeKeywords.forEach(kw => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.53-3.53a.75.75 0 0 0-1.06 1.06L10.94 12l-2.47 2.47a.75.75 0 1 0 1.06 1.06L12 13.06l2.47 2.47a.75.75 0 1 0 1.06-1.06L13.06 12l2.47-2.47a.75.75 0 0 0-1.06-1.06L12 10.94 9.53 8.47Z" clip-rule="evenodd"/></svg></span>').attr('data-kw', kw);
       $rm.on('click', function() {
@@ -1200,9 +1225,8 @@ labelloc="t";
     URL.revokeObjectURL(url);
   }
 </script>
-  </main>
-
-  <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
+    </main>
+    <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
   <div class="flex items-center text-black/75 gap-2">
     <span class="text-xs">Hosted by</span>
     
@@ -1238,7 +1262,6 @@ labelloc="t";
       </a>
     </div>
   </footer>
-  
+  </div>
 </body>
-
 </html>

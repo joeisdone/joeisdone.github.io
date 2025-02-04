@@ -57,11 +57,13 @@ title: Nonprofits
   }
 </style>
 
-{% include icon-nonprofit.html %}
-
+<h1 class="mb-1">Charity funding</h1>
+<p class="opacity-80 mb-2">
+  This table shows the total contributions and government grants for each 501(c)(3) charity. Search by EIN or name to see how much taxpayer money each has received.
+</p>
 
 <div id="totals" class="min-h-[44px]">
-  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
     <div>
       <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
         class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
@@ -210,7 +212,7 @@ title: Nonprofits
 
     const count = dataArray.length;
     const totalsText =
-      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span class="text-[15px] md:text-base">${count}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalContribTotal)}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalGovtGrants)}</span></div>
@@ -290,7 +292,7 @@ title: Nonprofits
           // Modified percentage cell with conditional coloring using classes
           const percentCell = $('<td></td>').text(formatPercentage(item.percentTaxpayer));
           if (item.percentTaxpayer >= 0.70) {
-            percentCell.addClass('text-red-500 font-semibold');
+            percentCell.addClass('text-red font-semibold');
           } else if (item.percentTaxpayer >= 0.35) {
             percentCell.addClass('text-orange-500 font-semibold');
           }

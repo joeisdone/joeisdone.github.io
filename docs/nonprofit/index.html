@@ -80,7 +80,7 @@ $(document).ready(function() {
     <div class="flex-1 flex flex-col gap-0.5">
     <a 
   href="/expose" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -92,7 +92,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="#" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -104,7 +104,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="/award_search" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -116,7 +116,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="/nonprofit" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white select-none "
   
 >
   
@@ -144,7 +144,7 @@ $(document).ready(function() {
     >
       <a 
   href="/florida" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -160,7 +160,7 @@ $(document).ready(function() {
 </a> 
       <a 
   href="/northcarolina" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -176,7 +176,7 @@ $(document).ready(function() {
 </a> 
       <a 
   href="/pennsylvania" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 items-center gap-2 text-white/80 hover:text-white select-none "
   
 >
   
@@ -196,7 +196,7 @@ $(document).ready(function() {
   <div class="flex flex-col gap-0.5">
     <a 
   href="/donate" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white !border-green bg-green/20 hover:bg-green hover:text-navy relative [&_.right-icon]:text-green"
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none !border-green bg-green/20 hover:bg-green hover:text-navy relative [&_.right-icon]:text-green"
   
 >
   
@@ -210,7 +210,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="https://x.com/datarepublican" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white relative "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none relative "
   target="_blank"
 >
   
@@ -328,8 +328,9 @@ $(document).ready(function() {
 
 
 
-  <main class="">
-    <style>
+  <div class="@container flex-1">
+    <main class="p-4 xl:p-6">
+      <style>
   #filterContainer {
     margin-bottom: 10px;
   }
@@ -383,16 +384,13 @@ $(document).ready(function() {
   }
 </style>
 
-<svg class="opacity-80 group-hover:opacity-100 relative left-1 top-px" xmlns="http://www.w3.org/2000/svg" x="0px"
-          y="0px" width="24" height="24" viewBox="0 0 30 30">
-          <path fill="#000" fill-rule="evenodd"
-            d="M21.9 10.713h-.3v7.877a2.1 2.1 0 0 1 1.427 1.359l.4 1.2a2.1 2.1 0 0 1-1.992 2.764H2.565a2.1 2.1 0 0 1-1.992-2.764l.4-1.2A2.1 2.1 0 0 1 2.4 18.59v-7.877h-.3a2.1 2.1 0 0 1-2.1-2.1v-.554a2.1 2.1 0 0 1 1.153-1.875l9.9-5.001a2.1 2.1 0 0 1 1.894 0l9.9 5.001A2.1 2.1 0 0 1 24 8.06v.554a2.1 2.1 0 0 1-2.1 2.1Zm-5.1 0h3v7.8h-3v-7.8Zm-9.6 7.8h-3v-7.8h3v7.8Zm1.8 0v-7.8h6v7.8H9Z"
-            clip-rule="evenodd" />
-        </svg>
-
+<h1 class="mb-1">Charity funding</h1>
+<p class="opacity-80 mb-2">
+  This table shows the total contributions and government grants for each 501(c)(3) charity. Search by EIN or name to see how much taxpayer money each has received.
+</p>
 
 <div id="totals" class="min-h-[44px]">
-  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
     <div>
       <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
         class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
@@ -541,7 +539,7 @@ $(document).ready(function() {
 
     const count = dataArray.length;
     const totalsText =
-      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span class="text-[15px] md:text-base">${count}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalContribTotal)}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalGovtGrants)}</span></div>
@@ -621,7 +619,7 @@ $(document).ready(function() {
           // Modified percentage cell with conditional coloring using classes
           const percentCell = $('<td></td>').text(formatPercentage(item.percentTaxpayer));
           if (item.percentTaxpayer >= 0.70) {
-            percentCell.addClass('text-red-500 font-semibold');
+            percentCell.addClass('text-red font-semibold');
           } else if (item.percentTaxpayer >= 0.35) {
             percentCell.addClass('text-orange-500 font-semibold');
           }
@@ -730,9 +728,8 @@ $(document).ready(function() {
   });
 </script>
 
-  </main>
-
-  <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
+    </main>
+    <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
   <div class="flex items-center text-black/75 gap-2">
     <span class="text-xs">Hosted by</span>
     
@@ -768,7 +765,6 @@ $(document).ready(function() {
       </a>
     </div>
   </footer>
-  
+  </div>
 </body>
-
 </html>
