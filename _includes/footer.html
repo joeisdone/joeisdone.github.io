@@ -1,3 +1,10 @@
+{% unless page.url contains 'donate' %}
+<div class="flex justify-center">
+  <div class="m-4 border-2 border-green p-4 rounded text-sm bg-white text-center">
+    <strong class="block mb-1">Help us build more tools like this.</strong> If you like the work you're doing, <a href="/donate" class="text-green font-semibold">we'd love your support</a>.
+  </div>
+</div>
+{% endunless %}
 <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
   <div class="flex items-center text-black/75 gap-2">
     <span class="text-xs">Hosted by</span>

@@ -7,18 +7,36 @@ title: Government grant award search
 <script src="jszip.min.js"></script>
 <script src="papaparse.min.js"></script>
 
-<h1>Federal government grant award search</h1>
-<p class="text-sm md:text-[15px]">
-  Below is a keyword search over a selection of active federal government grants.
-  Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
-  This search runs in two passes per keyword:
-  (1) exact keyword match,
-  (2) prefix matches (i.e., other keywords that start with that string).
-  For performance reasons, only the first 100 matching rows are displayed.  
-</p>
-<p class="text-sm md:text-[15px] mb-4">
-  You can search by <abbr title="Employer Identification Number">EIN</abbr> (eg: 13-2574854), <abbr title="Unique Entity Identifier">UEI</abbr> (eg: M2NYTB5V2D77) or keywords (eg: unaccompanied refugee)
-</p>
+<h1 class="mb-1">Federal grant search</h1>
+<p class="opacity-80 mb-0 text-[15px]">Search through federal grant awards to find recipients and award amounts. Data includes active grants from USAspending.gov, with details like recipient names, locations, award descriptions and amounts.</p>
+
+<div class="mb-4">
+  <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+  <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+    <div class="p-4 border border-gray-200 rounded-md bg-white">
+      <h3 class="mt-0">How it works</h3>
+      <div class="text-sm space-y-2">
+        <p>
+          Below is a keyword search over a selection of active federal government grants.
+          Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
+        </p>
+        <p>
+          This search runs in two passes per keyword:
+          <ol class="!list-decimal space-y-1 pl-4">
+            <li>exact keyword match</li>
+            <li>prefix matches (i.e., other keywords that start with that string)</li>
+          </ol>
+        </p>
+        <p>
+          For performance reasons, only the first 100 matching rows are displayed.
+        </p>
+        <p>
+          You can search by <abbr title="Employer Identification Number">EIN</abbr> (eg: 13-2574854), <abbr title="Unique Entity Identifier">UEI</abbr> (eg: M2NYTB5V2D77) or keywords (eg: unaccompanied refugee)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="searchContainer" class="mb-2">
   <div class="flex flex-col md:flex-row md:items-center gap-1 justify-between">
@@ -483,6 +501,25 @@ title: Government grant award search
       console.error(err);
       $('#statusMessage').text('Error loading index: ' + err);
     }
+
+    // Add toggle functionality for "How it works"
+    $('#howItWorksBtn').on('click', function() {
+      const $list = $('#howItWorksList');
+      const $btn = $(this);
+      
+      if ($list.height() === 0) {
+          // Expand
+          $list.css('height', 'auto');
+          const autoHeight = $list.height();
+          $list.height(0);
+          $list.height(autoHeight);
+          $btn.text('Hide details');
+      } else {
+          // Collapse
+          $list.height(0);
+          $btn.text('How it works');
+      }
+    });
   });
 
   // Attach search handler
@@ -539,7 +576,7 @@ title: Government grant award search
           $('#resultsStatus').html(
             `<span class="text-sm whitespace-nowrap">Showing ${totalRowsDisplayed}${totalRowsDisplayed === 100 ? ' (limit)' : ''} results</span>`
           );
-          $('#statsBox').html(`<div class="p-2 rounded border border-gray-200 bg-white text-center md:text-left"><span class="text-black text-sm">Taxpayer money spent:</span> <strong class="text-red-500">${formatCurrency(totalAwardAmount)}</strong></div>`);
+          $('#statsBox').html(`<div class="p-2 rounded border border-gray-200 bg-white text-center md:text-left"><span class="text-black text-sm">Taxpayer money spent:</span> <strong class="text-red">${formatCurrency(totalAwardAmount)}</strong></div>`);
         } else {
           $('#resultsContainer').html(
             '<div class="p-4 text-center">No results found.</div>'
@@ -932,7 +969,7 @@ title: Government grant award search
 
           <div>
             <span class="text-sm opacity-80">Amount</span>
-            <div class="text-base font-bold text-red-500">${formatCurrency(awardAmount)}</div>
+            <div class="text-base font-bold text-red">${formatCurrency(awardAmount)}</div>
           </div>
         </div>
         <div class="flex flex-col gap-2">

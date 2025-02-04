@@ -11,6 +11,10 @@ defaults:
 
 development:
   url: "http://localhost:4000"
+  server_options:
+    headers:
+      Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+    
 production:
   url: "https://datarepublican.com"
   

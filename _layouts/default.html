@@ -8,15 +8,14 @@
   {% seo %}
 </head>
 
-<body>
+<body class="m-0 p-0 flex flex-col md:flex-row">
   {% include header.html %}
 
-  <main class="w-full lg:max-w-7xl mx-auto min-h-[calc(100vh-200px)]">
-    {{ content }}
-  </main>
-
-  {% include footer.html %}
-  
+  <div class="md:ml-[275px] flex-1">
+    <main class="@container p-4 xl:p-6 min-h-[calc(100vh-200px)]">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </div>
 </body>
-
 </html>

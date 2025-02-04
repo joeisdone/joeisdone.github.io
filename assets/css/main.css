@@ -35,7 +35,7 @@
     }
 
     &.frameless {
-      @apply bg-transparent text-[13px] text-blue-600 p-0 m-0 border-none min-w-0;
+      @apply bg-transparent text-[13px] text-blue p-0 m-0 border-none min-w-0;
     }
   }
 
@@ -47,8 +47,16 @@
     @apply font-bold mb-2;
   }
 
-  h1, h2, h3 {
+  h2, h3 {
     @apply mt-6;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
   }
 
   h4, h5, h6 {

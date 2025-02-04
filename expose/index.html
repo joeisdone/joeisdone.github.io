@@ -1,6 +1,8 @@
 ---
-layout: full_width
+layout: default
 title: Charity graph - multi-root BFS & taxpayer totals
+redirect_from:
+  - /
 ---
 
     
@@ -38,22 +40,29 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
 </style>
 
-
-
-<div id="topbar" class="max-w-7xl mx-auto">
+<div id="topbar" class="">
   <div id="explanation">
-    <h2><abbr title="BFS (Breadth-First Search) is a variation of the standard BFS algorithm where the traversal starts from multiple sources (roots) simultaneously instead of a single source.">Multi-root BFS</abbr> & taxpayer totals</h2>
-    <ol class="!list-decimal ml-4 space-y-1 mb-4 text-sm">
-      <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
-      <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
-      <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
-    </ol>
+    <h1 class="mb-1">Charity graph</h1>
+    <p class="opacity-80 mb-0 text-[15px]">
+      This graph shows the connections between charities based on the money they receive from each other.
+    </p>
+    <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+    <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+      <div class="p-4 border border-gray-200 rounded-md bg-white">
+        <h3 class="mt-0">How it works</h3>
+        <ol class="!list-decimal space-y-1 text-sm pl-4">
+          <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
+          <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
+          <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
+        </ol>
+      </div>
+    </div>
   </div>
-  <div id="controls" class="mb-4 flex flex-col md:items-start md:justify-between md:flex-row gap-4">
+  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4">
     <!-- EIN Input & Add Button -->
      <div class="relative flex flex-col gap-2 max-w-lg">
       {% include input.html 
-        label="Add EIN" 
+        label="Add EIN(s)" 
         id="einInput" 
         placeholder="XX-XXXXXXX or 9 digits" 
         buttonLabel="Add EIN" 
@@ -93,17 +102,17 @@ title: Charity graph - multi-root BFS & taxpayer totals
   </div>
 </div>
 
-<div id="excluded-info" class="max-w-7xl -mx-4 md:mx-auto mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
+<div id="excluded-info" class="-mx-4 md:mx-0 mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
 
   {% include stat.html label="501(c)(3)s <em>not</em> displayed" valueId="excluded501" %}
 
   {% include stat.html label="Grants <em>not</em> displayed" valueId="excludedGrants" %}
 
-  {% include stat.html label="<strong>Taxpayer total in subgraph</strong>" labelColor="text-red-500" valueId="taxpayerTotal" %}
+  {% include stat.html label="<strong class='font-semibold'>Taxpayer total in subgraph</strong>" labelColor="text-red opacity-100" valueId="taxpayerTotal" %}
 
 </div>
 
-<div id="graph-container" class="flex-1 -mx-4 border-y border-gray-200 bg-white md:min-h-[50vh] flex items-center justify-center">
+<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
   <div class="">
     <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
@@ -172,6 +181,25 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // ADDED: Download SVG
     $('#downloadBtn').on('click', downloadSVG); // ADDED
+
+    // Add this near the top of your existing document.ready function
+    $('#howItWorksBtn').on('click', function() {
+        const $list = $('#howItWorksList');
+        const $btn = $(this);
+        
+        if ($list.height() === 0) {
+            // Expand
+            $list.css('height', 'auto');
+            const autoHeight = $list.height();
+            $list.height(0);
+            $list.height(autoHeight);
+            $btn.text('Hide details');
+        } else {
+            // Collapse
+            $list.height(0);
+            $btn.text('How it works');
+        }
+    });
   });
 
   /**
@@ -563,11 +591,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
         $('#excluded501').text(excluded501.toLocaleString());
         $('#excludedGrants').text(excludedGrants.toLocaleString());
         $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red-500">$${formatNumber(taxpayerTotal)}</span>`
+          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
         );
         $('#excluded-info').show();
 
-        $('#status').html(`<span class="text-sm text-green-600 font-semibold">${visitedSet.size} charities displayed</span>`);
+        $('#status').html(`<span class="text-sm text-green font-semibold">${visitedSet.size} charities displayed</span>`);
         $('#downloadBtn').show();
         $('#generateBtn').prop('disabled', false);
       })
@@ -599,8 +627,8 @@ node [
 ];
 edge [
   fontname="SF Pro, Helvetica, sans-serif",
-  color="#94A3B8",
-  penwidth=1.5,
+  color="#DADBE7",
+  penwidth=2,
   fontsize=11,
   decorate=true,
   labelangle=0,
@@ -608,7 +636,8 @@ edge [
 ];
 graph [
   fontname="SF Pro, Helvetica, sans-serif",
-  splines=polyline
+  splines=spline,
+  overlap=false
 ];
 labelloc="t";
 `;
@@ -776,7 +805,7 @@ labelloc="t";
     $('#clearEINsBtn').toggle(activeEINs.length > 0);
     
     activeEINs.forEach(ein => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer">{% include close.html %}</span>').attr('data-ein', ein);
       $rm.on('click', function() {
@@ -813,7 +842,7 @@ labelloc="t";
     $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
     
     activeKeywords.forEach(kw => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue-600 bg-blue-100 text-blue-600 rounded-md px-2 py-1 bg-blue-100 text-xs"></div>');
+      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
       const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer">{% include close.html %}</span>').attr('data-kw', kw);
       $rm.on('click', function() {

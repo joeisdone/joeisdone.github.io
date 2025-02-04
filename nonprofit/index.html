@@ -57,9 +57,13 @@ title: Nonprofits
   }
 </style>
 
+<h1 class="mb-1">Charity funding</h1>
+<p class="opacity-80 mb-2 text-[15px]">
+  This table shows the total contributions and government grants for each 501(c)(3) charity. Search by EIN or name to see how much taxpayer money each has received.
+</p>
 
 <div id="totals" class="min-h-[44px]">
-  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
     <div>
       <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
         class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
@@ -88,13 +92,13 @@ title: Nonprofits
 </div>
 
 
-<div class="flex flex-col md:flex-row md:items-center justify-between w-full">
+<div class="flex flex-col @xl:flex-row @xl:items-center justify-between w-full">
   <form>
-    <div id="filterContainer" class="flex flex-col md:flex-row w-full md:w-auto md:items-center gap-1 md:gap-2 text-sm">
+    <div id="filterContainer" class="flex flex-col @xl:flex-row w-full @xl:w-auto @xl:items-center gap-1 @xl:gap-2 text-sm">
       <label for="filterInput"><strong class="font-medium">Filter EIN or 501(c)(3) Name: </strong></label>
-      <div class="flex gap-1 w-full md:w-auto">
+      <div class="flex gap-1 w-full @xl:w-auto">
         <input type="text" id="filterInput" placeholder="Type your filter..."
-          class="w-full md:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
+          class="w-full @xl:w-auto px-2 py-1 rounded text-[15px] border border-gray-300" autofocus />
         <button id="filterButton">
           <span class="button-text">Filter</span>
           <img src="/assets/images/loading-white.svg" class="loading-spinner size-6" style="display: none;"
@@ -104,10 +108,10 @@ title: Nonprofits
     </div>
   </form>
 
-  <div id="warning" class="mb-2 md:mb-0"></div>
+  <div id="warning" class="mb-2 @xl:mb-0"></div>
 
 </div>
-<div class="w-screen md:w-auto overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
+<div class="w-screen md:w-auto overflow-x-auto -mx-4 px-4 xl:-mx-6 xl:px-6">
   <table id="nonprofitTable" class="">
     <thead>
       <tr>
@@ -208,8 +212,8 @@ title: Nonprofits
 
     const count = dataArray.length;
     const totalsText =
-      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex justify-between w-full pt-2 pb-4">
-        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span class="text-[15px] md:text-base">${count}</span></div>
+      `<div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
+        <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span class="text-[15px] md:text-base">${count.toLocaleString()}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalContribTotal)}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalGovtGrants)}</span></div>
         <div><h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3> <span class="text-[15px] md:text-base">${formatCurrency(totalOtherContrib)}</span></div>
@@ -288,7 +292,7 @@ title: Nonprofits
           // Modified percentage cell with conditional coloring using classes
           const percentCell = $('<td></td>').text(formatPercentage(item.percentTaxpayer));
           if (item.percentTaxpayer >= 0.70) {
-            percentCell.addClass('text-red-500 font-semibold');
+            percentCell.addClass('text-red font-semibold');
           } else if (item.percentTaxpayer >= 0.35) {
             percentCell.addClass('text-orange-500 font-semibold');
           }

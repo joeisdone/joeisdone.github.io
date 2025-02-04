@@ -250,7 +250,7 @@ image: https://joeisdone.github.io/assets/images/og-pa.png
 
 
 		var pctGapDesc = pctPctGap < 0 ? "Trump" : "Harris";
-		var pctGapColor = pctPctGap < 0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+		var pctGapColor = pctPctGap < 0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 		var gap2020Desc = "2020 D-R ratio: " + pctToString((demEarly2020Total + 0.0) / (early2020Total + 0.0)) + " D - " +
 			pctToString((repEarly2020Total + 0.0) / (early2020Total + 0.0)) + " R, Gap: " +
 			pctEarlyGap;
@@ -355,7 +355,7 @@ image: https://joeisdone.github.io/assets/images/og-pa.png
 
 			var gap = (demPct - repPct) - (demEarlyPct - repEarlyPct);
 			var gapDesc = gap <= 0.0 ? " Advantage Trump" : "Advantage Harris";
-			var pctDescColor = gap <= 0.0 ? "bg-red-50 border-red-500" : "bg-blue-50 border-blue-500";
+			var pctDescColor = gap <= 0.0 ? "bg-red/10 border-red" : "bg-blue/10 border-blue";
 
 			// raw votes 
 			var gapRaw = Math.ceil((gap * totalNums[k])) * -1;
