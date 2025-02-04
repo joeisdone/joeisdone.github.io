@@ -75,7 +75,12 @@ $(document).ready(function() {
       <span>Menu</span>
     </button>
   </div>
-  <div id="menu-items" class="hidden md:flex flex-1 h-full flex-col justify-between md:gap-1 sm:gap-2">
+  <div id="menu-items" class="invisible p-4 md:p-0 md:visible md:flex flex-1 flex-col justify-between md:gap-1 sm:gap-2 fixed md:static top-[84px] right-0 w-full md:w-auto h-screen md:h-auto bg-navy z-50 transition-transform duration-300 translate-x-full md:translate-x-0">
+    <button id="mobile-menu-close" class="md:hidden absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded z-[51]">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
     <div class="flex-1 flex flex-col gap-0.5">
     <a 
   href="/expose" 
@@ -232,6 +237,9 @@ $(document).ready(function() {
     const $dropdownButton = $('#election-results-dropdown-button');
     const $dropdownContent = $('#election-results-dropdown');
     const $chevron = $dropdownButton.find('span:last-child');
+    const $menuButton = $('#mobile-menu-button');
+    const $closeButton = $('#mobile-menu-close');
+    const $menuItems = $('#menu-items');
     
     // Get the full height of the hidden content
     $dropdownContent.css('height', 'auto');
@@ -247,6 +255,38 @@ $(document).ready(function() {
     } else {
       $dropdownContent.css('height', 0);
     }
+
+    // Mobile menu functions
+    function showMenu() {
+      $menuItems
+        .css('display', 'flex')
+        .removeClass('invisible translate-x-full');
+    }
+
+    function hideMenu() {
+      $menuItems
+        .addClass('translate-x-full')
+        .one('transitionend', function(e) {
+          if (window.innerWidth < 768) {
+            $(this).addClass('invisible').css('display', '');
+          }
+        });
+    }
+
+    function handleResize() {
+      if (window.innerWidth >= 768) {
+        $menuItems
+          .removeClass('invisible translate-x-full')
+          .css('display', 'flex');
+      } else if (!$menuItems.hasClass('translate-x-full')) {
+        hideMenu();
+      }
+    }
+
+    // Event listeners
+    $menuButton.on('click', showMenu);
+    $closeButton.on('click', hideMenu);
+    $(window).on('resize', handleResize);
 
     $dropdownButton.on('click', function() {
       const isExpanded = $dropdownContent.height() !== 0;
