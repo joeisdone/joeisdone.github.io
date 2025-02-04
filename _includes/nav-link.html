@@ -6,9 +6,9 @@
   {% if include.icon %}
     <span class="size-5 fill-current">{% include icon-{{ include.icon }}.html %}</span>
   {% endif %}
-  <strong class="text-sm{% if include.icon %} font-semibold{% endif %}">{{ include.title }}</strong>
+  <strong class="md:text-sm{% if include.icon %} font-semibold{% endif %}">{{ include.title }}</strong>
   {% if include.subtitle %}
-    <span class="opacity-70 text-[13px]">{{ include.subtitle }}</span>
+    <span class="opacity-70 text-sm md:text-[13px]">{{ include.subtitle }}</span>
   {% endif %}
   {% if include.right-icon %}
     <span class="right-icon inline-block absolute right-2 top-[calc(50%-0.75rem)] size-6 {% if include.right-icon == 'gift' %}group-hover:text-navy{% endif %}">{% include icon-{{ include.right-icon }}.html %}</span>

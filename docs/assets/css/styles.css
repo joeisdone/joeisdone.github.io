@@ -1108,6 +1108,12 @@ select {
   --tw-border-opacity: 1 !important;
   border-color: rgb(52 226 151 / var(--tw-border-opacity)) !important;
 }
+.border-white\/75 {
+  border-color: rgb(255 255 255 / 0.75);
+}
+.border-white\/50 {
+  border-color: rgb(255 255 255 / 0.5);
+}
 .bg-\[0-9\] {
   background-color: 0-9;
 }
@@ -1707,6 +1713,10 @@ table {
   .md\:text-sm {
     font-size: 0.875rem;
     line-height: 1.25rem;
+  }
+
+  .md\:text-\[13px\] {
+    font-size: 13px;
   }
 
   .md\:opacity-100 {
