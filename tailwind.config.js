@@ -122,7 +122,22 @@ module.exports = {
     // 'bg-[0-9]+',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        transparent: 'transparent',
+        current: 'currentColor',
+        navy: '#252739',
+        blue: '#349CE2',
+        'blue-500': '#349CE2',
+        'blue-600': '#349CE2',
+        yellow: '#E2D134',
+        red: '#EF3E28',
+        green: '#34E297',
+      },
+      outlineColor: theme => ({
+        ...theme('colors')
+      })
+    },
   },
   plugins: [],
 } 

@@ -1,5 +1,5 @@
 ---
-layout: full_width
+layout: default
 title: Charity graph - multi-root BFS & taxpayer totals
 ---
 
@@ -42,6 +42,8 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
 <div id="topbar" class="max-w-7xl mx-auto">
   <div id="explanation">
+    {% include icon-charity-graph.html %}
+
     <h2><abbr title="BFS (Breadth-First Search) is a variation of the standard BFS algorithm where the traversal starts from multiple sources (roots) simultaneously instead of a single source.">Multi-root BFS</abbr> & taxpayer totals</h2>
     <ol class="!list-decimal ml-4 space-y-1 mb-4 text-sm">
       <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>

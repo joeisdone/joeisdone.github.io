@@ -1,0 +1,16 @@
+<a 
+  href="{{ include.url }}" 
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 {% if page.url contains include.url %}border-blue bg-blue/20 !text-white{% else %}border-transparent hover:border-white/75 hover:bg-white/10{% endif %} {% if include.icon %}items-center gap-2 text-white/80 hover:text-white{% else %}flex-col text-white{% endif %} {{ include.classes }}"
+  {% if include.target %}target="{{ include.target }}"{% endif %}
+>
+  {% if include.icon %}
+    <span class="size-5 fill-current">{% include icon-{{ include.icon }}.html %}</span>
+  {% endif %}
+  <strong class="text-sm{% if include.icon %} font-semibold{% endif %}">{{ include.title }}</strong>
+  {% if include.subtitle %}
+    <span class="opacity-70 text-[13px]">{{ include.subtitle }}</span>
+  {% endif %}
+  {% if include.right-icon %}
+    <span class="right-icon inline-block absolute right-2 top-[calc(50%-0.75rem)] size-6 {% if include.right-icon == 'gift' %}group-hover:text-navy{% endif %}">{% include icon-{{ include.right-icon }}.html %}</span>
+  {% endif %}
+</a> 
