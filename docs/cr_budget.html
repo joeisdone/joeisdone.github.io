@@ -318,7 +318,7 @@ $(document).ready(function() {
 
 
   <div class="md:ml-[275px] flex-1">
-    <main class="@container p-4 xl:p-6">
+    <main class="@container p-4 xl:p-6 min-h-[calc(100vh-200px)]">
       <h1 id="consolidated-budget-review">Consolidated Budget Review</h1>
 
 <p>This document compiles various budget items that have been flagged for either unclear justifications or potential waste. The entries below have been gathered from multiple sections and titles, including allocations for disaster response, infrastructure, research and development, and various federal programs. Many of these allocations reference events such as Hurricanes Helene and Milton, which, while assumed to be known events here, have unsupported justifications for the amounts allocated. Additionally, numerous funding increases lack detailed explanations of how the amounts were determined or how the funds will achieve stated objectives.</p>
@@ -777,7 +777,14 @@ Conduct thorough cost-benefit analyses, especially for large appropriations, to 
 <p><strong>In conclusion,</strong> the compiled budget items highlight numerous instances where federal funds are allocated without clear justification or adequate oversight. Implementing the suggested reforms can help ensure that taxpayer dollars are spent effectively, transparently, and with measurable benefit to the public.</p>
 
     </main>
-    <footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
+    
+<div class="flex justify-center">
+  <div class="m-4 border-2 border-green p-4 rounded text-sm bg-white text-center">
+    <strong class="block mb-1">Help us build more tools like this.</strong> If you like the work you're doing, <a href="/donate" class="text-green font-semibold">we'd love your support</a>.
+  </div>
+</div>
+
+<footer class="border-t border-gray-200 mt-4 py-4 flex justify-center">
   <div class="flex items-center text-black/75 gap-2">
     <span class="text-xs">Hosted by</span>
     

@@ -786,6 +786,9 @@ select {
 .m-1 {
   margin: 0.25rem;
 }
+.m-4 {
+  margin: 1rem;
+}
 .-mx-4 {
   margin-left: -1rem;
   margin-right: -1rem;
@@ -950,6 +953,9 @@ select {
 }
 .min-h-\[44px\] {
   min-height: 44px;
+}
+.min-h-\[calc\(100vh-200px\)\] {
+  min-height: calc(100vh - 200px);
 }
 .min-h-screen {
   min-height: 100vh;
@@ -1223,10 +1229,6 @@ select {
 .bg-gray-300 {
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
-}
-.bg-green-light {
-  --tw-bg-opacity: 1;
-  background-color: rgb(52 226 151 / var(--tw-bg-opacity));
 }
 .bg-green-light\/20 {
   background-color: rgb(52 226 151 / 0.2);
