@@ -10,7 +10,6 @@ module.exports = {
     './*.{html,js}',
   ],
   safelist: [
-    '@lg:flex',
     // '!hidden',
     // '-mb-4',
     // '-my-0.5',

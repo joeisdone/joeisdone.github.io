@@ -26,12 +26,14 @@
       url="/expose"
       classes=""
     %}
+    {% comment %}
     {% include nav-link.html 
       title="Person search"
       subtitle="Identify recipients of grant proceeds"
       url="#"
       classes=""
     %}
+    {% endcomment %}
     {% include nav-link.html 
       title="Federal grant search"
       subtitle="Map funds to connected organizations"
@@ -85,7 +87,7 @@
       title="Donate"
       subtitle="Help support our work"
       url="/donate"
-      classes="!border-green-light bg-green-light/20 hover:bg-green-light hover:text-navy relative [&_.right-icon]:text-green-light"
+      classes="!border-green-light bg-green-light/20 hover:!bg-green-light hover:text-navy relative [&_.right-icon]:text-green-light"
       right-icon="gift"
     %}
     {% include nav-link.html 
