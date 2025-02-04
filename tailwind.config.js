@@ -134,7 +134,8 @@ module.exports = {
         'blue-600': '#349CE2',
         yellow: '#E2D134',
         red: '#EF3E28',
-        green: '#34E297',
+        'green-light': '#34E297',
+        green: '#19B270',
       },
       outlineColor: theme => ({
         ...theme('colors')
