@@ -1013,10 +1013,11 @@ $(document).ready(function() {
         const comp  = off.c || 0;
 
         const blockHtml = `
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1">
-            <div class="md:col-span-1"><strong>${escapeHtml(name)}</strong></div>
-            <div class="md:col-span-1">${escapeHtml(title)}</div>
-            <div class="md:col-span-1">$${Number(comp).toLocaleString()}</div>
+          <div class="grid grid-cols-9 md:grid-cols-12 gap-1 py-1">
+            <div class="col-span-5"><strong>${escapeHtml(name)}</strong></div>
+            <div class="col-span-2">${escapeHtml(title)}</div>
+            <div class="col-span-2">$${Number(comp).toLocaleString()}</div>
+            <div class="hidden md:block md:col-span-3">&nbsp;</div>
           </div>
         `;
         if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
@@ -1039,10 +1040,11 @@ $(document).ready(function() {
       if (otherItems.length) {
         otherHtml = `
           <div class="text-sm officialSection" style="display:none;">
-            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-1 py-1 px-4">
-              <strong>Officials</strong>
-              <strong>Role</strong>
-              <strong>Compensation</strong>
+            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-9 md:grid-cols-12 gap-1 py-1 px-4">
+              <strong class="col-span-5">Officials</strong>
+              <strong class="col-span-2">Role</strong>
+              <strong class="col-span-2">Compensation</strong>
+              <strong class="hidden md:block md:col-span-3">&nbsp;</strong>
             </div>
             <div class="pt-2 px-4">${otherItems.join('')}</div>
           </div>
@@ -1069,24 +1071,27 @@ $(document).ready(function() {
   // Return the entire block of HTML
   return `
     <div class="bg-white border border-gray-200 rounded">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-4 px-4 pb-2">
-        <div class="flex flex-col gap-1">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-2 pt-4 px-4 pb-2">
+        <div class="flex flex-col gap-1 md:col-span-5">
           <span class="text-sm opacity-80">Name</span>
           <span class="font-bold">
-            ${escapeHtml(filerName)} <br />${exposeLink}
+            ${escapeHtml(filerName)}
           </span>
         </div>
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-sm opacity-80">EIN</span>
           <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
         </div>
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-sm opacity-80">Tax Year</span>
           <span class="text-sm">${escapeHtml(taxYear)}</span>
         </div>
+        <div class="flex items-end text-sm pb-1 md:col-span-3">
+          ${exposeLink}
+        </div>
       </div>
       
-      ${matchedHtml ? `<div><h4 class="mt-0 mb-1 px-4 text-sm">Matches</h4>${matchedHtml}</div>` : ''}
+      ${matchedHtml ? `<div><div class="md:grid md:grid-cols-12"><h4 class="mt-0 mb-1 px-4 text-sm md:col-span-5">Matches</h4><strong class="hidden md:block md:col-span-2 text-sm">Role</strong><strong class="hidden md:block md:col-span-2 text-sm">Compensation</strong><strong class="hidden md:block md:col-span-3">&nbsp;</strong></div>${matchedHtml}</div>` : ''}
       ${otherHtml}
       ${
         otherHtml

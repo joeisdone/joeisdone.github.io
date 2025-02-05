@@ -1094,6 +1094,9 @@ select {
 .grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
+.grid-cols-9 {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
 .flex-row-reverse {
   flex-direction: row-reverse;
 }
@@ -1772,6 +1775,10 @@ table {
     display: inline-flex;
   }
 
+  .md\:grid {
+    display: grid;
+  }
+
   .md\:hidden {
     display: none;
   }
@@ -1831,6 +1838,10 @@ table {
 
   .md\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 
   .md\:flex-row {
