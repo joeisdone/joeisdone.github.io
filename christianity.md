@@ -1,3 +1,8 @@
+---
+layout: markdown
+title: The historical case for Christianity
+---
+
 *Please take a moment to read my pastor's essay.*
 
 # The Historical Case for Christianity
@@ -6,7 +11,7 @@
 
 One of the strongest arguments in favor of the truth of Christianity is the historical evidence for the existence of Jesus Christ and his resurrection.  The historical evidence that supports Christianity is unique when compared to all other religious worldviews.  And this is not just my opinion as a Christian Pastor.  This is something that even some scholarly and academic unbelievers grant.  This is how atheist Anthony Flew put it:
  
->  The evidence for the resurrection is better than for claimed miracles in any other religion. It's outstandingly different in quality and quantity. (1)
+>  The evidence for the resurrection is better than for claimed miracles in any other religion. It's outstandingly different in quality and quantity. (1)
 
 And so in this paper, we are going to be looking at the historical evidence for the existence of Jesus and for his resurrection which would cause a skeptic of Christianity like Anthony Flew to make the shocking statement that I just quoted.  
 
@@ -86,17 +91,17 @@ There was no compiled book called the "New Testament" in the first century. Rath
 
 ## Criteria of Multiple Attestation
 
-There are different criteria that secular historians employ to show that something likely happened historically.  The one method I will be using the to start with is what is called the *criteria of multiple attestation*.  This criteria says that an event is more likely to be historical if it has two sources rather than just one source, with all things being equal. Under this criteria, the more sources you have, the more it increases the likelihood of something taking place historically rather than not. Paul Maier, a historian of antiquity, affirms this method when he writes "*Many facts from antiquity rest on just one ancient source, while two or three in agreement generally render the fact unimpeachable.*" (10)
+There are different criteria that secular historians employ to show that something likely happened historically.  The one method I will be using the to start with is what is called the *criteria of multiple attestation*.  This criteria says that an event is more likely to be historical if it has two sources rather than just one source, with all things being equal. Under this criteria, the more sources you have, the more it increases the likelihood of something taking place historically rather than not. Paul Maier, a historian of antiquity, affirms this method when he writes "*Many facts from antiquity rest on just one ancient source, while two or three in agreement generally render the fact unimpeachable.*" (10)
 
 ### Jesus as a Miracle Worker
 
 The gospels of Matthew, Luke, Mark, and John are all generally treated as independent sources. There are two miracles that happened in all four Gospels: feeding of the 5,000, and Jesus walking on water. 
 
-But we have more support for the proposition that Jesus was a miracle worker in general than just the four Gospels.  We have the book of Acts which gives us an independent first century tradition that Jesus was a miracle worker from his followers, look at Acts 2:22:
+But we have more support for the proposition that Jesus was a miracle worker in general than just the four Gospels.  We have the book of Acts which gives us an independent first century tradition that Jesus was a miracle worker from his followers, look at Acts 2:22:
 
 > Men of Israel, hear these words: Jesus of Nazareth, a man attested to you by God with mighty works and wonders and signs that God did through him in your midst, as you yourselves know.
 
-Now one might be tempted to say Luke is the writer of a Gospel and just using the same source material that he used for the Gospel.  But this is not plausible according to Ehrman, who writes: 
+Now one might be tempted to say Luke is the writer of a Gospel and just using the same source material that he used for the Gospel.  But this is not plausible according to Ehrman, who writes: 
 
 > Some of the speeches in Acts contain what scholars call preliterary tradition: oral traditions that had been in circulation from much earlier times that are found, now, only in their written form in Acts…..These traditions are quite emphatic that Jesus was a Jewish man who lived, did spectacular deeds, taught, and was executed. (11) 
 
@@ -112,13 +117,13 @@ An easy way for the author of Hebrews to shut down followers of Jesus going back
 
 The book called 2nd Peter is most likely written after Hebrews, but it still is certainly a good first century source from a follower of Christ.  Let us look at what this disciple said in 2 Peter 1:16-18: 
 
-> For we did not follow cleverly devised myths when we made known to you the power and coming of our Lord Jesus Christ, but we were eyewitnesses of his majesty. For when he received honor and glory from God the Father, and the voice was borne to him by the Majestic Glory, "This is my beloved Son, with whom I am well pleased," we ourselves heard this very voice borne from heaven, for we were with him on the holy mountain.
+> For we did not follow cleverly devised myths when we made known to you the power and coming of our Lord Jesus Christ, but we were eyewitnesses of his majesty. For when he received honor and glory from God the Father, and the voice was borne to him by the Majestic Glory, "This is my beloved Son, with whom I am well pleased," we ourselves heard this very voice borne from heaven, for we were with him on the holy mountain.
 
 The reference to power and majesty is likely a reference to the miracles of Jesus that this Christ follower is indirectly mentioning which would just be another additional independent source of the miracles of Jesus.
 
 ### What do scholars say?
 
-If we treated the New Testament like any other ancient first historical document, we find that there is an abundance of evidence that Jesus was a miracle worker.  This is not just my opinion.  This is something that skeptical atheist and agnostic New Testament historians affirms.  In the words of radically liberal atheist New Testament scholar John Crossan:
+If we treated the New Testament like any other ancient first historical document, we find that there is an abundance of evidence that Jesus was a miracle worker.  This is not just my opinion.  This is something that skeptical atheist and agnostic New Testament historians affirms.  In the words of radically liberal atheist New Testament scholar John Crossan:
 
 > Jesus was both an exorcist and a healer. (12)
 
@@ -150,9 +155,9 @@ Now the ironic thing about the miracles of Jesus is that the miracle that has th
 
 There is no miracle in the New Testament that is given more weight than the Resurrection of Jesus—everything hinges on it!  As the Apostle Paul acknowledges himself in 1 Corinthians 15:13-19: 
 
-> But if there is no resurrection of the dead, then not even Christ has been raised. And if Christ has not been raised, then our preaching is in vain and your faith is in vain. We are even found to be misrepresenting God, because we testified about God that he raised Christ, whom he did not raise if it is true that the dead are not raised.  For if the dead are not raised, not even Christ has been raised.  And if Christ has not been raised, your faith is futile and you are still in your sins. Then those also who have fallen asleep in Christ have perished. If in Christ we have hope in this life only, we are of all people most to be pitied.
+> But if there is no resurrection of the dead, then not even Christ has been raised. And if Christ has not been raised, then our preaching is in vain and your faith is in vain. We are even found to be misrepresenting God, because we testified about God that he raised Christ, whom he did not raise if it is true that the dead are not raised.  For if the dead are not raised, not even Christ has been raised.  And if Christ has not been raised, your faith is futile and you are still in your sins. Then those also who have fallen asleep in Christ have perished. If in Christ we have hope in this life only, we are of all people most to be pitied.
 
-So if the resurrection is false then Christianity is false.  But if the resurrection is true then it follows that Christianity is true, according to the Apostle Paul himself.  So let us finally examine the evidence for the resurrection.
+So if the resurrection is false then Christianity is false.  But if the resurrection is true then it follows that Christianity is true, according to the Apostle Paul himself.  So let us finally examine the evidence for the resurrection.
 
 ## 1 Corinthians 15
 
@@ -164,9 +169,9 @@ This is a significant section of scripture that is often overlooked by the lay p
 
 ### Delivered and Received Language
 
-This delivered and received language we see here in 1 Corinthians 15:3 is used to indicate that starts at verses 3 and continues through 7 was an ancient creed-like tradition that was passed on to Paul.  This would have been something that the earliest Christian memorized and passed on to others. 
+This delivered and received language we see here in 1 Corinthians 15:3 is used to indicate that starts at verses 3 and continues through 7 was an ancient creed-like tradition that was passed on to Paul.  This would have been something that the earliest Christian memorized and passed on to others. 
 
-There exists academic consensus that these verses represent an early Christian creed that dates around 5 years after the death of Jesus. Scholars know this for a variety of reasons, but here is just one quick reason that is clear to those of us who read Greek: The style of writing and Greek word choice shows this is a memorized early tradition passed down to Paul; the words that are used here is not how Paul writes and the phrases used indicate that this is a very early creed.  As skeptical agnostic historian Gerd Ludemann puts it: 
+There exists academic consensus that these verses represent an early Christian creed that dates around 5 years after the death of Jesus. Scholars know this for a variety of reasons, but here is just one quick reason that is clear to those of us who read Greek: The style of writing and Greek word choice shows this is a memorized early tradition passed down to Paul; the words that are used here is not how Paul writes and the phrases used indicate that this is a very early creed.  As skeptical agnostic historian Gerd Ludemann puts it: 
 
 > the elements in the tradition are to be dated to the first two years after the crucifixion of Jesus... not later than three years... (17)
 

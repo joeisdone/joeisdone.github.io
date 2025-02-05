@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% include head-custom.html %}
+  {% seo %}
+</head>
+
+<body class="m-0 p-0 flex flex-col md:flex-row">
+  {% include header.html %}
+
+  <div class="md:ml-[275px] flex-1">
+    <main class="@container p-4 xl:p-6 min-h-[calc(100vh-200px)] max-w-4xl prose prose-lg">
+      {{ content }}
+    </main>
+    {% include footer.html %}
+  </div>
+</body>
+</html>
