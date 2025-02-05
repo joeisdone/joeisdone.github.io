@@ -33,12 +33,18 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
 <div id="topbar" class="">
   <div id="explanation">
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const returnUrl = urlParams.get('return_url');
+      document.write(`<button class="frameless" onclick="window.location.href='${returnUrl || '/officers/'}'">&larr; Back to officer search</button>`);
+    </script>
+    
     <h1 class="mb-1">Charity graph</h1>
     <!-- If custom_graph is present, we show "title" or "Displaying exact graph." below -->
-    <p id="instructions" class="opacity-80 mb-0 text-[15px]">
+    <p id="instructions" class="opacity-80 mb-0 text-[15px] pb-2 empty:hidden">
       <!-- Will be dynamically set in parseQueryParams() -->
     </p>
-
     <!-- "How it works" toggle is BFS-only -->
     <button class="frameless mb-2 text-base bfs-only" id="howItWorksBtn">How it works</button>
     <div class="h-[0px] overflow-hidden transition-all duration-200 bfs-only" id="howItWorksList">
@@ -172,7 +178,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     // Download SVG
     $('#downloadBtn').on('click', downloadSVG);
 
-    // Expand/collapse “How it works” (BFS-only)
+    // Expand/collapse "How it works" (BFS-only)
     $('#howItWorksBtn').on('click', function() {
       const $list = $('#howItWorksList');
       const $btn = $(this);
@@ -228,7 +234,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
       // Show instructions
       if (customTitle) {
-        $('#instructions').text('Displaying ' + customTitle);
+        $('#instructions').html('Displaying <strong>' + customTitle + '</strong>');
       } else {
         $('#instructions').text('Displaying exact graph.');
       }
@@ -393,7 +399,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   }
 
   /**
-   * Build and render the BFS-based subgraph from the user’s EINS and keywords.
+   * Build and render the BFS-based subgraph from the user's EINS and keywords.
    */
   function generateBFSGraph() {
     // Build filtered dataset
@@ -518,7 +524,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // For excluded501 / excludedGrants:
     const excluded501 = totalCharitiesCount - visitedSet.size;
-    // There's no “filteredEdges” concept here. We just say # of edges in the custom param minus # that made it in
+    // There's no "filteredEdges" concept here. We just say # of edges in the custom param minus # that made it in
     const totalCustomEdges = customGraphEdges.length;
     const displayedEdgesCount = validEdges.length;
     const excludedGrants = totalCustomEdges - displayedEdgesCount;

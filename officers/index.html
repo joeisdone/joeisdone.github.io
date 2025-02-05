@@ -7,28 +7,43 @@ title: Government NGO Tracking
 <script src="jszip.min.js"></script>
 <script src="papaparse.min.js"></script>
 
-<h1>Government NGO Tracking</h1>
-<p class="text-sm md:text-[15px]">
-  Below is a simple two-part keyword search over nonprofit filings.
-</p>
-<p class="text-sm md:text-[15px] mb-4">
-  <strong>Nonprofit search</strong> looks up by EIN or nonprofit name.<br/>
-  <strong>Officer search</strong> looks up by principal officer name.<br/><br/>
+<h1 class="mb-1">Government NGO Tracking</h1>
+<p class="opacity-80 mb-0 text-[15px]">Search through nonprofit filings to find organizations and their principal officers. Data includes EINs, organization names, and officer details.</p>
 
-  Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
-  <br/>
-  This search runs in two passes per keyword:
-  (1) exact keyword match,
-  (2) prefix matches (i.e., other keywords that start with that string).
-  For performance reasons, only the first 100 matching rows are displayed.
-</p>
+<div class="mb-4">
+  <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+  <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+    <div class="p-4 border border-gray-200 rounded-md bg-white">
+      <div class="text-sm space-y-2">
+        <p>Below is a simple two-part keyword search over nonprofit filings.</p>
+        <p>
+          <strong>Nonprofit search</strong> looks up by EIN or nonprofit name.<br/>
+          <strong>Officer search</strong> looks up by principal officer name.
+        </p>
+        <p>
+          Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
+        </p>
+        <p>
+          This search runs in two passes per keyword:
+          <ol class="!list-decimal space-y-1 pl-4">
+            <li>exact keyword match</li>
+            <li>prefix matches (i.e., other keywords that start with that string)</li>
+          </ol>
+        </p>
+        <p>
+          For performance reasons, only the first 100 matching rows are displayed.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="searchContainer" class="mb-2">
-  <div class="flex flex-col md:flex-row md:items-center gap-2 justify-between">
+  <div class="flex flex-col md:flex-row md:items-end gap-2 justify-between">
     <form id="searchForm" class="flex flex-col md:flex-row md:items-center gap-2 w-full">
       
-      <div class="flex flex-col">
-        <label for="nonprofitBox" class="text-sm md:text-[15px] font-bold">
+      <div class="flex flex-col gap-1">
+        <label for="nonprofitBox" class="text-sm md:text-[15px] font-bold min-w-[200px]">
           Nonprofit/EIN keywords:
         </label>
         <input type="text" id="nonprofitBox" 
@@ -36,8 +51,8 @@ title: Government NGO Tracking
                placeholder="E.g. 'united way' or '12-3456789'"/>
       </div>
       
-      <div class="flex flex-col">
-        <label for="officerBox" class="text-sm md:text-[15px] font-bold">
+      <div class="flex flex-col gap-1">
+        <label for="officerBox" class="text-sm md:text-[15px] font-bold min-w-[200px]">
           Officer name keywords:
         </label>
         <input type="text" id="officerBox" 
@@ -98,6 +113,25 @@ title: Government NGO Tracking
       const offKW = urlParams.get('officer_kw') || '';
       if (npKW) $('#nonprofitBox').val(npKW);
       if (offKW) $('#officerBox').val(offKW);
+
+      // Add toggle functionality for "How it works"
+      $('#howItWorksBtn').on('click', function() {
+        const $list = $('#howItWorksList');
+        const $btn = $(this);
+        
+        if ($list.height() === 0) {
+            // Expand
+            $list.css('height', 'auto');
+            const autoHeight = $list.height();
+            $list.height(0);
+            $list.height(autoHeight);
+            $btn.text('Hide details');
+        } else {
+            // Collapse
+            $list.height(0);
+            $btn.text('How it works');
+        }
+      });
 
       if (npKW || offKW) {
         $('#searchForm').trigger('submit');
@@ -642,7 +676,7 @@ title: Government NGO Tracking
         const comp  = off.c || 0;
 
         const blockHtml = `
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1 border-b border-gray-100">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1">
             <div class="md:col-span-1"><strong>${escapeHtml(name)}</strong></div>
             <div class="md:col-span-1">${escapeHtml(title)}</div>
             <div class="md:col-span-1">$${Number(comp).toLocaleString()}</div>
@@ -658,8 +692,8 @@ title: Government NGO Tracking
       // Only show matched block if any matched
       if (matchedItems.length) {
         matchedHtml = `
-          <div class="p-4 bg-green-50 border-t border-gray-200 text-sm">
-            <div class="pt-2">${matchedItems.join('')}</div>
+          <div class="bg-green/10 border-t border-gray-200 text-sm px-4 py-1">
+            <div class="divide-y divide-gray-200">${matchedItems.join('')}</div>
           </div>
         `;
       }
@@ -667,13 +701,13 @@ title: Government NGO Tracking
       // The other officials remain behind a toggle
       if (otherItems.length) {
         otherHtml = `
-          <div class="p-4 bg-gray-50 border-t border-gray-200 text-sm officialSection" style="display:none;">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1 border-b border-gray-100">
+          <div class="text-sm officialSection" style="display:none;">
+            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-1 py-1 px-4">
               <strong>Officials</strong>
               <strong>Role</strong>
               <strong>Compensation</strong>
             </div>
-            <div class="pt-2">${otherItems.join('')}</div>
+            <div class="pt-2 px-4">${otherItems.join('')}</div>
           </div>
         `;
       }
@@ -687,8 +721,9 @@ title: Government NGO Tracking
   if (exposePath) {
     const encodedPath = encodeURIComponent(exposePath);
     const encodedName = encodeURIComponent(filerName);
+    const returnUrl = encodeURIComponent(window.location.href);
     exposeLink = `
-      <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}">
+      <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
         Trace connections to USAID NGOs
       </a>
     `;
@@ -696,8 +731,8 @@ title: Government NGO Tracking
 
   // Return the entire block of HTML
   return `
-    <div class="bg-white border border-gray-200 rounded p-4">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+    <div class="bg-white border border-gray-200 rounded">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-4 px-4 pb-2">
         <div class="flex flex-col gap-1">
           <span class="text-sm opacity-80">Name</span>
           <span class="font-bold">
@@ -706,21 +741,22 @@ title: Government NGO Tracking
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm opacity-80">EIN</span>
-          <span class="text-sm">${escapeHtml(filerEin)}</span>
+          <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-sm opacity-80">Tax Year</span>
           <span class="text-sm">${escapeHtml(taxYear)}</span>
         </div>
       </div>
-      ${matchedHtml}
+      
+      ${matchedHtml ? `<div><h4 class="mt-0 mb-1 px-4 text-sm">Matches</h4>${matchedHtml}</div>` : ''}
       ${otherHtml}
       ${
         otherHtml
           ? `
-            <div class="bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4 mt-2">
+            <div class="bg-gray-100/50 border-t border-gray-200">
               <button class="toggleOfficials font-semibold text-blue text-[13px] bg-transparent border-0 py-2 px-4">
-                Show officials
+                Show ${matchedHtml ? 'other ' : ''}officials
               </button>
             </div>
           `
@@ -740,7 +776,7 @@ title: Government NGO Tracking
         $btn.text('Show other officials');
       } else {
         $section.slideDown(200);
-        $btn.text('Hide other officials');
+        $btn.text('Hide officials');
       }
     });
   }

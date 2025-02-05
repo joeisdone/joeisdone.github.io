@@ -35,22 +35,22 @@ $(document).ready(function() {
 </script>
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Charity graph - multi-root BFS &amp; taxpayer totals | DataRepublican</title>
+<title>Government NGO Tracking | DataRepublican</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
+<meta property="og:title" content="Government NGO Tracking" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="http://localhost:4000/expose/" />
-<meta property="og:url" content="http://localhost:4000/expose/" />
+<link rel="canonical" href="http://localhost:4000/officers/" />
+<meta property="og:url" content="http://localhost:4000/officers/" />
 <meta property="og:site_name" content="DataRepublican" />
 <meta property="og:image" content="http://localhost:4000/assets/images/poster.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="http://localhost:4000/assets/images/poster.png" />
-<meta property="twitter:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
+<meta property="twitter:title" content="Government NGO Tracking" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"http://localhost:4000/assets/images/poster.png","url":"http://localhost:4000/expose/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Government NGO Tracking","image":"http://localhost:4000/assets/images/poster.png","url":"http://localhost:4000/officers/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -80,7 +80,7 @@ $(document).ready(function() {
     <div class="flex-1 flex flex-col gap-0.5">
     <a 
   href="/expose" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white select-none "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
 >
   
@@ -92,7 +92,7 @@ $(document).ready(function() {
 </a> 
     <a 
   href="/officers" 
-  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white select-none "
   
 >
   
@@ -340,951 +340,791 @@ $(document).ready(function() {
 
   <div class="md:ml-[275px] flex-1">
     <main class="@container p-4 xl:p-6 min-h-[calc(100vh-200px)]">
-      <!-- jQuery for convenience -->
-<script src="jquery.min.js"></script>
-
-<!-- Viz.js (core + full render) -->
-<script src="viz.js"></script>
-<script src="full.render.js"></script>
-
-<!-- svg-pan-zoom for panning/zooming the resulting SVG -->
-<script src="svg-pan-zoom.min.js"></script>
-
-<!-- JSZip for reading the zipped CSVs -->
+      <script src="jquery.min.js"></script>
 <script src="jszip.min.js"></script>
-
-<!-- Papa Parse for CSV parsing -->
 <script src="papaparse.min.js"></script>
 
-<style>
-  #activeEINs, #activeFilters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-  }
+<h1 class="mb-1">Government NGO Tracking</h1>
+<p class="opacity-80 mb-0 text-[15px]">Search through nonprofit filings to find organizations and their principal officers. Data includes EINs, organization names, and officer details.</p>
 
-  #graph-container {
-    overflow: hidden; /* Hide scrollbars */
-  }
-</style>
-
-<div id="topbar" class="">
-  <div id="explanation">
-
-    <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const returnUrl = urlParams.get('return_url');
-      document.write(`<button class="frameless" onclick="window.location.href='${returnUrl || '/officers/'}'">&larr; Back to officer search</button>`);
-    </script>
-    
-    <h1 class="mb-1">Charity graph</h1>
-    <!-- If custom_graph is present, we show "title" or "Displaying exact graph." below -->
-    <p id="instructions" class="opacity-80 mb-0 text-[15px] pb-2 empty:hidden">
-      <!-- Will be dynamically set in parseQueryParams() -->
-    </p>
-    <!-- "How it works" toggle is BFS-only -->
-    <button class="frameless mb-2 text-base bfs-only" id="howItWorksBtn">How it works</button>
-    <div class="h-[0px] overflow-hidden transition-all duration-200 bfs-only" id="howItWorksList">
-      <div class="p-4 border border-gray-200 rounded-md bg-white">
-        <h3 class="mt-0">How it works</h3>
-        <ol class="!list-decimal space-y-1 text-sm pl-4">
-          <li>We filter charities by user-specified EINs + any keywords. EINs are always included, everything else must match at least one keyword <em>unless</em> no keywords are set (then all are included).</li>
-          <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
-          <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
-        </ol>
+<div class="mb-4">
+  <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+  <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+    <div class="p-4 border border-gray-200 rounded-md bg-white">
+      <div class="text-sm space-y-2">
+        <p>Below is a simple two-part keyword search over nonprofit filings.</p>
+        <p>
+          <strong>Nonprofit search</strong> looks up by EIN or nonprofit name.<br/>
+          <strong>Officer search</strong> looks up by principal officer name.
+        </p>
+        <p>
+          Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
+        </p>
+        <p>
+          This search runs in two passes per keyword:
+          <ol class="!list-decimal space-y-1 pl-4">
+            <li>exact keyword match</li>
+            <li>prefix matches (i.e., other keywords that start with that string)</li>
+          </ol>
+        </p>
+        <p>
+          For performance reasons, only the first 100 matching rows are displayed.
+        </p>
       </div>
     </div>
   </div>
-
-  <!-- BFS controls are BFS-only -->
-  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4 bfs-only">
-    <!-- EIN Input & Add Button -->
-    <div class="relative flex flex-col gap-2 max-w-lg">
-      <div class="inline-flex flex-col gap-1">
-  <div class="">
-    <label class="text-sm font-semibold" for="einInput">Add EIN(s)</label>
-    
-    <span class="inline-block ml-1"><button id='clearEINsBtn' class='frameless'>Clear EINs</button></span>
-    
-  </div>
-  <div class="flex items-center gap-1.5">
-    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-1 rounded text-sm border border-gray-300" />
-    <button id="addEinBtn">Add EIN</button>
-  </div>
 </div>
 
+<div id="searchContainer" class="mb-2">
+  <div class="flex flex-col md:flex-row md:items-end gap-2 justify-between">
+    <form id="searchForm" class="flex flex-col md:flex-row md:items-center gap-2 w-full">
+      
+      <div class="flex flex-col gap-1">
+        <label for="nonprofitBox" class="text-sm md:text-[15px] font-bold min-w-[200px]">
+          Nonprofit/EIN keywords:
+        </label>
+        <input type="text" id="nonprofitBox" 
+               class="w-full md:w-auto px-2 py-1 rounded text-sm border border-gray-300" 
+               placeholder="E.g. 'united way' or '12-3456789'"/>
+      </div>
+      
+      <div class="flex flex-col gap-1">
+        <label for="officerBox" class="text-sm md:text-[15px] font-bold min-w-[200px]">
+          Officer name keywords:
+        </label>
+        <input type="text" id="officerBox" 
+               class="w-full md:w-auto px-2 py-1 rounded text-sm border border-gray-300" 
+               placeholder="E.g. 'mary sue'"/>
+      </div>
 
-      <div id="activeEINs"></div>
-    </div>
+      <span class="flex items-center gap-1 mt-2 md:mt-6">
+        <button type="submit" id="searchButton" disabled>
+          <span class="button-text">Search</span>
+          <img src="/assets/images/loading-white.svg" 
+               class="loading-spinner size-6 mx-auto" 
+               style="display: none;" 
+               alt="Loading..." />
+        </button>
+      </span>
+      <span id="statusMessage" class="mt-2"></span>
+    </form>
 
-    <div class="relative flex flex-col gap-2 max-w-lg">
-      <div class="inline-flex flex-col gap-1">
-  <div class="">
-    <label class="text-sm font-semibold" for="keywordInput">Add keyword</label>
-    
-    <span class="inline-block ml-1"><button id='clearFiltersBtn' class='frameless'>Clear keywords</button></span>
-    
-  </div>
-  <div class="flex items-center gap-1.5">
-    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-1 rounded text-sm border border-gray-300" />
-    <button id="addFilterBtn">Add</button>
-  </div>
-</div>
-
-
-      <div id="activeFilters"></div>
-    </div>
-
-    <div class="flex-1 text-right flex flex-row-reverse md:flex-col items-end justify-between md:justify-end gap-1 md:self-end">
-      <!-- <button id="generateBtn">Generate Graph</button> -->
-      <button id="downloadBtn" class="frameless" style="display: none;">
-        <span class="flex items-center gap-1 text-sm text-gray-500 font-semibold">
-          <img src="/assets/images/download.svg" class="size-5" alt="Download SVG">
-          Download SVG
-        </span>
-      </button>
-      <div id="status" class=""></div>
+    <div>
+      <div id="resultsStatus"></div>
     </div>
   </div>
 </div>
 
-<div id="excluded-info" class="-mx-4 md:mx-0 mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
-  <div>
-  <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 ">501(c)(3)s <em>not</em> displayed</h3> 
-  <!-- placeholder: <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span> -->
-  <span class="text-[15px] md:text-base font-bold" id="excluded501"></span>
-</div>
-  <div>
-  <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 ">Grants <em>not</em> displayed</h3> 
-  <!-- placeholder: <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span> -->
-  <span class="text-[15px] md:text-base font-bold" id="excludedGrants"></span>
-</div>
-  <div>
-  <h3 class="mt-0 text-sm opacity-75 font-medium mb-0 text-red opacity-100"><strong class='font-semibold'>Taxpayer total in subgraph</strong></h3> 
-  <!-- placeholder: <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span> -->
-  <span class="text-[15px] md:text-base font-bold" id="taxpayerTotal"></span>
-</div>
-</div>
-
-<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
-  <div class="">
-    <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
-  </div>
-</div>
-
+<div id="resultsContainer" class="flex flex-col gap-2"></div>
 
 <script>
-  const BFS_CAP = 20;
+  // Global arrays for the master index
+  let KEYWORDS = [];
+  let BATCHES  = [];
 
-  // Full data from CSV
-  let charities = {};             // EIN -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
-  let edgeAccumulator = {};       // "filer~grantee" -> totalGrant
-  let totalCharitiesCount = 0;    // total charities read
-  let totalGrantsCount = 0;       // total edges read from CSV
+  $('#nonprofitBox').prop('disabled', true);
+  $('#officerBox').prop('disabled', true);
+  $('#searchButton').prop('disabled', true);
 
-  // Filter state
-  let activeEINs = [];
-  let activeKeywords = [];
+  $(document).ready(async function() {
+    $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
+    try {
+      // Spinner on
+      $('#searchButton .button-text').hide();
+      $('#searchButton .loading-spinner').show();
 
-  // BFS / data-ready
-  let dataReady = false;
-  let panZoomInstance = null;
+      // 1) Load master index
+      await loadMasterReverseIndex('officials_reverse_index.txt.zip');
 
-  // Custom graph state
-  let customGraphEdges = null;  // array of objects { filer, grantee, amt }
-  let customTitle = null;       // optional custom title from the query param
+      // 2) Re-enable
+      $('#searchButton .loading-spinner').hide();
+      $('#searchButton .button-text').show();
+      $('#statusMessage').hide();
+      $('#nonprofitBox').prop('disabled', false);
+      $('#officerBox').prop('disabled', false);
+      $('#searchButton').prop('disabled', false);
 
-  $(document).ready(function() {
+      // 3) Auto-search if URL has params
+      const urlParams = new URLSearchParams(window.location.search);
+      const npKW = urlParams.get('nonprofit_kw') || '';
+      const offKW = urlParams.get('officer_kw') || '';
+      if (npKW) $('#nonprofitBox').val(npKW);
+      if (offKW) $('#officerBox').val(offKW);
 
-    // Parse query params first
-    parseQueryParams();
+      // Add toggle functionality for "How it works"
+      $('#howItWorksBtn').on('click', function() {
+        const $list = $('#howItWorksList');
+        const $btn = $(this);
+        
+        if ($list.height() === 0) {
+            // Expand
+            $list.css('height', 'auto');
+            const autoHeight = $list.height();
+            $list.height(0);
+            $list.height(autoHeight);
+            $btn.text('Hide details');
+        } else {
+            // Collapse
+            $list.height(0);
+            $btn.text('How it works');
+        }
+      });
 
-    // Load data once
-    loadData().then(() => {
-      dataReady = true;
-      $('#status').text('Data loaded.').css('color', 'black');
-      // Generate graph right away (which will respect BFS or custom logic)
-      generateGraph();
-    }).catch(err => {
-      console.error(err);
-      $('#status').text('Failed to load data.').css('color', 'red');
-    });
-
-    // EIN handling
-    $('#addEinBtn').on('click', addEINFromInput);
-    $('#einInput').on('keypress', e => {
-      if (e.key === 'Enter') addEINFromInput();
-    });
-    $('#clearEINsBtn').on('click', () => {
-      activeEINs = [];
-      renderActiveEINs();
-      updateQueryParams();
-      generateGraph();
-    });
-
-    // Keywords
-    $('#addFilterBtn').on('click', addKeywordFromInput);
-    $('#keywordInput').on('keypress', e => {
-      if (e.key === 'Enter') addKeywordFromInput();
-    });
-    $('#clearFiltersBtn').on('click', () => {
-      activeKeywords = [];
-      renderActiveKeywords();
-      updateQueryParams();
-      generateGraph();
-    });
-
-    // Download SVG
-    $('#downloadBtn').on('click', downloadSVG);
-
-    // Expand/collapse "How it works" (BFS-only)
-    $('#howItWorksBtn').on('click', function() {
-      const $list = $('#howItWorksList');
-      const $btn = $(this);
-
-      if ($list.height() === 0) {
-        // Expand
-        $list.css('height', 'auto');
-        const autoHeight = $list.height();
-        $list.height(0);
-        $list.height(autoHeight);
-        $btn.text('Hide details');
-      } else {
-        // Collapse
-        $list.height(0);
-        $btn.text('How it works');
+      if (npKW || offKW) {
+        $('#searchForm').trigger('submit');
       }
-    });
+    } catch (err) {
+      console.error(err);
+      $('#statusMessage').text('Error loading index: ' + err);
+    }
   });
 
-  /**
-   * Parse query parameters:
-   * - If custom_graph is present, parse it, store in customGraphEdges; ignore other params except for title.
-   * - Otherwise, parse eins/keywords in the BFS usage scenario.
-   * Also sets the instructions text, and shows/hides BFS elements accordingly.
-   */
-  function parseQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    customTitle = params.get('title') || null;
+  // ===========================
+  // Search form
+  // ===========================
+  $('#searchForm').on('submit', async function(e) {
+    e.preventDefault();
+    $('#resultsContainer').empty();
 
-    const customParam = params.get('custom_graph');
-    if (customParam) {
-      // We are in custom-graph mode
-      const trimmed = customParam.replace(/;+$/, '');
-      const segments = trimmed.split(';');
-      let edgeList = [];
+    // Disable form
+    $('#nonprofitBox').prop('disabled', true);
+    $('#officerBox').prop('disabled', true);
+    $('#searchButton').prop('disabled', true);
 
-      segments.forEach(s => {
-        const parts = s.split(',');
-        if (parts.length !== 3) return; // skip if malformed
-        let [filer, grantee, amt] = parts.map(x => x.trim());
-        // Remove dashes/spaces from EINS
-        filer = filer.replace(/[-\s]/g, '');
-        grantee = grantee.replace(/[-\s]/g, '');
-        const num = parseInt(amt, 10);
-        if (!isNaN(num)) {
-          edgeList.push({ filer, grantee, amt: num });
-        }
-      });
-      customGraphEdges = edgeList;
+    // Spinner on
+    $('#searchButton .button-text').hide();
+    $('#searchButton .loading-spinner').show();
 
-      // BFS controls are hidden
-      $('.bfs-only').hide();
+    try {
+      // Gather user input
+      const nonprofitInput = $('#nonprofitBox').val().trim();
+      const officerInput   = $('#officerBox').val().trim();
 
-      // Show instructions
-      if (customTitle) {
-        $('#instructions').html('Displaying <strong>' + customTitle + '</strong>');
+      // Update URL
+      const newUrl = new URL(window.location);
+      if (nonprofitInput) {
+        newUrl.searchParams.set('nonprofit_kw', nonprofitInput);
       } else {
-        $('#instructions').text('Displaying exact graph.');
+        newUrl.searchParams.delete('nonprofit_kw');
       }
-    } else {
-      // BFS scenario: parse EINS, keywords normally
-      const einParam = params.get('eins');
-      if (einParam) {
-        let list = einParam.split(',');
-        list.forEach(e => {
-          let v = e.replace(/[-\s]/g, '');
-          if (/^\d{9}$/.test(v)) {
-            if (!activeEINs.includes(v)) {
-              activeEINs.push(v);
-            }
-          }
-        });
+      if (officerInput) {
+        newUrl.searchParams.set('officer_kw', officerInput);
+      } else {
+        newUrl.searchParams.delete('officer_kw');
       }
-      const kwParam = params.get('keywords');
-      if (kwParam) {
-        let kws = kwParam.split(',');
-        kws.forEach(k => {
-          k = k.trim().toLowerCase();
-          if (k && !activeKeywords.includes(k)) {
-            activeKeywords.push(k);
-          }
-        });
-      }
+      window.history.pushState({}, '', newUrl);
 
-      // BFS controls visible
-      $('.bfs-only').show();
+      // Tokenize
+      const npTokens = tokenizeInput(nonprofitInput);
+      const ofTokens = tokenizeInput(officerInput);
 
-      // Instructions text for BFS scenario
-      $('#instructions').text(
-        'Use the search and keywords to filter charities, then BFS expansion is performed automatically.'
-      );
-
-      // Render them
-      renderActiveEINs();
-      renderActiveKeywords();
-    }
-  }
-
-  /**
-   * Update the query parameters to reflect the current activeEINs and activeKeywords.
-   * This only applies if we are not in custom-graph mode.
-   */
-  function updateQueryParams() {
-    if (customGraphEdges) {
-      // Do nothing if custom_graph is present
-      return;
-    }
-    const params = new URLSearchParams();
-    if (activeEINs.length > 0) {
-      params.set('eins', activeEINs.join(','));
-    }
-    if (activeKeywords.length > 0) {
-      params.set('keywords', activeKeywords.join(','));
-    }
-    const newUrl = window.location.pathname + '?' + params.toString();
-    window.history.replaceState({}, '', newUrl);
-  }
-
-  /**
-   * Load charities + grants from the CSV zips.
-   */
-  async function loadData() {
-    $('#status').html('<span class="flex items-center text-sm"><img src="/assets/images/loading.svg" class="size-6" alt="Loading..."> Loading data...</span>');
-
-    // 1) charities
-    const charitiesZipBuf = await fetch('charities.csv.zip').then(r => r.arrayBuffer());
-    const charitiesZip = await JSZip.loadAsync(charitiesZipBuf);
-    const charitiesCsvString = await charitiesZip.file('charities_truncated.csv').async('string');
-
-    await new Promise((resolve, reject) => {
-      Papa.parse(charitiesCsvString, {
-        header: true,
-        skipEmptyLines: true,
-        complete: results => {
-          results.data.forEach(row => {
-            const ein = (row['filer_ein'] || '').trim();
-            if (!ein) return;
-            let rAmt = parseInt((row['receipt_amt'] || '0').trim(), 10);
-            if (isNaN(rAmt)) rAmt = 0;
-            charities[ein] = {
-              name: (row['filer_name'] || '').trim(),
-              xml_name: row['xml_name'],
-              receipt_amt: rAmt,
-              govt_amt: parseInt((row['govt_amt'] || '0').trim(), 10) || 0,
-              contrib_amt: parseInt((row['contrib_amt'] || '0').trim(), 10) || 0,
-              grant_amt: 0 // will accumulate below
-            };
-          });
-          totalCharitiesCount = Object.keys(charities).length;
-          resolve();
-        },
-        error: err => reject(err)
-      });
-    });
-
-    // 2) grants
-    const grantsZipBuf = await fetch('grants.csv.zip').then(r => r.arrayBuffer());
-    const grantsZip = await JSZip.loadAsync(grantsZipBuf);
-    const grantsCsvString = await grantsZip.file('grants_truncated.csv').async('string');
-
-    await new Promise((resolve, reject) => {
-      Papa.parse(grantsCsvString, {
-        header: true,
-        skipEmptyLines: true,
-        complete: results => {
-          let localEdges = {};
-          let count = 0;
-          results.data.forEach(row => {
-            const filer = (row['filer_ein'] || '').trim();
-            const grantee = (row['grant_ein'] || '').trim();
-            let amt = parseInt((row['grant_amt'] || '0').trim(), 10);
-            if (isNaN(amt)) amt = 0;
-            count++;
-            if (charities[filer] && charities[grantee]) {
-              const key = filer + '~' + grantee;
-              if (!localEdges[key]) localEdges[key] = 0;
-              localEdges[key] += amt;
-              charities[filer].grant_amt += amt;
-            }
-          });
-          edgeAccumulator = localEdges;
-          totalGrantsCount = count;
-          resolve();
-        },
-        error: err => reject(err)
-      });
-    });
-  }
-
-  /**
-   * The main graph-generation entry point.
-   * - If custom_graph is present, we parse and render that directly.
-   * - Else, we do BFS logic based on activeEINs & keywords.
-   */
-  function generateGraph() {
-    if (!dataReady) {
-      alert("Data not loaded yet. Please wait.");
-      return;
-    }
-
-    // Clear old graph
-    $('#graph-container').empty();
-    $('#excluded-info').hide();
-    if (panZoomInstance) {
-      panZoomInstance.destroy();
-      panZoomInstance = null;
-    }
-
-    $('#status').text('Generating...').css('color', 'red');
-
-    if (customGraphEdges) {
-      // CUSTOM GRAPH MODE
-      generateCustomGraph();
-    } else {
-      // BFS MODE
-      generateBFSGraph();
-    }
-  }
-
-  /**
-   * Build and render the BFS-based subgraph from the user's EINS and keywords.
-   */
-  function generateBFSGraph() {
-    // Build filtered dataset
-    const { filteredCharities, filteredEdges } = buildFilteredData();
-    const filteredEINs = Object.keys(filteredCharities);
-    if (filteredEINs.length === 0) {
-      $('#status').text('No charities match the filters.').css('color','black');
-      return;
-    }
-
-    // Build adjacency
-    const adjacencyFwd = {};
-    const adjacencyRev = {};
-    for (const [key, amt] of Object.entries(filteredEdges)) {
-      const [filer, grantee] = key.split('~');
-      if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
-      adjacencyFwd[filer].push(grantee);
-
-      if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
-      adjacencyRev[grantee].push(filer);
-    }
-
-    // Multi-root BFS
-    let visitedSet = multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev);
-
-    // Force user EINs
-    for (const e of activeEINs) {
-      if (filteredCharities[e]) {
-        visitedSet.add(e);
-      }
-    }
-
-    // Build final edges
-    const finalEdges = [];
-    for (const [key, amt] of Object.entries(filteredEdges)) {
-      const [filer, grantee] = key.split('~');
-      if (visitedSet.has(filer) && visitedSet.has(grantee)) {
-        finalEdges.push({ filer, grantee, amt });
-      }
-    }
-
-    // Also forcibly include direct edges among user EINs
-    for (let i = 0; i < activeEINs.length; i++) {
-      for (let j = i + 1; j < activeEINs.length; j++) {
-        const e1 = activeEINs[i];
-        const e2 = activeEINs[j];
-        // fwd
-        if (filteredEdges[e1 + '~' + e2]) {
-          const amt = filteredEdges[e1 + '~' + e2];
-          if (!finalEdges.find(x => x.filer===e1 && x.grantee===e2)) {
-            finalEdges.push({ filer: e1, grantee: e2, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
-        }
-        // rev
-        if (filteredEdges[e2 + '~' + e1]) {
-          const amt = filteredEdges[e2 + '~' + e1];
-          if (!finalEdges.find(x => x.filer===e2 && x.grantee===e1)) {
-            finalEdges.push({ filer: e2, grantee: e1, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
-        }
-      }
-    }
-
-    // Summaries
-    const displayedNodesCount = visitedSet.size;
-    const excluded501 = totalCharitiesCount - displayedNodesCount;
-    const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
-    const displayedEdgesCount = finalEdges.length;
-    const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
-
-    // Sum taxpayer funds in subgraph
-    let taxpayerTotal = 0;
-    for (const ein of visitedSet) {
-      taxpayerTotal += (filteredCharities[ein].govt_amt || 0);
-    }
-
-    // Build & render
-    const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount);
-
-    // Debug or link logging
-    for (let ein of visitedSet) {
-      const c = filteredCharities[ein];
-      const grants = formatNumber(c.grant_amt);
-      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
-      const irsFormLink = linkScheduleI
-        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
-        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
-      console.log(ein + " " + irsFormLink);
-    }
-  }
-
-  /**
-   * Build and render the *custom* graph from the custom_graph param.
-   * We skip BFS. We parse customGraphEdges, filter out unknown charities, then build final edges.
-   */
-  function generateCustomGraph() {
-    const validEdges = [];
-    const visitedSet = new Set();
-
-    // For each custom edge, keep only if src & dst exist in charities
-    customGraphEdges.forEach(e => {
-      if (charities[e.filer] && charities[e.grantee]) {
-        validEdges.push(e);
-        visitedSet.add(e.filer);
-        visitedSet.add(e.grantee);
-      }
-    });
-
-    // Sum taxpayer total for the visited EINS
-    let taxpayerTotal = 0;
-    visitedSet.forEach(ein => {
-      taxpayerTotal += charities[ein].govt_amt || 0;
-    });
-
-    // Build DOT
-    const dot = buildDotSource(visitedSet, validEdges, charities, taxpayerTotal);
-
-    // For excluded501 / excludedGrants:
-    const excluded501 = totalCharitiesCount - visitedSet.size;
-    // There's no "filteredEdges" concept here. We just say # of edges in the custom param minus # that made it in
-    const totalCustomEdges = customGraphEdges.length;
-    const displayedEdgesCount = validEdges.length;
-    const excludedGrants = totalCustomEdges - displayedEdgesCount;
-
-    // Render
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size);
-
-    // Debug or link logging
-    visitedSet.forEach(ein => {
-      const c = charities[ein];
-      const grants = formatNumber(c.grant_amt);
-      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
-      const irsFormLink = linkScheduleI
-        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
-        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
-      console.log(ein + " " + irsFormLink);
-    });
-  }
-
-  /**
-   * Renders a DOT string, updates excluded info, sets status and shows download button.
-   */
-  function renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedCount) {
-    const viz = new Viz();
-    viz.renderSVGElement(dot)
-      .then(svgEl => {
-        svgEl.setAttribute('width', '100%');
-        svgEl.setAttribute('height', '100%');
-        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgEl.setAttribute('class', 'w-full h-full');
-        svgEl.setAttribute('style', 'min-height: 75vh;');
-
-        $('#graph-container').append(svgEl);
-        panZoomInstance = svgPanZoom(svgEl, {
-          zoomEnabled: true,
-          controlIconsEnabled: true,
-          fit: true,
-          center: true
-        });
-
-        // Show excluded info
-        $('#excluded501').text(excluded501.toLocaleString());
-        $('#excludedGrants').text(excludedGrants.toLocaleString());
-        $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
+      if (!npTokens.length && !ofTokens.length) {
+        $('#resultsContainer').html(
+          '<div class="p-4 text-center">No valid keywords to search for.</div>'
         );
-        $('#excluded-info').show();
+        $('#resultsStatus').empty();
+      } else {
+        // Get batch sets from master index
+        let npBatches = null;
+        if (npTokens.length) {
+          npBatches = getFinalBatchIntersection(npTokens);
+        }
+        let ofBatches = null;
+        if (ofTokens.length) {
+          ofBatches = getFinalBatchIntersection(ofTokens);
+        }
 
-        $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
-        $('#downloadBtn').show();
-      })
-      .catch(err => {
-        console.error(err);
-        $('#status').text('Error generating graph.').css('color', 'red');
-      });
+        // Intersect if both exist
+        let finalBatchIDs = null;
+        if (npBatches && ofBatches) {
+          finalBatchIDs = new Set();
+          for (let b of npBatches) {
+            if (ofBatches.has(b)) {
+              finalBatchIDs.add(b);
+            }
+          }
+        } else if (npBatches) {
+          finalBatchIDs = npBatches;
+        } else if (ofBatches) {
+          finalBatchIDs = ofBatches;
+        } else {
+          finalBatchIDs = new Set();
+        }
+
+        // Process each batch up to 100 rows
+        const sortedBatchIDs = Array.from(finalBatchIDs).sort((a,b)=>a-b);
+        let totalRowsDisplayed = 0;
+        for (let i = 0; i < sortedBatchIDs.length && totalRowsDisplayed < 100; i++) {
+          const batchId = sortedBatchIDs[i];
+          totalRowsDisplayed += await processBatch(
+            batchId, 
+            npTokens, 
+            ofTokens, 
+            100 - totalRowsDisplayed
+          );
+        }
+
+        // Show results or none
+        if (totalRowsDisplayed > 0) {
+          $('#resultsStatus').html(
+            `<span class="text-sm whitespace-nowrap">Showing ${totalRowsDisplayed}${
+               totalRowsDisplayed === 100 ? ' (limit)' : ''
+            } results</span>`
+          );
+        } else {
+          $('#resultsContainer').html(
+            '<div class="p-4 text-center">No results found.</div>'
+          );
+          $('#resultsStatus').empty();
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      $('#resultsContainer').html(
+        `<div class="p-4 text-center">Error during search: ${err}</div>`
+      );
+      $('#resultsStatus').empty();
+    }
+
+    // Restore
+    $('#searchButton .loading-spinner').hide();
+    $('#searchButton .button-text').show();
+    $('#nonprofitBox').prop('disabled', false);
+    $('#officerBox').prop('disabled', false);
+    $('#searchButton').prop('disabled', false);
+  });
+
+  // ===========================
+  // 1) MASTER REVERSE INDEX
+  // ===========================
+  async function loadMasterReverseIndex(zipUrl) {
+    const resp = await fetch(zipUrl);
+    if (!resp.ok) throw new Error('Could not fetch ' + zipUrl);
+    const buffer = await resp.arrayBuffer();
+
+    const jsZip = new JSZip();
+    const zip = await jsZip.loadAsync(buffer);
+
+    const fileName = 'officials_reverse_index.txt';
+    if (!zip.file(fileName)) {
+      throw new Error('Missing ' + fileName + ' in zip');
+    }
+    const text = await zip.file(fileName).async('string');
+    parseMasterReverseIndex(text);
   }
 
-  /**
-   * BFS multi-root approach
-   */
-  function multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev) {
-    const visited = new Set();
-    const allEINs = Object.keys(filteredCharities);
+  function parseMasterReverseIndex(fileData) {
+    // lines: key:batch1,batch2,...
+    const lines = fileData.split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      const parts = trimmed.split(':');
+      if (parts.length !== 2) continue;
+      const kw = parts[0];
+      const bStr = parts[1];
+      const bIds = bStr.split(',')
+        .map(x => parseInt(x,10))
+        .filter(n => !isNaN(n));
+      KEYWORDS.push(kw);
+      BATCHES.push(bIds);
+    }
+  }
 
-    // Sort them by descending receipt_amt
-    let sortedByReceipt = allEINs.slice().sort((a,b) => {
-      return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
+  // ===========================
+  // 2) TOKENIZE
+  // ===========================
+  function tokenizeInput(input) {
+    if (!input) return [];
+    let txt = input.toLowerCase();
+    // remove hyphens
+    txt = txt.replace(/-/g, '');
+    // replace non-alphanumeric with space
+    txt = txt.replace(/[^a-z0-9]+/g, ' ');
+    // split
+    const rawTokens = txt.split(/\s+/).filter(Boolean);
+
+    // only keep tokens that can prefix-match
+    const valid = [];
+    for (const t of rawTokens) {
+      if (couldPrefixMatch(t)) {
+        valid.push(t);
+      }
+    }
+    return valid;
+  }
+
+  function couldPrefixMatch(token) {
+    const idx = findInsertionIndex(KEYWORDS, token);
+    if (idx >= KEYWORDS.length) return false;
+    // if token < 4, only exact
+    if (token.length < 4 && KEYWORDS[idx] !== token) return false;
+    return KEYWORDS[idx].startsWith(token);
+  }
+
+  function findInsertionIndex(arr, val) {
+    let low = 0, high = arr.length;
+    while (low < high) {
+      const mid = (low + high) >>> 1;
+      if (arr[mid] < val) low = mid + 1;
+      else high = mid;
+    }
+    return low;
+  }
+
+  // ===========================
+  // 3) BATCH INTERSECTION
+  // ===========================
+  function getFinalBatchIntersection(tokens) {
+    let runningSet = null;
+    for (const t of tokens) {
+      const matchSet = new Set();
+      // exact
+      const exIdx = exactMatchIndex(t);
+      if (exIdx !== -1) {
+        for (let b of BATCHES[exIdx]) matchSet.add(b);
+      }
+      // prefix
+      const pr = findPrefixRange(t);
+      for (let i = pr.start; i < pr.end; i++) {
+        for (let b of BATCHES[i]) matchSet.add(b);
+      }
+      if (runningSet === null) {
+        runningSet = matchSet;
+      } else {
+        // intersect
+        const temp = new Set();
+        for (let x of runningSet) {
+          if (matchSet.has(x)) temp.add(x);
+        }
+        runningSet = temp;
+      }
+      if (!runningSet.size) break;
+    }
+    return runningSet || new Set();
+  }
+
+  function exactMatchIndex(word) {
+    let low = 0, high = KEYWORDS.length - 1;
+    while (low <= high) {
+      const mid = (low + high) >>> 1;
+      if (KEYWORDS[mid] === word) return mid;
+      if (KEYWORDS[mid] < word) low = mid + 1;
+      else high = mid - 1;
+    }
+    return -1;
+  }
+
+  function findPrefixRange(prefix) {
+    const start = findInsertionIndex(KEYWORDS, prefix);
+    if (prefix.length < 4) {
+      // short => only exact
+      return { start, end: start };
+    }
+    let end = start;
+    while (end < KEYWORDS.length && KEYWORDS[end].startsWith(prefix)) {
+      end++;
+    }
+    return { start, end };
+  }
+
+  // ===========================
+  // 4) PROCESS A BATCH
+  //    - Nonprofit => (rowId) set
+  //    - Officer   => rowId => set of matched official indexes
+  //      Then combine them so we know which row => which matched indexes
+  // ===========================
+  async function processBatch(batchId, npTokens, ofTokens, maxNeeded) {
+    // 1) Load batch-level reverse index
+    const revZipName = `officials_batch_${String(batchId).padStart(3,'0')}_reverse_index.txt.zip`;
+    let resp = await fetch(revZipName);
+    if (!resp.ok) {
+      console.warn(`Could not fetch ${revZipName}`);
+      return 0;
+    }
+    const buffer = await resp.arrayBuffer();
+    const jsZip = new JSZip();
+    const revZip = await jsZip.loadAsync(buffer);
+
+    const revTxtName = `officials_batch_${String(batchId).padStart(3,'0')}_reverse_index.txt`;
+    if (!revZip.file(revTxtName)) {
+      console.warn(`Missing ${revTxtName} in zip`);
+      return 0;
+    }
+    const reverseIndexText = await revZip.file(revTxtName).async('string');
+
+    // 2) Row-level matches
+    const npRowSet = getBatchMatchesNonprofit(reverseIndexText, npTokens);   // Set<rowId> or null
+    const officerMap = getBatchMatchesOfficer(reverseIndexText, ofTokens);  // Map<rowId, Set<officerIdx>> or null
+
+    // Construct final row => set of matched officer indexes
+    // If a row is not in nonprofitSet, skip. If nonprofitSet=null, that means no filter on nonprofit => pass
+    // If a row is not in officerMap, skip. If officerMap=null, that means no filter on officer => pass
+    const finalRows = new Map();
+
+    // We'll gather all row IDs that pass both filters
+    // First find the union of row IDs from npRowSet and officerMap.
+    let allRows = new Set();
+    if (npRowSet) {
+      // npRowSet is a set of row IDs
+      for (let r of npRowSet) {
+        allRows.add(r);
+      }
+    }
+    if (officerMap) {
+      // officerMap is rowId => set
+      for (let [r, offSet] of officerMap.entries()) {
+        allRows.add(r);
+      }
+    }
+    // If both are null => no tokens => no matches
+    if (!npRowSet && !officerMap) {
+      return 0;
+    }
+
+    for (let rowId of allRows) {
+      // Must pass nonprofit if npRowSet exists
+      if (npRowSet && !npRowSet.has(rowId)) {
+        continue; 
+      }
+      // Must pass officer if officerMap exists
+      let matchedSet = new Set();
+      if (officerMap) {
+        if (!officerMap.has(rowId)) {
+          continue;
+        }
+        matchedSet = officerMap.get(rowId);
+      }
+      // If no officer filter => matchedSet = empty
+      // If officer filter => matchedSet is set of matched indexes
+      finalRows.set(rowId, matchedSet);
+    }
+
+    if (!finalRows.size) return 0;
+
+    // 3) Fetch the CSV
+    const csvZipName = `officials_batch_${String(batchId).padStart(3,'0')}.csv.zip`;
+    resp = await fetch(csvZipName);
+    if (!resp.ok) {
+      console.warn(`Could not fetch ${csvZipName}`);
+      return 0;
+    }
+    const csvBuffer = await resp.arrayBuffer();
+    const batchZip = await jsZip.loadAsync(csvBuffer);
+
+    const csvFileName = `officials_batch_${String(batchId).padStart(3,'0')}.csv`;
+    if (!batchZip.file(csvFileName)) {
+      console.warn(`Missing file: ${csvFileName}`);
+      return 0;
+    }
+    const csvData = await batchZip.file(csvFileName).async('string');
+    const parsed = Papa.parse(csvData, {
+      header: true,
+      skipEmptyLines: false,
+      dynamicTyping: false
     });
 
-    // If user EINs exist in the filtered set, BFS from the largest among them first
-    let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
-    if (hasUserEINsInFiltered.length > 0) {
-      let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
-        if (!best) return cur;
-        const bestAmt = filteredCharities[best].receipt_amt;
-        const curAmt = filteredCharities[cur].receipt_amt;
-        return (curAmt > bestAmt) ? cur : best;
-      }, null);
-
-      bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
-      sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
-    }
-
-    // If <5 visited, BFS from next-largest
-    let idx = 0;
-    while (visited.size < 5 && idx < sortedByReceipt.length) {
-      const candidate = sortedByReceipt[idx];
-      if (!visited.has(candidate)) {
-        bfsFromRoot(candidate, adjacencyFwd, adjacencyRev, visited);
+    // 4) Display
+    let displayed = 0;
+    // sort row IDs ascending
+    const sortedRows = Array.from(finalRows.keys()).sort((a,b) => a-b);
+    for (let r of sortedRows) {
+      if (displayed >= maxNeeded) break;
+      const idx = r - 1; // rowId is 1-based
+      if (idx >= 0 && idx < parsed.data.length) {
+        const rowObj = parsed.data[idx];
+        const matchedOfficerIndexes = finalRows.get(r); 
+        // matchedOfficerIndexes is a Set of integers (0-based for the official array?), 
+        // but note we stored "i-1" inside getBatchMatchesOfficer. We'll confirm below.
+        const html = buildResultItem(rowObj, matchedOfficerIndexes);
+        $('#resultsContainer').append(html);
+        displayed++;
       }
-      idx++;
     }
-
-    return visited;
+    initDynamicEventHandlers();
+    return displayed;
   }
 
-  function bfsFromRoot(root, adjacencyFwd, adjacencyRev, visited) {
-    if (!root) return;
-    // forward BFS
-    let queue = [root];
-    const localFwd = new Set();
-    while (queue.length > 0 && localFwd.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localFwd.has(curr)) {
-        localFwd.add(curr);
-        const neighs = adjacencyFwd[curr] || [];
-        for (let n of neighs) {
-          if (!localFwd.has(n) && localFwd.size < BFS_CAP) {
-            queue.push(n);
+  // ------------------------------------------------------------
+  // getBatchMatchesNonprofit:
+  //   returns null if no tokens.
+  //   else returns a Set of real row IDs that matched (offsetID >> 12).
+  //   only collects offsetIDs where (offsetID & 0xFFF) == 0
+  // ------------------------------------------------------------
+  function getBatchMatchesNonprofit(reverseIndexText, tokens) {
+    if (!tokens || !tokens.length) return null;
+    const batchMap = parseBatchIndex(reverseIndexText);
+    let finalOffsets = null;
+
+    for (let tok of tokens) {
+      const matchSet = new Set();
+      // EXACT
+      if (batchMap.has(tok)) {
+        for (let offId of batchMap.get(tok)) {
+          if ((offId & 0xFFF) === 0) {
+            matchSet.add(offId);
           }
         }
       }
-    }
-    // reverse BFS
-    const localRev = new Set();
-    queue = [root];
-    while (queue.length > 0 && localRev.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localRev.has(curr)) {
-        localRev.add(curr);
-        const neighs = adjacencyRev[curr] || [];
-        for (let n of neighs) {
-          if (!localRev.has(n) && localRev.size < BFS_CAP) {
-            queue.push(n);
+      // PREFIX
+      for (let [kw, offList] of batchMap.entries()) {
+        if (kw !== tok && kw.startsWith(tok)) {
+          for (let offId of offList) {
+            if ((offId & 0xFFF) === 0) {
+              matchSet.add(offId);
+            }
           }
         }
       }
-    }
-    // union
-    for (let x of localFwd) visited.add(x);
-    for (let x of localRev) visited.add(x);
-  }
-
-  /**
-   * Build a filtered subset of charities + edges (for BFS scenario).
-   * - If activeKeywords is non-empty, a charity must match at least one or be in activeEINs.
-   * - If no keywords, we include all charities plus the user EINS.
-   */
-  function buildFilteredData() {
-    let filteredCharities = {};
-    const hasKeywords = (activeKeywords.length > 0);
-
-    for (const [ein, c] of Object.entries(charities)) {
-      if (activeEINs.includes(ein)) {
-        // Always keep user-specified EIN
-        filteredCharities[ein] = c;
-        continue;
-      }
-      if (hasKeywords) {
-        // Must match at least one keyword
-        const nm = c.name.toLowerCase();
-        const matched = activeKeywords.some(kw => nm.includes(kw));
-        if (matched) {
-          filteredCharities[ein] = c;
-        }
+      // intersect
+      if (finalOffsets === null) {
+        finalOffsets = matchSet;
       } else {
-        // No keywords => keep everything
-        filteredCharities[ein] = c;
+        const temp = new Set();
+        for (let x of finalOffsets) {
+          if (matchSet.has(x)) temp.add(x);
+        }
+        finalOffsets = temp;
       }
+      if (!finalOffsets.size) break;
     }
 
-    // Filter edges so that both ends are in the filtered set
-    let filteredEdges = {};
-    for (const [key, amt] of Object.entries(edgeAccumulator)) {
-      const [filer, grantee] = key.split('~');
-      if (filteredCharities[filer] && filteredCharities[grantee]) {
-        filteredEdges[key] = amt;
-      }
+    if (!finalOffsets) return new Set(); // no matches
+    // convert to row IDs
+    const rowIdSet = new Set();
+    for (let offId of finalOffsets) {
+      rowIdSet.add(offId >> 12);
     }
-
-    return { filteredCharities, filteredEdges };
+    return rowIdSet;
   }
 
-  /**
-   * Build DOT string. 
-   */
-  function buildDotSource(nodeSet, edgeList, filteredCharities, taxpayerTotal) {
-    let dot = `digraph G {
-rankdir=LR;
-nodesep=0.5;
-ranksep=0.5;
-node [
-  shape=box,
-  style="filled",
-  fillcolor="#F3F4F6",
-  color="#94A3B8",
-  fontname="SF Pro, Helvetica, sans-serif",
-  fontsize=14,
-  margin=0.1,
-  penwidth=1
-];
-edge [
-  fontname="SF Pro, Helvetica, sans-serif",
-  color="#DADBE7",
-  penwidth=2,
-  fontsize=11,
-  decorate=true,
-  labelangle=0,
-  labeldistance=2
-];
-graph [
-  fontname="SF Pro, Helvetica, sans-serif",
-  splines=spline,
-  overlap=false
-];
-labelloc="t";\n`;
+  // ------------------------------------------------------------
+  // getBatchMatchesOfficer:
+  //   returns null if no tokens.
+  //   else returns Map< rowId => Set< officerIndex > >
+  //   where officerIndex is the 0-based index for the official array
+  //   i.e. (offsetID & 0xFFF) - 1
+  //   But we also must ensure each official matched *all* tokens (the AND condition).
+  // ------------------------------------------------------------
+  function getBatchMatchesOfficer(reverseIndexText, tokens) {
+    if (!tokens || !tokens.length) return null;
+    const batchMap = parseBatchIndex(reverseIndexText);
 
-    for (const ein of nodeSet) {
-      const c = filteredCharities[ein];
-      if (!c) continue; // safety
+    // We track (rowId, officialIndex) => matchCount
+    const globalCountMap = new Map();
+    const tokenCount = tokens.length;
 
-      let escapedName = c.name.replace(/[&<>"']/g, char => {
-        switch (char) {
-          case '&': return '&amp;';
-          case '<': return '&lt;';
-          case '>': return '&gt;';
-          case '"': return '&quot;';
-          case "'": return '&apos;';
-          default: return char;
+    for (let tok of tokens) {
+      // Gather offsetIDs with (offsetId & 0xFFF) != 0
+      const curTokenSet = new Set();
+      // EXACT
+      if (batchMap.has(tok)) {
+        for (let offId of batchMap.get(tok)) {
+          const i = offId & 0xFFF;
+          if (i !== 0) {
+            curTokenSet.add(offId);
+          }
         }
-      });
-
-      // If we are in BFS scenario (customGraphEdges == null), highlight keywords
-      if (!customGraphEdges && activeKeywords.length > 0) {
-        activeKeywords.forEach(kw => {
-          const regex = new RegExp(`(\\s*)(${kw})`, 'gi');
-          escapedName = escapedName.replace(regex, '$1<B><FONT COLOR="#2563EB">$2</FONT></B> ').trim();
-        });
+      }
+      // PREFIX
+      for (let [kw, offIds] of batchMap.entries()) {
+        if (kw !== tok && kw.startsWith(tok)) {
+          for (let offId of offIds) {
+            const i = offId & 0xFFF;
+            if (i !== 0) {
+              curTokenSet.add(offId);
+            }
+          }
+        }
       }
 
-      const receipts = formatNumber(c.receipt_amt);
-      const govt = formatNumber(c.govt_amt);
-      const contrib = formatNumber(c.contrib_amt);
-      const grants = formatNumber(c.grant_amt);
+      // For each offsetID in curTokenSet, increment its (rowId, officialIndex) count
+      for (let offId of curTokenSet) {
+        const rowId   = offId >> 12;
+        const i       = (offId & 0xFFF) - 1;  // 0-based official index
+        const key     = `${rowId}:${i}`;
+        const oldVal  = globalCountMap.get(key) || 0;
+        globalCountMap.set(key, oldVal + 1);
+      }
+    }
 
-      const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" cellpadding="2">
-        ${
-          c.govt_amt > 10000000 
-          ? `<tr><td colspan="4"><table border="0" cellspacing="0" cellpadding="5"><tr><td colspan="2" BGCOLOR="#DC2626">
-             <font color="white"><b>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</b></font>
-             </td></tr></table></td></tr>` 
+    // Now build final map of rowId => set of matched i
+    const finalMap = new Map();
+    for (let [key, ct] of globalCountMap.entries()) {
+      if (ct === tokenCount) {
+        const [rStr, iStr] = key.split(':');
+        const r = parseInt(rStr, 10);
+        const i = parseInt(iStr, 10);
+        if (!finalMap.has(r)) {
+          finalMap.set(r, new Set());
+        }
+        finalMap.get(r).add(i);
+      }
+    }
+
+    return finalMap;
+  }
+
+  // ------------------------------------------------------------
+  // parse batch-level reverse index => Map<kw, offsetIDs[]>
+  // ------------------------------------------------------------
+  function parseBatchIndex(txt) {
+    const map = new Map();
+    const lines = txt.split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      const parts = trimmed.split(':');
+      if (parts.length !== 2) continue;
+      const kw = parts[0];
+      const arr = parts[1].split(',')
+        .map(x => parseInt(x,10))
+        .filter(n => !isNaN(n));
+      map.set(kw, arr);
+    }
+    return map;
+  }
+
+  // ===========================
+  // 5) RENDERING
+  // ===========================
+  // Updated to accept "matchedOfficerIndexes" as a Set of 0-based indexes
+  function buildResultItem(row, matchedOfficerIndexes) {
+    const filerName = row.filer_name || '';
+    const filerEin  = row.filer_ein  || '';
+    const taxYear   = row.tax_year   || '';
+    const exposePath = row.serialized_graph || '';
+
+    let raw = row.officials_json || '[]';
+    let matchedHtml = '';
+    let otherHtml   = '';
+
+    try {
+      const officialArray = JSON.parse(raw);
+
+      // Build two lists: matched vs. other
+      const matchedItems = [];
+      const otherItems   = [];
+
+      for (let i = 0; i < officialArray.length; i++) {
+        const off = officialArray[i];
+        const title = off.t || '';
+        const name  = off.n || '';
+        const comp  = off.c || 0;
+
+        const blockHtml = `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1">
+            <div class="md:col-span-1"><strong>${escapeHtml(name)}</strong></div>
+            <div class="md:col-span-1">${escapeHtml(title)}</div>
+            <div class="md:col-span-1">$${Number(comp).toLocaleString()}</div>
+          </div>
+        `;
+        if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
+          matchedItems.push(blockHtml);
+        } else {
+          otherItems.push(blockHtml);
+        }
+      }
+
+      // Only show matched block if any matched
+      if (matchedItems.length) {
+        matchedHtml = `
+          <div class="bg-green/10 border-t border-gray-200 text-sm px-4 py-1">
+            <div class="divide-y divide-gray-200">${matchedItems.join('')}</div>
+          </div>
+        `;
+      }
+
+      // The other officials remain behind a toggle
+      if (otherItems.length) {
+        otherHtml = `
+          <div class="text-sm officialSection" style="display:none;">
+            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-1 py-1 px-4">
+              <strong>Officials</strong>
+              <strong>Role</strong>
+              <strong>Compensation</strong>
+            </div>
+            <div class="pt-2 px-4">${otherItems.join('')}</div>
+          </div>
+        `;
+      }
+    } catch(e) {
+      // Fallback
+      matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officials)</div>`;
+    }
+
+  // Construct exposeLink if we have an exposePath
+  let exposeLink = '';
+  if (exposePath) {
+    const encodedPath = encodeURIComponent(exposePath);
+    const encodedName = encodeURIComponent(filerName);
+    const returnUrl = encodeURIComponent(window.location.href);
+    exposeLink = `
+      <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
+        Trace connections to USAID NGOs
+      </a>
+    `;
+  }
+
+  // Return the entire block of HTML
+  return `
+    <div class="bg-white border border-gray-200 rounded">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pt-4 px-4 pb-2">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">Name</span>
+          <span class="font-bold">
+            ${escapeHtml(filerName)} <br />${exposeLink}
+          </span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">EIN</span>
+          <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">Tax Year</span>
+          <span class="text-sm">${escapeHtml(taxYear)}</span>
+        </div>
+      </div>
+      
+      ${matchedHtml ? `<div><h4 class="mt-0 mb-1 px-4 text-sm">Matches</h4>${matchedHtml}</div>` : ''}
+      ${otherHtml}
+      ${
+        otherHtml
+          ? `
+            <div class="bg-gray-100/50 border-t border-gray-200">
+              <button class="toggleOfficials font-semibold text-blue text-[13px] bg-transparent border-0 py-2 px-4">
+                Show ${matchedHtml ? 'other ' : ''}officials
+              </button>
+            </div>
+          `
           : ''
-        }
-        <tr><td colspan="4"><table border="0" cellspacing="0" cellpadding="0"><tr><td colspan="4" height="2"></td></tr></table></td></tr>
-        <tr><td colspan="3" align="left"><b>${escapedName}</b></td><td>&nbsp;</td></tr>
-        <tr><td colspan="3" align="left">EIN: ${ein.slice(0,2)}-${ein.slice(2)}</td><td>&nbsp;</td></tr>
-        <tr><td colspan="4">
-          <table border="0" cellspacing="0" cellpadding="0"><tr><td colspan="2" bgcolor="#000000" height="2"></td></tr></table>
-        </td></tr>
-        <tr><td align="left">Gross receipts</td><td>&nbsp;</td><td align="right">$${receipts}</td><td>&nbsp;</td></tr>
-        <tr><td align="left">Contributions</td><td>&nbsp;</td><td align="right">$${contrib}</td><td>&nbsp;</td></tr>
-        <tr><td align="left">Grants given (visible)</td><td>&nbsp;</td><td align="right">$${grants}</td><td>&nbsp;</td></tr>
-        <tr>
-          <td colspan="3">
-            <table border="0" cellspacing="0" cellpadding="0">
-              <tr>
-                <td align="left"><font ${c.govt_amt > 0 ? 'color="#DC2626"' : 'color="#000"'}><b>Taxpayer funds</b></font></td>
-                <td align="right"><font ${c.govt_amt > 0 ? 'color="#DC2626"' : 'color="#000"'}><b>$${govt}</b></font></td>
-              </tr>
-            </table>
-          </td>
-          <td>&nbsp;</td>
-        </tr>
-      </TABLE>>`;
-
-      // Color logic: highlight user EINS if BFS scenario
-      let nodeStyle = '';
-      const isUserEin = (!customGraphEdges && activeEINs.includes(ein));
-      if (isUserEin) {
-        // BFS scenario, user-searched node
-        if (c.govt_amt > 10000000) {
-          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626" penwidth=3';
-        } else if (c.govt_amt > 1000000) {
-          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706" penwidth=3';
-        } else {
-          // Blue highlight if user-specified but not a high govt amt
-          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';
-        }
-      } else {
-        // Normal styling
-        if (c.govt_amt > 10000000) {
-          nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
-        } else if (c.govt_amt > 1000000) {
-          nodeStyle = 'fillcolor="#FEF3C7" color="#D97706"';
-        } else if (c.govt_amt > 0) {
-          nodeStyle = 'fillcolor="#F3F4F6" color="#4B5563"';
-        } else {
-          nodeStyle = 'fillcolor="#F3F4F6" color="#94A3B8"';
-        }
       }
-
-      dot += `  "${ein}" [${nodeStyle}, label=${label}];\n`;
-    }
-
-    // Edges
-    for (const e of edgeList) {
-      const amt = formatNumber(e.amt);
-      dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}", color="#94A3B8"];\n`;
-    }
-
-    dot += `}\n`;
-    return dot;
+    </div>
+  `;
   }
 
-  function formatNumber(x) {
-    const n = parseInt(x, 10) || 0;
-    return n.toLocaleString('en-US');
-  }
-
-  function addEINFromInput() {
-    let val = $('#einInput').val().trim();
-    val = val.replace(/[-\s]/g, '');
-    if (!/^\d{9}$/.test(val)) {
-      alert("EIN must be 9 digits after removing dashes/spaces.");
-      return;
-    }
-    if (!charities[val]) {
-      console.warn("EIN not found in charities.csv (still adding).");
-    }
-    if (!activeEINs.includes(val)) {
-      activeEINs.push(val);
-    }
-    $('#einInput').val('');
-    renderActiveEINs();
-    updateQueryParams();
-    generateGraph();
-  }
-
-  function renderActiveEINs() {
-    const $c = $('#activeEINs');
-    $c.empty();
-    $('#clearEINsBtn').toggle(activeEINs.length > 0);
-
-    activeEINs.forEach(ein => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
-      const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
-      const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.53-3.53a.75.75 0 0 0-1.06 1.06L10.94 12l-2.47 2.47a.75.75 0 1 0 1.06 1.06L12 13.06l2.47 2.47a.75.75 0 1 0 1.06-1.06L13.06 12l2.47-2.47a.75.75 0 0 0-1.06-1.06L12 10.94 9.53 8.47Z" clip-rule="evenodd"/></svg></span>').attr('data-ein', ein);
-      $rm.on('click', function() {
-        const rem = $(this).attr('data-ein');
-        activeEINs = activeEINs.filter(x => x !== rem);
-        renderActiveEINs();
-        updateQueryParams();
-        generateGraph();
-      });
-      $tag.append($text).append($rm);
-      $c.append($tag);
+  // Toggle event
+  function initDynamicEventHandlers() {
+    $('.toggleOfficials').off('click').on('click', function() {
+      const $btn = $(this);
+      const $section = $btn.closest('div').siblings('.officialSection');
+      if ($section.is(':visible')) {
+        $section.slideUp(200);
+        $btn.text('Show other officials');
+      } else {
+        $section.slideDown(200);
+        $btn.text('Hide officials');
+      }
     });
   }
 
-  function addKeywordFromInput() {
-    const kw = $('#keywordInput').val().trim();
-    if (kw.length > 0) {
-      activeKeywords.push(kw.toLowerCase());
-      $('#keywordInput').val('');
-      renderActiveKeywords();
-      updateQueryParams();
-      generateGraph();
-    }
-  }
-
-  function renderActiveKeywords() {
-    const $c = $('#activeFilters');
-    $c.empty();
-    $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
-
-    activeKeywords.forEach(kw => {
-      const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
-      const $text = $('<span></span>').text(kw);
-      const $rm = $('<span class="remove-filter opacity-50 hover:opacity-100 size-5 -my-0.5 -mr-1 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#000" fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.53-3.53a.75.75 0 0 0-1.06 1.06L10.94 12l-2.47 2.47a.75.75 0 1 0 1.06 1.06L12 13.06l2.47 2.47a.75.75 0 1 0 1.06-1.06L13.06 12l2.47-2.47a.75.75 0 0 0-1.06-1.06L12 10.94 9.53 8.47Z" clip-rule="evenodd"/></svg></span>').attr('data-kw', kw);
-      $rm.on('click', function() {
-        const rem = $(this).attr('data-kw');
-        activeKeywords = activeKeywords.filter(x => x !== rem);
-        renderActiveKeywords();
-        updateQueryParams();
-        generateGraph();
-      });
-      $tag.append($text).append($rm);
-      $c.append($tag);
-    });
-  }
-
-  /**
-   * Download the currently displayed SVG as a file named "charity_graph.svg".
-   */
-  function downloadSVG() {
-    const svgEl = document.querySelector('#graph-container svg');
-    if (!svgEl) {
-      alert('No SVG to download yet.');
-      return;
-    }
-    const svgData = new XMLSerializer().serializeToString(svgEl);
-    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'charity_graph.svg';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 </script>
 
