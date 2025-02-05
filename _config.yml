@@ -8,7 +8,7 @@ defaults:
   - scope:
       path: ""
     values:
-      image: /assets/images/default.png
+      image: /assets/images/poster.png
 
 social: 
   name: DataRepublican

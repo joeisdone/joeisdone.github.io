@@ -47,6 +47,8 @@ The above command runs everything, but if you need to run things separately:
 1. `bundle exec jekyll clean`
 1. `bundle exec jekyll build JEKYLL_ENV=production`
 
+You can serve the build site locally with `ruby -run -e httpd docs -p 4000`
+
 ## Troubleshooting
 
 If you see "jekyll: command not found", make sure you:
