@@ -29,23 +29,19 @@ title: Charity graph - multi-root BFS & taxpayer totals
   #graph-container {
     overflow: hidden; /* Hide scrollbars */
   }
-
-  /* Hide elements when displaying a custom graph */
-  .hide-when-custom {
-    display: none;
-  }
-
 </style>
 
 <div id="topbar" class="">
   <div id="explanation">
     <h1 class="mb-1">Charity graph</h1>
-    <!-- If custom_graph is present, we show "title" or "Displaying exact graph" below -->
+    <!-- If custom_graph is present, we show "title" or "Displaying exact graph." below -->
     <p id="instructions" class="opacity-80 mb-0 text-[15px]">
-      <!-- Will be dynamically set to either BFS instructions or custom title. -->
+      <!-- Will be dynamically set in parseQueryParams() -->
     </p>
-    <button class="frameless mb-2 text-base hide-when-custom" id="howItWorksBtn">How it works</button>
-    <div class="h-[0px] overflow-hidden transition-all duration-200 hide-when-custom" id="howItWorksList">
+
+    <!-- "How it works" toggle is BFS-only -->
+    <button class="frameless mb-2 text-base bfs-only" id="howItWorksBtn">How it works</button>
+    <div class="h-[0px] overflow-hidden transition-all duration-200 bfs-only" id="howItWorksList">
       <div class="p-4 border border-gray-200 rounded-md bg-white">
         <h3 class="mt-0">How it works</h3>
         <ol class="!list-decimal space-y-1 text-sm pl-4">
@@ -56,9 +52,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
       </div>
     </div>
   </div>
-  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4 hide-when-custom">
+
+  <!-- BFS controls are BFS-only -->
+  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4 bfs-only">
     <!-- EIN Input & Add Button -->
-     <div class="relative flex flex-col gap-2 max-w-lg">
+    <div class="relative flex flex-col gap-2 max-w-lg">
       {% include input.html 
         label="Add EIN(s)" 
         id="einInput" 
@@ -174,7 +172,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     // Download SVG
     $('#downloadBtn').on('click', downloadSVG);
 
-    // Expand/collapse “How it works”
+    // Expand/collapse “How it works” (BFS-only)
     $('#howItWorksBtn').on('click', function() {
       const $list = $('#howItWorksList');
       const $btn = $(this);
@@ -198,6 +196,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
    * Parse query parameters:
    * - If custom_graph is present, parse it, store in customGraphEdges; ignore other params except for title.
    * - Otherwise, parse eins/keywords in the BFS usage scenario.
+   * Also sets the instructions text, and shows/hides BFS elements accordingly.
    */
   function parseQueryParams() {
     const params = new URLSearchParams(window.location.search);
@@ -205,21 +204,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     const customParam = params.get('custom_graph');
     if (customParam) {
-      // We are in custom-graph mode: hide search widgets, set instructions, parse edges
-      $('#controls').hide();
-      $('#howItWorksBtn').hide();
-
-      // If there's a custom title, display that, otherwise "Displaying exact graph."
-      if (customTitle) {
-        $('#instructions').text('Displaying ' + customTitle);
-      } else {
-        $('#instructions').text('Displaying exact graph.');
-      }
-
-      // Clean up potential trailing semicolon, then parse
+      // We are in custom-graph mode
       const trimmed = customParam.replace(/;+$/, '');
       const segments = trimmed.split(';');
       let edgeList = [];
+
       segments.forEach(s => {
         const parts = s.split(',');
         if (parts.length !== 3) return; // skip if malformed
@@ -227,7 +216,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
         // Remove dashes/spaces from EINS
         filer = filer.replace(/[-\s]/g, '');
         grantee = grantee.replace(/[-\s]/g, '');
-        // Try to parse the amount
         const num = parseInt(amt, 10);
         if (!isNaN(num)) {
           edgeList.push({ filer, grantee, amt: num });
@@ -235,9 +223,17 @@ title: Charity graph - multi-root BFS & taxpayer totals
       });
       customGraphEdges = edgeList;
 
+      // BFS controls are hidden
+      $('.bfs-only').hide();
+
+      // Show instructions
+      if (customTitle) {
+        $('#instructions').text('Displaying ' + customTitle);
+      } else {
+        $('#instructions').text('Displaying exact graph.');
+      }
     } else {
-      // BFS scenario: parse EINS, keywords normally, show BFS instructions
-      $('#instructions').text('Use the search and keywords to filter charities, then BFS expansion is performed automatically.');
+      // BFS scenario: parse EINS, keywords normally
       const einParam = params.get('eins');
       if (einParam) {
         let list = einParam.split(',');
@@ -250,7 +246,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
           }
         });
       }
-
       const kwParam = params.get('keywords');
       if (kwParam) {
         let kws = kwParam.split(',');
@@ -261,6 +256,16 @@ title: Charity graph - multi-root BFS & taxpayer totals
           }
         });
       }
+
+      // BFS controls visible
+      $('.bfs-only').show();
+
+      // Instructions text for BFS scenario
+      $('#instructions').text(
+        'Use the search and keywords to filter charities, then BFS expansion is performed automatically.'
+      );
+
+      // Render them
       renderActiveEINs();
       renderActiveKeywords();
     }
@@ -272,10 +277,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
    */
   function updateQueryParams() {
     if (customGraphEdges) {
-      // Do nothing – we do not alter the URL if custom_graph is present
+      // Do nothing if custom_graph is present
       return;
     }
-
     const params = new URLSearchParams();
     if (activeEINs.length > 0) {
       params.set('eins', activeEINs.join(','));
@@ -737,7 +741,7 @@ labelloc="t";\n`;
         }
       });
 
-      // Highlight BFS keywords if any (only in BFS scenario)
+      // If we are in BFS scenario (customGraphEdges == null), highlight keywords
       if (!customGraphEdges && activeKeywords.length > 0) {
         activeKeywords.forEach(kw => {
           const regex = new RegExp(`(\\s*)(${kw})`, 'gi');

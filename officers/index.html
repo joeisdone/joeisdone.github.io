@@ -622,6 +622,7 @@ title: Government NGO Tracking
     const filerName = row.filer_name || '';
     const filerEin  = row.filer_ein  || '';
     const taxYear   = row.tax_year   || '';
+    const exposePath = row.serialized_graph || '';
 
     let raw = row.officials_json || '[]';
     let matchedHtml = '';
@@ -679,39 +680,52 @@ title: Government NGO Tracking
       matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officials)</div>`;
     }
 
-    // The main row
-    return `
-      <div class="bg-white border border-gray-200 rounded p-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <div class="flex flex-col gap-1">
-            <span class="text-sm opacity-80">Name</span>
-            <span class="font-bold">${escapeHtml(filerName)}</span>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-sm opacity-80">EIN</span>
-            <span class="text-sm">${escapeHtml(filerEin)}</span>
-          </div>
-          <div class="flex flex-col gap-1">
-            <span class="text-sm opacity-80">Tax Year</span>
-            <span class="text-sm">${escapeHtml(taxYear)}</span>
-          </div>
-        </div>
-        ${matchedHtml}
-        ${otherHtml}
-        ${
-          // If there ARE other officials, show a toggle button
-          otherHtml
-            ? `
-              <div class="mt-3">
-                <button class="toggleOfficials font-semibold text-blue-500 text-sm bg-transparent border-0 py-1 px-0">
-                  Show other officials
-                </button>
-              </div>
-            `
-            : ''
-        }
-      </div>
+  // Construct exposeLink if we have an exposePath
+  let exposeLink = '';
+  if (exposePath) {
+    const encodedPath = encodeURIComponent(exposePath);
+    const encodedName = encodeURIComponent(filerName);
+    exposeLink = `
+      <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}">
+        See USAID NGO graph
+      </a>
     `;
+  }
+
+  // Return the entire block of HTML
+  return `
+    <div class="bg-white border border-gray-200 rounded p-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">Name</span>
+          <span class="font-bold">
+            ${escapeHtml(filerName)} ${exposeLink}
+          </span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">EIN</span>
+          <span class="text-sm">${escapeHtml(filerEin)}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-sm opacity-80">Tax Year</span>
+          <span class="text-sm">${escapeHtml(taxYear)}</span>
+        </div>
+      </div>
+      ${matchedHtml}
+      ${otherHtml}
+      ${
+        otherHtml
+          ? `
+            <div class="mt-3">
+              <button class="toggleOfficials font-semibold text-blue-500 text-sm bg-transparent border-0 py-1 px-0">
+                Show other officials
+              </button>
+            </div>
+          `
+          : ''
+      }
+    </div>
+  `;
   }
 
   // Toggle event
