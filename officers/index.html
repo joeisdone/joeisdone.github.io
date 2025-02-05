@@ -668,8 +668,10 @@ title: Government NGO Tracking
       if (otherItems.length) {
         otherHtml = `
           <div class="p-4 bg-gray-50 border-t border-gray-200 text-sm officialSection" style="display:none;">
-            <div class="pb-2 border-b border-gray-200">
-              <strong>Other Officials</strong>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-1 py-1 border-b border-gray-100">
+              <strong>Officials</strong>
+              <strong>Role</strong>
+              <strong>Compensation</strong>
             </div>
             <div class="pt-2">${otherItems.join('')}</div>
           </div>
@@ -687,7 +689,7 @@ title: Government NGO Tracking
     const encodedName = encodeURIComponent(filerName);
     exposeLink = `
       <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}">
-        See USAID NGO graph
+        Trace connections to USAID NGOs
       </a>
     `;
   }
@@ -699,7 +701,7 @@ title: Government NGO Tracking
         <div class="flex flex-col gap-1">
           <span class="text-sm opacity-80">Name</span>
           <span class="font-bold">
-            ${escapeHtml(filerName)} ${exposeLink}
+            ${escapeHtml(filerName)} <br />${exposeLink}
           </span>
         </div>
         <div class="flex flex-col gap-1">
@@ -716,9 +718,9 @@ title: Government NGO Tracking
       ${
         otherHtml
           ? `
-            <div class="mt-3">
-              <button class="toggleOfficials font-semibold text-blue-500 text-sm bg-transparent border-0 py-1 px-0">
-                Show other officials
+            <div class="bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4 mt-2">
+              <button class="toggleOfficials font-semibold text-blue text-[13px] bg-transparent border-0 py-2 px-4">
+                Show officials
               </button>
             </div>
           `
