@@ -36,7 +36,7 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Charity graph - multi-root BFS &amp; taxpayer totals | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.9.5" />
+<meta name="generator" content="Jekyll v3.10.0" />
 <meta property="og:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
@@ -589,6 +589,8 @@ $(document).ready(function() {
 
       // BFS controls are hidden
       $('.bfs-only').hide();
+      // Taxpayer controls are hidden
+      $('#excluded-info').hide();
 
       // Show instructions
       if (customTitle) {
@@ -929,7 +931,10 @@ $(document).ready(function() {
         $('#taxpayerTotal').html(
           `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
         );
-        $('#excluded-info').show();
+        const customParam = params.get('custom_graph');
+        if (!customParam) {
+          $('#excluded-info').show();
+        }
 
         $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
         $('#downloadBtn').show();
