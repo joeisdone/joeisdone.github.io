@@ -65,32 +65,31 @@ title: Nonprofits
 <div id="totals" class="min-h-[44px]">
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4 @6xl:flex justify-between w-full pt-2 pb-4">
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Count</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Contributions Total</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Government Grants</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Other Cash Contributions</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Indirect Government Monies (Est)</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Indirect Government Monies (Est)</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
     <div>
-      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Total Taxpayer Dollars</h3> <span
-        class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
+      <h3 class="mt-0 text-sm opacity-75 font-medium mb-0">Total Taxpayer Dollars</h3>
+      <span class="inline-block animate-pulse w-16 h-5 mt-1 rounded bg-gray-300"></span>
     </div>
   </div>
 </div>
-
 
 <div class="flex flex-col @xl:flex-row @xl:items-center justify-between w-full">
   <form>
@@ -109,8 +108,8 @@ title: Nonprofits
   </form>
 
   <div id="warning" class="mb-2 @xl:mb-0"></div>
-
 </div>
+
 <div class="w-screen md:w-auto overflow-x-auto -mx-4 px-4 xl:-mx-6 xl:px-6">
   <table id="nonprofitTable" class="">
     <thead>
@@ -174,6 +173,7 @@ title: Nonprofits
     const govtAmt = arr[2];
     const contribAmt = arr[3];
     const govtIndirectAmt = arr[4];
+    const xmlFileName = arr[5];
 
     const contribTotal = govtAmt + contribAmt;
     const totalTaxpayer = govtAmt + govtIndirectAmt;
@@ -190,7 +190,8 @@ title: Nonprofits
       otherContrib: contribAmt,
       govtIndirect: govtIndirectAmt,
       totalTaxpayer: totalTaxpayer,
-      percentTaxpayer: percentTaxpayer
+      percentTaxpayer: percentTaxpayer,
+      xmlFileName: xmlFileName
     };
   }
 
@@ -281,7 +282,9 @@ title: Nonprofits
         rowsToRender.forEach(item => {
           const tr = $('<tr></tr>');
 
-          tr.append($('<td></td>').text(item.ein));
+          const proPublicaLink = `<a href="https://projects.propublica.org/nonprofits/organizations/${item.ein}/${item.xmlFileName}/full">${item.ein}</a>`
+
+          tr.append($('<td></td>').html(proPublicaLink));
           tr.append($('<td></td>').text(item.name));
           tr.append($('<td></td>').text(formatCurrency(item.contribTotal)));
           tr.append($('<td></td>').text(formatCurrency(item.govtGrants)));
@@ -307,22 +310,30 @@ title: Nonprofits
 
   // Applies the current filter and the current sort, then renders
   function applyFilterAndSort() {
-    // Filter
     const filterQuery = $('#filterInput').val();
     let filtered = filterData(nonprofitData, filterQuery);
 
-    // Sort
     if (currentSortField) {
       filtered = sortData(filtered, currentSortField, currentSortDirection);
     }
 
-    // Render
     renderTable(filtered);
   }
 
-  // Reload data from the ZIP, then filter & sort
+  // Updates the URL query string so that `?filter=...` matches our current filter.
+  function updateQueryStringParam(key, value) {
+    const url = new URL(window.location);
+    if (value) {
+      url.searchParams.set(key, value);
+    } else {
+      url.searchParams.delete(key);
+    }
+    // Replace the current history state with the updated URL
+    window.history.replaceState({}, '', url.toString());
+  }
+
+  // Loads data from the ZIP (one-time), then applies filter & sort
   function loadData() {
-    // Disable button and show loading state
     const filterButton = $('#filterButton');
     filterButton.prop('disabled', true);
     filterButton.find('.button-text').addClass('hidden');
@@ -330,12 +341,8 @@ title: Nonprofits
 
     fetch('nonprofit.json.zip')
       .then(response => response.arrayBuffer())
-      .then(arrayBuffer => {
-        return JSZip.loadAsync(arrayBuffer);
-      })
-      .then(zip => {
-        return zip.file('nonprofit.json').async('string');
-      })
+      .then(arrayBuffer => JSZip.loadAsync(arrayBuffer))
+      .then(zip => zip.file('nonprofit.json').async('string'))
       .then(jsonText => {
         const rawData = JSON.parse(jsonText);
         nonprofitData = rawData.map(buildRecord);
@@ -346,7 +353,6 @@ title: Nonprofits
         $('#warning').text('Error loading data. Check console for details.');
       })
       .finally(() => {
-        // Re-enable button and hide loading state
         filterButton.prop('disabled', false);
         filterButton.find('.button-text').removeClass('hidden');
         filterButton.find('.loading-spinner').css('display', 'none');
@@ -354,49 +360,49 @@ title: Nonprofits
   }
 
   $(document).ready(function () {
-    // Initial load
+    // 1) Parse the initial filter from query string
+    const params = new URLSearchParams(window.location.search);
+    const initialKeyword = params.get('filter') || '';
+    $('#filterInput').val(initialKeyword);
+
+    // 2) Load data one time on page load
     loadData();
 
-    // Set up click on column headers for sorting
+    // 3) Sorting: click on column header
     $('#nonprofitTable thead th').on('click', function () {
       const field = $(this).data('field');
-
       if (currentSortField === field) {
-        // Toggle direction
         currentSortDirection = (currentSortDirection === 'asc') ? 'desc' : 'asc';
       } else {
         currentSortField = field;
         currentSortDirection = 'asc';
       }
-
-      // Update sort arrow classes
       $('#nonprofitTable thead th').removeClass('sort-asc sort-desc');
       $(this).addClass(currentSortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
-
-      // Re-apply filter & sort
       applyFilterAndSort();
     });
 
-    // Filter button: reload the data from the server and re-apply
+    // 4) Filter actions. Instead of reloading data, we just re-filter in-memory & update URL
     $('#filterButton').on('click', function (e) {
-      e.preventDefault(); // Prevent form submission
-      loadData();
+      e.preventDefault(); // Don’t submit form
+      const newFilter = $('#filterInput').val().trim();
+      updateQueryStringParam('filter', newFilter);
+      applyFilterAndSort();
     });
 
-    // Bind Enter key to filter button action
+    // Enter key also triggers the filter in-memory & query string update
     $('#filterInput').on('keypress', function (e) {
-      if (e.which === 13) { // 13 is the Enter key code
-        e.preventDefault(); // Prevent form submission
-        loadData();
+      if (e.which === 13) {
+        e.preventDefault();
+        const newFilter = $('#filterInput').val().trim();
+        updateQueryStringParam('filter', newFilter);
+        applyFilterAndSort();
       }
     });
 
-    // Add smooth scroll functionality to back to top button
+    // Smooth scroll to top
     $('#backToTop').on('click', function () {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 </script>
