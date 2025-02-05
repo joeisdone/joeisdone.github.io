@@ -1,4 +1,5 @@
 title: DataRepublican
+description: Tracking where the money goes
 baseurl: ""
 url: "https://datarepublican.com"
 destination: docs
@@ -8,6 +9,9 @@ defaults:
       path: ""
     values:
       image: /assets/images/default.png
+
+social: 
+  name: DataRepublican
 
 development:
   url: "http://localhost:4000"

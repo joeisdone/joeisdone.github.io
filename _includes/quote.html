@@ -1,0 +1,16 @@
+<div class="flex bg-gray-200 p-8 rounded-md items-center min-h-40">
+  <div class="flex-[0_0_3rem]">
+    <span class="w-12 inline-block">{% include icon-wreath-half.html %}</span>
+  </div>
+
+  <div class="flex-1 flex flex-col justify-center items-center px-4">
+    <h3 class="text-lg @xl:text-xl mt-0 text-center">"{{ include.text }}"</h3>
+    <p class="mb-0">
+      - <a href="{{ include.link }}" target="_blank">{{ include.author }}</a>
+    </p>
+  </div>
+
+  <div class="flex-[0_0_3rem]">
+    <span class="w-12 inline-block transform scale-x-[-1]">{% include icon-wreath-half.html %}</span>
+  </div>
+</div> 
