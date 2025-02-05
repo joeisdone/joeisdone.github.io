@@ -995,6 +995,9 @@ select {
 .min-w-\[65px\] {
   min-width: 65px;
 }
+.min-w-\[200px\] {
+  min-width: 200px;
+}
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -1091,6 +1094,9 @@ select {
 .grid-cols-5 {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
+.grid-cols-9 {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
 .flex-row-reverse {
   flex-direction: row-reverse;
 }
@@ -1152,6 +1158,18 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+}
+.divide-green\/50 > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgb(25 178 112 / 0.5);
+}
+.divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-divide-opacity));
 }
 .self-end {
   align-self: flex-end;
@@ -1263,6 +1281,9 @@ select {
 .bg-green-light\/20 {
   background-color: rgb(52 226 151 / 0.2);
 }
+.bg-green\/10 {
+  background-color: rgb(25 178 112 / 0.1);
+}
 .bg-navy {
   --tw-bg-opacity: 1;
   background-color: rgb(37 39 57 / var(--tw-bg-opacity));
@@ -1362,6 +1383,9 @@ select {
 .pt-8 {
   padding-top: 2rem;
 }
+.pt-4 {
+  padding-top: 1rem;
+}
 .text-center {
   text-align: center;
 }
@@ -1456,6 +1480,9 @@ select {
 }
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
+}
+.text-\[15ox\] {
+  color: 15ox;
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
@@ -1673,6 +1700,10 @@ table {
     order: 1;
   }
 
+  .md\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
   .md\:col-span-2 {
     grid-column: span 2 / span 2;
   }
@@ -1728,6 +1759,10 @@ table {
     margin-right: 350px;
   }
 
+  .md\:mt-6 {
+    margin-top: 1.5rem;
+  }
+
   .md\:block {
     display: block;
   }
@@ -1738,6 +1773,10 @@ table {
 
   .md\:inline-flex {
     display: inline-flex;
+  }
+
+  .md\:grid {
+    display: grid;
   }
 
   .md\:hidden {
@@ -1801,6 +1840,10 @@ table {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
+  .md\:grid-cols-12 {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -1811,6 +1854,10 @@ table {
 
   .md\:items-start {
     align-items: flex-start;
+  }
+
+  .md\:items-end {
+    align-items: flex-end;
   }
 
   .md\:items-center {
