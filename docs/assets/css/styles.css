@@ -1028,6 +1028,9 @@ select {
 .max-w-sm {
   max-width: 24rem;
 }
+.max-w-\[350px\] {
+  max-width: 350px;
+}
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2027,6 +2030,11 @@ table {
     padding-bottom: 0px;
   }
 
+  .md\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
   .md\:pl-4 {
     padding-left: 1rem;
   }
@@ -2069,17 +2077,70 @@ table {
 
 @media (min-width: 1024px) {
 
+  .lg\:fixed {
+    position: fixed;
+  }
+
+  .lg\:mr-\[350px\] {
+    margin-right: 350px;
+  }
+
+  .lg\:ml-0 {
+    margin-left: 0px;
+  }
+
+  .lg\:block {
+    display: block;
+  }
+
   .lg\:flex {
     display: flex;
+  }
+
+  .lg\:hidden {
+    display: none;
+  }
+
+  .lg\:max-h-screen {
+    max-height: 100vh;
   }
 
   .lg\:max-w-sm {
     max-width: 24rem;
   }
 
+  .lg\:max-w-\[350px\] {
+    max-width: 350px;
+  }
+
+  .lg\:flex-\[0_0_350px\] {
+    flex: 0 0 350px;
+  }
+
+  .lg\:flex-row {
+    flex-direction: row;
+  }
+
+  .lg\:overflow-y-auto {
+    overflow-y: auto;
+  }
+
+  .lg\:border-l {
+    border-left-width: 1px;
+  }
+
+  .lg\:bg-navy\/5 {
+    background-color: rgb(37 39 57 / 0.05);
+  }
+
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .lg\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .lg\:pl-8 {
@@ -2088,6 +2149,18 @@ table {
 
   .lg\:pr-8 {
     padding-right: 2rem;
+  }
+
+  .lg\:pl-4 {
+    padding-left: 1rem;
+  }
+
+  .lg\:pr-0 {
+    padding-right: 0px;
+  }
+
+  .lg\:text-left {
+    text-align: left;
   }
 }
 
@@ -2114,6 +2187,11 @@ table {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
+}
+
+.\[\&\>div\]\:mx-auto>div {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .\[\&_\.right-icon\]\:text-green-light .right-icon {
