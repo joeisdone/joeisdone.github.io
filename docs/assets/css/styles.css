@@ -814,6 +814,9 @@ select {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.\!mt-8 {
+  margin-top: 2rem !important;
+}
 .-mb-4 {
   margin-bottom: -1rem;
 }
@@ -873,9 +876,6 @@ select {
 }
 .mt-8 {
   margin-top: 2rem;
-}
-.\!mt-8 {
-  margin-top: 2rem !important;
 }
 .block {
   display: block;
@@ -1873,6 +1873,20 @@ table {
 
   .md\:border-l {
     border-left-width: 1px;
+  }
+
+  .md\:bg-gray-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  }
+
+  .md\:bg-gray-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  }
+
+  .md\:bg-navy\/5 {
+    background-color: rgb(37 39 57 / 0.05);
   }
 
   .md\:p-0 {
