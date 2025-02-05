@@ -36,21 +36,21 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Charity graph - multi-root BFS &amp; taxpayer totals | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.10.0" />
+<meta name="generator" content="Jekyll v3.9.5" />
 <meta property="og:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="https://datarepublican.com/expose/" />
-<meta property="og:url" content="https://datarepublican.com/expose/" />
+<link rel="canonical" href="http://localhost:4000/expose/" />
+<meta property="og:url" content="http://localhost:4000/expose/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/poster.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/poster.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/poster.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/poster.png" />
 <meta property="twitter:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"https://datarepublican.com/assets/images/poster.png","url":"https://datarepublican.com/expose/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"http://localhost:4000/assets/images/poster.png","url":"http://localhost:4000/expose/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -378,7 +378,9 @@ $(document).ready(function() {
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const returnUrl = urlParams.get('return_url');
-      document.write(`<div class="mt-1 mb-2"><button class="frameless" onclick="window.location.href='${returnUrl || '/officers/'}'">&larr; Back to officer search</button></div>`);
+      if (returnUrl) {
+        document.write(`<div class="mt-1 mb-2"><button class="frameless" onclick="window.location.href='${returnUrl}'">&larr; Back to officer search</button></div>`);
+      }
     </script>
     
     <!-- "How it works" toggle is BFS-only -->

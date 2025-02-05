@@ -679,11 +679,10 @@ title: Government NGO Tracking
         const comp  = off.c || 0;
 
         const blockHtml = `
-          <div class="grid grid-cols-9 md:grid-cols-12 gap-1 py-1">
-            <div class="col-span-5"><strong>${escapeHtml(name)}</strong></div>
-            <div class="col-span-2">${escapeHtml(title)}</div>
-            <div class="col-span-2">$${Number(comp).toLocaleString()}</div>
-            <div class="hidden md:block md:col-span-3">&nbsp;</div>
+          <div class="grid grid-cols-3 @xl:grid-cols-12 gap-1 py-1">
+            <div class="col-span-2 @xl:col-span-6"><strong>${escapeHtml(name)}</strong><div class="@xl:hidden text-[13px]">${escapeHtml(title)}</div></div>
+            <div class="hidden @xl:col-span-4 @xl:block">${escapeHtml(title)}</div>
+            <div class="@xl:col-span-2">$${Number(comp).toLocaleString()}</div>
           </div>
         `;
         if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
@@ -696,7 +695,7 @@ title: Government NGO Tracking
       // Only show matched block if any matched
       if (matchedItems.length) {
         matchedHtml = `
-          <div class="bg-green/10 border-t border-gray-200 text-sm px-4 py-1">
+          <div class="bg-yellow/20 border-t border-gray-200 text-sm px-4 py-1">
             <div class="divide-y divide-gray-200">${matchedItems.join('')}</div>
           </div>
         `;
@@ -706,11 +705,10 @@ title: Government NGO Tracking
       if (otherItems.length) {
         otherHtml = `
           <div class="text-sm officialSection" style="display:none;">
-            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-9 md:grid-cols-12 gap-1 py-1 px-4">
-              <strong class="col-span-5">Principal Officers</strong>
-              <strong class="col-span-2">Role</strong>
-              <strong class="col-span-2">Compensation</strong>
-              <strong class="hidden md:block md:col-span-3">&nbsp;</strong>
+            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-3 @xl:grid-cols-12 gap-1 py-1 px-4">
+              <strong class="col-span-2 @xl:col-span-6">Principal officers</strong>
+              <strong class="hidden @xl:block col-span-4">Role</strong>
+              <strong class="@xl:col-span-2">Compensation</strong>
             </div>
             <div class="pt-2 px-4">${otherItems.join('')}</div>
           </div>
@@ -737,27 +735,27 @@ title: Government NGO Tracking
   // Return the entire block of HTML
   return `
     <div class="bg-white border border-gray-200 rounded">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-2 pt-4 px-4 pb-2">
-        <div class="flex flex-col gap-1 md:col-span-5">
+      <div class="grid grid-cols-2 @xl:grid-cols-12 gap-2 pt-4 px-4 pb-2">
+        <div class="flex flex-col gap-1 col-span-2 @xl:col-span-5">
           <span class="text-sm opacity-80">Name</span>
           <span class="font-bold">
             ${escapeHtml(filerName)}
           </span>
         </div>
-        <div class="flex flex-col gap-1 md:col-span-2">
+        <div class="flex flex-col gap-1 @xl:col-span-2">
           <span class="text-sm opacity-80">EIN</span>
           <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
         </div>
-        <div class="flex flex-col gap-1 md:col-span-2">
+        <div class="flex flex-col gap-1 @xl:col-span-1">
           <span class="text-sm opacity-80">Tax Year</span>
           <span class="text-sm">${escapeHtml(taxYear)}</span>
         </div>
-        <div class="flex items-end text-sm pb-1 md:col-span-3">
+        <div class="flex @xl:justify-end text-sm pb-1 col-span-2 @xl:col-span-4 @xl:pt-6">
           ${exposeLink}
         </div>
       </div>
       
-      ${matchedHtml ? `<div><div class="md:grid md:grid-cols-12"><h4 class="mt-0 mb-1 px-4 text-sm md:col-span-5">Matches</h4><strong class="hidden md:block md:col-span-2 text-sm">Role</strong><strong class="hidden md:block md:col-span-2 text-sm">Compensation</strong><strong class="hidden md:block md:col-span-3">&nbsp;</strong></div>${matchedHtml}</div>` : ''}
+      ${matchedHtml ? `<div class="mt-2"><div class="grid grid-cols-3 @xl:grid-cols-12 px-4 gap-1"><h4 class="mt-0 mb-1 text-sm col-span-2 @xl:col-span-6">Matches</h4><strong class="hidden @xl:block @xl:col-span-4 text-sm">Role</strong><strong class="@xl:block @xl:col-span-2 text-sm">Compensation</strong></div>${matchedHtml}</div>` : ''}
       ${otherHtml}
       ${
         otherHtml

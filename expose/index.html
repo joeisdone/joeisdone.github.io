@@ -41,7 +41,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
     <script>
       const urlParams = new URLSearchParams(window.location.search);
       const returnUrl = urlParams.get('return_url');
-      document.write(`<div class="mt-1 mb-2"><button class="frameless" onclick="window.location.href='${returnUrl || '/officers/'}'">&larr; Back to officer search</button></div>`);
+      if (returnUrl) {
+        document.write(`<div class="mt-1 mb-2"><button class="frameless" onclick="window.location.href='${returnUrl}'">&larr; Back to officer search</button></div>`);
+      }
     </script>
     
     <!-- "How it works" toggle is BFS-only -->
