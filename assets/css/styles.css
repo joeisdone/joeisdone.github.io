@@ -1142,6 +1142,9 @@ select {
 .gap-4 {
   gap: 1rem;
 }
+.gap-3 {
+  gap: 0.75rem;
+}
 .gap-x-2 {
   -moz-column-gap: 0.5rem;
        column-gap: 0.5rem;
@@ -1508,6 +1511,9 @@ select {
 .opacity-80 {
   opacity: 0.8;
 }
+.opacity-60 {
+  opacity: 0.6;
+}
 .outline {
   outline-style: solid;
 }
@@ -1662,6 +1668,10 @@ table {
     grid-column: span 6 / span 6;
   }
 
+  .\@xl\:col-span-7 {
+    grid-column: span 7 / span 7;
+  }
+
   .\@xl\:mb-0 {
     margin-bottom: 0px;
   }
@@ -1721,6 +1731,10 @@ table {
 
   .\@xl\:pt-6 {
     padding-top: 1.5rem;
+  }
+
+  .\@xl\:text-right {
+    text-align: right;
   }
 
   .\@xl\:text-xl {

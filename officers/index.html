@@ -680,7 +680,7 @@ title: Government NGO Tracking
 
         const blockHtml = `
           <div class="grid grid-cols-3 @xl:grid-cols-12 gap-1 py-1">
-            <div class="col-span-2 @xl:col-span-6"><strong>${escapeHtml(name)}</strong><div class="@xl:hidden text-[13px]">${escapeHtml(title)}</div></div>
+            <div class="col-span-2 @xl:col-span-6"><strong class="font-semibold">${escapeHtml(name)}</strong><div class="@xl:hidden text-[13px]">${escapeHtml(title)}</div></div>
             <div class="hidden @xl:col-span-4 @xl:block">${escapeHtml(title)}</div>
             <div class="@xl:col-span-2">$${Number(comp).toLocaleString()}</div>
           </div>
@@ -736,21 +736,22 @@ title: Government NGO Tracking
   return `
     <div class="bg-white border border-gray-200 rounded">
       <div class="grid grid-cols-2 @xl:grid-cols-12 gap-2 pt-4 px-4 pb-2">
-        <div class="flex flex-col gap-1 col-span-2 @xl:col-span-5">
-          <span class="text-sm opacity-80">Name</span>
+        <div class="flex flex-col col-span-2 @xl:col-span-7">
           <span class="font-bold">
             ${escapeHtml(filerName)}
           </span>
+          <div class="flex gap-3">
+            <div>
+              <span class="text-xs opacity-60">EIN</span>
+              <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
+            </div>
+            <div>
+              <span class="text-xs opacity-60">Tax year</span>
+              <span class="text-sm">${escapeHtml(taxYear)}</span>
+            </div>
+          </div>
         </div>
-        <div class="flex flex-col gap-1 @xl:col-span-2">
-          <span class="text-sm opacity-80">EIN</span>
-          <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
-        </div>
-        <div class="flex flex-col gap-1 @xl:col-span-1">
-          <span class="text-sm opacity-80">Tax Year</span>
-          <span class="text-sm">${escapeHtml(taxYear)}</span>
-        </div>
-        <div class="flex @xl:justify-end text-sm pb-1 col-span-2 @xl:col-span-4 @xl:pt-6">
+        <div class="@xl:text-right text-sm pb-1 col-span-2 @xl:col-span-5">
           ${exposeLink}
         </div>
       </div>
