@@ -3,7 +3,6 @@ layout: default
 title: Charity graph - multi-root BFS & taxpayer totals
 ---
 
-    
 <!-- jQuery for convenience -->
 <script src="jquery.min.js"></script>
 
@@ -21,19 +20,19 @@ title: Charity graph - multi-root BFS & taxpayer totals
 <script src="papaparse.min.js"></script>
 
 <style>
-  
-
-
   #activeEINs, #activeFilters {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em;
   }
 
-
-  
   #graph-container {
     overflow: hidden; /* Hide scrollbars */
+  }
+
+  /* Hide elements when displaying a custom graph */
+  .hide-when-custom {
+    display: none;
   }
 
 </style>
@@ -41,11 +40,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
 <div id="topbar" class="">
   <div id="explanation">
     <h1 class="mb-1">Charity graph</h1>
-    <p class="opacity-80 mb-0 text-[15px]">
-      This graph shows the connections between charities based on the money they receive from each other.
+    <!-- If custom_graph is present, we show "title" or "Displaying exact graph" below -->
+    <p id="instructions" class="opacity-80 mb-0 text-[15px]">
+      <!-- Will be dynamically set to either BFS instructions or custom title. -->
     </p>
-    <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
-    <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+    <button class="frameless mb-2 text-base hide-when-custom" id="howItWorksBtn">How it works</button>
+    <div class="h-[0px] overflow-hidden transition-all duration-200 hide-when-custom" id="howItWorksList">
       <div class="p-4 border border-gray-200 rounded-md bg-white">
         <h3 class="mt-0">How it works</h3>
         <ol class="!list-decimal space-y-1 text-sm pl-4">
@@ -56,7 +56,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       </div>
     </div>
   </div>
-  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4">
+  <div id="controls" class="mt-2 mb-4 flex flex-col @xl:items-start @xl:justify-between @xl:flex-row gap-4 hide-when-custom">
     <!-- EIN Input & Add Button -->
      <div class="relative flex flex-col gap-2 max-w-lg">
       {% include input.html 
@@ -82,10 +82,8 @@ title: Charity graph - multi-root BFS & taxpayer totals
       %}
 
       <div id="activeFilters"></div>
-      
     </div>
 
-    
     <div class="flex-1 text-right flex flex-row-reverse md:flex-col items-end justify-between md:justify-end gap-1 md:self-end">
       <!-- <button id="generateBtn">Generate Graph</button> -->
       <button id="downloadBtn" class="frameless" style="display: none;">
@@ -95,19 +93,14 @@ title: Charity graph - multi-root BFS & taxpayer totals
         </span>
       </button>
       <div id="status" class=""></div>
-
     </div>
   </div>
 </div>
 
 <div id="excluded-info" class="-mx-4 md:mx-0 mb-4 px-3 pt-3 pb-2 flex gap-4 md:gap-8 md:rounded border-y md:border-x border-gray-200 bg-white" style="display: none;">
-
   {% include stat.html label="501(c)(3)s <em>not</em> displayed" valueId="excluded501" %}
-
   {% include stat.html label="Grants <em>not</em> displayed" valueId="excludedGrants" %}
-
   {% include stat.html label="<strong class='font-semibold'>Taxpayer total in subgraph</strong>" labelColor="text-red opacity-100" valueId="taxpayerTotal" %}
-
 </div>
 
 <div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
@@ -130,20 +123,24 @@ title: Charity graph - multi-root BFS & taxpayer totals
   let activeEINs = [];
   let activeKeywords = [];
 
-  // For BFS
+  // BFS / data-ready
   let dataReady = false;
   let panZoomInstance = null;
 
+  // Custom graph state
+  let customGraphEdges = null;  // array of objects { filer, grantee, amt }
+  let customTitle = null;       // optional custom title from the query param
+
   $(document).ready(function() {
 
-    // ADDED: Parse query params first
-    parseQueryParams(); // ADDED
+    // Parse query params first
+    parseQueryParams();
 
-    // Load once
+    // Load data once
     loadData().then(() => {
       dataReady = true;
       $('#status').text('Data loaded.').css('color', 'black');
-      // Generate graph right away (which will respect any pre-parsed EINs/keywords)
+      // Generate graph right away (which will respect BFS or custom logic)
       generateGraph();
     }).catch(err => {
       console.error(err);
@@ -158,7 +155,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     $('#clearEINsBtn').on('click', () => {
       activeEINs = [];
       renderActiveEINs();
-      updateQueryParams(); // ADDED
+      updateQueryParams();
       generateGraph();
     });
 
@@ -170,86 +167,117 @@ title: Charity graph - multi-root BFS & taxpayer totals
     $('#clearFiltersBtn').on('click', () => {
       activeKeywords = [];
       renderActiveKeywords();
-      updateQueryParams(); // ADDED
+      updateQueryParams();
       generateGraph();
     });
 
-    // Generate
-    $('#generateBtn').on('click', generateGraph);
+    // Download SVG
+    $('#downloadBtn').on('click', downloadSVG);
 
-    // ADDED: Download SVG
-    $('#downloadBtn').on('click', downloadSVG); // ADDED
-
-    // Add this near the top of your existing document.ready function
+    // Expand/collapse “How it works”
     $('#howItWorksBtn').on('click', function() {
-        const $list = $('#howItWorksList');
-        const $btn = $(this);
-        
-        if ($list.height() === 0) {
-            // Expand
-            $list.css('height', 'auto');
-            const autoHeight = $list.height();
-            $list.height(0);
-            $list.height(autoHeight);
-            $btn.text('Hide details');
-        } else {
-            // Collapse
-            $list.height(0);
-            $btn.text('How it works');
-        }
+      const $list = $('#howItWorksList');
+      const $btn = $(this);
+
+      if ($list.height() === 0) {
+        // Expand
+        $list.css('height', 'auto');
+        const autoHeight = $list.height();
+        $list.height(0);
+        $list.height(autoHeight);
+        $btn.text('Hide details');
+      } else {
+        // Collapse
+        $list.height(0);
+        $btn.text('How it works');
+      }
     });
   });
 
   /**
-   * ADDED:
-   * Parse query parameters (eins & keywords) and populate activeEINs, activeKeywords
-   * Then render them in the UI so the user sees them.
+   * Parse query parameters:
+   * - If custom_graph is present, parse it, store in customGraphEdges; ignore other params except for title.
+   * - Otherwise, parse eins/keywords in the BFS usage scenario.
    */
   function parseQueryParams() {
     const params = new URLSearchParams(window.location.search);
+    customTitle = params.get('title') || null;
 
-    // EINs
-    const einParam = params.get('eins');
-    if (einParam) {
-      // e.g. eins=12-3456789,11-1111111 => after removing dashes => 9-digit check
-      let list = einParam.split(',');
-      list.forEach(e => {
-        // remove dashes
-        let v = e.replace(/[-\s]/g, '');
-        if (/^\d{9}$/.test(v)) {
-          // We'll add it if it's in our CSV or not - user might want it anyway
-          if (!activeEINs.includes(v)) {
-            activeEINs.push(v);
+    const customParam = params.get('custom_graph');
+    if (customParam) {
+      // We are in custom-graph mode: hide search widgets, set instructions, parse edges
+      $('#controls').hide();
+      $('#howItWorksBtn').hide();
+
+      // If there's a custom title, display that, otherwise "Displaying exact graph."
+      if (customTitle) {
+        $('#instructions').text('Displaying ' + customTitle);
+      } else {
+        $('#instructions').text('Displaying exact graph.');
+      }
+
+      // Clean up potential trailing semicolon, then parse
+      const trimmed = customParam.replace(/;+$/, '');
+      const segments = trimmed.split(';');
+      let edgeList = [];
+      segments.forEach(s => {
+        const parts = s.split(',');
+        if (parts.length !== 3) return; // skip if malformed
+        let [filer, grantee, amt] = parts.map(x => x.trim());
+        // Remove dashes/spaces from EINS
+        filer = filer.replace(/[-\s]/g, '');
+        grantee = grantee.replace(/[-\s]/g, '');
+        // Try to parse the amount
+        const num = parseInt(amt, 10);
+        if (!isNaN(num)) {
+          edgeList.push({ filer, grantee, amt: num });
+        }
+      });
+      customGraphEdges = edgeList;
+
+    } else {
+      // BFS scenario: parse EINS, keywords normally, show BFS instructions
+      $('#instructions').text('Use the search and keywords to filter charities, then BFS expansion is performed automatically.');
+      const einParam = params.get('eins');
+      if (einParam) {
+        let list = einParam.split(',');
+        list.forEach(e => {
+          let v = e.replace(/[-\s]/g, '');
+          if (/^\d{9}$/.test(v)) {
+            if (!activeEINs.includes(v)) {
+              activeEINs.push(v);
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    // Keywords
-    const kwParam = params.get('keywords');
-    if (kwParam) {
-      let kws = kwParam.split(',');
-      kws.forEach(k => {
-        k = k.trim().toLowerCase();
-        if (k && !activeKeywords.includes(k)) {
-          activeKeywords.push(k);
-        }
-      });
+      const kwParam = params.get('keywords');
+      if (kwParam) {
+        let kws = kwParam.split(',');
+        kws.forEach(k => {
+          k = k.trim().toLowerCase();
+          if (k && !activeKeywords.includes(k)) {
+            activeKeywords.push(k);
+          }
+        });
+      }
+      renderActiveEINs();
+      renderActiveKeywords();
     }
-
-    // Render them into their respective boxes
-    renderActiveEINs();
-    renderActiveKeywords();
   }
 
   /**
-   * ADDED:
    * Update the query parameters to reflect the current activeEINs and activeKeywords.
+   * This only applies if we are not in custom-graph mode.
    */
   function updateQueryParams() {
+    if (customGraphEdges) {
+      // Do nothing – we do not alter the URL if custom_graph is present
+      return;
+    }
+
     const params = new URLSearchParams();
     if (activeEINs.length > 0) {
-      // We'll allow the user to see them with dashes removed
       params.set('eins', activeEINs.join(','));
     }
     if (activeKeywords.length > 0) {
@@ -282,10 +310,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
             if (isNaN(rAmt)) rAmt = 0;
             charities[ein] = {
               name: (row['filer_name'] || '').trim(),
+              xml_name: row['xml_name'],
               receipt_amt: rAmt,
               govt_amt: parseInt((row['govt_amt'] || '0').trim(), 10) || 0,
               contrib_amt: parseInt((row['contrib_amt'] || '0').trim(), 10) || 0,
-              grant_amt: 0 // gets accumulated below
+              grant_amt: 0 // will accumulate below
             };
           });
           totalCharitiesCount = Object.keys(charities).length;
@@ -313,7 +342,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
             let amt = parseInt((row['grant_amt'] || '0').trim(), 10);
             if (isNaN(amt)) amt = 0;
             count++;
-
             if (charities[filer] && charities[grantee]) {
               const key = filer + '~' + grantee;
               if (!localEdges[key]) localEdges[key] = 0;
@@ -331,52 +359,221 @@ title: Charity graph - multi-root BFS & taxpayer totals
   }
 
   /**
-   * Build a filtered subset of charities + edges:
-   *   - If activeKeywords is non-empty, a charity must match at least one or be in activeEINs.
-   *   - If no keywords, we include all charities plus the user EINS.
+   * The main graph-generation entry point.
+   * - If custom_graph is present, we parse and render that directly.
+   * - Else, we do BFS logic based on activeEINs & keywords.
    */
-  function buildFilteredData() {
-    let filteredCharities = {};
-    const hasKeywords = (activeKeywords.length > 0);
-
-    for (const [ein, c] of Object.entries(charities)) {
-      if (activeEINs.includes(ein)) {
-        // Always keep user-specified EIN
-        filteredCharities[ein] = c;
-        continue;
-      }
-      if (hasKeywords) {
-        // Must match at least one keyword
-        const nm = c.name.toLowerCase();
-        const matched = activeKeywords.some(kw => nm.includes(kw));
-        if (matched) {
-          filteredCharities[ein] = c;
-        }
-      } else {
-        // No keywords => keep everything
-        filteredCharities[ein] = c;
-      }
+  function generateGraph() {
+    if (!dataReady) {
+      alert("Data not loaded yet. Please wait.");
+      return;
     }
 
-    // Filter edges so that both ends are in the filtered set
-    let filteredEdges = {};
-    for (const [key, amt] of Object.entries(edgeAccumulator)) {
-      const [filer, grantee] = key.split('~');
-      if (filteredCharities[filer] && filteredCharities[grantee]) {
-        filteredEdges[key] = amt;
-      }
+    // Clear old graph
+    $('#graph-container').empty();
+    $('#excluded-info').hide();
+    if (panZoomInstance) {
+      panZoomInstance.destroy();
+      panZoomInstance = null;
     }
 
-    return { filteredCharities, filteredEdges };
+    $('#status').text('Generating...').css('color', 'red');
+
+    if (customGraphEdges) {
+      // CUSTOM GRAPH MODE
+      generateCustomGraph();
+    } else {
+      // BFS MODE
+      generateBFSGraph();
+    }
   }
 
   /**
-   * Multi-step BFS: 
-   *  1) Pick the largest receipt_amt root from among user EINs (if any in the filtered set),
-   *     otherwise the largest from the entire filtered set.
-   *  2) BFS from that root (both directions). 
-   *  3) If the subgraph has < 5 nodes, pick the next-largest unvisited charity, BFS again, union the sets.
-   *  4) Keep going until subgraph has >=5 nodes or no more BFS roots remain.
+   * Build and render the BFS-based subgraph from the user’s EINS and keywords.
+   */
+  function generateBFSGraph() {
+    // Build filtered dataset
+    const { filteredCharities, filteredEdges } = buildFilteredData();
+    const filteredEINs = Object.keys(filteredCharities);
+    if (filteredEINs.length === 0) {
+      $('#status').text('No charities match the filters.').css('color','black');
+      return;
+    }
+
+    // Build adjacency
+    const adjacencyFwd = {};
+    const adjacencyRev = {};
+    for (const [key, amt] of Object.entries(filteredEdges)) {
+      const [filer, grantee] = key.split('~');
+      if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
+      adjacencyFwd[filer].push(grantee);
+
+      if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
+      adjacencyRev[grantee].push(filer);
+    }
+
+    // Multi-root BFS
+    let visitedSet = multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev);
+
+    // Force user EINs
+    for (const e of activeEINs) {
+      if (filteredCharities[e]) {
+        visitedSet.add(e);
+      }
+    }
+
+    // Build final edges
+    const finalEdges = [];
+    for (const [key, amt] of Object.entries(filteredEdges)) {
+      const [filer, grantee] = key.split('~');
+      if (visitedSet.has(filer) && visitedSet.has(grantee)) {
+        finalEdges.push({ filer, grantee, amt });
+      }
+    }
+
+    // Also forcibly include direct edges among user EINs
+    for (let i = 0; i < activeEINs.length; i++) {
+      for (let j = i + 1; j < activeEINs.length; j++) {
+        const e1 = activeEINs[i];
+        const e2 = activeEINs[j];
+        // fwd
+        if (filteredEdges[e1 + '~' + e2]) {
+          const amt = filteredEdges[e1 + '~' + e2];
+          if (!finalEdges.find(x => x.filer===e1 && x.grantee===e2)) {
+            finalEdges.push({ filer: e1, grantee: e2, amt });
+          }
+          visitedSet.add(e1);
+          visitedSet.add(e2);
+        }
+        // rev
+        if (filteredEdges[e2 + '~' + e1]) {
+          const amt = filteredEdges[e2 + '~' + e1];
+          if (!finalEdges.find(x => x.filer===e2 && x.grantee===e1)) {
+            finalEdges.push({ filer: e2, grantee: e1, amt });
+          }
+          visitedSet.add(e1);
+          visitedSet.add(e2);
+        }
+      }
+    }
+
+    // Summaries
+    const displayedNodesCount = visitedSet.size;
+    const excluded501 = totalCharitiesCount - displayedNodesCount;
+    const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
+    const displayedEdgesCount = finalEdges.length;
+    const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
+
+    // Sum taxpayer funds in subgraph
+    let taxpayerTotal = 0;
+    for (const ein of visitedSet) {
+      taxpayerTotal += (filteredCharities[ein].govt_amt || 0);
+    }
+
+    // Build & render
+    const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount);
+
+    // Debug or link logging
+    for (let ein of visitedSet) {
+      const c = filteredCharities[ein];
+      const grants = formatNumber(c.grant_amt);
+      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
+      const irsFormLink = linkScheduleI
+        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
+        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
+      console.log(ein + " " + irsFormLink);
+    }
+  }
+
+  /**
+   * Build and render the *custom* graph from the custom_graph param.
+   * We skip BFS. We parse customGraphEdges, filter out unknown charities, then build final edges.
+   */
+  function generateCustomGraph() {
+    const validEdges = [];
+    const visitedSet = new Set();
+
+    // For each custom edge, keep only if src & dst exist in charities
+    customGraphEdges.forEach(e => {
+      if (charities[e.filer] && charities[e.grantee]) {
+        validEdges.push(e);
+        visitedSet.add(e.filer);
+        visitedSet.add(e.grantee);
+      }
+    });
+
+    // Sum taxpayer total for the visited EINS
+    let taxpayerTotal = 0;
+    visitedSet.forEach(ein => {
+      taxpayerTotal += charities[ein].govt_amt || 0;
+    });
+
+    // Build DOT
+    const dot = buildDotSource(visitedSet, validEdges, charities, taxpayerTotal);
+
+    // For excluded501 / excludedGrants:
+    const excluded501 = totalCharitiesCount - visitedSet.size;
+    // There's no “filteredEdges” concept here. We just say # of edges in the custom param minus # that made it in
+    const totalCustomEdges = customGraphEdges.length;
+    const displayedEdgesCount = validEdges.length;
+    const excludedGrants = totalCustomEdges - displayedEdgesCount;
+
+    // Render
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size);
+
+    // Debug or link logging
+    visitedSet.forEach(ein => {
+      const c = charities[ein];
+      const grants = formatNumber(c.grant_amt);
+      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
+      const irsFormLink = linkScheduleI
+        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
+        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
+      console.log(ein + " " + irsFormLink);
+    });
+  }
+
+  /**
+   * Renders a DOT string, updates excluded info, sets status and shows download button.
+   */
+  function renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedCount) {
+    const viz = new Viz();
+    viz.renderSVGElement(dot)
+      .then(svgEl => {
+        svgEl.setAttribute('width', '100%');
+        svgEl.setAttribute('height', '100%');
+        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svgEl.setAttribute('class', 'w-full h-full');
+        svgEl.setAttribute('style', 'min-height: 75vh;');
+
+        $('#graph-container').append(svgEl);
+        panZoomInstance = svgPanZoom(svgEl, {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+          center: true
+        });
+
+        // Show excluded info
+        $('#excluded501').text(excluded501.toLocaleString());
+        $('#excludedGrants').text(excludedGrants.toLocaleString());
+        $('#taxpayerTotal').html(
+          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
+        );
+        $('#excluded-info').show();
+
+        $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
+        $('#downloadBtn').show();
+      })
+      .catch(err => {
+        console.error(err);
+        $('#status').text('Error generating graph.').css('color', 'red');
+      });
+  }
+
+  /**
+   * BFS multi-root approach
    */
   function multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev) {
     const visited = new Set();
@@ -387,10 +584,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
       return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
     });
 
-    // If user EINs exist in the filtered set, we want the largest of those first
+    // If user EINs exist in the filtered set, BFS from the largest among them first
     let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
     if (hasUserEINsInFiltered.length > 0) {
-      // Among those user EINs, find the one with largest receipt_amt
       let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
         if (!best) return cur;
         const bestAmt = filteredCharities[best].receipt_amt;
@@ -398,14 +594,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
         return (curAmt > bestAmt) ? cur : best;
       }, null);
 
-      // BFS from that root
       bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
-
-      // Then remove that root from the sorted array's priority
       sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
     }
 
-    // If we still have fewer than 5, BFS from next largest unvisited
+    // If <5 visited, BFS from next-largest
     let idx = 0;
     while (visited.size < 5 && idx < sortedByReceipt.length) {
       const candidate = sortedByReceipt[idx];
@@ -418,9 +611,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
     return visited;
   }
 
-  /**
-   * BFS forward + reverse from a single root, union results into visited.
-   */
   function bfsFromRoot(root, adjacencyFwd, adjacencyRev, visited) {
     if (!root) return;
     // forward BFS
@@ -459,160 +649,53 @@ title: Charity graph - multi-root BFS & taxpayer totals
   }
 
   /**
-   * The main "generate graph" function:
-   *  1) Filter data
-   *  2) Build adjacency
-   *  3) multiRootBFS => visited set
-   *  4) Force all user EINs
-   *  5) Build final subgraph edges + direct user-EIN edges
-   *  6) Summation of taxpayer money
-   *  7) Render
+   * Build a filtered subset of charities + edges (for BFS scenario).
+   * - If activeKeywords is non-empty, a charity must match at least one or be in activeEINs.
+   * - If no keywords, we include all charities plus the user EINS.
    */
-  function generateGraph() {
-    if (!dataReady) {
-      alert("Data not loaded yet. Please wait.");
-      return;
-    }
+  function buildFilteredData() {
+    let filteredCharities = {};
+    const hasKeywords = (activeKeywords.length > 0);
 
-    // Clear old graph
-    $('#graph-container').empty();
-    $('#excluded-info').hide();
-    if (panZoomInstance) {
-      panZoomInstance.destroy();
-      panZoomInstance = null;
-    }
-
-    $('#status').text('Generating...').css('color', 'red');
-    $('#generateBtn').prop('disabled', true);
-
-    // Build filtered dataset
-    const { filteredCharities, filteredEdges } = buildFilteredData();
-    const filteredEINs = Object.keys(filteredCharities);
-    if (filteredEINs.length === 0) {
-      $('#status').text('No charities match the filters.').css('color','black');
-      $('#generateBtn').prop('disabled', false);
-      return;
-    }
-
-    // Build adjacency
-    const adjacencyFwd = {};
-    const adjacencyRev = {};
-    for (const [key, amt] of Object.entries(filteredEdges)) {
-      const [filer, grantee] = key.split('~');
-      if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
-      adjacencyFwd[filer].push(grantee);
-
-      if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
-      adjacencyRev[grantee].push(filer);
-    }
-
-    // Multi-root BFS
-    let visitedSet = multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev);
-
-    // Force user EINs
-    for (const e of activeEINs) {
-      if (filteredCharities[e]) {
-        visitedSet.add(e);
+    for (const [ein, c] of Object.entries(charities)) {
+      if (activeEINs.includes(ein)) {
+        // Always keep user-specified EIN
+        filteredCharities[ein] = c;
+        continue;
       }
-    }
-
-    // Build final edges
-    const finalEdges = [];
-    for (const [key, amt] of Object.entries(filteredEdges)) {
-      const [filer, grantee] = key.split('~');
-      if (visitedSet.has(filer) && visitedSet.has(grantee)) {
-        finalEdges.push({ filer, grantee, amt });
-      }
-    }
-
-    // Also forcibly include direct edges among user EINs if they exist
-    for (let i = 0; i < activeEINs.length; i++) {
-      for (let j = i + 1; j < activeEINs.length; j++) {
-        const e1 = activeEINs[i];
-        const e2 = activeEINs[j];
-        // fwd
-        if (filteredEdges[e1 + '~' + e2]) {
-          const amt = filteredEdges[e1 + '~' + e2];
-          if (!finalEdges.find(x => x.filer===e1 && x.grantee===e2)) {
-            finalEdges.push({ filer: e1, grantee: e2, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
+      if (hasKeywords) {
+        // Must match at least one keyword
+        const nm = c.name.toLowerCase();
+        const matched = activeKeywords.some(kw => nm.includes(kw));
+        if (matched) {
+          filteredCharities[ein] = c;
         }
-        // rev
-        if (filteredEdges[e2 + '~' + e1]) {
-          const amt = filteredEdges[e2 + '~' + e1];
-          if (!finalEdges.find(x => x.filer===e2 && x.grantee===e1)) {
-            finalEdges.push({ filer: e2, grantee: e1, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
-        }
+      } else {
+        // No keywords => keep everything
+        filteredCharities[ein] = c;
       }
     }
 
-    // Calculate excluded stats, taxpayer total
-    const displayedNodesCount = visitedSet.size;
-    const excluded501 = totalCharitiesCount - displayedNodesCount;
-    const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
-    const displayedEdgesCount = finalEdges.length;
-    const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
-
-    // Sum taxpayer funds in subgraph
-    let taxpayerTotal = 0;
-    for (const ein of visitedSet) {
-      taxpayerTotal += (filteredCharities[ein].govt_amt || 0);
+    // Filter edges so that both ends are in the filtered set
+    let filteredEdges = {};
+    for (const [key, amt] of Object.entries(edgeAccumulator)) {
+      const [filer, grantee] = key.split('~');
+      if (filteredCharities[filer] && filteredCharities[grantee]) {
+        filteredEdges[key] = amt;
+      }
     }
 
-    // Build DOT
-    const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
-
-    // Render
-    const viz = new Viz();
-    viz.renderSVGElement(dot)
-      .then(svgEl => {
-        svgEl.setAttribute('width', '100%');
-        svgEl.setAttribute('height', '100%');
-        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgEl.setAttribute('class', 'w-full h-full');
-        svgEl.setAttribute('style', 'min-height: 75vh;');
-
-        $('#graph-container').append(svgEl);
-        panZoomInstance = svgPanZoom(svgEl, {
-          zoomEnabled: true,
-          controlIconsEnabled: true,
-          fit: true,
-          center: true
-        });
-
-        // Show excluded info
-        $('#excluded501').text(excluded501.toLocaleString());
-        $('#excludedGrants').text(excludedGrants.toLocaleString());
-        $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
-        );
-        $('#excluded-info').show();
-
-        $('#status').html(`<span class="text-sm text-green font-semibold">${visitedSet.size} charities displayed</span>`);
-        $('#downloadBtn').show();
-        $('#generateBtn').prop('disabled', false);
-      })
-      .catch(err => {
-        console.error(err);
-        $('#status').text('Error generating graph.').css('color', 'red');
-        $('#generateBtn').prop('disabled', false);
-      });
+    return { filteredCharities, filteredEdges };
   }
 
   /**
-   * Build DOT string. We also highlight "Taxpayer Funds Received" in the label.
+   * Build DOT string. 
    */
   function buildDotSource(nodeSet, edgeList, filteredCharities, taxpayerTotal) {
     let dot = `digraph G {
-// Graph settings
 rankdir=LR;
-nodesep=0.5;  // Increase horizontal spacing between nodes
-ranksep=0.5;  // Increase vertical spacing between ranks
+nodesep=0.5;
+ranksep=0.5;
 node [
   shape=box,
   style="filled",
@@ -637,14 +720,12 @@ graph [
   splines=spline,
   overlap=false
 ];
-labelloc="t";
-`;
+labelloc="t";\n`;
 
-    // Add nodes
     for (const ein of nodeSet) {
       const c = filteredCharities[ein];
-      
-      // First escape special characters
+      if (!c) continue; // safety
+
       let escapedName = c.name.replace(/[&<>"']/g, char => {
         switch (char) {
           case '&': return '&amp;';
@@ -656,92 +737,64 @@ labelloc="t";
         }
       });
 
-      // Highlight keywords in the name
-      if (activeKeywords.length > 0) {
+      // Highlight BFS keywords if any (only in BFS scenario)
+      if (!customGraphEdges && activeKeywords.length > 0) {
         activeKeywords.forEach(kw => {
-          // Case-insensitive search, preserve leading and trailing whitespace
           const regex = new RegExp(`(\\s*)(${kw})`, 'gi');
           escapedName = escapedName.replace(regex, '$1<B><FONT COLOR="#2563EB">$2</FONT></B> ').trim();
         });
       }
-      
+
       const receipts = formatNumber(c.receipt_amt);
       const govt = formatNumber(c.govt_amt);
       const contrib = formatNumber(c.contrib_amt);
       const grants = formatNumber(c.grant_amt);
-      
-      // Enhanced table formatting
+
       const label = `<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="2" cellpadding="2">
-        ${c.govt_amt > 10000000 ? `<tr>
-          <td colspan="4">
-          <table border="0" cellspacing="0" cellpadding="5"><TR><TD COLSPAN="2" BGCOLOR="#DC2626">
-          <FONT COLOR="white"><B>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</B></FONT>
-          </TD></TR></table></td></tr>` : ''}
-        <tr>
-          <td colspan="4">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <TR><TD COLSPAN="4" HEIGHT="2"></TD></TR>
-          </table>
-          </td>
-        </tr>
-        <TR><TD COLSPAN="3" align="left"><b>${escapedName}</b></TD><td>&nbsp;</td></TR>
-        <TR>
-          <TD colspan="3" align="left">EIN: ${ein.slice(0,2)}-${ein.slice(2)}</TD>
-          <td>&nbsp;</td>
-        </TR>
-        <tr>
-          <td colspan="4">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <TR><TD COLSPAN="2" BGCOLOR="#000000" HEIGHT="2"></TD></TR>
-          </table>
-          </td>
-        </tr>
-        <TR>
-          <TD align="left">Gross receipts</TD>
-          <td>&nbsp;</td>
-          <TD align="right">$${receipts}</TD>
-          <td>&nbsp;</td>
-        </TR>
-        <TR>
-          <TD align="left">Contributions</TD>
-          <td>&nbsp;</td>
-          <TD align="right">$${contrib}</TD>
-          <td>&nbsp;</td>
-        </TR>
-        <TR>
-          <TD align="left">Grants given</TD>
-          <td>&nbsp;</td>
-          <TD align="right">$${grants}</TD>
-          <td>&nbsp;</td>
-        </TR>
+        ${
+          c.govt_amt > 10000000 
+          ? `<tr><td colspan="4"><table border="0" cellspacing="0" cellpadding="5"><tr><td colspan="2" BGCOLOR="#DC2626">
+             <font color="white"><b>🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨</b></font>
+             </td></tr></table></td></tr>` 
+          : ''
+        }
+        <tr><td colspan="4"><table border="0" cellspacing="0" cellpadding="0"><tr><td colspan="4" height="2"></td></tr></table></td></tr>
+        <tr><td colspan="3" align="left"><b>${escapedName}</b></td><td>&nbsp;</td></tr>
+        <tr><td colspan="3" align="left">EIN: ${ein.slice(0,2)}-${ein.slice(2)}</td><td>&nbsp;</td></tr>
+        <tr><td colspan="4">
+          <table border="0" cellspacing="0" cellpadding="0"><tr><td colspan="2" bgcolor="#000000" height="2"></td></tr></table>
+        </td></tr>
+        <tr><td align="left">Gross receipts</td><td>&nbsp;</td><td align="right">$${receipts}</td><td>&nbsp;</td></tr>
+        <tr><td align="left">Contributions</td><td>&nbsp;</td><td align="right">$${contrib}</td><td>&nbsp;</td></tr>
+        <tr><td align="left">Grants given (visible)</td><td>&nbsp;</td><td align="right">$${grants}</td><td>&nbsp;</td></tr>
         <tr>
           <td colspan="3">
-          <table border="0" cellspacing="0" cellpadding="0">
-            <TR>
-              <TD align="left"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="left">Taxpayer funds</B></FONT></TD>
-              <TD align="right"><FONT ${c.govt_amt > 0 ? 'COLOR="#DC2626"' : 'COLOR="#000"'}><B align="right">$${govt}</B></FONT></TD>
-            </TR>
-          </table>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="left"><font ${c.govt_amt > 0 ? 'color="#DC2626"' : 'color="#000"'}><b>Taxpayer funds</b></font></td>
+                <td align="right"><font ${c.govt_amt > 0 ? 'color="#DC2626"' : 'color="#000"'}><b>$${govt}</b></font></td>
+              </tr>
+            </table>
           </td>
           <td>&nbsp;</td>
         </tr>
       </TABLE>>`;
-      
-      // Style based on taxpayer funds AND user search
+
+      // Color logic: highlight user EINS if BFS scenario
       let nodeStyle = '';
-      if (activeEINs.includes(ein)) {
-        // Highlight user-searched nodes with a thicker border and different color
+      const isUserEin = (!customGraphEdges && activeEINs.includes(ein));
+      if (isUserEin) {
+        // BFS scenario, user-searched node
         if (c.govt_amt > 10000000) {
           nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626" penwidth=3';
         } else if (c.govt_amt > 1000000) {
           nodeStyle = 'fillcolor="#FEF3C7" color="#D97706" penwidth=3';
-        } else if (c.govt_amt > 0) {
-          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
         } else {
-          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';  // Blue for emphasis
+          // Blue highlight if user-specified but not a high govt amt
+          nodeStyle = 'fillcolor="#F3F4F6" color="#2563EB" penwidth=3';
         }
       } else {
-        // Normal styling for other nodes
+        // Normal styling
         if (c.govt_amt > 10000000) {
           nodeStyle = 'fillcolor="#FEE2E2" color="#DC2626"';
         } else if (c.govt_amt > 1000000) {
@@ -756,7 +809,7 @@ labelloc="t";
       dot += `  "${ein}" [${nodeStyle}, label=${label}];\n`;
     }
 
-    // Add edges - explicitly set color for each edge
+    // Edges
     for (const e of edgeList) {
       const amt = formatNumber(e.amt);
       dot += `  "${e.filer}" -> "${e.grantee}" [label="$${amt}", color="#94A3B8"];\n`;
@@ -766,15 +819,11 @@ labelloc="t";
     return dot;
   }
 
-  // Format number with commas
   function formatNumber(x) {
     const n = parseInt(x, 10) || 0;
     return n.toLocaleString('en-US');
   }
 
-  /**
-   * EIN input => add to activeEINs if valid
-   */
   function addEINFromInput() {
     let val = $('#einInput').val().trim();
     val = val.replace(/[-\s]/g, '');
@@ -783,7 +832,6 @@ labelloc="t";
       return;
     }
     if (!charities[val]) {
-      // Not found in CSV, but let's allow it anyway if user insists
       console.warn("EIN not found in charities.csv (still adding).");
     }
     if (!activeEINs.includes(val)) {
@@ -791,17 +839,15 @@ labelloc="t";
     }
     $('#einInput').val('');
     renderActiveEINs();
-    updateQueryParams(); // ADDED
+    updateQueryParams();
     generateGraph();
   }
 
   function renderActiveEINs() {
     const $c = $('#activeEINs');
     $c.empty();
-    
-    // Show/hide Clear EINs button based on activeEINs length
     $('#clearEINsBtn').toggle(activeEINs.length > 0);
-    
+
     activeEINs.forEach(ein => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(ein.slice(0,2) + '-' + ein.slice(2));
@@ -810,7 +856,7 @@ labelloc="t";
         const rem = $(this).attr('data-ein');
         activeEINs = activeEINs.filter(x => x !== rem);
         renderActiveEINs();
-        updateQueryParams(); // ADDED
+        updateQueryParams();
         generateGraph();
       });
       $tag.append($text).append($rm);
@@ -818,16 +864,13 @@ labelloc="t";
     });
   }
 
-  /**
-   * Keyword input => add to activeKeywords
-   */
   function addKeywordFromInput() {
     const kw = $('#keywordInput').val().trim();
     if (kw.length > 0) {
       activeKeywords.push(kw.toLowerCase());
       $('#keywordInput').val('');
       renderActiveKeywords();
-      updateQueryParams(); // ADDED
+      updateQueryParams();
       generateGraph();
     }
   }
@@ -835,10 +878,8 @@ labelloc="t";
   function renderActiveKeywords() {
     const $c = $('#activeFilters');
     $c.empty();
-    
-    // Show/hide Clear keywords button based on activeKeywords length
     $('#clearFiltersBtn').toggle(activeKeywords.length > 0);
-    
+
     activeKeywords.forEach(kw => {
       const $tag = $('<div class="filter-tag flex items-center gap-0.5 rounded border border-blue bg-blue/10 text-blue rounded-md px-2 py-1 text-xs"></div>');
       const $text = $('<span></span>').text(kw);
@@ -847,7 +888,7 @@ labelloc="t";
         const rem = $(this).attr('data-kw');
         activeKeywords = activeKeywords.filter(x => x !== rem);
         renderActiveKeywords();
-        updateQueryParams(); // ADDED
+        updateQueryParams();
         generateGraph();
       });
       $tag.append($text).append($rm);
@@ -856,7 +897,6 @@ labelloc="t";
   }
 
   /**
-   * ADDED:
    * Download the currently displayed SVG as a file named "charity_graph.svg".
    */
   function downloadSVG() {
