@@ -1746,6 +1746,21 @@ table {
   }
 }
 
+@container (min-width: 42rem) {
+
+  .\@2xl\:flex-row {
+    flex-direction: row;
+  }
+
+  .\@2xl\:items-start {
+    align-items: flex-start;
+  }
+
+  .\@2xl\:justify-between {
+    justify-content: space-between;
+  }
+}
+
 @container (min-width: 48rem) {
 
   .\@3xl\:grid-cols-2 {
