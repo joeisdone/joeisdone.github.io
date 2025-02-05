@@ -7,7 +7,7 @@ title: The historical case for Christianity
 
 # The Historical Case for Christianity
 
-# Introduction
+## Introduction
 
 One of the strongest arguments in favor of the truth of Christianity is the historical evidence for the existence of Jesus Christ and his resurrection.  The historical evidence that supports Christianity is unique when compared to all other religious worldviews.  And this is not just my opinion as a Christian Pastor.  This is something that even some scholarly and academic unbelievers grant.  This is how atheist Anthony Flew put it:
  
@@ -17,8 +17,8 @@ And so in this paper, we are going to be looking at the historical evidence for 
 
 I want to begin this paper by briefly going over how clear it is that Jesus Christ existed as a historical figure.  After I do this, I will go over the historical evidence that Jesus performed miracles and then finally, I argue that he rose from the dead authenticating his radical claims which are at the center of the Christian worldview.    
 
-# Part 1: Outside Sources
-## The Academic Consensus On The Existence of Jesus
+## Part 1: Outside Sources
+### The Academic Consensus On The Existence of Jesus
 
 Although there are internet atheists who make the claim that Jesus never existed, this view is not taken seriously in the academic world.  This is how agnostic skeptical scholar Bart Erhman puts it:
 
@@ -30,11 +30,11 @@ Bart Erhman goes on to stress how he has no ax to grind when it comes to the exi
 
 The reason why Bart Erhman says this is because we have more evidence that Jesus existed than we do for other historical figures like Alexander the great.  Have you ever notice that no one questions whether Alexander the great existed or not? And yet, the earliest accounts of Alexander the Great are written over 250 years after he existed.  For Jesus Christ, on the other hand, we have an abundance of early sources most of which are recorded 5 to 100 years after he died. Some of these sources are not even in the Bible, but also outside secular sources recording his existence.  
 
-## Secular Sources Support The Existence of Jesus
+### Secular Sources Support The Existence of Jesus
 
 I want to start off listing some sources outside of the Bible that we have on Jesus.  Now I want us to keep in mind that Jesus died around 33 AD, so that when I am citing a source from 95 AD, that source is only around 60 years after his death.  
 
-### Roman Sources
+#### Roman Sources
 
 The first quote is from Suetonius who lived from 69 to 140 AD.  He wrote this section that I am about to quote around 115 AD but he lived close to the time when Jesus lived.  He writes:
 
@@ -46,7 +46,7 @@ We do not get much from Suetonius other than Jesus existed and he was called the
 
 We get more facts from Tacitus about Jesus than we do from Suetonius. Two facts we get from Tacitus is that Jesus was called the Christ and he was crucified.  But there seems to be another implied fact that Tacitus refers to as “a most mischievous superstition”.  This is mentioned directly after the death of Christ and seems to be a pejorative term of the Christian belief in resurrection of Jesus.  So, from Tacitus we can infer that Jesus is the Christ, that he was crucified, and that he was believed to have been resurrected from the dead. 
 
-### Josephus
+#### Josephus
 
 Now I want to look and turn to Josephus, an ancient Jewish historian.  He wrote much of first century Judaism and on the Jewish War which occurred in the first century. A particular passage about Jesus from Josephus was likely added onto by Christian scribes. 
 
@@ -64,7 +64,7 @@ And so for those who want to deny that Josephus mentions anything about Jesus pr
 
 And so because this quotation is widely accepted by majority of scholarship, then it is fair to say that we learn the following new facts about Jesus: Jesus had a brother, Jesus was crucified by Pilate, Jesus was considered a wise teacher and even said to do miraculous things.  
 
-## Summary: What We Know From Outside Sources
+### Summary: What We Know From Outside Sources
 
 Now there are other Christian and secular sources outside of the Bible, but these are the earliest and best.  I summarize what we learn about Jesus from these outside sources:
 
@@ -78,8 +78,8 @@ Now there are other Christian and secular sources outside of the Bible, but thes
 
 In my opinion as an academic, this is an impressive list of details by a brief sampling of the most prominent secular sources about Jesus. So, I believe it is safe to assume that academic research supports that Jesus did in fact exist.
 
-# Part 2: New Testament
-## The New Testament Is More Than Just One Reliable Source
+## Part 2: New Testament
+### The New Testament Is More Than Just One Reliable Source
 
 Often, skeptics will make the remark along the lines of: *Well I don’t believe that the Jesus that Christians say they follow today ever existed at all.  Rather I just believe there was a man who was a regular first century Jew who existed and anything remotely miraculous must be a later myth or a later development.  So that the miracle working Jesus followed by Christians today did not exist.*
 
@@ -89,11 +89,11 @@ The reason why textual scholars say this is that for any ancient text, we have a
 
 There was no compiled book called the "New Testament" in the first century. Rather, the books of the New Testament were separate Greek documents about Jesus and Christianity in the first century when they were written. They were not together in one book like we have today, but had separate authors and sources.  
 
-## Criteria of Multiple Attestation
+### Criteria of Multiple Attestation
 
 There are different criteria that secular historians employ to show that something likely happened historically.  The one method I will be using the to start with is what is called the *criteria of multiple attestation*.  This criteria says that an event is more likely to be historical if it has two sources rather than just one source, with all things being equal. Under this criteria, the more sources you have, the more it increases the likelihood of something taking place historically rather than not. Paul Maier, a historian of antiquity, affirms this method when he writes "*Many facts from antiquity rest on just one ancient source, while two or three in agreement generally render the fact unimpeachable.*" (10)
 
-### Jesus as a Miracle Worker
+#### Jesus as a Miracle Worker
 
 The gospels of Matthew, Luke, Mark, and John are all generally treated as independent sources. There are two miracles that happened in all four Gospels: feeding of the 5,000, and Jesus walking on water. 
 
@@ -121,7 +121,7 @@ The book called 2nd Peter is most likely written after Hebrews, but it still is 
 
 The reference to power and majesty is likely a reference to the miracles of Jesus that this Christ follower is indirectly mentioning which would just be another additional independent source of the miracles of Jesus.
 
-### What do scholars say?
+#### What do scholars say?
 
 If we treated the New Testament like any other ancient first historical document, we find that there is an abundance of evidence that Jesus was a miracle worker.  This is not just my opinion.  This is something that skeptical atheist and agnostic New Testament historians affirms.  In the words of radically liberal atheist New Testament scholar John Crossan:
 
@@ -149,7 +149,7 @@ If one were to count the early historical sources supporting Jesus existing as a
 
 And so with Jesus, we have over five times that amount of evidence required for an unimpeachable fact in the ancient world.  I would say that is pretty impressive, but I am not finished yet!
 
-# Part 3: Resurrection
+## Part 3: Resurrection
 
 Now the ironic thing about the miracles of Jesus is that the miracle that has the strongest and earliest evidence supporting is the Resurrection of Jesus Christ.  This is truly remarkable because the Resurrection is the central miracle of Christianity.  
 
@@ -159,7 +159,7 @@ There is no miracle in the New Testament that is given more weight than the Resu
 
 So if the resurrection is false then Christianity is false.  But if the resurrection is true then it follows that Christianity is true, according to the Apostle Paul himself.  So let us finally examine the evidence for the resurrection.
 
-## 1 Corinthians 15
+### 1 Corinthians 15
 
 I want to begin by quoting the earliest dated part of the entire New Testament 1 Corinthians 15:1-3, first let us look at the first three verses: 
 
@@ -167,7 +167,7 @@ I want to begin by quoting the earliest dated part of the entire New Testament 1
 
 This is a significant section of scripture that is often overlooked by the lay person but which is paid very close attention to by the New Testament scholars.
 
-### Delivered and Received Language
+#### Delivered and Received Language
 
 This delivered and received language we see here in 1 Corinthians 15:3 is used to indicate that starts at verses 3 and continues through 7 was an ancient creed-like tradition that was passed on to Paul.  This would have been something that the earliest Christian memorized and passed on to others. 
 
@@ -179,7 +179,7 @@ And again Michael Goulder, another skeptical non-Christian scholar, confirms thi
 
 > goes back at least to what Paul was taught when he was converted, a couple of years after the crucifixion. (18)
 
-## Crucifixion of Jesus
+### Crucifixion of Jesus
 
 Over seven sources confirm that Jesus died by crucifixion. So established is the death of Christ by crucifixion that non-Christian New Testament Scholar, Marcus Borg, who I quoted earlier, concluded that: 
 
@@ -187,7 +187,7 @@ Over seven sources confirm that Jesus died by crucifixion. So established is the
 
 Robert Funk of the radically liberal Jesus seminar went so far as to say that the death of Jesus by crucifixion is an “indisputable fact” about Jesus. (20)
 
-## Empty Tomb
+### Empty Tomb
 
 We will now look at the evidence that shows that Jesus was buried and that the tomb was empty in 1 Corinthians 15:4 - the same ancient creed we looked at earlier - we find two more foundational historical facts about Jesus: 
 
@@ -195,7 +195,7 @@ We will now look at the evidence that shows that Jesus was buried and that the t
 
 The second fact implied by this verse is that the tomb on Easter Sunday was empty. For any first century Jew, to say that of a dead man “that he was buried and that he was raised” is to imply a bodily resurrection meaning the tomb was empty. Another reason why most critical scholars accept the empty tomb is that it is attested for by all four Gospels in addition to 1 Corinthians 15 which I’ve just quoted. 
 
-### Criterion of Embarassment
+#### Criterion of Embarassment
 
 Another piece of evidence for the empty tomb is that in every Gospel the empty tomb was found by women. Now why do the first witnesses of the empty tomb being women give strong evidence that tomb was empty? The reason is that testimony of women was not admitted in a court of law in the first century.
 
@@ -207,7 +207,7 @@ This is what Jacob Kremer, an Australian specialist on the resurrection, says ab
 
 > By far most exegetes hold firmly to the reliability of the biblical statements concerning the empty tomb. (20)
 
-## Appearances of Christ
+### Appearances of Christ
 
 The last and most important fact comes from the 1 Corinthians 15:5-9 creed:  
 
@@ -215,7 +215,7 @@ The last and most important fact comes from the 1 Corinthians 15:5-9 creed:
 
 I want us to remember that all of these creeds date no more than six years after Jesus’ death and that is just phenomenal in terms of ancient history. 
 
-# Summarizing the evidence
+## Summarizing the evidence
 
 I want to now briefly summarize the evidence we have that Jesus appeared to both individuals and groups of people with four simple points:
 
@@ -236,7 +236,7 @@ Skeptical critical scholar, Helmut Koester, also concedes:
 
 The evidence is so strong that Jesus appeared to his disciples, secular scholars strangely start sounding like Christian preachers. 
 
-# Best Explanation of the Facts
+## Best Explanation of the Facts
 
 So then how do secular scholars explain the empty tomb and the appearances of Jesus?  Is there any predominantly held secular theory that tries to explain these facts?  The answer is no.  
 
@@ -254,7 +254,7 @@ And if Christianity is true then you should devote your life to trusting and fol
 
 And my hope is that the evidence and facts presented in this paper will help you see what is true and that it will change your life!
 
-# Sources
+## Sources
 1) Gary Habermas, “My Pilgrimage from Atheism to Theism: An Exclusive Interview with Former British Atheist Professor Antony Flew.” Available from the Web site of Biola University at www.biola.edu/antonyflew
 
 2) Two Dozen (or so) Arguments for God: The Plantinga Project. Editors Jerry Walls, Trent Dougherty

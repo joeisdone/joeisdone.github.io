@@ -9,6 +9,17 @@ defaults:
       path: ""
     values:
       image: /assets/images/default.png
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default
+  - scope:
+      path: ""
+      type: "pages"
+      ext: ".md"
+    values:
+      layout: markdown
 
 social: 
   name: DataRepublican
@@ -37,6 +48,13 @@ exclude:
 plugins:
   - jekyll-seo-tag
   - jekyll-redirect-from
+  - jekyll-optional-front-matter
+  - jekyll-relative-links
 
 whitelist:
   - jekyll-redirect-from
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

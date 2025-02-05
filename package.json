@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
     "postcss-cli": "^10.1.0",
