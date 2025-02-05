@@ -574,8 +574,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
         $('#taxpayerTotal').html(
           `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
         );
-        const customParam = params.get('custom_graph');
-        if (!customParam) {
+        
+        // Check if we're in custom graph mode using the global customGraphEdges
+        if (!customGraphEdges) {
           $('#excluded-info').show();
         }
 
