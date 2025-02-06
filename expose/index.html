@@ -237,9 +237,13 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
       // Show instructions
       if (customTitle) {
-        $('#instructions').html('Displaying <strong>' + customTitle + '</strong>');
+        const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
+
+<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it’s more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
+
+        $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
-        $('#instructions').text('Displaying exact graph.');
+        $('#instructions').text(`Displaying exact graph.${addendum}`);
       }
     } else {
       // BFS scenario: parse EINS, keywords normally
