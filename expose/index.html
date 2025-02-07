@@ -6,10 +6,6 @@ title: Charity graph - multi-root BFS & taxpayer totals
 <!-- jQuery for convenience -->
 <script src="jquery.min.js"></script>
 
-<!-- Viz.js (core + full render) -->
-<script src="viz.js"></script>
-<script src="full.render.js"></script>
-
 <!-- svg-pan-zoom for panning/zooming the resulting SVG -->
 <script src="svg-pan-zoom.min.js"></script>
 
@@ -18,6 +14,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
 <!-- Papa Parse for CSV parsing -->
 <script src="papaparse.min.js"></script>
+
+<!-- Add D3 and related libraries -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<!-- Custom graph visualization -->
+<script src="graph-viz.js"></script>
 
 <style>
   #activeEINs, #activeFilters {
@@ -28,6 +30,27 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
   #graph-container {
     overflow: hidden; /* Hide scrollbars */
+    height: 75vh; /* Set a specific height */
+    min-height: 600px; /* Minimum height */
+  }
+
+  .node {
+    cursor: pointer;
+  }
+
+  .node text {
+    font-family: "SF Pro", Helvetica, sans-serif;
+    font-size: 12px;
+  }
+
+  .link-label {
+    font-family: "SF Pro", Helvetica, sans-serif;
+    font-size: 11px;
+    fill: #64748B;
+  }
+
+  .node rect {
+    filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.1));
   }
 </style>
 
@@ -108,7 +131,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   {% include stat.html label="<strong class='font-semibold'>Taxpayer total in subgraph</strong>" labelColor="text-red opacity-100" valueId="taxpayerTotal" %}
 </div>
 
-<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
+<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white flex items-stretch">
   <div class="">
     <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
@@ -239,7 +262,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       if (customTitle) {
         const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
 
-<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it’s more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
+<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it's more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
 
         $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
@@ -489,7 +512,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // Build & render
     const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount);
+    renderGraph(visitedSet, finalEdges, filteredCharities, taxpayerTotal, displayedNodesCount, excluded501, excludedGrants);
 
     // Debug or link logging
     for (let ein of visitedSet) {
@@ -537,7 +560,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     const excludedGrants = totalCustomEdges - displayedEdgesCount;
 
     // Render
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size);
+    renderGraph(visitedSet, validEdges, charities, taxpayerTotal, visitedSet.size, excluded501, excludedGrants);
 
     // Debug or link logging
     visitedSet.forEach(ein => {
@@ -554,43 +577,36 @@ title: Charity graph - multi-root BFS & taxpayer totals
   /**
    * Renders a DOT string, updates excluded info, sets status and shows download button.
    */
-  function renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedCount) {
-    const viz = new Viz();
-    viz.renderSVGElement(dot)
-      .then(svgEl => {
-        svgEl.setAttribute('width', '100%');
-        svgEl.setAttribute('height', '100%');
-        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgEl.setAttribute('class', 'w-full h-full');
-        svgEl.setAttribute('style', 'min-height: 75vh;');
+  function renderGraph(nodeSet, edgeList, filteredCharities, taxpayerTotal, displayedCount, excluded501, excludedGrants) {
+    // Clear old graph
+    $('#graph-container').empty();
+    
+    const graphViz = new CharityGraphViz('#graph-container', {
+      width: $('#graph-container').width(),
+      height: $('#graph-container').height()
+    });
 
-        $('#graph-container').append(svgEl);
-        panZoomInstance = svgPanZoom(svgEl, {
-          zoomEnabled: true,
-          controlIconsEnabled: true,
-          fit: true,
-          center: true
-        });
+    graphViz.render({
+      nodeSet,
+      edgeList,
+      filteredCharities,
+      activeEINs,
+      customGraphEdges
+    });
 
-        // Show excluded info
-        $('#excluded501').text(excluded501.toLocaleString());
-        $('#excludedGrants').text(excludedGrants.toLocaleString());
-        $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
-        );
-        
-        // Check if we're in custom graph mode using the global customGraphEdges
-        if (!customGraphEdges) {
-          $('#excluded-info').show();
-        }
+    // Update stats
+    $('#excluded501').text(excluded501.toLocaleString());
+    $('#excludedGrants').text(excludedGrants.toLocaleString());
+    $('#taxpayerTotal').html(
+      `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
+    );
+    
+    if (!customGraphEdges) {
+      $('#excluded-info').show();
+    }
 
-        $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
-        $('#downloadBtn').show();
-      })
-      .catch(err => {
-        console.error(err);
-        $('#status').text('Error generating graph.').css('color', 'red');
-      });
+    $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
+    $('#downloadBtn').show();
   }
 
   /**
