@@ -603,4 +603,28 @@ class CharityGraphViz {
         transform.scale(factor)
       );
   }
+
+  // Add destroy method for cleanup
+  destroy() {
+    // Stop simulation if running
+    if (this.simulation) {
+      this.simulation.stop();
+    }
+    
+    // Remove event listeners
+    if (this.zoom) {
+      this.svg.on('.zoom', null);
+    }
+    
+    // Remove the SVG element
+    if (this.svg) {
+      this.svg.remove();
+    }
+    
+    // Clear references
+    this.svg = null;
+    this.simulation = null;
+    this.zoom = null;
+    this.currentHighlight = null;
+  }
 } 

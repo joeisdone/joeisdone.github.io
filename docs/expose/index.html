@@ -791,16 +791,17 @@ $(document).ready(function() {
    * - Else, we do BFS logic based on activeEINs & keywords.
    */
   function generateGraph() {
-    if (!dataReady) {
-      alert("Data not loaded yet. Please wait.");
-      return;
-    }
+    if (!dataReady) return;
 
-    // Clear old graph
-    $('#graph-container').empty();
-    $('#excluded-info').hide();
+    // Clear old graph if it exists
     if (panZoomInstance) {
-      panZoomInstance.destroy();
+      if (typeof panZoomInstance.destroy === 'function') {
+        // Handle old svg-pan-zoom instances
+        panZoomInstance.destroy();
+      } else if (panZoomInstance instanceof CharityGraphViz) {
+        // Handle new D3 instances
+        panZoomInstance.destroy();
+      }
       panZoomInstance = null;
     }
 
