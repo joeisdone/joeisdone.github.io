@@ -306,41 +306,58 @@ class CharityGraphViz {
       .attr('class', 'node-text')
       .attr('transform', 'translate(10,20)');
 
+    // Function to calculate total height of wrapped text
+    const getTextHeight = (element) => {
+      const tspans = element.selectAll('tspan');
+      return tspans.size(); // Return number of lines
+    };
+
     // Organization name
-    textGroup.append('text')
+    const nameText = textGroup.append('text')
       .attr('class', 'name')
       .attr('dy', '0.35em')
       .text(d => d.name)
       .style('font-weight', 'bold')
       .call(this._wrapText, this.options.nodeWidth - 20);
 
+    // Store number of wrapped lines for each node
+    nameText.each(function(d) {
+      d.nameLines = getTextHeight(d3.select(this));
+    });
+
     // EIN
     textGroup.append('text')
-      .attr('dy', '2.5em')
+      .attr('dy', d => `${1.5 + (d.nameLines * 1.1)}em`)
       .text(d => `EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
 
     // Financial info
     const formatMoney = num => `$${num.toLocaleString()}`;
     
     textGroup.append('text')
-      .attr('dy', '4em')
+      .attr('dy', d => `${3 + (d.nameLines * 1.1)}em`)
       .text(d => `Gross receipts: ${formatMoney(d.receipt_amt)}`);
 
     textGroup.append('text')
-      .attr('dy', '5.5em')
+      .attr('dy', d => `${4.5 + (d.nameLines * 1.1)}em`)
       .text(d => `Contributions: ${formatMoney(d.contrib_amt)}`);
 
     textGroup.append('text')
-      .attr('dy', '7em')
+      .attr('dy', d => `${6 + (d.nameLines * 1.1)}em`)
       .text(d => `Grants given: ${formatMoney(d.grant_amt)}`);
 
     // Taxpayer funds (highlighted if > 0)
     const taxpayerText = textGroup.append('text')
-      .attr('dy', '8.5em')
+      .attr('dy', d => `${7.5 + (d.nameLines * 1.1)}em`)
       .style('font-weight', 'bold')
-      .style('fill', d => d.govt_amt > 0 ? '#DC2626' : '#000');
+      .style('fill', d => d.govt_amt > 0 ? '#DC2626' : '#000')
+      .text(d => `Taxpayer funds: ${formatMoney(d.govt_amt)}`);
 
-    taxpayerText.text(d => `Taxpayer funds: ${formatMoney(d.govt_amt)}`);
+    // Adjust node height if needed
+    node.select('rect')
+      .attr('height', d => Math.max(
+        this.options.nodeHeight,
+        (8.5 + (d.nameLines * 1.1)) * 16 + 40 // Convert ems to pixels + padding
+      ));
   }
 
   _wrapText(text, width) {
