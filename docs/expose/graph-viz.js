@@ -392,6 +392,35 @@ class CharityGraphViz {
       .attr('class', 'node-text')
       .attr('transform', 'translate(10,20)');
 
+    // Add "High Taxpayer Funds Alert!" banner if applicable
+    const hasHighTaxpayerFunds = d => d.govt_amt > 10000000;
+    const alertGroup = textGroup.filter(hasHighTaxpayerFunds)
+      .append('g')
+      .attr('class', 'alert-group');
+    
+    // Add red background rectangle
+    alertGroup.append('rect')
+      .attr('x', -5)
+      .attr('y', -12)
+      .attr('width', this.options.nodeWidth - 10)
+      .attr('height', 24)  // Increased height for more padding
+      .attr('rx', 4)
+      .attr('fill', '#FEE2E2')
+      .attr('stroke', '#DC2626')
+      .attr('stroke-width', 1);
+    
+    // Add alert text
+    alertGroup
+      .append('text')
+      .attr('class', 'alert')
+      .attr('dy', '0.35em')  // Vertically center text
+      .attr('x', (this.options.nodeWidth - 10) / 2)  // Center text horizontally
+      .style('text-anchor', 'middle')  // Center text
+      .attr('fill', '#DC2626')
+      .style('font-size', '11px')
+      .style('font-weight', 'bold')
+      .text('🚨🚨🚨 High Taxpayer Funds Alert! 🚨🚨🚨');
+
     // Function to calculate total height of wrapped text
     const getTextHeight = (element) => {
       const tspans = element.selectAll('tspan');
@@ -401,7 +430,7 @@ class CharityGraphViz {
     // Organization name
     const nameText = textGroup.append('text')
       .attr('class', 'name')
-      .attr('dy', '0.35em')
+      .attr('dy', d => hasHighTaxpayerFunds(d) ? '2em' : '0.35em')  // More space after alert
       .text(d => d.name)
       .style('font-weight', 'bold')
       .call(this._wrapText, this.options.nodeWidth - 20);
@@ -409,6 +438,10 @@ class CharityGraphViz {
     // Store number of wrapped lines for each node
     nameText.each(function(d) {
       d.nameLines = getTextHeight(d3.select(this));
+      // Add extra line if there's an alert banner
+      if (hasHighTaxpayerFunds(d)) {
+        d.nameLines += 1;
+      }
     });
 
     // EIN
