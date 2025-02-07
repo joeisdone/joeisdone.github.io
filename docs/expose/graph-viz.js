@@ -27,6 +27,70 @@ class CharityGraphViz {
       .attr('preserveAspectRatio', 'xMidYMid meet')
       .attr('viewBox', '0 0 1000 1000');
 
+    // Create overlay group for controls (always on top)
+    const overlayGroup = this.svg.append('g')
+      .attr('class', 'overlay');
+
+    // Function to calculate zoom controls position
+    const getZoomPosition = () => {
+      const parent = this.svg.node().parentElement;
+      const viewBox = this.svg.attr('viewBox').split(' ').map(Number);
+      const padding = 16; // 1rem
+      
+      // Calculate position relative to viewBox dimensions
+      const x = (viewBox[2] / parent.clientWidth) * (parent.clientWidth - padding);
+      const y = viewBox[3] - padding - (window.innerWidth <= 767 ? 280 : 180); // Account for button heights
+      
+      return `translate(${x}, ${y})`;
+    };
+
+    // Function to get button size based on viewport
+    const getButtonSize = () => {
+      return window.innerWidth <= 767 ? 80 : 40;  // Larger on mobile
+    };
+
+    // Add zoom controls container
+    const zoomControls = overlayGroup.append('g')
+      .attr('class', 'zoom-controls')
+      .attr('transform', getZoomPosition());
+
+    // Helper function to create a zoom button
+    const createZoomButton = (y, symbol, onClick) => {
+      const button = zoomControls.append('g')
+        .attr('class', 'zoom-button')
+        .attr('transform', `translate(0, ${y})`)
+        .style('cursor', 'pointer')
+        .on('click', onClick);
+      
+      // Button background
+      button.append('rect')
+        .attr('x', -40)
+        .attr('y', -20)
+        .attr('width', 40)
+        .attr('height', 40)
+        .attr('rx', 4)
+        .attr('fill', 'white')
+        .attr('stroke', '#94A3B8')
+        .attr('stroke-width', 1);
+      
+      // Centered text
+      button.append('text')
+        .attr('x', -20)
+        .attr('y', 0)
+        .attr('text-anchor', 'middle')
+        .attr('dominant-baseline', 'middle')
+        .attr('fill', '#64748B')
+        .style('font-size', window.innerWidth <= 767 ? '24px' : '18px')
+        .text(symbol);
+      
+      return button;
+    };
+
+    // Create the three buttons with proper spacing
+    createZoomButton(0, '+', () => this._zoom(1.2));
+    createZoomButton(50, '−', () => this._zoom(0.8));
+    createZoomButton(100, '↺', () => this._centerGraph());
+
     // Create a group for zoom/pan behavior
     const zoomGroup = this.svg.append('g')
       .attr('class', 'zoom-group');
@@ -510,8 +574,9 @@ class CharityGraphViz {
     const fullWidth = parent.clientWidth;
     const fullHeight = parent.clientHeight;
     
-    // Calculate scale to fit all content with padding
-    const scale = 1.2 * Math.min(fullWidth / bounds.width, fullHeight / bounds.height);
+    // More aggressive initial zoom on mobile
+    const zoomFactor = window.innerWidth <= 767 ? 2 : 1.2;
+    const scale = zoomFactor * Math.min(fullWidth / bounds.width, fullHeight / bounds.height);
     
     const translate = [
       fullWidth / 2 - (bounds.x + bounds.width / 2) * scale,
@@ -590,5 +655,16 @@ class CharityGraphViz {
       .transition()
       .duration(750)
       .call(this.zoom.transform, transform);
+  }
+
+  _zoom(factor) {
+    const transform = d3.zoomTransform(this.svg.node());
+    this.svg
+      .transition()
+      .duration(300)
+      .call(
+        this.zoom.transform,
+        transform.scale(factor)
+      );
   }
 } 
