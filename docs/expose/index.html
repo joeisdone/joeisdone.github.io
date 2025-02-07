@@ -490,11 +490,24 @@ $(document).ready(function() {
 </div>
 </div>
 
-<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white flex items-stretch">
-  <div class="">
-    <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
+<div class="relative -mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white">
+  <div id="graph-container" class="flex items-stretch">
+    <div class="">
+      <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
+    </div>
+  </div>
+  <div class="top-2 right-2 absolute w-xs">
+    <div class="relative">
+      <input 
+        type="text" 
+        id="searchInput"
+        class="w-full px-2 text-sm py-1 border border-gray-300 rounded-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Search graph..."
+      >
+    </div>
   </div>
 </div>
+
 
 
 <script>
@@ -577,6 +590,16 @@ $(document).ready(function() {
         // Collapse
         $list.height(0);
         $btn.text('How it works');
+      }
+    });
+
+    // Add search handler
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.trim();
+      const matches = panZoomInstance.searchAndHighlight(searchTerm);
+      
+      if (matches) {
+        console.log(`Found ${matches.length} matches`);
       }
     });
   });
@@ -966,6 +989,9 @@ $(document).ready(function() {
 
     $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
     $('#downloadBtn').show();
+
+    // Store panZoomInstance
+    panZoomInstance = graphViz;
   }
 
   /**

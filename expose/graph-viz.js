@@ -12,6 +12,7 @@ class CharityGraphViz {
     this.svg = null;
     this.simulation = null;
     this.zoom = null;
+    this.currentHighlight = null; // Track currently highlighted node
     
     this.init();
   }
@@ -384,5 +385,74 @@ class CharityGraphViz {
     this.svg.call(this.zoom.transform, d3.zoomIdentity
       .translate(translate[0], translate[1])
       .scale(scale));
+  }
+
+  searchAndHighlight(searchTerm) {
+    if (!searchTerm) {
+      // Clear highlight if search is empty
+      this._clearHighlight();
+      return null;
+    }
+    
+    // Convert to lowercase for case-insensitive search
+    searchTerm = searchTerm.toLowerCase();
+    
+    // Find nodes that match the search term
+    const matches = this.svg.selectAll('.node').filter(d => {
+      return d.name.toLowerCase().includes(searchTerm) ||
+             d.id.includes(searchTerm);
+    });
+    
+    if (!matches.empty()) {
+      // Clear previous highlight
+      this._clearHighlight();
+      
+      // Highlight matching nodes
+      matches
+        .select('rect')
+        .style('stroke', '#2563EB')
+        .style('stroke-width', '3px')
+        .style('filter', 'drop-shadow(0 0 6px rgba(37, 99, 235, 0.5))');
+      
+      // Store current highlight
+      this.currentHighlight = matches;
+      
+      // Get the first match's position
+      const match = matches.data()[0];
+      
+      // Zoom to the matching node
+      this._zoomToNode(match);
+      
+      return matches.data();
+    }
+    
+    return null;
+  }
+
+  _clearHighlight() {
+    if (this.currentHighlight) {
+      this.currentHighlight
+        .select('rect')
+        .style('stroke', d => this._getNodeBorderColor(d))
+        .style('stroke-width', d => d.isUserEin ? 3 : 1)
+        .style('filter', null);
+      
+      this.currentHighlight = null;
+    }
+  }
+
+  _zoomToNode(node) {
+    const scale = 1.5;
+    const transform = d3.zoomIdentity
+      .translate(
+        this.options.width / 2 - node.x * scale,
+        this.options.height / 2 - node.y * scale
+      )
+      .scale(scale);
+    
+    this.svg
+      .transition()
+      .duration(750)
+      .call(this.zoom.transform, transform);
   }
 } 
