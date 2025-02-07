@@ -766,6 +766,12 @@ select {
 .top-\[calc\(50\%-0\.75rem\)\] {
   top: calc(50% - 0.75rem);
 }
+.bottom-4 {
+  bottom: 1rem;
+}
+.right-4 {
+  right: 1rem;
+}
 .z-50 {
   z-index: 50;
 }
@@ -965,6 +971,9 @@ select {
 .h-full {
   height: 100%;
 }
+.h-10 {
+  height: 2.5rem;
+}
 .min-h-40 {
   min-height: 10rem;
 }
@@ -997,6 +1006,9 @@ select {
 }
 .w-screen {
   width: 100vw;
+}
+.w-10 {
+  width: 2.5rem;
 }
 .min-w-\[200px\] {
   min-width: 200px;
@@ -1427,6 +1439,10 @@ select {
   font-size: 0.75rem;
   line-height: 1rem;
 }
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
 .font-bold {
   font-weight: 700;
 }
@@ -1489,6 +1505,10 @@ select {
 }
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
+}
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
@@ -1593,6 +1613,11 @@ table {
 
 .hover\:bg-white\/10:hover {
   background-color: rgb(255 255 255 / 0.1);
+}
+
+.hover\:bg-gray-50:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
 .hover\:text-navy:hover {

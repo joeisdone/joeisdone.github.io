@@ -496,6 +496,11 @@ $(document).ready(function() {
       <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
     </div>
   </div>
+  <div class="absolute bottom-4 right-4 flex flex-col gap-2">
+    <button id="zoomIn" class="p-2 bg-white rounded border border-gray-200 hover:bg-gray-50 w-10 h-10 flex items-center justify-center text-gray-600 text-xl">+</button>
+    <button id="zoomOut" class="p-2 bg-white rounded border border-gray-200 hover:bg-gray-50 w-10 h-10 flex items-center justify-center text-gray-600 text-xl">−</button>
+    <button id="resetZoom" class="p-2 bg-white rounded border border-gray-200 hover:bg-gray-50 w-10 h-10 flex items-center justify-center text-gray-600 text-lg">↺</button>
+  </div>
   <div class="top-2 right-2 absolute w-xs">
     <div class="relative">
       <input 
@@ -992,6 +997,11 @@ $(document).ready(function() {
 
     // Store panZoomInstance
     panZoomInstance = graphViz;
+
+    // Add zoom control handlers
+    document.getElementById('zoomIn').addEventListener('click', () => graphViz._zoom(1.2));
+    document.getElementById('zoomOut').addEventListener('click', () => graphViz._zoom(0.8));
+    document.getElementById('resetZoom').addEventListener('click', () => graphViz._centerGraph());
   }
 
   /**
