@@ -392,6 +392,15 @@ class CharityGraphViz {
       .attr('class', 'node-text')
       .attr('transform', 'translate(10,20)');
 
+    // Constants for layout
+    const leftPadding = 10;  // Already set by transform above
+    const rightPadding = 20; // Increased from 10
+    const rightEdge = this.options.nodeWidth - rightPadding;
+    const labelX = 0;
+
+    // Spacing after alert banner if present
+    const alertBottomMargin = 10;
+
     // Add "High Taxpayer Funds Alert!" banner if applicable
     const hasHighTaxpayerFunds = d => d.govt_amt > 10000000;
     const alertGroup = textGroup.filter(hasHighTaxpayerFunds)
@@ -403,7 +412,7 @@ class CharityGraphViz {
       .attr('x', -5)
       .attr('y', -12)
       .attr('width', this.options.nodeWidth - 10)
-      .attr('height', 24)  // Increased height for more padding
+      .attr('height', 24)
       .attr('rx', 4)
       .attr('fill', '#FEE2E2')
       .attr('stroke', '#DC2626')
@@ -430,7 +439,7 @@ class CharityGraphViz {
     // Organization name
     const nameText = textGroup.append('text')
       .attr('class', 'name')
-      .attr('dy', d => hasHighTaxpayerFunds(d) ? '2em' : '0.35em')  // More space after alert
+      .attr('dy', d => hasHighTaxpayerFunds(d) ? `${2 + (alertBottomMargin/16)}em` : '0.35em')
       .text(d => d.name)
       .style('font-weight', 'bold')
       .call(this._wrapText, this.options.nodeWidth - 20);
@@ -438,7 +447,6 @@ class CharityGraphViz {
     // Store number of wrapped lines for each node
     nameText.each(function(d) {
       d.nameLines = getTextHeight(d3.select(this));
-      // Add extra line if there's an alert banner
       if (hasHighTaxpayerFunds(d)) {
         d.nameLines += 1;
       }
@@ -447,29 +455,55 @@ class CharityGraphViz {
     // EIN
     textGroup.append('text')
       .attr('dy', d => `${1.5 + (d.nameLines * 1.1)}em`)
-      .text(d => `EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
+      .attr('x', labelX)
+      .text('EIN:')
+      .append('tspan')
+      .attr('x', rightEdge)
+      .attr('text-anchor', 'end')
+      .text(d => `${d.id.slice(0,2)}-${d.id.slice(2)}`);
 
     // Financial info
     const formatMoney = num => `$${num.toLocaleString()}`;
     
     textGroup.append('text')
       .attr('dy', d => `${3 + (d.nameLines * 1.1)}em`)
-      .text(d => `Gross receipts: ${formatMoney(d.receipt_amt)}`);
+      .attr('x', labelX)
+      .text('Gross receipts:')
+      .append('tspan')
+      .attr('x', rightEdge)
+      .attr('text-anchor', 'end')
+      .text(d => formatMoney(d.receipt_amt));
 
     textGroup.append('text')
       .attr('dy', d => `${4.5 + (d.nameLines * 1.1)}em`)
-      .text(d => `Contributions: ${formatMoney(d.contrib_amt)}`);
+      .attr('x', labelX)
+      .text('Contributions:')
+      .append('tspan')
+      .attr('x', rightEdge)
+      .attr('text-anchor', 'end')
+      .text(d => formatMoney(d.contrib_amt));
 
     textGroup.append('text')
       .attr('dy', d => `${6 + (d.nameLines * 1.1)}em`)
-      .text(d => `Grants given: ${formatMoney(d.grant_amt)}`);
+      .attr('x', labelX)
+      .text('Grants given:')
+      .append('tspan')
+      .attr('x', rightEdge)
+      .attr('text-anchor', 'end')
+      .text(d => formatMoney(d.grant_amt));
 
     // Taxpayer funds (highlighted if > 0)
     const taxpayerText = textGroup.append('text')
       .attr('dy', d => `${7.5 + (d.nameLines * 1.1)}em`)
       .style('font-weight', 'bold')
       .style('fill', d => d.govt_amt > 0 ? '#DC2626' : '#000')
-      .text(d => `Taxpayer funds: ${formatMoney(d.govt_amt)}`);
+      .attr('x', labelX)
+      .text('Taxpayer funds:')
+      .append('tspan')
+      .attr('x', rightEdge)
+      .attr('text-anchor', 'end')
+      .style('fill', d => d.govt_amt > 0 ? '#DC2626' : '#000')
+      .text(d => formatMoney(d.govt_amt));
 
     // Adjust node height if needed
     node.select('rect')
