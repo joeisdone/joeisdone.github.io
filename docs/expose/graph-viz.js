@@ -61,15 +61,15 @@ class CharityGraphViz {
 
     // Pre-compute positions using d3-force without animation
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(300))
-      .force('charge', d3.forceManyBody().strength(-1000))
-      .force('x', d3.forceX())
-      .force('y', d3.forceY())
-      .force('collision', d3.forceCollide().radius(150))
+      .force('link', d3.forceLink(links).id(d => d.id).distance(400))
+      .force('charge', d3.forceManyBody().strength(-2000))
+      .force('x', d3.forceX().strength(0.1))
+      .force('y', d3.forceY().strength(0.1))
+      .force('collision', d3.forceCollide().radius(200).strength(1))
       .stop(); // Stop the simulation immediately
 
     // Run the simulation manually without animation
-    for (let i = 0; i < 300; ++i) simulation.tick();
+    for (let i = 0; i < 500; ++i) simulation.tick();
     
     // Fix all node positions
     nodes.forEach(node => {
