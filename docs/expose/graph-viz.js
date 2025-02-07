@@ -100,6 +100,15 @@ class CharityGraphViz {
       .data(links)
       .join('g');
 
+    // Add invisible wider path for easier hovering
+    link.append('path')
+      .attr('class', 'link-hover-area')
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 15)  // Much wider than visible path
+      .attr('fill', 'none')
+      .style('cursor', 'pointer')
+      .attr('d', d => this._getLinkPath(d));
+
     link.append('path')
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
@@ -107,8 +116,37 @@ class CharityGraphViz {
       .attr('fill', 'none')
       .attr('stroke-linecap', 'round')
       .attr('marker-end', 'url(#arrowhead)')
-      .style('pointer-events', 'none')
+      .style('pointer-events', 'none')  // Visible path doesn't handle events
       .attr('d', d => this._getLinkPath(d));
+
+    // Move hover handlers to the hover area
+    link.select('.link-hover-area')
+      .on('mouseenter', (event, d) => {
+        // Highlight the visible path
+        d3.select(event.target.parentNode)
+          .select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 2.5)
+          .attr('marker-end', 'url(#arrowhead-highlighted)');
+        
+        // Highlight connected nodes
+        nodeGroup.selectAll('.node')
+          .filter(node => node.id === d.source.id || node.id === d.target.id)
+          .select('rect')
+          .style('filter', 'drop-shadow(0 0 6px rgba(37, 99, 235, 0.5))');
+      })
+      .on('mouseleave', (event, d) => {
+        // Reset visible path
+        d3.select(event.target.parentNode)
+          .select('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 1.5)
+          .attr('marker-end', 'url(#arrowhead)');
+        
+        // Reset nodes
+        nodeGroup.selectAll('.node rect')
+          .style('filter', null);
+      });
 
     link.append('text')
       .attr('class', 'link-label')
@@ -126,6 +164,41 @@ class CharityGraphViz {
       .join('g')
       .attr('class', 'node')
       .attr('transform', d => `translate(${d.x - this.options.nodeWidth/2},${d.y - this.options.nodeHeight/2})`) // Set initial position
+      .on('mouseenter', (event, d) => {
+        // Highlight all connected links
+        linkGroup.selectAll('.link')
+          .filter(link => link.source.id === d.id || link.target.id === d.id)
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 2.5)
+          .attr('marker-end', 'url(#arrowhead-highlighted)');
+        
+        // Highlight the node itself
+        d3.select(event.currentTarget)
+          .select('rect')
+          .style('filter', 'drop-shadow(0 0 6px rgba(37, 99, 235, 0.5))');
+        
+        // Highlight connected nodes
+        nodeGroup.selectAll('.node')
+          .filter(node => {
+            return links.some(link => 
+              (link.source.id === d.id && link.target.id === node.id) ||
+              (link.target.id === d.id && link.source.id === node.id)
+            );
+          })
+          .select('rect')
+          .style('filter', 'drop-shadow(0 0 6px rgba(37, 99, 235, 0.5))');
+      })
+      .on('mouseleave', (event, d) => {
+        // Reset all links
+        linkGroup.selectAll('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 1.5)
+          .attr('marker-end', 'url(#arrowhead)');
+        
+        // Reset all node highlights
+        nodeGroup.selectAll('.node rect')
+          .style('filter', null);
+      })
       .call(this._setupDrag(this.simulation));
 
     // Node background
@@ -164,6 +237,19 @@ class CharityGraphViz {
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#94A3B8');
+
+    // Add highlighted arrow marker definition
+    defs.append('marker')
+      .attr('id', 'arrowhead-highlighted')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 8)
+      .attr('refY', 0)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#2563EB');
   }
 
   _processData({ nodeSet, edgeList, filteredCharities, activeEINs, customGraphEdges }) {
