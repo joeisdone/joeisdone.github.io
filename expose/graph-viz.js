@@ -59,17 +59,30 @@ class CharityGraphViz {
     const container = this.svg.select('.zoom-group .graph-container');
     container.selectAll('*').remove();
 
+    // Create separate groups for links and nodes to control layering
+    const linkGroup = container.append('g').attr('class', 'links');
+    const nodeGroup = container.append('g').attr('class', 'nodes');
+
     // Pre-compute positions using d3-force without animation
     const simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(links).id(d => d.id).distance(400))
-      .force('charge', d3.forceManyBody().strength(-2000))
-      .force('x', d3.forceX().strength(0.1))
-      .force('y', d3.forceY().strength(0.1))
-      .force('collision', d3.forceCollide().radius(200).strength(1))
+      // Increase link distance for more spacing between connected nodes
+      .force('link', d3.forceLink(links).id(d => d.id).distance(600))
+      // Increase repulsion between nodes
+      .force('charge', d3.forceManyBody().strength(-3000))
+      .force('x', d3.forceX().x(d => {
+        // Check if this is a source node (has outgoing but no incoming links)
+        const isSource = links.some(l => l.source.id === d.id) && 
+                        !links.some(l => l.target.id === d.id);
+        // Increase horizontal spread
+        return isSource ? -800 : 800;
+      }).strength(0.3))
+      .force('y', d3.forceY(0).strength(0.1))
+      // Increase collision radius to prevent node overlap
+      .force('collision', d3.forceCollide().radius(300).strength(1))
       .stop(); // Stop the simulation immediately
 
     // Run the simulation manually without animation
-    for (let i = 0; i < 500; ++i) simulation.tick();
+    for (let i = 0; i < 1000; ++i) simulation.tick();
     
     // Fix all node positions
     nodes.forEach(node => {
@@ -81,7 +94,7 @@ class CharityGraphViz {
     this.simulation = simulation;
 
     // Create links
-    const link = container.append('g')
+    const link = linkGroup
       .selectAll('g')
       .data(links)
       .join('g');
@@ -89,9 +102,12 @@ class CharityGraphViz {
     link.append('path')
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
-      .attr('stroke-width', 2)
+      .attr('stroke-width', 1.5)
       .attr('fill', 'none')
-      .attr('d', d => this._getLinkPath(d)); // Set initial position
+      .attr('stroke-linecap', 'round')
+      .attr('marker-end', 'url(#arrowhead)')
+      .style('pointer-events', 'none')
+      .attr('d', d => this._getLinkPath(d));
 
     link.append('text')
       .attr('class', 'link-label')
@@ -103,7 +119,7 @@ class CharityGraphViz {
       .text(d => `$${d.amount.toLocaleString()}`);
 
     // Create nodes
-    const node = container.append('g')
+    const node = nodeGroup
       .selectAll('.node')
       .data(nodes)
       .join('g')
@@ -133,6 +149,20 @@ class CharityGraphViz {
 
     // Center the graph
     this._centerGraph();
+
+    // Add arrow marker definition
+    const defs = this.svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrowhead')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 8)
+      .attr('refY', 0)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#94A3B8');
   }
 
   _processData({ nodeSet, edgeList, filteredCharities, activeEINs, customGraphEdges }) {
@@ -199,17 +229,74 @@ class CharityGraphViz {
   }
 
   _getLinkPath(d) {
+    // Calculate box dimensions
+    const boxWidth = this.options.nodeWidth;
+    const boxHeight = this.options.nodeHeight;
+    
+    // Determine exit and entry points based on relative positions
     const dx = d.target.x - d.source.x;
     const dy = d.target.y - d.source.y;
-    const dr = Math.sqrt(dx * dx + dy * dy);
     
-    // Calculate points for the path to avoid overlapping with nodes
-    const sourceX = d.source.x + (dx * this.options.nodeWidth/2) / dr;
-    const sourceY = d.source.y + (dy * this.options.nodeHeight/2) / dr;
-    const targetX = d.target.x - (dx * this.options.nodeWidth/2) / dr;
-    const targetY = d.target.y - (dy * this.options.nodeHeight/2) / dr;
+    // Calculate source exit point
+    let sourcePoint;
+    if (Math.abs(dy) > Math.abs(dx)) {
+      // If more vertical distance, exit from top or bottom
+      const yOffset = dy > 0 ? boxHeight/2 : -boxHeight/2;
+      sourcePoint = {
+        x: d.source.x,
+        y: d.source.y + yOffset
+      };
+    } else {
+      // If more horizontal distance, exit from right
+      sourcePoint = {
+        x: d.source.x + boxWidth/2,
+        y: d.source.y
+      };
+    }
     
-    return `M${sourceX},${sourceY}L${targetX},${targetY}`;
+    // Calculate target entry point
+    let targetPoint;
+    if (Math.abs(dy) > Math.abs(dx)) {
+      // If more vertical distance, enter from top or bottom
+      const yOffset = dy > 0 ? -boxHeight/2 : boxHeight/2;
+      targetPoint = {
+        x: d.target.x,
+        y: d.target.y + yOffset
+      };
+    } else {
+      // If more horizontal distance, enter from left
+      targetPoint = {
+        x: d.target.x - boxWidth/2,
+        y: d.target.y
+      };
+    }
+    
+    // Create path points
+    const points = [];
+    points.push([sourcePoint.x, sourcePoint.y]);
+    
+    // Add intermediate points for routing
+    if (Math.abs(dy) > Math.abs(dx)) {
+      // Vertical dominant path
+      const midY = (sourcePoint.y + targetPoint.y) / 2;
+      points.push([sourcePoint.x, midY]);
+      points.push([targetPoint.x, midY]);
+    } else {
+      // Horizontal dominant path
+      const midX = (sourcePoint.x + targetPoint.x) / 2;
+      points.push([midX, sourcePoint.y]);
+      points.push([midX, targetPoint.y]);
+    }
+    
+    points.push([targetPoint.x, targetPoint.y]);
+    
+    // Create a line generator with curved corners
+    const lineGenerator = d3.line()
+      .x(d => d[0])
+      .y(d => d[1])
+      .curve(d3.curveBundle.beta(0.85));
+    
+    return lineGenerator(points);
   }
 
   _renderNodeContent(node) {
