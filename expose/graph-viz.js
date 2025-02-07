@@ -442,6 +442,7 @@ class CharityGraphViz {
       .attr('dy', d => hasHighTaxpayerFunds(d) ? `${2 + (alertBottomMargin/16)}em` : '0.35em')
       .text(d => d.name)
       .style('font-weight', 'bold')
+      .style('font-size', '14px')
       .call(this._wrapText, this.options.nodeWidth - 20);
 
     // Store number of wrapped lines for each node
@@ -452,41 +453,47 @@ class CharityGraphViz {
       }
     });
 
-    // EIN
+    // EIN (without label, positioned on left)
     textGroup.append('text')
-      .attr('dy', d => `${1.5 + (d.nameLines * 1.1)}em`)
+      .attr('dy', d => `${2.5 + (d.nameLines * 1.1)}em`)  // Increased spacing after title
       .attr('x', labelX)
-      .text('EIN:')
-      .append('tspan')
-      .attr('x', rightEdge)
-      .attr('text-anchor', 'end')
+      .style('fill', '#6B7280')  // Gray color for EIN
       .text(d => `${d.id.slice(0,2)}-${d.id.slice(2)}`);
+
+    // Add separator line
+    textGroup.append('line')
+      .attr('x1', 0)
+      .attr('x2', this.options.nodeWidth - 20)
+      .attr('y1', d => (3 + (d.nameLines * 1.1)) + 'em')  // Position closer to EIN
+      .attr('y2', d => (3 + (d.nameLines * 1.1)) + 'em')
+      .attr('stroke', 'rgba(0, 0, 0, 0.1)')
+      .attr('stroke-width', 1);
 
     // Financial info
     const formatMoney = num => `$${num.toLocaleString()}`;
     
     textGroup.append('text')
-      .attr('dy', d => `${3 + (d.nameLines * 1.1)}em`)
+      .attr('dy', d => `${4 + (d.nameLines * 1.1)}em`)  // Reduced spacing after EIN
       .attr('x', labelX)
-      .text('Gross receipts:')
+      .text('Gross receipts')
       .append('tspan')
       .attr('x', rightEdge)
       .attr('text-anchor', 'end')
       .text(d => formatMoney(d.receipt_amt));
 
     textGroup.append('text')
-      .attr('dy', d => `${4.5 + (d.nameLines * 1.1)}em`)
+      .attr('dy', d => `${5.5 + (d.nameLines * 1.1)}em`)
       .attr('x', labelX)
-      .text('Contributions:')
+      .text('Contributions')
       .append('tspan')
       .attr('x', rightEdge)
       .attr('text-anchor', 'end')
       .text(d => formatMoney(d.contrib_amt));
 
     textGroup.append('text')
-      .attr('dy', d => `${6 + (d.nameLines * 1.1)}em`)
+      .attr('dy', d => `${7 + (d.nameLines * 1.1)}em`)
       .attr('x', labelX)
-      .text('Grants given:')
+      .text('Grants given')
       .append('tspan')
       .attr('x', rightEdge)
       .attr('text-anchor', 'end')
@@ -494,11 +501,11 @@ class CharityGraphViz {
 
     // Taxpayer funds (highlighted if > 0)
     const taxpayerText = textGroup.append('text')
-      .attr('dy', d => `${7.5 + (d.nameLines * 1.1)}em`)
+      .attr('dy', d => `${8.5 + (d.nameLines * 1.1)}em`)
       .style('font-weight', 'bold')
       .style('fill', d => d.govt_amt > 0 ? '#DC2626' : '#000')
       .attr('x', labelX)
-      .text('Taxpayer funds:')
+      .text('Taxpayer funds')
       .append('tspan')
       .attr('x', rightEdge)
       .attr('text-anchor', 'end')
@@ -517,7 +524,8 @@ class CharityGraphViz {
     text.each(function() {
       const text = d3.select(this);
       const words = text.text().split(/\s+/).reverse();
-      const lineHeight = 1.1;
+      // Use tighter line height for title text
+      const lineHeight = text.classed('name') ? 1 : 1.1;
       const y = text.attr('y');
       const dy = parseFloat(text.attr('dy'));
       let word;
@@ -532,7 +540,11 @@ class CharityGraphViz {
           line.pop();
           tspan.text(line.join(' '));
           line = [word];
-          tspan = text.append('tspan').attr('x', 0).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+          tspan = text.append('tspan')
+            .attr('x', 0)
+            .attr('y', y)
+            .attr('dy', ++lineNumber * lineHeight + dy + 'em')
+            .text(word);
         }
       }
     });
