@@ -787,6 +787,9 @@ select {
 .z-50 {
   z-index: 50;
 }
+.z-20 {
+  z-index: 20;
+}
 .order-2 {
   order: 2;
 }
@@ -985,6 +988,9 @@ select {
 .h-full {
   height: 100%;
 }
+.h-8 {
+  height: 2rem;
+}
 .min-h-40 {
   min-height: 10rem;
 }
@@ -1026,6 +1032,9 @@ select {
 }
 .w-screen {
   width: 100vw;
+}
+.w-8 {
+  width: 2rem;
 }
 .min-w-\[200px\] {
   min-width: 200px;
@@ -1109,6 +1118,15 @@ select {
 }
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes spin {
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin {
+  animation: spin 1s linear infinite;
 }
 .cursor-pointer {
   cursor: pointer;
@@ -1600,6 +1618,9 @@ select {
 }
 .opacity-80 {
   opacity: 0.8;
+}
+.opacity-25 {
+  opacity: 0.25;
 }
 .shadow-lg {
   --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);

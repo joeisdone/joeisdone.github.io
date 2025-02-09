@@ -171,6 +171,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
   <!-- Graph Container -->
   <div id="graph-container" class="absolute inset-0 border-y md:border-x border-gray-200 md:rounded bg-white">
+    <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-20">
+      <svg class="animate-spin h-8 w-8 text-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+    </div>
     <svg id="graph"></svg>
   </div>
 </div>
@@ -489,9 +495,11 @@ title: Charity graph - multi-root BFS & taxpayer totals
       return;
     }
 
+    // Show loading icon
+    $('#loading').show();
+
     // Clear old graph
-    $('#graph-container').empty().append('<svg id="graph"></svg>');
-    $('#excluded-info').hide();
+    $('#graph-container svg').empty();
 
     $('#status').text('Generating...').css('color', 'red');
 
@@ -571,9 +579,16 @@ title: Charity graph - multi-root BFS & taxpayer totals
         return xPos;
       }).strength(0.5)) // Increased strength for more influence
       .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
-      .alpha(0.5)
-      .alphaDecay(0.02)
-      .velocityDecay(0.4)
+      .alpha(0.3) // Start with less energy
+      .alphaDecay(0.05) // Faster decay
+      .velocityDecay(0.5) // More damping
+      .on('end', () => {
+        // Hide loading icon when simulation ends
+        $('#loading').hide();
+        // Update status
+        $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
+        $('#downloadBtn').show();
+      })
       .restart();
 
     // Add arrow marker definition
