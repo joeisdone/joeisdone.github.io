@@ -619,7 +619,8 @@ $(document).ready(function() {
         rowsToRender.forEach(item => {
           const tr = $('<tr></tr>');
 
-          const proPublicaLink = `<a href="https://projects.propublica.org/nonprofits/organizations/${item.ein}/${item.xmlFileName}/full">${item.ein}</a>`
+          const officerLink = `<a href="../officers?nonprofit_kw=${item.ein}"">Principal Officers</a>`;
+          const proPublicaLink = `<a href="https://projects.propublica.org/nonprofits/organizations/${item.ein}/${item.xmlFileName}/full">${item.ein}</a><br/><span style="font-size: small">${officerLink}</span>`
 
           tr.append($('<td></td>').html(proPublicaLink));
           tr.append($('<td></td>').text(item.name));

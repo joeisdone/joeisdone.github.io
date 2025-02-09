@@ -345,7 +345,7 @@ $(document).ready(function() {
 <script src="papaparse.min.js"></script>
 
 <h1 class="mb-1">Federal grant search</h1>
-<p class="opacity-80 mb-0 text-[15px]">Search through federal grant awards to find recipients and award amounts. Data includes active grants from USAspending.gov, with details like recipient names, locations, award descriptions and amounts.</p>
+<p class="opacity-80 mb-0 text-[15px]">Search through federal grant awards to find recipients and award amounts. Data includes active grants from USAspending.gov, with details like recipient names, locations, award descriptions, and amounts.</p>
 
 <div class="mb-4">
   <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
@@ -354,21 +354,14 @@ $(document).ready(function() {
       <h3 class="mt-0">How it works</h3>
       <div class="text-sm space-y-2">
         <p>
-          Below is a keyword search over a selection of active federal government grants.
-          Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).
+          By default, each typed word is matched <strong>exactly</strong>. If you check "Enable prefix search," then any words that start with your search terms will also match. All keywords are combined with <strong>AND</strong> logic, so all words must match to see results.
         </p>
         <p>
-          This search runs in two passes per keyword:
-          <ol class="!list-decimal space-y-1 pl-4">
-            <li>exact keyword match</li>
-            <li>prefix matches (i.e., other keywords that start with that string)</li>
-          </ol>
+          For performance reasons, only the first 100 matching rows are displayed. Partial matches are only included if the prefix option is enabled.
         </p>
         <p>
-          For performance reasons, only the first 100 matching rows are displayed.
-        </p>
-        <p>
-          You can search by <abbr title="Employer Identification Number">EIN</abbr> (eg: 13-2574854), <abbr title="Unique Entity Identifier">UEI</abbr> (eg: M2NYTB5V2D77) or keywords (eg: unaccompanied refugee)
+          You can search by <abbr title="Employer Identification Number">EIN</abbr> (e.g., 13-2574854),
+          <abbr title="Unique Entity Identifier">UEI</abbr> (e.g., M2NYTB5V2D77), or keywords (e.g., unaccompanied refugee).
         </p>
       </div>
     </div>
@@ -380,11 +373,14 @@ $(document).ready(function() {
     <form id="searchForm" class="flex flex-col md:flex-row md:items-center gap-1 w-full">
       <label for="searchBox" class="text-sm md:text-[15px]">Enter keywords:</label>
       <span class="flex items-center gap-1">
-      <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-sm border border-gray-300" placeholder="Keywords, EIN, UEI" autofocus />
-      <button type="submit" id="searchButton" disabled>
-        <span class="button-text">Search</span>
-        <img src="/assets/images/loading-white.svg" class="loading-spinner size-6 mx-auto" style="display: none;" alt="Loading..." />
-      </button>
+        <input type="text" id="searchBox" class="w-full md:w-auto px-2 py-1 rounded text-sm border border-gray-300" placeholder="Keywords, EIN, UEI" autofocus />
+        <label for="prefixCheck" class="text-sm md:text-[15px] whitespace-nowrap">
+          <input type="checkbox" id="prefixCheck" />
+          Enable prefix search
+        </label>
+        <button type="submit" id="searchButton" disabled>
+          Search
+        </button>
       </span>
       <span id="statusMessage"></span>
     </form>
@@ -394,12 +390,19 @@ $(document).ready(function() {
   </div>
 </div>
 
-
 <div id="statsBox" class="empty:hidden my-2"></div> <!-- Will display the sum of award_amount here -->
 
 <div id="resultsContainer" class="flex flex-col gap-2"></div>
 
 <script>
+  // -------------------------------------------
+  //  GLOBALS / LOOKUPS
+  // -------------------------------------------
+  let stopRequested = false; // will be set true if user clicks "Stop"
+  let KEYWORDS = [];
+  let BATCHES  = [];
+  let totalAwardAmount = 0;
+
   const ITU_TO_NAME = {
     // -----------------------------------------
     //  A
@@ -791,43 +794,23 @@ $(document).ready(function() {
   };
 
   function getITUCountryName(code) {
-      // Ensure input is a string, trim whitespace, and convert to uppercase
-      const formattedCode = String(code).trim().toUpperCase();
-
-      // Lookup in the ITU_TO_NAME map
-      return ITU_TO_NAME[formattedCode] || "Unknown ITU Code";
+    const formattedCode = String(code).trim().toUpperCase();
+    return ITU_TO_NAME[formattedCode] || "Unknown ITU Code";
   }
 
-  // These will be filled after we parse award_reverse_index.txt.zip
-  let KEYWORDS = [];
-  let BATCHES  = [];
-
-  // Keep track of total taxpayer money across displayed results
-  let totalAwardAmount = 0;
-
-  // Disable the form until the index is loaded
+  // Disable the search box & button until index is loaded
   $('#searchBox').prop('disabled', true);
   $('#searchButton').prop('disabled', true);
 
-  // Once the document is ready, fetch and parse the master reverse index
   $(document).ready(async function() {
     $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
     try {
-      // Show loading spinner in button while loading
-      $('#searchButton .button-text').hide();
-      $('#searchButton .loading-spinner').show();
-      
       await loadMasterReverseIndex('award_reverse_index.txt.zip');
-      
-      // Hide loading spinner and show text when done
-      $('#searchButton .loading-spinner').hide();
-      $('#searchButton .button-text').show();
-      
       $('#statusMessage').hide();
       $('#searchBox').prop('disabled', false).focus();
       $('#searchButton').prop('disabled', false);
-      
-      // After index is loaded, check URL parameters and perform search if needed
+
+      // If there's a ?keywords= in the URL, run search
       const urlParams = new URLSearchParams(window.location.search);
       const keywords = urlParams.get('keywords');
       if (keywords) {
@@ -839,138 +822,136 @@ $(document).ready(function() {
       $('#statusMessage').text('Error loading index: ' + err);
     }
 
-    // Add toggle functionality for "How it works"
+    // Toggle "How it works" details
     $('#howItWorksBtn').on('click', function() {
       const $list = $('#howItWorksList');
       const $btn = $(this);
-      
       if ($list.height() === 0) {
-          // Expand
-          $list.css('height', 'auto');
-          const autoHeight = $list.height();
-          $list.height(0);
-          $list.height(autoHeight);
-          $btn.text('Hide details');
+        $list.css('height', 'auto');
+        const autoHeight = $list.height();
+        $list.height(0);
+        $list.height(autoHeight);
+        $btn.text('Hide details');
       } else {
-          // Collapse
-          $list.height(0);
-          $btn.text('How it works');
+        $list.height(0);
+        $btn.text('How it works');
       }
     });
   });
 
-  // Attach search handler
+  // -------------------------------------------
+  //  SEARCH FORM HANDLING
+  // -------------------------------------------
   $('#searchForm').on('submit', async function(e) {
     e.preventDefault();
-    // Clear previous results
+    // Clear old results & reset sum
     $('#resultsContainer').empty();
     $('#statsBox').text('');
-    totalAwardAmount = 0; // reset the sum
+    totalAwardAmount = 0;
 
-    // Disable search while performing the operation
-    $('#searchBox').prop('disabled', true);
-    $('#searchButton').prop('disabled', true);
+    // Prepare to run new search
+    const userInput = $('#searchBox').val().trim();
+    const prefixAllowed = $('#prefixCheck').is(':checked');
+    stopRequested = false;         // reset
+    toggleButtonState(true);       // show "Stop" instead of "Search"
 
-    // Show loading spinner while searching
-    $('#searchButton .button-text').hide();
-    $('#searchButton .loading-spinner').show();
+    // Update URL with or without ?keywords=
+    const newUrl = new URL(window.location);
+    if (userInput) {
+      newUrl.searchParams.set('keywords', userInput);
+    } else {
+      newUrl.searchParams.delete('keywords');
+    }
+    window.history.pushState({}, '', newUrl);
 
     try {
-      const userInput = $('#searchBox').val().trim();
-      
-      // Update URL with search terms without triggering page reload
-      const newUrl = new URL(window.location);
-      if (userInput) {
-        newUrl.searchParams.set('keywords', userInput);
-      } else {
-        newUrl.searchParams.delete('keywords');
-      }
-      window.history.pushState({}, '', newUrl);
-
-      // 1) Parse user input => tokens
       const tokens = tokenizeInput(userInput);
       if (!tokens.length) {
-        $('#resultsContainer').hide();
-        $('#resultsContainer').html(
-          '<div class="p-4 text-center">No valid keywords to search for.</div>'
-        ).show();
+        $('#resultsContainer').html('<div class="p-4 text-center">No valid keywords to search for.</div>');
         $('#resultsStatus').empty();
       } else {
-        // 2) For each token, gather the union of exact + prefix matches => then intersect across tokens
-        const finalBatchIDs = getFinalBatchIntersection(tokens);
+        // Intersect across tokens (exact + optional prefix)
+        const finalBatchIDs = getFinalBatchIntersection(tokens, prefixAllowed);
+        const sortedBatchIDs = Array.from(finalBatchIDs).sort((a,b) => a - b);
 
-        // 3) Load data from each batch (in ascending order) until we have 100 rows
-        const sortedBatchIDs = Array.from(finalBatchIDs).sort((a, b) => a - b);
         let totalRowsDisplayed = 0;
-        for (let i = 0; i < sortedBatchIDs.length && totalRowsDisplayed < 100; i++) {
-          const batchId = sortedBatchIDs[i];
-          totalRowsDisplayed += await processBatch(batchId, tokens, 100 - totalRowsDisplayed);
+        for (let i=0; i<sortedBatchIDs.length && totalRowsDisplayed < 100; i++) {
+          if (stopRequested) break; // user clicked 'Stop'
+          totalRowsDisplayed += await processBatch(sortedBatchIDs[i], tokens, prefixAllowed, 100 - totalRowsDisplayed);
         }
 
-        // Update status based on results
+        // Display stats
         if (totalRowsDisplayed > 0) {
-          $('#resultsContainer').show();
           $('#resultsStatus').html(
             `<span class="text-sm whitespace-nowrap">Showing ${totalRowsDisplayed}${totalRowsDisplayed === 100 ? ' (limit)' : ''} results</span>`
           );
-          $('#statsBox').html(`<div class="p-2 rounded border border-gray-200 bg-white text-center md:text-left"><span class="text-black text-sm">Taxpayer money spent:</span> <strong class="text-red">${formatCurrency(totalAwardAmount)}</strong></div>`);
+          $('#statsBox').html(
+            `<div class="p-2 rounded border border-gray-200 bg-white text-center md:text-left">
+               <span class="text-black text-sm">Taxpayer money spent:</span>
+               <strong class="text-red">${formatCurrency(totalAwardAmount)}</strong>
+             </div>`
+          );
         } else {
-          $('#resultsContainer').html(
-            '<div class="p-4 text-center">No results found.</div>'
-          ).show();
+          $('#resultsContainer').html('<div class="p-4 text-center">No results found.</div>');
           $('#resultsStatus').empty();
         }
       }
     } catch (err) {
       console.error(err);
-      $('#resultsContainer').html(
-        '<div class="p-4 text-center">Error during search: ' + err + '</div>'
-      ).show();
+      $('#resultsContainer').html('<div class="p-4 text-center">Error during search: ' + err + '</div>');
       $('#resultsStatus').empty();
     }
 
-    // Hide loading spinner when done
-    $('#searchButton .loading-spinner').hide();
-    $('#searchButton .button-text').show();
-
-    // Re-enable search
-    $('#searchBox').prop('disabled', false);
-    $('#searchButton').prop('disabled', false);
+    // Switch button back to "Search" after finishing or stopping
+    toggleButtonState(false);
   });
 
+  // If user clicks the button while searching, we want to stop
+  $('#searchButton').on('click', function(e) {
+    if ($(this).data('searching') === true) {
+      // They clicked "Stop"
+      e.preventDefault();
+      stopRequested = true;
+    }
+  });
 
-  // ============================================================
-  // 1) LOAD AND PARSE THE MASTER REVERSE INDEX
-  // ============================================================
+  function toggleButtonState(isSearching) {
+    if (isSearching) {
+      $('#searchBox').prop('disabled', true);
+      $('#searchButton').text('Stop').data('searching', true);
+    } else {
+      $('#searchBox').prop('disabled', false);
+      $('#searchButton').text('Search').data('searching', false);
+    }
+  }
+
+  // -------------------------------------------
+  //  LOAD MASTER REVERSE INDEX
+  // -------------------------------------------
   async function loadMasterReverseIndex(zipUrl) {
     const response = await fetch(zipUrl);
     if (!response.ok) {
       throw new Error('Could not fetch ' + zipUrl);
     }
     const arrayBuffer = await response.arrayBuffer();
-
     const jsZip = new JSZip();
     const zip = await jsZip.loadAsync(arrayBuffer);
 
-    // We expect a single file "award_reverse_index.txt" inside
-    const fileName = 'award_reverse_index.txt'; // Known from instructions
+    const fileName = 'award_reverse_index.txt';
     if (!zip.file(fileName)) {
       throw new Error('Zip does not contain ' + fileName);
     }
-
     const fileData = await zip.file(fileName).async('string');
     parseMasterReverseIndex(fileData);
   }
 
   function parseMasterReverseIndex(text) {
-    // Each line is: keyword:batch_id1,batch_id2,...
-    // Lines are in alphabetical order
     const lines = text.split(/\r?\n/);
     for (const line of lines) {
       const trimmed = line.trim();
-      if (!trimmed) continue; // skip empty
+      if (!trimmed) continue;
       const parts = trimmed.split(':');
-      if (parts.length !== 2) continue; // skip malformed
+      if (parts.length !== 2) continue;
 
       const kw = parts[0];
       const batchString = parts[1];
@@ -981,270 +962,189 @@ $(document).ready(function() {
     }
   }
 
-  // ============================================================
-  // 2) TOKENIZE USER INPUT
-  // ============================================================
+  // -------------------------------------------
+  //  TOKENIZE USER INPUT
+  // -------------------------------------------
   function tokenizeInput(input) {
-    // 1) lowercase
     let txt = input.toLowerCase();
-    // 2) remove hyphens
     txt = txt.replace(/-/g, '');
-    // 3) replace all other punctuation / non-alphanumeric with whitespace
     txt = txt.replace(/[^a-z0-9]+/g, ' ');
-    // 4) split by whitespace
     const rawTokens = txt.split(/\s+/).map(t => t.trim()).filter(Boolean);
 
-    // 5) discard tokens that cannot be found as a prefix in KEYWORDS
-    const validTokens = [];
-    for (const t of rawTokens) {
-      if (couldPrefixMatch(t)) {
-        validTokens.push(t);
-      }
-    }
-    return validTokens;
+    // For simplicity, keep them all
+    return rawTokens;
   }
 
-  function couldPrefixMatch(token) {
-    // don't prefix on tiny words or ITU
-    // Binary-search approach to see if there's any keyword that starts with 'token'
-    const startIdx = findInsertionIndex(KEYWORDS, token);
-    if (startIdx >= KEYWORDS.length) return false;
-
-    // now if it is of a certain length and not an exact match, return false.
-    if (token.length < 4 && token !==KEYWORDS[startIdx]) return false;
-
-    return KEYWORDS[startIdx].startsWith(token);
-  }
-
-  // Binary search for insertion index
-  function findInsertionIndex(array, value) {
-    let low = 0, high = array.length;
-    while (low < high) {
-      const mid = (low + high) >>> 1;
-      if (array[mid] < value) {
-        low = mid + 1;
-      } else {
-        high = mid;
-      }
-    }
-    return low;
-  }
-
-  // ============================================================
-  // 3) GET FINAL BATCH INTERSECTION
-  //    For each token:
-  //      - union of EXACT MATCH batch set + all prefix match sets
-  //    Then intersect across tokens
-  // ============================================================
-  function getFinalBatchIntersection(tokens) {
+  // -------------------------------------------
+  //  INTERSECT BATCH LISTS: EXACT vs PREFIX
+  // -------------------------------------------
+  function getFinalBatchIntersection(tokens, prefixAllowed) {
     let runningSet = null;
-
     for (const token of tokens) {
       const matchSet = new Set();
-
-      // Exact match
+      // exact
       const exactIdx = exactMatchIndex(token);
       if (exactIdx !== -1) {
         BATCHES[exactIdx].forEach(id => matchSet.add(id));
       }
-
-      // Prefix matches
-      const prefixRange = findPrefixRange(token);
-      for (let i = prefixRange.start; i < prefixRange.end; i++) {
-        BATCHES[i].forEach(id => matchSet.add(id));
+      // prefix (only if checkbox is checked)
+      if (prefixAllowed) {
+        const prefixRange = findPrefixRange(token);
+        for (let i = prefixRange.start; i < prefixRange.end; i++) {
+          BATCHES[i].forEach(id => matchSet.add(id));
+        }
       }
-
-      // Intersect with running set (implementing AND logic)
+      // Intersect with overall
       if (runningSet === null) {
         runningSet = matchSet; // first token
       } else {
         const temp = new Set();
         for (const b of runningSet) {
-          if (matchSet.has(b)) {
-            temp.add(b);
-          }
+          if (matchSet.has(b)) temp.add(b);
         }
         runningSet = temp;
       }
-
-      if (!runningSet.size) break; // short circuit if empty
+      if (!runningSet.size) break; // short-circuit if empty
     }
-
     return runningSet || new Set();
   }
 
   function exactMatchIndex(word) {
-    let low = 0, high = KEYWORDS.length - 1;
+    // binary search in KEYWORDS
+    let low=0, high=KEYWORDS.length-1;
     while (low <= high) {
       const mid = (low + high) >>> 1;
       if (KEYWORDS[mid] === word) return mid;
-      if (KEYWORDS[mid] < word) {
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
+      if (KEYWORDS[mid] < word) low = mid + 1;
+      else high = mid - 1;
     }
     return -1;
   }
 
   function findPrefixRange(prefix) {
-    const startIdx = findInsertionIndex(KEYWORDS, prefix);
-
-    // match exact on short keywords
-    if (prefix.length < 4) {
-      return { start: startIdx, end: startIdx };      
-    }
-
-    let endIdx = startIdx;
-    while (endIdx < KEYWORDS.length && KEYWORDS[endIdx].startsWith(prefix)) {
-      endIdx++;
-    }
-    return { start: startIdx, end: endIdx };
+    // insertion index
+    const start = findInsertionIndex(KEYWORDS, prefix);
+    let end = start;
+    while (end < KEYWORDS.length && KEYWORDS[end].startsWith(prefix)) end++;
+    return {start, end};
   }
 
-  // ============================================================
-  // 4) PROCESS A BATCH
-  //    - fetch award_batch_XXX_reverse_index.txt.zip
-  //    - parse it to see if there's any row-level match
-  //      (i.e. intersection of all tokens in a single row)
-  //    - if none => skip
-  //    - if some => fetch award_batch_XXX.csv.zip, parse matched rows
-  // ============================================================
-  async function processBatch(batchId, tokens, maxNeeded) {
-    // 1) First fetch the batch-level reverse index
+  function findInsertionIndex(arr, val) {
+    let low=0, high=arr.length;
+    while (low < high) {
+      const mid = (low+high)>>>1;
+      if (arr[mid] < val) low = mid+1; else high = mid;
+    }
+    return low;
+  }
+
+  // -------------------------------------------
+  //  PROCESS BATCHES
+  // -------------------------------------------
+  async function processBatch(batchId, tokens, prefixAllowed, maxNeeded) {
+    if (stopRequested) return 0;
+
     const revZipName = `award_batch_${String(batchId).padStart(3, '0')}_reverse_index.txt.zip`;
-    const revResponse = await fetch(revZipName);
-    if (!revResponse.ok) {
-      console.warn('Could not fetch batch reverse index file: ' + revZipName);
+    let revResponse;
+    try {
+      revResponse = await fetch(revZipName);
+    } catch(e) {
       return 0;
     }
+    if (!revResponse.ok) return 0;
     const revArrayBuffer = await revResponse.arrayBuffer();
     const jsZip = new JSZip();
     const revZip = await jsZip.loadAsync(revArrayBuffer);
 
-    // 2) We expect a single text file inside: "award_batch_XXX_reverse_index.txt"
     const reverseIndexName = `award_batch_${String(batchId).padStart(3, '0')}_reverse_index.txt`;
-    if (!revZip.file(reverseIndexName)) {
-      console.warn(`Batch reverse index zip missing expected file: ${reverseIndexName}`);
-      return 0;
-    }
-
+    if (!revZip.file(reverseIndexName)) return 0;
     const reverseIndexText = await revZip.file(reverseIndexName).async('string');
 
-    // 3) Determine which rowIDs have matches for *all* tokens
-    //    (i.e. intersection across exact + prefix sets)
-    const rowIDs = getMatchingRowsInBatch(reverseIndexText, tokens);
-    if (!rowIDs.size) {
-      // No row-level matches => skip downloading the CSV
-      return 0;
-    }
+    // Row-level intersection
+    const rowIDs = getMatchingRowsInBatch(reverseIndexText, tokens, prefixAllowed);
+    if (!rowIDs.size) return 0;
 
-    // 4) Since we have row-level matches, download and parse the CSV
+    if (stopRequested) return 0;
+
+    // Now fetch the CSV
     const csvZipName = `award_batch_${String(batchId).padStart(3, '0')}.csv.zip`;
-    const csvResponse = await fetch(csvZipName);
-    if (!csvResponse.ok) {
-      console.warn('Could not fetch batch CSV file: ' + csvZipName);
+    let csvResponse;
+    try {
+      csvResponse = await fetch(csvZipName);
+    } catch(e) {
       return 0;
     }
+    if (!csvResponse.ok) return 0;
     const csvArrayBuffer = await csvResponse.arrayBuffer();
     const batchZip = await jsZip.loadAsync(csvArrayBuffer);
 
-    // 5) The CSV zip should contain a single .csv: "award_batch_XXX.csv"
     const csvFileName = `award_batch_${String(batchId).padStart(3, '0')}.csv`;
-    if (!batchZip.file(csvFileName)) {
-      console.warn(`Batch CSV zip missing expected file: ${csvFileName}`);
-      return 0;
-    }
-
+    if (!batchZip.file(csvFileName)) return 0;
     const csvData = await batchZip.file(csvFileName).async('string');
-    // Parse it with Papa Parse
+
+    // Parse CSV
     const parseResult = Papa.parse(csvData, {
       header: true,
-      skipEmptyLines: false,
-      dynamicTyping: false
+      skipEmptyLines: false
     });
 
-    // 6) Build and display the matched rows
     let displayed = 0;
     for (const rowId of rowIDs) {
-      if (displayed >= maxNeeded) break;
-
-      // Note rowId is 1-based in the text index
+      if (stopRequested || displayed >= maxNeeded) break;
       const idx = rowId - 1;
-      if (idx >= 0 && idx < parseResult.data.length) {
-        const rowObject = parseResult.data[idx];
-        const htmlBlock = buildResultItem(rowObject);
-
-        $('#resultsContainer').append(htmlBlock);
-
-        // Add to total if award_amount is present
-        const amt = parseFloat(rowObject.award_amount || '0');
-        if (!isNaN(amt)) {
-          totalAwardAmount += amt;
-        }
-
-        displayed++;
-      }
+      if (idx < 0 || idx >= parseResult.data.length) continue;
+      const rowObject = parseResult.data[idx];
+      $('#resultsContainer').append(buildResultItem(rowObject));
+      const amt = parseFloat(rowObject.award_amount || '0');
+      if (!isNaN(amt)) totalAwardAmount += amt;
+      displayed++;
     }
-
-    // Attach event handlers for newly added items
     initDynamicEventHandlers();
-
     return displayed;
   }
 
-  function getMatchingRowsInBatch(reverseIndexText, tokens) {
-    // Parse the batch-level reverse index (keyword => row_ids)
-    // e.g.  keyword:1,10,22
+  // Same logic for row-level intersection but local to this batch
+  function getMatchingRowsInBatch(reverseIndexText, tokens, prefixAllowed) {
     const batchIndexMap = new Map();
-    const lines = reverseIndexText.split(/\r?\n/);
-    for (const line of lines) {
+    for (const line of reverseIndexText.split(/\r?\n/)) {
       const trimmed = line.trim();
       if (!trimmed) continue;
       const parts = trimmed.split(':');
       if (parts.length !== 2) continue;
       const kw = parts[0];
-      const rowString = parts[1];
-      const rowIds = rowString.split(',').map(x => parseInt(x, 10)).filter(n => !isNaN(n));
+      const rowIds = parts[1].split(',').map(x=>parseInt(x,10)).filter(n=>!isNaN(n));
       batchIndexMap.set(kw, rowIds);
     }
 
-    // For each user token, do EXACT + PREFIX union, then AND across tokens
     let finalSet = null;
     for (const token of tokens) {
-      const rowSetForToken = new Set();
-
-      // EXACT
+      const rowSet = new Set();
+      // exact
       if (batchIndexMap.has(token)) {
-        batchIndexMap.get(token).forEach(r => rowSetForToken.add(r));
+        batchIndexMap.get(token).forEach(r => rowSet.add(r));
       }
-
-      // PREFIX
-      for (const [kw, rowIds] of batchIndexMap.entries()) {
-        if (kw.startsWith(token) && kw !== token) {
-          rowIds.forEach(r => rowSetForToken.add(r));
-        }
-      }
-
-      // AND with finalSet
-      if (finalSet === null) {
-        finalSet = rowSetForToken;
-      } else {
-        const temp = new Set();
-        for (const r of finalSet) {
-          if (rowSetForToken.has(r)) {
-            temp.add(r);
+      // prefix
+      if (prefixAllowed) {
+        for (const [kw, rowIds] of batchIndexMap.entries()) {
+          if (kw.startsWith(token) && kw !== token) {
+            rowIds.forEach(r => rowSet.add(r));
           }
         }
-        finalSet = temp;
       }
-
-      if (!finalSet.size) break; // short circuit if empty
+      if (finalSet === null) {
+        finalSet = rowSet;
+      } else {
+        const tmp = new Set();
+        for (const r of finalSet) {
+          if (rowSet.has(r)) tmp.add(r);
+        }
+        finalSet = tmp;
+      }
+      if (!finalSet.size) break;
     }
     return finalSet || new Set();
   }
 
-  // Helper to build the HTML snippet for a single row
   function buildResultItem(row) {
     const recipientName = row.recipient_uei_name || '';
     const recipientUEI  = row.recipient_uei || '';
@@ -1255,28 +1155,23 @@ $(document).ready(function() {
     const fundingAgencySub = row.funding_subtier_agency_name || '';
     const fullDescription = row.description || '';
     const countryCode = row.country_code || '';
-    const countryName = getITUCountryName(countryCode) || 'Unknown';
+    const countryName = getITUCountryName(countryCode);
 
-    // possible_eins is a JSON blob
     let einHtml = '';
-    let hasEINs = row.possible_eins || '';
-    let rawEINData = row.possible_eins || '{}';
-    let recipientAddr = row.recipient_addr || '';
+    const possibleEINs = row.possible_eins || '{}';
     try {
-      const parsed = JSON.parse(rawEINData);
+      const parsed = JSON.parse(possibleEINs);
       const lines = Object.entries(parsed).map(([einID, data]) => {
-        return `
-          <span class="text-sm opacity-80">${escapeHtml(einID)}</span>
-          <strong class="md:col-span-2">${escapeHtml(data.name || '')}</strong>
-          <span class="md:col-span-2 mb-4 md:mb-0">${escapeHtml(data.addr || '')}</span>
-        `;
+        return `<span class="text-sm opacity-80">${escapeHtml(einID)}</span>
+                <strong class="md:col-span-2">${escapeHtml(data.name || '')}</strong>
+                <span class="md:col-span-2 mb-4 md:mb-0">${escapeHtml(data.addr || '')}</span>`;
       }).join('');
       einHtml = `
         <div class="p-4 grid grid-cols-1 md:grid-cols-5 gap-x-2 gap-y-1 md:gap-y-1.5 text-sm">
           <div class="md:col-span-5 text-sm pt-2 pb-2 mb-1 border-b border-gray-200"><strong>Recipient address</strong></div>
           <span class="hidden md:block">&nbsp;</span>
           <span class="md:col-span-2">${escapeHtml(recipientName)}</span>
-          <span class="md:col-span-2 text-sm opacity-80">${escapeHtml(recipientAddr)}</span>
+          <span class="md:col-span-2 text-sm opacity-80">${escapeHtml(row.recipient_addr || '')}</span>
           <div class="md:col-span-5 text-sm pt-2 pb-2 mb-1 border-b border-gray-200"><strong>Possible EINs</strong></div>
           ${lines}
         </div>
@@ -1285,13 +1180,14 @@ $(document).ready(function() {
       einHtml = `<div class="md:col-span-5">(Could not parse possible EINs)</div>`;
     }
 
-    let einButton = hasEINs ? `
-        <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
-          <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
-          <div class="einSection" style="display:none;" class="p-4">
-            <div class="test">${einHtml}</div>
-          </div>
+    const hasEINs = row.possible_eins || '';
+    const einButton = hasEINs ? `
+      <div class="md:col-span-2 bg-gray-100/50 border-t border-gray-200 -mx-4 -mb-4">
+        <button class="einToggle font-semibold text-blue-500 text-sm bg-transparent border-0 py-2 px-4">Show possible matching 501(c)(3) EINs</button>
+        <div class="einSection" style="display:none;">
+          ${einHtml}
         </div>
+      </div>
     ` : '';
 
     return `
@@ -1301,9 +1197,8 @@ $(document).ready(function() {
             <span class="text-sm opacity-80">Recipient</span>
             <div class="font-bold text-[15px]">${escapeHtml(recipientName)}</div>
             <div class="text-sm opacity-80"><abbr title="Unique Entity Identifier">UEI</abbr>: ${escapeHtml(recipientUEI)}</div>
-            <div class="text-sm opacity-80"><abbr title="Location of grant">Locale</abbr>: ${escapeHtml(countryName)}</div>
+            <div class="text-sm opacity-80"><abbr>Locale</abbr>: ${escapeHtml(countryName)}</div>
           </div>
-
           <div>
             <span class="text-sm opacity-80">Amount</span>
             <div class="text-base font-bold text-red">${formatCurrency(awardAmount)}</div>
@@ -1313,30 +1208,39 @@ $(document).ready(function() {
           <div>
             <span class="text-sm opacity-80">Awarded by</span>
             <div class="font-bold text-[15px]">${escapeHtml(fundingAgencyTop)} : ${escapeHtml(fundingAgencySub)}</div>
-            <div class="text-sm opacity-80">${escapeHtml(awardID)}</div>
+            <div class="text-sm opacity-80"><a href="https://www.usaspending.gov/award/${awardID}">${escapeHtml(awardID)}</a></div>
           </div>
-
           <div>
             <span class="text-sm opacity-80">Ends</span>
             <div class="text-sm">${escapeHtml(endDate)}</div>
           </div>
         </div>
-
         <div class="md:col-span-2">
           <span class="text-sm opacity-80">Description</span>
           <div class="text-sm">${truncatedDescription(fullDescription, 300)}</div>
         </div>
-
         ${einButton}
       </div>
     `;
   }
 
-  // Creates a truncated description with "Read more" link if beyond a threshold
+  function initDynamicEventHandlers() {
+    // Expand truncated description
+    $('.readMoreLink').off('click').on('click', function(e) {
+      e.preventDefault();
+      const $link = $(this);
+      const $fullDesc = $link.next('.descriptionFull');
+      $fullDesc.show();
+      $link.hide();
+    });
+    // Toggle EINs
+    $('.einToggle').off('click').on('click', function() {
+      $(this).next('.einSection').slideToggle(200);
+    });
+  }
+
   function truncatedDescription(desc, limit) {
-    if (desc.length <= limit) {
-      return `<div class="descriptionShort capitalize">${escapeHtml(desc)}</div>`;
-    }
+    if (desc.length <= limit) return `<div class="descriptionShort">${escapeHtml(desc)}</div>`;
     const shortText = desc.substring(0, limit);
     const remainder = desc.substring(limit);
     return `
@@ -1350,26 +1254,6 @@ $(document).ready(function() {
     `;
   }
 
-  // After building new rows, attach click events so they work
-  function initDynamicEventHandlers() {
-    // Expand full description text
-    $('.readMoreLink').off('click').on('click', function(e) {
-      e.preventDefault();
-      const $link = $(this);
-      const $fullDesc = $link.next('.descriptionFull');
-      $fullDesc.show();
-      $link.hide();
-    });
-
-    // Toggle EIN section
-    $('.einToggle').off('click').on('click', function() {
-      const $toggle = $(this);
-      const $section = $toggle.next('.einSection');
-      $section.slideToggle(200);
-    });
-  }
-
-  // Utility: format as currency
   function formatCurrency(numOrString) {
     const val = parseFloat(numOrString) || 0;
     return new Intl.NumberFormat('en-US', {
@@ -1378,7 +1262,6 @@ $(document).ready(function() {
     }).format(val);
   }
 
-  // Simple HTML escaping
   function escapeHtml(str) {
     if (!str) return '';
     return str

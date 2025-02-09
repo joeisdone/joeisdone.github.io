@@ -848,18 +848,7 @@ $(document).ready(function() {
 
     // Build & render
     const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount);
-
-    // Debug or link logging
-    for (let ein of visitedSet) {
-      const c = filteredCharities[ein];
-      const grants = formatNumber(c.grant_amt);
-      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
-      const irsFormLink = linkScheduleI
-        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
-        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
-      console.log(ein + " " + irsFormLink);
-    }
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount, filteredCharities);
   }
 
   /**
@@ -896,18 +885,7 @@ $(document).ready(function() {
     const excludedGrants = totalCustomEdges - displayedEdgesCount;
 
     // Render
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size);
-
-    // Debug or link logging
-    visitedSet.forEach(ein => {
-      const c = charities[ein];
-      const grants = formatNumber(c.grant_amt);
-      const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
-      const irsFormLink = linkScheduleI
-        ? `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/IRS990ScheduleI`
-        : `https://projects.propublica.org/nonprofits/organizations/${ein}/${c.xml_name}/full`;
-      console.log(ein + " " + irsFormLink);
-    });
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size, charities);
   }
 
   /**
@@ -945,6 +923,30 @@ $(document).ready(function() {
 
         $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
         $('#downloadBtn').show();
+      })
+      .then(ignore => {
+        $('text').filter(function () {
+          return $(this).text().trim().startsWith('EIN:');
+        }).each(function () {
+          const $text = $(this);
+          // Find the ancestor <g> with class="node" and grab its <title> content:
+          const nodeEIN = $text.closest('g.node').children('title').text().trim();
+          const c = charities[nodeEIN];
+          const grants = formatNumber(c.grant_amt);
+          const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
+          const irsFormLink = linkScheduleI
+            ? `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/IRS990ScheduleI`
+            : `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/full`;
+
+          // Strip off the 'EIN: ' part so we only hyperlink the remainder
+          const remainder = $text.text().replace(/^EIN:\s*/, '');
+
+          // Replace the text node content with a hyperlink
+          // In SVG, you'll typically use <a xlink:href="..."></a> for linking:
+          $text.html(`EIN: <a xlink:href="${irsFormLink}">${remainder}</a>`);
+        });
+
+
       })
       .catch(err => {
         console.error(err);
@@ -1206,7 +1208,8 @@ labelloc="t";\n`;
 
   function addEINFromInput() {
     let val = $('#einInput').val().trim();
-    val = val.replace(/[-\s]/g, '');
+    val = val.replace(/[-\s]/g, ''); // Remove hyphens and spaces first
+    
     if (!/^\d{9}$/.test(val)) {
       alert("EIN must be 9 digits after removing dashes/spaces.");
       return;
