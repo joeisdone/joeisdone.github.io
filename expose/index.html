@@ -121,7 +121,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       >
       <button 
         id="clearSearch" 
-        class="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 hidden"
+        class="absolute right-2 top-1/2 -translate-y-1/2 min-w-0 p-1 aspect-square items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 hidden"
         aria-label="Clear search"
       >
         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,6 +208,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   let simulation = null;
   let nodeElements = null;
   let zoom = null;
+  let selectedSearchIndex = 0; // Track selected search result
 
   $(document).ready(function() {
 
@@ -289,12 +290,13 @@ title: Charity graph - multi-root BFS & taxpayer totals
     newSearchInput.addEventListener('input', handleSearch);
     newSearchInput.addEventListener('blur', handleSearchBlur);
     newSearchResults.addEventListener('click', handleSearchClick);
+    newSearchInput.addEventListener('keydown', handleSearchKeydown);
 
     // Add clear button handler
     newClearButton.addEventListener('click', () => {
       newSearchInput.value = '';
       newSearchInput.focus();
-      handleSearch({ target: newSearchInput }); // Trigger search handler to reset everything
+      handleSearch({ target: newSearchInput });
     });
   });
 
@@ -774,7 +776,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
           .attr('height', 30)
           .attr('rx', 4) // Match parent box rounded corners
           .attr('ry', 4)
-          .attr('fill', '#DC2626');
+          .attr('fill', '#EF3E28');
         
         alertGroup.append('text')
           .attr('x', getNodeWidth(d) / 2)
@@ -842,7 +844,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       node.append('text')
         .attr('x', padding)
         .attr('y', y += 15) // Reduced spacing for EIN
-        .attr('fill', '#64748B')
+        .attr('fill', '#252739')
         .attr('font-size', '13px')
         .text(`EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
 
@@ -852,7 +854,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         .attr('x2', getNodeWidth(d) - padding)
         .attr('y1', y + 10)
         .attr('y2', y + 10)
-        .attr('stroke', '#000')
+        .attr('stroke', '#252739')
         .attr('stroke-opacity', 0.2);
 
       y += 25; // Space after divider
@@ -873,7 +875,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         node.append('text')
           .attr('x', padding)
           .attr('y', y += 20)
-          .attr('fill', isTaxpayer ? '#DC2626' : '#000')
+          .attr('fill', isTaxpayer ? '#EF3E28' : '#000')
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
           .attr('font-size', '13px')
           .text(label);
@@ -883,7 +885,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
           .attr('x', getNodeWidth(d) - rightPadding)
           .attr('y', y)
           .attr('text-anchor', 'end')
-          .attr('fill', isTaxpayer ? '#DC2626' : '#000')
+          .attr('fill', isTaxpayer ? '#EF3E28' : '#000')
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
           .attr('font-size', '13px')
           .text(`$${formatNumber(amount)}`);
@@ -1709,15 +1711,29 @@ labelloc="t";\n`;
 
       // Update search results list
       searchResults.innerHTML = matches
-        .map(d => `
-          <div class="p-2 hover:bg-gray-100 cursor-pointer" data-ein="${d.id}">
+        .map((d, index) => `
+          <div 
+            class="p-2 cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
+            data-ein="${d.id}"
+            data-index="${index}"
+            onmouseenter="handleSearchResultHover(${index})"
+          >
             ${charities[d.id].name}
           </div>
         `)
         .join('');
       searchResults.classList.remove('hidden');
+      selectedSearchIndex = 0; // Reset selection to first item
+      
+      // Ensure first result is highlighted
+      const firstResult = searchResults.querySelector('[data-index="0"]');
+      if (firstResult) {
+        firstResult.classList.add('bg-blue/10');
+        firstResult.classList.remove('hover:bg-gray-100');
+      }
     } else {
       searchResults.classList.add('hidden');
+      selectedSearchIndex = -1;
       // Reset node highlighting if no matches
       nodeElements.select('rect')
         .attr('stroke', n => getNodeStroke(n))
@@ -1741,5 +1757,105 @@ labelloc="t";\n`;
     const searchInput = document.getElementById('searchInput');
     searchInput.value = charities[ein].name;
     document.getElementById('searchResults').classList.add('hidden');
+
+    // Find the clicked node and zoom to it
+    const node = d3.select(`g[data-id="${ein}"]`).node();
+    if (node) {
+      const bounds = node.getBBox();
+      const transform = node.getAttribute('transform');
+      const translate = transform.match(/translate\(([^)]+)\)/)[1].split(',').map(Number);
+      
+      const x = translate[0];
+      const y = translate[1];
+      const width = bounds.width;
+      const height = bounds.height;
+      
+      const containerWidth = document.getElementById('graph-container').offsetWidth;
+      const containerHeight = document.getElementById('graph-container').offsetHeight;
+      
+      // Calculate scale to show the node at about 1/3 of the container
+      const scale = 0.3 * Math.min(
+        containerWidth / width,
+        containerHeight / height
+      );
+      
+      // Zoom to the node with padding
+      d3.select('#graph').transition()
+        .duration(750)
+        .call(zoom.transform,
+          d3.zoomIdentity
+            .translate(containerWidth/2, containerHeight/2)
+            .scale(scale)
+            .translate(-(x + width/2), -(y + height/2))
+        );
+      
+      // Highlight the selected node
+      nodeElements.select('rect')
+        .attr('stroke', n => n.id === ein ? '#2563EB' : getNodeStroke(n))
+        .attr('stroke-width', n => n.id === ein ? 3 : (isUserEin(n.id) ? 3 : 1));
+    }
+  }
+
+  function handleSearchKeydown(e) {
+    const searchResults = document.getElementById('searchResults');
+    if (searchResults.classList.contains('hidden')) return;
+    
+    const results = searchResults.querySelectorAll('[data-index]');
+    const maxIndex = results.length - 1;
+
+    if (maxIndex < 0) {
+      selectedSearchIndex = -1;
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        selectedSearchIndex = Math.min(selectedSearchIndex + 1, maxIndex);
+        updateSearchSelection(results);
+        break;
+
+      case 'ArrowUp':
+        e.preventDefault();
+        selectedSearchIndex = Math.max(selectedSearchIndex - 1, 0);
+        updateSearchSelection(results);
+        break;
+
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSearchIndex >= 0) {
+          const selectedResult = results[selectedSearchIndex];
+          if (selectedResult) {
+            const ein = selectedResult.dataset.ein;
+            handleSearchClick({ target: selectedResult });
+          }
+        }
+        break;
+
+      case 'Escape':
+        e.preventDefault();
+        searchResults.classList.add('hidden');
+        e.target.blur();
+        break;
+    }
+  }
+
+  function updateSearchSelection(results) {
+    results.forEach((result, index) => {
+      if (index === selectedSearchIndex) {
+        result.classList.add('bg-blue/10');
+        result.classList.remove('hover:bg-gray-100');
+        // Ensure selected item is visible with smooth scrolling
+        result.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      } else {
+        result.classList.remove('bg-blue/10');
+        result.classList.add('hover:bg-gray-100');
+      }
+    });
+  }
+
+  function handleSearchResultHover(index) {
+    selectedSearchIndex = index;
+    updateSearchSelection(document.querySelectorAll('[data-index]'));
   }
 </script>
