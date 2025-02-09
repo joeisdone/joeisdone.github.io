@@ -489,7 +489,7 @@ $(document).ready(function() {
     <div class="space-y-2">
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 bg-red-100 border-2 border-red-600"></div>
-        <span class="text-sm">High taxpayer funds (>$10M)</span>
+        <span class="text-sm">🚨 High taxpayer funds (>$10M)</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 bg-amber-100 border-2 border-amber-600"></div>
@@ -969,22 +969,85 @@ $(document).ready(function() {
     nodeElements.each(function(d) {
       const node = d3.select(this);
       const charity = charities[d.id];
-      const padding = 10;
+      const padding = 15;
       let y = padding;
 
-      // Name
-      node.append('text')
+      // High taxpayer alert if needed
+      if (charity.govt_amt > 10000000) {
+        const alertGroup = node.append('g')
+          .attr('transform', `translate(0, ${y})`);
+        
+        alertGroup.append('rect')
+          .attr('width', getNodeWidth(d))
+          .attr('height', 30)
+          .attr('fill', '#DC2626'); // red-600
+        
+        alertGroup.append('text')
+          .attr('x', getNodeWidth(d) / 2)
+          .attr('y', 20)
+          .attr('text-anchor', 'middle')
+          .attr('fill', 'white')
+          .attr('font-weight', 'bold')
+          .text('🚨 High Taxpayer Funds Alert! 🚨');
+        
+        y += 40;
+      }
+
+      // Name - allow wrapping for long names
+      const nameText = node.append('text')
         .attr('x', padding)
-        .attr('y', y += 20)
+        .attr('y', y + 20)
         .attr('fill', '#000')
         .attr('font-weight', 'bold')
-        .text(charity.name);
+        .attr('font-size', '14px');
+
+      // Word wrap the name
+      const words = charity.name.split(/\s+/);
+      let line = [];
+      let lineNumber = 0;
+      const lineHeight = 1.2; // ems
+      const maxWidth = getNodeWidth(d) - (padding * 2);
+
+      words.forEach(word => {
+        line.push(word);
+        const testLine = line.join(' ');
+        const testWidth = getTextWidth(testLine, '14px bold sans-serif');
+        
+        if (testWidth > maxWidth) {
+          if (lineNumber < 2) { // Max 2 lines
+            nameText.append('tspan')
+              .attr('x', padding)
+              .attr('dy', lineNumber ? lineHeight + 'em' : 0)
+              .text(line.slice(0, -1).join(' '));
+            line = [word];
+            lineNumber++;
+          } else {
+            // Add ellipsis if too long
+            const lastLine = line.slice(0, -1).join(' ') + '...';
+            nameText.append('tspan')
+              .attr('x', padding)
+              .attr('dy', lineHeight + 'em')
+              .text(lastLine);
+            line = [];
+          }
+        }
+      });
+      
+      if (line.length > 0 && lineNumber < 3) {
+        nameText.append('tspan')
+          .attr('x', padding)
+          .attr('dy', lineNumber ? lineHeight + 'em' : 0)
+          .text(line.join(' '));
+      }
+
+      y += (lineNumber + 1) * 20 + 10;
 
       // EIN
       node.append('text')
         .attr('x', padding)
         .attr('y', y += 20)
         .attr('fill', '#64748B')
+        .attr('font-size', '13px')
         .text(`EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
 
       // Amounts
@@ -996,11 +1059,15 @@ $(document).ready(function() {
       ];
 
       amounts.forEach(([label, amount]) => {
+        const isHighTaxpayer = label === 'Taxpayer funds' && amount > 10000000;
+        const isMedTaxpayer = label === 'Taxpayer funds' && amount > 1000000 && amount <= 10000000;
+        
         node.append('text')
           .attr('x', padding)
           .attr('y', y += 20)
-          .attr('fill', label === 'Taxpayer funds' && amount > 0 ? '#DC2626' : '#000')
+          .attr('fill', isHighTaxpayer ? '#DC2626' : (isMedTaxpayer ? '#D97706' : '#000'))
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
+          .attr('font-size', '13px')
           .text(`${label}: $${formatNumber(amount)}`);
       });
     });
@@ -1054,48 +1121,67 @@ $(document).ready(function() {
         const targetX = d.target.x || 0;
         const targetY = d.target.y || 0;
         
-        // Calculate edge points
+        // Determine connection points based on relative positions
         const dx = targetX - sourceX;
         const dy = targetY - sourceY;
         const angle = Math.atan2(dy, dx);
         
-        // Offset from node edges
-        const sourceW = sourceBox.width;
-        const sourceH = sourceBox.height;
-        const targetW = targetBox.width;
-        const targetH = targetBox.height;
+        // Connection points will be middle of sides
+        let sourcePoint, targetPoint;
         
-        // Calculate where the line should start/end at node boundaries
-        const sourcePoint = {
-          x: sourceX + (Math.cos(angle) * sourceW/2),
-          y: sourceY + (Math.sin(angle) * sourceH/2)
-        };
+        // Source connection point
+        if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
+          // Connect to right/left side
+          const side = dx > 0 ? 'right' : 'left';
+          sourcePoint = {
+            x: sourceX + (side === 'right' ? sourceBox.width : 0),
+            y: sourceY + sourceBox.height/2
+          };
+        } else {
+          // Connect to top/bottom
+          const side = dy > 0 ? 'bottom' : 'top';
+          sourcePoint = {
+            x: sourceX + sourceBox.width/2,
+            y: sourceY + (side === 'bottom' ? sourceBox.height : 0)
+          };
+        }
         
-        const targetPoint = {
-          x: targetX - (Math.cos(angle) * targetW/2),
-          y: targetY - (Math.sin(angle) * targetH/2)
-        };
-
-        // Add variation to the curve based on the source and target positions
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        // Target connection point
+        if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
+          // Connect to right/left side
+          const side = dx > 0 ? 'left' : 'right';
+          targetPoint = {
+            x: targetX + (side === 'right' ? targetBox.width : 0),
+            y: targetY + targetBox.height/2
+          };
+        } else {
+          // Connect to top/bottom
+          const side = dy > 0 ? 'top' : 'bottom';
+          targetPoint = {
+            x: targetX + targetBox.width/2,
+            y: targetY + (side === 'bottom' ? targetBox.height : 0)
+          };
+        }
         
-        // Create a unique curve for each path based on its position
-        const curveOffset = (sourceX + targetX + sourceY + targetY) % 200 - 100;
-        const curvature = Math.min(distance / 2, 200) + curveOffset;
+        // Create curved path
+        const distance = Math.sqrt(
+          Math.pow(targetPoint.x - sourcePoint.x, 2) + 
+          Math.pow(targetPoint.y - sourcePoint.y, 2)
+        );
         
-        // Calculate control point offset perpendicular to the line
-        const mx = (sourcePoint.x + targetPoint.x) / 2;
-        const my = (sourcePoint.y + targetPoint.y) / 2;
+        // Control point for the curve
+        const midX = (sourcePoint.x + targetPoint.x) / 2;
+        const midY = (sourcePoint.y + targetPoint.y) / 2;
+        const curvature = Math.min(distance / 3, 100);
         
-        // Perpendicular vector
-        const px = -dy / distance;
-        const py = dx / distance;
+        // Perpendicular vector for control point
+        const perpX = -(targetPoint.y - sourcePoint.y) / distance;
+        const perpY = (targetPoint.x - sourcePoint.x) / distance;
         
-        // Control point
-        const cx = mx + px * curvature;
-        const cy = my + py * curvature;
+        const ctrlX = midX + perpX * curvature;
+        const ctrlY = midY + perpY * curvature;
         
-        return `M${sourcePoint.x},${sourcePoint.y} Q${cx},${cy} ${targetPoint.x},${targetPoint.y}`;
+        return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
       });
 
       // Update hover paths
@@ -1617,15 +1703,14 @@ labelloc="t";\n`;
   // Add these helper functions before generateGraph()
 
   function getNodeWidth(d) {
-    const charity = charities[d.id];
-    // Base width that will fit the content
-    return 300; // Fixed width for now
+    // Fixed width that comfortably fits content
+    return 400;
   }
 
   function getNodeHeight(d) {
     const charity = charities[d.id];
-    // Height based on content (name + EIN + 4 amounts)
-    return 140; // Fixed height for now
+    // Base height plus extra for high taxpayer alert
+    return charity.govt_amt > 10000000 ? 180 : 160;
   }
 
   function getNodeColor(d) {
@@ -1676,6 +1761,14 @@ labelloc="t";\n`;
       xStrength: 0.01 / Math.sqrt(distanceScale),
       yStrength: 0.01 / Math.sqrt(distanceScale)
     };
+  }
+
+  // Helper function to measure text width
+  function getTextWidth(text, font) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = font;
+    return context.measureText(text).width;
   }
 </script>
 
