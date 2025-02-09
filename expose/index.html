@@ -135,43 +135,38 @@ title: Charity graph - multi-root BFS & taxpayer totals
   </div>
 
   <!-- Legend -->
-  <div class="absolute top-4 left-4 z-10 bg-white p-3 rounded-md shadow-md border border-gray-200">
-    <div class="text-sm font-medium mb-2">Legend</div>
-    <div class="space-y-2">
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 bg-[#FEE2E2] border-2 border-[#DC2626]"></div>
-        <span class="text-sm">🚨 High taxpayer funds (>$10M)</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 bg-[#FEF3C7] border-2 border-[#D97706]"></div>
-        <span class="text-sm">Medium taxpayer funds (>$1M)</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 bg-[#F3F4F6] border-2 border-[#94A3B8]"></div>
-        <span class="text-sm">Low/No taxpayer funds</span>
-      </div>
+  <div class="absolute bottom-4 left-4 z-10 bg-white p-3 rounded-md shadow-md border border-gray-200 flex flex-col md:flex-row gap-2 md:gap-4">
+    <div class="flex items-center gap-2">
+      <div class="w-4 h-4 bg-[#FEE2E2] border-2 border-[#DC2626]"></div>
+      <span class="text-[13px]">🚨 High taxpayer funds (>$10M)</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-4 h-4 bg-[#FEF3C7] border-2 border-[#D97706]"></div>
+      <span class="text-[13px]">Medium taxpayer funds (>$1M)</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-4 h-4 bg-[#F3F4F6] border-2 border-[#94A3B8]"></div>
+      <span class="text-[13px]">Low/No taxpayer funds</span>
     </div>
   </div>
 
   <!-- Zoom Controls -->
-  <div class="absolute bottom-4 right-4 z-10 bg-white p-2 rounded-md shadow-md border border-gray-200">
-    <div class="flex gap-2">
-      <button id="zoomIn" class="p-2 hover:bg-gray-100 rounded">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-        </svg>
-      </button>
-      <button id="zoomOut" class="p-2 hover:bg-gray-100 rounded">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-        </svg>
-      </button>
-      <button id="zoomFit" class="p-2 hover:bg-gray-100 rounded">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"/>
-        </svg>
-      </button>
-    </div>
+  <div class="absolute bottom-4 right-4 z-10 flex flex-col gap-1">
+    <button id="zoomIn" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+      </svg>
+    </button>
+    <button id="zoomOut" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+      </svg>
+    </button>
+    <button id="zoomFit" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"/>
+      </svg>
+    </button>
   </div>
 
   <!-- Graph Container -->
@@ -523,15 +518,24 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // Add initial positions before starting the simulation
     nodes.forEach((node, i) => {
-      const angle = (i / nodes.length) * 2 * Math.PI;
-      const radius = Math.sqrt(nodes.length) * 100;
-      node.x = width/2 + radius * Math.cos(angle);
-      node.y = height/2 + radius * Math.sin(angle);
+      if (i === 0) {
+        // Position first node at the top-center
+        node.x = width/2;
+        node.y = 100; // Fixed distance from top
+        node.fy = 100; // Pin Y position
+      } else {
+        // Position other nodes in a grid below
+        const cols = Math.ceil(Math.sqrt(nodes.length - 1));
+        const col = (i - 1) % cols;
+        const row = Math.floor((i - 1) / cols);
+        node.x = (width * 0.2) + (col * width * 0.6 / (cols - 1));
+        node.y = 300 + (row * 200); // Start below the first node
+      }
     });
 
-    // Create force simulation with adjusted parameters
+    // Update force simulation parameters
     const forceParams = getForceParameters(nodes, width, height);
-
+    
     simulation = d3.forceSimulation(nodes)
       .force('link', d3.forceLink(edges)
         .id(d => d.id)
@@ -541,13 +545,28 @@ title: Charity graph - multi-root BFS & taxpayer totals
         .distanceMin(200)
         .distanceMax(forceParams.linkDistance * 2))
       .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('y', d3.forceY(d => {
+        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
+        const maxConnections = Math.max(...nodes.map(n => 
+          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
+        ));
+        // Pull more connected nodes to the top
+        const yPos = height * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
+        return yPos;
+      }).strength(0.5)) // Increased strength for more influence
+      .force('x', d3.forceX(d => {
+        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
+        const maxConnections = Math.max(...nodes.map(n => 
+          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
+        ));
+        // Pull more connected nodes to the left
+        const xPos = width * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
+        return xPos;
+      }).strength(0.5)) // Increased strength for more influence
       .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
-      .force('x', d3.forceX(width / 2).strength(forceParams.xStrength))
-      .force('y', d3.forceY(height / 2).strength(forceParams.yStrength))
-      // Reduce the simulation's energy to prevent excessive movement
-      .alpha(0.5) // Start with less energy
-      .alphaDecay(0.02) // Faster decay
-      .velocityDecay(0.4) // More damping
+      .alpha(0.5)
+      .alphaDecay(0.02)
+      .velocityDecay(0.4)
       .restart();
 
     // Add arrow marker definition
