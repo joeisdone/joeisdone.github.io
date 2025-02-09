@@ -1595,6 +1595,10 @@ select {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
+.text-navy {
+  --tw-text-opacity: 1;
+  color: rgb(37 39 57 / var(--tw-text-opacity));
+}
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }

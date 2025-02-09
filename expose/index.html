@@ -142,7 +142,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     </div>
     <div class="flex items-center gap-2">
       <div class="w-4 h-4 bg-[#FEF3C7] rounded-sm border-2 border-[#D97706]"></div>
-      <span class="text-[13px]">Medium taxpayer funds (>$1M)</span>
+      <span class="text-[13px]">Medium taxpayer funds ($1M-$10M)</span>
     </div>
     <div class="flex items-center gap-2">
       <div class="w-4 h-4 bg-[#F3F4F6] rounded-sm border-2 border-[#94A3B8]"></div>
@@ -172,7 +172,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
   <!-- Graph Container -->
   <div id="graph-container" class="absolute inset-0 border-y md:border-x border-gray-200 md:rounded bg-white">
     <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-20">
-      <svg class="animate-spin h-8 w-8 text-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
         <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
       </svg>
@@ -804,7 +804,8 @@ title: Charity graph - multi-root BFS & taxpayer totals
       const node = d3.select(this);
       const charity = charities[d.id];
       const padding = 15;
-      const rightPadding = padding + 15;
+      const horizontalPadding = 16; // Increased horizontal padding
+      const rightPadding = horizontalPadding; // Match left padding
       let y = 0; // Start at top for alert, or add padding if no alert
 
       // High taxpayer alert if needed
@@ -834,7 +835,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
       // Name
       const nameText = node.append('text')
-        .attr('x', padding)
+        .attr('x', horizontalPadding)
         .attr('y', y + padding)
         .attr('fill', '#000')
         .attr('font-weight', 'bold')
@@ -845,7 +846,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       let line = [];
       let lineNumber = 0;
       const lineHeight = 1.1; // Reduced line height
-      const maxWidth = getNodeWidth(d) - (padding * 2);
+      const maxWidth = getNodeWidth(d) - (horizontalPadding * 2);
 
       words.forEach(word => {
         line.push(word);
@@ -855,7 +856,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         if (testWidth > maxWidth) {
           if (lineNumber < 2) { // Max 2 lines
             nameText.append('tspan')
-              .attr('x', padding)
+              .attr('x', horizontalPadding)
               .attr('dy', lineNumber ? lineHeight + 'em' : 0)
               .text(line.slice(0, -1).join(' '));
             line = [word];
@@ -864,7 +865,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
             // Add ellipsis if too long
             const lastLine = line.slice(0, -1).join(' ') + '...';
             nameText.append('tspan')
-              .attr('x', padding)
+              .attr('x', horizontalPadding)
               .attr('dy', lineHeight + 'em')
               .text(lastLine);
             line = [];
@@ -874,7 +875,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       
       if (line.length > 0 && lineNumber < 3) {
         nameText.append('tspan')
-          .attr('x', padding)
+          .attr('x', horizontalPadding)
           .attr('dy', lineNumber ? lineHeight + 'em' : 0)
           .text(line.join(' '));
       }
@@ -883,7 +884,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
       // EIN
       node.append('text')
-        .attr('x', padding)
+        .attr('x', horizontalPadding)
         .attr('y', y += 15) // Reduced spacing for EIN
         .attr('fill', '#252739')
         .attr('opacity', '0.8')
@@ -892,8 +893,8 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
       // Dividing line
       node.append('line')
-        .attr('x1', padding)
-        .attr('x2', getNodeWidth(d) - padding)
+        .attr('x1', horizontalPadding)
+        .attr('x2', getNodeWidth(d) - horizontalPadding)
         .attr('y1', y + 10)
         .attr('y2', y + 10)
         .attr('stroke', '#252739')
@@ -910,13 +911,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
       ];
 
       amounts.forEach(([label, amount]) => {
-        const isHighTaxpayer = label === 'Taxpayer funds' && amount > 10000000;
         const isTaxpayer = label === 'Taxpayer funds' && amount > 0;
         
         // Label (left-aligned)
         node.append('text')
-          .attr('x', padding)
-          .attr('y', y += 20) // Increased spacing for more padding
+          .attr('x', horizontalPadding)
+          .attr('y', y += 20)
           .attr('fill', isTaxpayer ? '#EF3E28' : '#000')
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
           .attr('font-size', '13px')
@@ -924,7 +924,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
         // Amount (right-aligned)
         node.append('text')
-          .attr('x', getNodeWidth(d) - rightPadding)
+          .attr('x', getNodeWidth(d) - horizontalPadding)
           .attr('y', y)
           .attr('text-anchor', 'end')
           .attr('fill', isTaxpayer ? '#EF3E28' : '#000')
@@ -999,6 +999,13 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // Update positions on simulation tick
     simulation.on('tick', () => {
+      // On first tick, show the graph and hide loading
+      if (simulation.alpha() > 0.99) {
+        $('#loading').hide();
+        $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
+        $('#downloadBtn').show();
+      }
+
       // Update node positions with boundary constraints
       nodeElements.attr('transform', d => {
         const nodeWidth = getNodeWidth(d);
@@ -1621,8 +1628,8 @@ labelloc="t";\n`;
   // Add these helper functions before generateGraph()
 
   function getNodeWidth(d) {
-    // Fixed width that comfortably fits content
-    return 400;
+    // Fixed width with reduced horizontal padding
+    return 400; // Back to original width
   }
 
   function getNodeHeight(d) {
