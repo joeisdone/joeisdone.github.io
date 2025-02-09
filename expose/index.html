@@ -137,15 +137,15 @@ title: Charity graph - multi-root BFS & taxpayer totals
   <!-- Legend -->
   <div class="absolute bottom-4 left-4 z-10 bg-white p-3 rounded-md shadow-md border border-gray-200 flex flex-col md:flex-row gap-2 md:gap-4">
     <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#FEE2E2] border-2 border-[#DC2626]"></div>
+      <div class="w-4 h-4 bg-[#FEE2E2] rounded-sm border-2 border-[#DC2626]"></div>
       <span class="text-[13px]">🚨 High taxpayer funds (>$10M)</span>
     </div>
     <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#FEF3C7] border-2 border-[#D97706]"></div>
+      <div class="w-4 h-4 bg-[#FEF3C7] rounded-sm border-2 border-[#D97706]"></div>
       <span class="text-[13px]">Medium taxpayer funds (>$1M)</span>
     </div>
     <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#F3F4F6] border-2 border-[#94A3B8]"></div>
+      <div class="w-4 h-4 bg-[#F3F4F6] rounded-sm border-2 border-[#94A3B8]"></div>
       <span class="text-[13px]">Low/No taxpayer funds</span>
     </div>
   </div>
@@ -728,7 +728,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
     // Add text
     linkLabels.append('text')
       .attr('class', 'link-label')
-      .attr('dy', -10)
+      .attr('dy', -6)
       .attr('text-anchor', 'middle')
       .attr('fill', '#94A3B8') // Match line color
       .attr('font-size', '12px')
@@ -886,6 +886,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         .attr('x', padding)
         .attr('y', y += 15) // Reduced spacing for EIN
         .attr('fill', '#252739')
+        .attr('opacity', '0.8')
         .attr('font-size', '13px')
         .text(`EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
 
@@ -898,7 +899,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         .attr('stroke', '#252739')
         .attr('stroke-opacity', 0.2);
 
-      y += 25; // Space after divider
+      y += 15; // Reduced space after divider
 
       // Amounts
       const amounts = [
@@ -915,7 +916,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
         // Label (left-aligned)
         node.append('text')
           .attr('x', padding)
-          .attr('y', y += 20)
+          .attr('y', y += 20) // Increased spacing for more padding
           .attr('fill', isTaxpayer ? '#EF3E28' : '#000')
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
           .attr('font-size', '13px')
