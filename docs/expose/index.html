@@ -474,9 +474,19 @@ $(document).ready(function() {
       <input 
         type="text" 
         id="searchInput"
-        class="w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        placeholder="Search nodes..."
+        class="w-64 px-2 py-1 text-sm border border-gray-300 rounded-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Search graph..."
+        autocomplete="off"
       >
+      <button 
+        id="clearSearch" 
+        class="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 hidden"
+        aria-label="Clear search"
+      >
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
       <div id="searchResults" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg hidden">
         <!-- Results will be populated here -->
       </div>
@@ -555,6 +565,8 @@ $(document).ready(function() {
 
   // Add this with other global variables at the top
   let simulation = null;
+  let nodeElements = null;
+  let zoom = null;
 
   $(document).ready(function() {
 
@@ -616,6 +628,32 @@ $(document).ready(function() {
         $list.height(0);
         $btn.text('How it works');
       }
+    });
+
+    // Add search handlers after graph is generated
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const clearButton = document.getElementById('clearSearch');
+
+    // Remove any existing listeners
+    const newSearchInput = searchInput.cloneNode(true);
+    const newSearchResults = searchResults.cloneNode(true);
+    const newClearButton = clearButton.cloneNode(true);
+    
+    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+    searchResults.parentNode.replaceChild(newSearchResults, searchResults);
+    clearButton.parentNode.replaceChild(newClearButton, clearButton);
+
+    // Add new listeners
+    newSearchInput.addEventListener('input', handleSearch);
+    newSearchInput.addEventListener('blur', handleSearchBlur);
+    newSearchResults.addEventListener('click', handleSearchClick);
+
+    // Add clear button handler
+    newClearButton.addEventListener('click', () => {
+      newSearchInput.value = '';
+      newSearchInput.focus();
+      handleSearch({ target: newSearchInput }); // Trigger search handler to reset everything
     });
   });
 
@@ -824,7 +862,7 @@ $(document).ready(function() {
       .style('display', 'block');
 
     // Add zoom behavior
-    const zoom = d3.zoom()
+    zoom = d3.zoom()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
@@ -897,6 +935,54 @@ $(document).ready(function() {
       .attr('stroke-width', 2)
       .attr('fill', 'none')
       .attr('marker-end', 'url(#arrow)');
+
+    // Add invisible wider path for easier hovering
+    linkElements.append('path')
+      .attr('class', 'link-hover')
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 20)
+      .attr('fill', 'none')
+      .style('cursor', 'pointer')
+      .on('mouseover', function(event, d) {
+        // Highlight this link
+        d3.select(this.parentNode).select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+        
+        // Highlight the label
+        labelGroup.selectAll('.link-label-group')
+          .filter(l => l === d)
+          .each(function() {
+            d3.select(this).select('.label-bg')
+              .attr('fill', '#2563EB')
+              .attr('stroke', '#2563EB');
+            d3.select(this).select('.link-label')
+              .attr('fill', 'white');
+            // Bring label to front
+            this.parentNode.appendChild(this);
+          });
+        
+        // Highlight connected nodes
+        nodeElements
+          .filter(n => n.id === d.source.id || n.id === d.target.id)
+          .select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+      })
+      .on('mouseout', function() {
+        // Reset all highlights
+        linkElements.selectAll('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 2);
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#94A3B8');
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+      });
 
     // Move link labels to a separate group that's rendered on top of everything
     const labelGroup = g.append('g').attr('class', 'label-group');
@@ -1007,7 +1093,7 @@ $(document).ready(function() {
 
     // Create nodes
     const nodeGroup = g.append('g').attr('class', 'nodes');
-    const nodeElements = nodeGroup.selectAll('g')
+    nodeElements = nodeGroup.selectAll('g')
       .data(nodes)
       .join('g')
       .attr('data-id', d => d.id)
@@ -1025,24 +1111,29 @@ $(document).ready(function() {
       .attr('height', d => getNodeHeight(d))
       .attr('fill', d => getNodeColor(d))
       .attr('stroke', d => getNodeStroke(d))
-      .attr('stroke-width', d => isUserEin(d.id) ? 3 : 1);
+      .attr('stroke-width', d => isUserEin(d.id) ? 3 : 1)
+      .style('cursor', 'grab')
+      .style('transition', 'filter 0.2s ease');
 
     // Node content (name, EIN, amounts)
     nodeElements.each(function(d) {
       const node = d3.select(this);
       const charity = charities[d.id];
       const padding = 15;
-      let y = padding;
+      const rightPadding = padding + 15;
+      let y = 0; // Start at top for alert, or add padding if no alert
 
       // High taxpayer alert if needed
       if (charity.govt_amt > 10000000) {
         const alertGroup = node.append('g')
-          .attr('transform', `translate(0, ${y})`);
+          .attr('transform', `translate(0, 0)`);
         
         alertGroup.append('rect')
           .attr('width', getNodeWidth(d))
           .attr('height', 30)
-          .attr('fill', '#DC2626'); // red-600
+          .attr('rx', 4) // Match parent box rounded corners
+          .attr('ry', 4)
+          .attr('fill', '#DC2626');
         
         alertGroup.append('text')
           .attr('x', getNodeWidth(d) / 2)
@@ -1052,13 +1143,15 @@ $(document).ready(function() {
           .attr('font-weight', 'bold')
           .text('🚨 High Taxpayer Funds Alert! 🚨');
         
-        y += 40;
+        y += 45; // Add 15px margin below alert bar
+      } else {
+        y += padding; // Only add top padding if no alert
       }
 
-      // Name - allow wrapping for long names
+      // Name
       const nameText = node.append('text')
         .attr('x', padding)
-        .attr('y', y + 20)
+        .attr('y', y + padding)
         .attr('fill', '#000')
         .attr('font-weight', 'bold')
         .attr('font-size', '14px');
@@ -1067,7 +1160,7 @@ $(document).ready(function() {
       const words = charity.name.split(/\s+/);
       let line = [];
       let lineNumber = 0;
-      const lineHeight = 1.2; // ems
+      const lineHeight = 1.1; // Reduced line height
       const maxWidth = getNodeWidth(d) - (padding * 2);
 
       words.forEach(word => {
@@ -1102,15 +1195,26 @@ $(document).ready(function() {
           .text(line.join(' '));
       }
 
-      y += (lineNumber + 1) * 20 + 10;
+      y += (lineNumber + 1) * 20 + 5; // Reduced spacing after name
 
       // EIN
       node.append('text')
         .attr('x', padding)
-        .attr('y', y += 20)
+        .attr('y', y += 15) // Reduced spacing for EIN
         .attr('fill', '#64748B')
         .attr('font-size', '13px')
         .text(`EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
+
+      // Dividing line
+      node.append('line')
+        .attr('x1', padding)
+        .attr('x2', getNodeWidth(d) - padding)
+        .attr('y1', y + 10)
+        .attr('y2', y + 10)
+        .attr('stroke', '#000')
+        .attr('stroke-opacity', 0.2);
+
+      y += 25; // Space after divider
 
       // Amounts
       const amounts = [
@@ -1122,15 +1226,26 @@ $(document).ready(function() {
 
       amounts.forEach(([label, amount]) => {
         const isHighTaxpayer = label === 'Taxpayer funds' && amount > 10000000;
-        const isMedTaxpayer = label === 'Taxpayer funds' && amount > 1000000 && amount <= 10000000;
+        const isTaxpayer = label === 'Taxpayer funds' && amount > 0;
         
+        // Label (left-aligned)
         node.append('text')
           .attr('x', padding)
           .attr('y', y += 20)
-          .attr('fill', isHighTaxpayer ? '#DC2626' : (isMedTaxpayer ? '#D97706' : '#000'))
+          .attr('fill', isTaxpayer ? '#DC2626' : '#000')
           .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
           .attr('font-size', '13px')
-          .text(`${label}: $${formatNumber(amount)}`);
+          .text(label);
+
+        // Amount (right-aligned)
+        node.append('text')
+          .attr('x', getNodeWidth(d) - rightPadding)
+          .attr('y', y)
+          .attr('text-anchor', 'end')
+          .attr('fill', isTaxpayer ? '#DC2626' : '#000')
+          .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
+          .attr('font-size', '13px')
+          .text(`$${formatNumber(amount)}`);
       });
     });
 
@@ -1138,7 +1253,9 @@ $(document).ready(function() {
     nodeElements
       .on('mouseover', function(event, d) {
         // Highlight this node
-        d3.select(this).select('rect')
+        d3.select(this)
+          .style('filter', 'drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))')
+          .select('rect')
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
 
@@ -1157,8 +1274,15 @@ $(document).ready(function() {
           }
         });
       })
+      .on('mousedown', function() {
+        d3.select(this).style('cursor', 'grabbing');
+      })
+      .on('mouseup', function() {
+        d3.select(this).style('cursor', 'grab');
+      })
       .on('mouseout', function() {
         // Reset all node highlights
+        d3.select(this).style('filter', 'none');
         nodeElements.select('rect')
           .attr('stroke', n => getNodeStroke(n))
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
@@ -1798,8 +1922,12 @@ labelloc="t";\n`;
 
   function getNodeHeight(d) {
     const charity = charities[d.id];
-    // Base height plus extra for high taxpayer alert
-    return charity.govt_amt > 10000000 ? 180 : 160;
+    // Base height is 160px, plus alert height (30px) if needed, plus bottom padding
+    const baseHeight = 160;
+    const alertHeight = charity.govt_amt > 10000000 ? 30 : 0;
+    const alertMargin = charity.govt_amt > 10000000 ? 15 : 0; // Add margin if there's an alert
+    const bottomPadding = 15;
+    return baseHeight + alertHeight + alertMargin + bottomPadding;
   }
 
   function getNodeColor(d) {
@@ -1858,6 +1986,120 @@ labelloc="t";\n`;
     const context = canvas.getContext('2d');
     context.font = font;
     return context.measureText(text).width;
+  }
+
+  // Define search handler functions
+  function handleSearch(e) {
+    const value = e.target.value.toLowerCase();
+    const searchResults = document.getElementById('searchResults');
+    const clearButton = document.getElementById('clearSearch');
+    
+    if (!value) {
+      searchResults.classList.add('hidden');
+      clearButton.classList.add('hidden');
+      return;
+    }
+
+    // Show clear button when there's text
+    clearButton.classList.remove('hidden');
+
+    // Find matching nodes
+    const matches = Array.from(nodeElements.data())
+      .filter(d => {
+        const charity = charities[d.id];
+        return charity.name.toLowerCase().includes(value) ||
+               d.id.includes(value);
+      })
+      .slice(0, 5);
+
+    if (matches.length > 0) {
+      // Get combined bounds of all matching nodes
+      const nodeBounds = matches.map(d => {
+        const node = d3.select(`g[data-id="${d.id}"]`).node();
+        const bounds = node.getBBox();
+        const transform = node.getAttribute('transform');
+        const translate = transform.match(/translate\(([^)]+)\)/)[1].split(',').map(Number);
+        return {
+          x: translate[0],
+          y: translate[1],
+          width: bounds.width,
+          height: bounds.height
+        };
+      });
+
+      // Calculate combined bounds
+      const xMin = Math.min(...nodeBounds.map(b => b.x));
+      const yMin = Math.min(...nodeBounds.map(b => b.y));
+      const xMax = Math.max(...nodeBounds.map(b => b.x + b.width));
+      const yMax = Math.max(...nodeBounds.map(b => b.y + b.height));
+
+      // Add padding
+      const padding = 50;
+      const width = document.getElementById('graph-container').offsetWidth;
+      const height = document.getElementById('graph-container').offsetHeight;
+
+      // Calculate scale to fit all matches
+      const scale = 0.8 * Math.min(
+        width / (xMax - xMin + 2 * padding),
+        height / (yMax - yMin + 2 * padding)
+      );
+
+      // Highlight matching nodes
+      nodeElements.select('rect')
+        .attr('stroke', d => {
+          const isMatch = matches.some(m => m.id === d.id);
+          if (isMatch) return '#2563EB';
+          return getNodeStroke(d);
+        })
+        .attr('stroke-width', d => {
+          const isMatch = matches.some(m => m.id === d.id);
+          if (isMatch) return 3;
+          return isUserEin(d.id) ? 3 : 1;
+        });
+
+      // Zoom to show all matches
+      d3.select('#graph').transition()
+        .duration(750)
+        .call(zoom.transform,
+          d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(scale)
+            .translate(-(xMin + xMax)/2, -(yMin + yMax)/2));
+
+      // Update search results list
+      searchResults.innerHTML = matches
+        .map(d => `
+          <div class="p-2 hover:bg-gray-100 cursor-pointer" data-ein="${d.id}">
+            ${charities[d.id].name}
+          </div>
+        `)
+        .join('');
+      searchResults.classList.remove('hidden');
+    } else {
+      searchResults.classList.add('hidden');
+      // Reset node highlighting if no matches
+      nodeElements.select('rect')
+        .attr('stroke', n => getNodeStroke(n))
+        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+    }
+  }
+
+  function handleSearchBlur() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput.value) {
+      nodeElements.select('rect')
+        .attr('stroke', n => getNodeStroke(n))
+        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+    }
+  }
+
+  function handleSearchClick(e) {
+    const ein = e.target.dataset.ein;
+    if (!ein) return;
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.value = charities[ein].name;
+    document.getElementById('searchResults').classList.add('hidden');
   }
 </script>
 
