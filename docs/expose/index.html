@@ -898,18 +898,41 @@ $(document).ready(function() {
       .attr('fill', 'none')
       .attr('marker-end', 'url(#arrow)');
 
-    // Add invisible wider path for easier hovering
-    linkElements.append('path')
-      .attr('class', 'link-hover')
-      .attr('stroke', 'transparent')
-      .attr('stroke-width', 20) // Wider than before for easier hovering
-      .attr('fill', 'none')
+    // Move link labels to a separate group that's rendered on top of everything
+    const labelGroup = g.append('g').attr('class', 'label-group');
+    const linkLabels = labelGroup.selectAll('g')
+      .data(edges)
+      .join('g')
+      .attr('class', 'link-label-group');
+    
+    // Add background pill
+    linkLabels.append('rect')
+      .attr('rx', 12) // Fully rounded corners
+      .attr('ry', 12)
+      .attr('fill', '#F3F4F6') // Light gray background
+      .attr('stroke', 'white') // White border
+      .attr('stroke-width', 2) // Thick enough to create padding
+      .attr('class', 'label-bg')
       .style('cursor', 'pointer')
+      // Add hover effects to label background
       .on('mouseover', function(event, d) {
-        // Highlight this link
-        d3.select(this.parentNode).select('.link')
+        const labelGroup = d3.select(this.parentNode);
+        // Highlight this label
+        labelGroup.select('.label-bg')
+          .attr('fill', '#2563EB')
+          .attr('stroke', '#2563EB');
+        labelGroup.select('.link-label')
+          .attr('fill', 'white');
+        // Bring label to front
+        this.parentNode.parentNode.appendChild(this.parentNode);
+        
+        // Highlight corresponding link
+        linkElements
+          .filter(l => l === d)
+          .select('.link')
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
+          
         // Highlight connected nodes
         nodeElements
           .filter(n => n.id === d.source.id || n.id === d.target.id)
@@ -918,30 +941,69 @@ $(document).ready(function() {
           .attr('stroke-width', 3);
       })
       .on('mouseout', function() {
-        // Reset all node highlights
-        nodeElements.select('rect')
-          .attr('stroke', n => getNodeStroke(n))
-          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
-        // Reset all link highlights
+        // Reset all highlights
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#94A3B8');
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
           .attr('stroke-width', 2);
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
       });
-
-    // Move link labels to a separate group that's rendered on top of everything
-    const labelGroup = g.append('g').attr('class', 'label-group');
-    const linkLabels = labelGroup.selectAll('text')
-      .data(edges)
-      .join('text')
+    
+    // Add text
+    linkLabels.append('text')
       .attr('class', 'link-label')
       .attr('dy', -10)
       .attr('text-anchor', 'middle')
-      .attr('fill', '#64748B')
+      .attr('fill', '#94A3B8') // Match line color
       .attr('font-size', '12px')
-      .attr('paint-order', 'stroke') // Add white outline to text
-      .attr('stroke', 'white')
-      .attr('stroke-width', '3px')
-      .text(d => `$${formatNumber(d.amt)}`);
+      .text(d => `$${formatNumber(d.amt)}`)
+      .style('cursor', 'pointer')
+      // Add same hover effects to text
+      .on('mouseover', function(event, d) {
+        const labelGroup = d3.select(this.parentNode);
+        // Highlight this label
+        labelGroup.select('.label-bg')
+          .attr('fill', '#2563EB')
+          .attr('stroke', '#2563EB');
+        labelGroup.select('.link-label')
+          .attr('fill', 'white');
+        // Bring label to front
+        this.parentNode.parentNode.appendChild(this.parentNode);
+        
+        // Highlight corresponding link
+        linkElements
+          .filter(l => l === d)
+          .select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+          
+        // Highlight connected nodes
+        nodeElements
+          .filter(n => n.id === d.source.id || n.id === d.target.id)
+          .select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+      })
+      .on('mouseout', function() {
+        // Reset all highlights
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#94A3B8');
+        linkElements.selectAll('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 2);
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+      });
 
     // Create nodes
     const nodeGroup = g.append('g').attr('class', 'nodes');
@@ -1211,34 +1273,40 @@ $(document).ready(function() {
           return d3.select(this.parentNode).select('.link').attr('d');
         });
 
-      // Update link labels
+      // Update link labels with background
       linkLabels.attr('transform', function(d) {
-        const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
-        const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
-        
-        if (!sourceNode || !targetNode) return '';
-        
         const sourceX = d.source.x || 0;
         const sourceY = d.source.y || 0;
         const targetX = d.target.x || 0;
         const targetY = d.target.y || 0;
         
-        // Calculate midpoint with offset
-        const dx = targetX - sourceX;
-        const dy = targetY - sourceY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        // Get the corresponding path for this label's link
+        const path = linkElements
+          .filter(l => l.source === d.source && l.target === d.target)
+          .select('.link')
+          .node();
         
-        // Create unique offset for each label
-        const curveOffset = (sourceX + targetX + sourceY + targetY) % 200 - 100;
-        const curvature = Math.min(distance / 2, 200) + curveOffset;
+        if (!path) return '';
         
-        // Perpendicular vector
-        const px = -dy / distance;
-        const py = dx / distance;
+        // Get the point halfway along the curved path
+        const pathLength = path.getTotalLength();
+        const midPoint = path.getPointAtLength(pathLength / 2);
         
-        // Position label at offset midpoint
-        const mx = (sourceX + targetX) / 2 + px * curvature * 0.5;
-        const my = (sourceY + targetY) / 2 + py * curvature * 0.5;
+        // Add a slight vertical offset to position above the line
+        const mx = midPoint.x;
+        const my = midPoint.y - 15;
+        
+        // Get the text width to size the background
+        const text = d3.select(this).select('text');
+        const textNode = text.node();
+        const textWidth = textNode.getComputedTextLength();
+        
+        // Update background size
+        d3.select(this).select('.label-bg')
+          .attr('x', -textWidth/2 - 8) // Add padding
+          .attr('y', -22) // Position above text
+          .attr('width', textWidth + 16) // Add padding
+          .attr('height', 24); // Fixed height
         
         return `translate(${mx},${my})`;
       });
@@ -1654,7 +1722,7 @@ labelloc="t";\n`;
       return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
     });
 
-    // If user EINs exist in the filtered set, BFS from the largest among them first
+    // If user EINS exist in the filtered set, BFS from the largest among them first
     let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
     if (hasUserEINsInFiltered.length > 0) {
       let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
