@@ -108,12 +108,70 @@ title: Charity graph - multi-root BFS & taxpayer totals
   {% include stat.html label="<strong class='font-semibold'>Taxpayer total in subgraph</strong>" labelColor="text-red opacity-100" valueId="taxpayerTotal" %}
 </div>
 
-<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
-  <div class="">
-    <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
+<div class="relative flex-1 -mx-4 md:mx-0 min-h-[75vh]">
+  <!-- Search -->
+  <div class="absolute top-4 right-4 z-10">
+    <div class="relative">
+      <input 
+        type="text" 
+        id="searchInput"
+        class="w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Search nodes..."
+      >
+      <div id="searchResults" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg hidden">
+        <!-- Results will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="absolute top-4 left-4 z-10 bg-white p-3 rounded-md shadow-md border border-gray-200">
+    <div class="text-sm font-medium mb-2">Legend</div>
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 bg-red-100 border-2 border-red-600"></div>
+        <span class="text-sm">High taxpayer funds (>$10M)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 bg-amber-100 border-2 border-amber-600"></div>
+        <span class="text-sm">Medium taxpayer funds (>$1M)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 bg-gray-100 border-2 border-gray-400"></div>
+        <span class="text-sm">Low/No taxpayer funds</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoom Controls -->
+  <div class="absolute bottom-4 right-4 z-10 bg-white p-2 rounded-md shadow-md border border-gray-200">
+    <div class="flex gap-2">
+      <button id="zoomIn" class="p-2 hover:bg-gray-100 rounded">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+      </button>
+      <button id="zoomOut" class="p-2 hover:bg-gray-100 rounded">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
+        </svg>
+      </button>
+      <button id="zoomFit" class="p-2 hover:bg-gray-100 rounded">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Graph Container -->
+  <div id="graph-container" class="absolute inset-0 border-y md:border-x border-gray-200 md:rounded bg-white">
+    <svg id="graph"></svg>
   </div>
 </div>
 
+<!-- Add D3.js -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
   const BFS_CAP = 20;
@@ -135,6 +193,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
   // Custom graph state
   let customGraphEdges = null;  // array of objects { filer, grantee, amt }
   let customTitle = null;       // optional custom title from the query param
+
+  // Add this with other global variables at the top
+  let simulation = null;
 
   $(document).ready(function() {
 
@@ -239,7 +300,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       if (customTitle) {
         const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
 
-<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it’s more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
+<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it's more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
 
         $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
@@ -387,288 +448,445 @@ title: Charity graph - multi-root BFS & taxpayer totals
     }
 
     // Clear old graph
-    $('#graph-container').empty();
+    $('#graph-container').empty().append('<svg id="graph"></svg>');
     $('#excluded-info').hide();
-    if (panZoomInstance) {
-      panZoomInstance.destroy();
-      panZoomInstance = null;
-    }
 
     $('#status').text('Generating...').css('color', 'red');
 
-    if (customGraphEdges) {
-      // CUSTOM GRAPH MODE
-      generateCustomGraph();
-    } else {
-      // BFS MODE
-      generateBFSGraph();
-    }
+    // Get container dimensions
+    const container = document.getElementById('graph-container');
+    const width = container.offsetWidth;
+    const height = container.offsetHeight || window.innerHeight * 0.7;
+
+    // Create SVG
+    const svg = d3.select('#graph')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .style('display', 'block');
+
+    // Add zoom behavior
+    const zoom = d3.zoom()
+      .scaleExtent([0.1, 4])
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform);
+      });
+
+    svg.call(zoom);
+
+    // Main group for zoom/pan
+    const g = svg.append('g');
+
+    // Get nodes and edges based on mode
+    let { nodes, edges } = customGraphEdges 
+      ? getCustomGraphData() 
+      : getBFSGraphData();
+
+    // Add initial positions before starting the simulation
+    nodes.forEach((node, i) => {
+      const angle = (i / nodes.length) * 2 * Math.PI;
+      const radius = Math.sqrt(nodes.length) * 100;
+      node.x = width/2 + radius * Math.cos(angle);
+      node.y = height/2 + radius * Math.sin(angle);
+    });
+
+    // Create force simulation with adjusted parameters
+    const forceParams = getForceParameters(nodes, width, height);
+
+    simulation = d3.forceSimulation(nodes)
+      .force('link', d3.forceLink(edges)
+        .id(d => d.id)
+        .distance(forceParams.linkDistance))
+      .force('charge', d3.forceManyBody()
+        .strength(forceParams.charge)
+        .distanceMin(200)
+        .distanceMax(forceParams.linkDistance * 2))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
+      .force('x', d3.forceX(width / 2).strength(forceParams.xStrength))
+      .force('y', d3.forceY(height / 2).strength(forceParams.yStrength))
+      // Reduce the simulation's energy to prevent excessive movement
+      .alpha(0.5) // Start with less energy
+      .alphaDecay(0.02) // Faster decay
+      .velocityDecay(0.4) // More damping
+      .restart();
+
+    // Add arrow marker definition
+    svg.append('defs').selectAll('marker')
+      .data(['arrow'])
+      .join('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 20)
+      .attr('refY', 0)
+      .attr('markerWidth', 6)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#94A3B8');
+
+    // Create curved links with labels
+    const linkGroup = g.append('g').attr('class', 'links');
+    const linkElements = linkGroup.selectAll('g')
+      .data(edges)
+      .join('g')
+      .attr('class', 'link-group');
+
+    const links = linkElements.append('path')
+      .attr('class', 'link')
+      .attr('stroke', '#94A3B8')
+      .attr('stroke-width', 2)
+      .attr('fill', 'none')
+      .attr('marker-end', 'url(#arrow)');
+
+    // Add invisible wider path for easier hovering
+    linkElements.append('path')
+      .attr('class', 'link-hover')
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 20) // Wider than before for easier hovering
+      .attr('fill', 'none')
+      .style('cursor', 'pointer')
+      .on('mouseover', function(event, d) {
+        // Highlight this link
+        d3.select(this.parentNode).select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+        // Highlight connected nodes
+        nodeElements
+          .filter(n => n.id === d.source.id || n.id === d.target.id)
+          .select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+      })
+      .on('mouseout', function(event, d) {
+        // Reset link style
+        d3.select(this.parentNode).select('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 2);
+        // Reset node styles
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+      });
+
+    // Move link labels to a separate group that's rendered on top of everything
+    const labelGroup = g.append('g').attr('class', 'label-group');
+    const linkLabels = labelGroup.selectAll('text')
+      .data(edges)
+      .join('text')
+      .attr('class', 'link-label')
+      .attr('dy', -10)
+      .attr('text-anchor', 'middle')
+      .attr('fill', '#64748B')
+      .attr('font-size', '12px')
+      .attr('paint-order', 'stroke') // Add white outline to text
+      .attr('stroke', 'white')
+      .attr('stroke-width', '3px')
+      .text(d => `$${formatNumber(d.amt)}`);
+
+    // Create nodes
+    const nodeGroup = g.append('g').attr('class', 'nodes');
+    const nodeElements = nodeGroup.selectAll('g')
+      .data(nodes)
+      .join('g')
+      .attr('data-id', d => d.id)
+      .attr('class', 'node')
+      .call(d3.drag()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended));
+
+    // Node rectangles
+    nodeElements.append('rect')
+      .attr('rx', 4)
+      .attr('ry', 4)
+      .attr('width', d => getNodeWidth(d))
+      .attr('height', d => getNodeHeight(d))
+      .attr('fill', d => getNodeColor(d))
+      .attr('stroke', d => getNodeStroke(d))
+      .attr('stroke-width', d => isUserEin(d.id) ? 3 : 1);
+
+    // Node content (name, EIN, amounts)
+    nodeElements.each(function(d) {
+      const node = d3.select(this);
+      const charity = charities[d.id];
+      const padding = 10;
+      let y = padding;
+
+      // Name
+      node.append('text')
+        .attr('x', padding)
+        .attr('y', y += 20)
+        .attr('fill', '#000')
+        .attr('font-weight', 'bold')
+        .text(charity.name);
+
+      // EIN
+      node.append('text')
+        .attr('x', padding)
+        .attr('y', y += 20)
+        .attr('fill', '#64748B')
+        .text(`EIN: ${d.id.slice(0,2)}-${d.id.slice(2)}`);
+
+      // Amounts
+      const amounts = [
+        ['Gross receipts', charity.receipt_amt],
+        ['Contributions', charity.contrib_amt],
+        ['Grants given', charity.grant_amt],
+        ['Taxpayer funds', charity.govt_amt]
+      ];
+
+      amounts.forEach(([label, amount]) => {
+        node.append('text')
+          .attr('x', padding)
+          .attr('y', y += 20)
+          .attr('fill', label === 'Taxpayer funds' && amount > 0 ? '#DC2626' : '#000')
+          .attr('font-weight', label === 'Taxpayer funds' ? 'bold' : 'normal')
+          .text(`${label}: $${formatNumber(amount)}`);
+      });
+    });
+
+    // Node hover effects
+    nodeElements
+      .on('mouseover', function(event, d) {
+        // Highlight connected links
+        linkElements.each(function(l) {
+          if (l.source.id === d.id || l.target.id === d.id) {
+            d3.select(this).select('.link')
+              .attr('stroke', '#2563EB')
+              .attr('stroke-width', 3);
+          }
+        });
+      })
+      .on('mouseout', function() {
+        linkElements.selectAll('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 2);
+      });
+
+    // Update positions on simulation tick
+    simulation.on('tick', () => {
+      // Update node positions with boundary constraints
+      nodeElements.attr('transform', d => {
+        const nodeWidth = getNodeWidth(d);
+        const nodeHeight = getNodeHeight(d);
+        const padding = 100;
+        
+        d.x = Math.max(forceParams.bounds.left + nodeWidth/2, 
+          Math.min(forceParams.bounds.right - nodeWidth/2, d.x || 0));
+        d.y = Math.max(forceParams.bounds.top + nodeHeight/2, 
+          Math.min(forceParams.bounds.bottom - nodeHeight/2, d.y || 0));
+        
+        return `translate(${d.x - nodeWidth/2},${d.y - nodeHeight/2})`;
+      });
+
+      // Update link paths
+      links.attr('d', d => {
+        const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
+        const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
+        
+        if (!sourceNode || !targetNode) return '';
+        
+        const sourceBox = sourceNode.getBBox();
+        const targetBox = targetNode.getBBox();
+        
+        const sourceX = d.source.x || 0;
+        const sourceY = d.source.y || 0;
+        const targetX = d.target.x || 0;
+        const targetY = d.target.y || 0;
+        
+        // Calculate edge points
+        const dx = targetX - sourceX;
+        const dy = targetY - sourceY;
+        const angle = Math.atan2(dy, dx);
+        
+        // Offset from node edges
+        const sourceW = sourceBox.width;
+        const sourceH = sourceBox.height;
+        const targetW = targetBox.width;
+        const targetH = targetBox.height;
+        
+        // Calculate where the line should start/end at node boundaries
+        const sourcePoint = {
+          x: sourceX + (Math.cos(angle) * sourceW/2),
+          y: sourceY + (Math.sin(angle) * sourceH/2)
+        };
+        
+        const targetPoint = {
+          x: targetX - (Math.cos(angle) * targetW/2),
+          y: targetY - (Math.sin(angle) * targetH/2)
+        };
+
+        // Add variation to the curve based on the source and target positions
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Create a unique curve for each path based on its position
+        const curveOffset = (sourceX + targetX + sourceY + targetY) % 200 - 100;
+        const curvature = Math.min(distance / 2, 200) + curveOffset;
+        
+        // Calculate control point offset perpendicular to the line
+        const mx = (sourcePoint.x + targetPoint.x) / 2;
+        const my = (sourcePoint.y + targetPoint.y) / 2;
+        
+        // Perpendicular vector
+        const px = -dy / distance;
+        const py = dx / distance;
+        
+        // Control point
+        const cx = mx + px * curvature;
+        const cy = my + py * curvature;
+        
+        return `M${sourcePoint.x},${sourcePoint.y} Q${cx},${cy} ${targetPoint.x},${targetPoint.y}`;
+      });
+
+      // Update hover paths
+      linkElements.select('.link-hover')
+        .attr('d', function() {
+          return d3.select(this.parentNode).select('.link').attr('d');
+        });
+
+      // Update link labels
+      linkLabels.attr('transform', function(d) {
+        const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
+        const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
+        
+        if (!sourceNode || !targetNode) return '';
+        
+        const sourceX = d.source.x || 0;
+        const sourceY = d.source.y || 0;
+        const targetX = d.target.x || 0;
+        const targetY = d.target.y || 0;
+        
+        // Calculate midpoint with offset
+        const dx = targetX - sourceX;
+        const dy = targetY - sourceY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Create unique offset for each label
+        const curveOffset = (sourceX + targetX + sourceY + targetY) % 200 - 100;
+        const curvature = Math.min(distance / 2, 200) + curveOffset;
+        
+        // Perpendicular vector
+        const px = -dy / distance;
+        const py = dx / distance;
+        
+        // Position label at offset midpoint
+        const mx = (sourceX + targetX) / 2 + px * curvature * 0.5;
+        const my = (sourceY + targetY) / 2 + py * curvature * 0.5;
+        
+        return `translate(${mx},${my})`;
+      });
+    });
+
+    // Handle zoom controls
+    document.getElementById('zoomIn').onclick = () => {
+      svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+    };
+
+    document.getElementById('zoomOut').onclick = () => {
+      svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+    };
+
+    document.getElementById('zoomFit').onclick = () => {
+      const bounds = g.node().getBBox();
+      const dx = bounds.x;
+      const dy = bounds.y;
+      const scale = 0.4 / Math.max( // Reduced initial scale for larger graphs
+        bounds.width / width,
+        bounds.height / height
+      );
+
+      svg.transition()
+        .duration(750)
+        .call(zoom.transform,
+          d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(scale)
+            .translate(-dx-bounds.width/2, -dy-bounds.height/2));
+    };
+
+    // Also update the initial zoom to account for the larger bounds
+    setTimeout(() => {
+      const bounds = g.node().getBBox();
+      const dx = bounds.x;
+      const dy = bounds.y;
+      const scale = 0.4 / Math.max( // Reduced initial scale for larger graphs
+        bounds.width / width,
+        bounds.height / height
+      );
+
+      svg.transition()
+        .duration(750)
+        .call(zoom.transform,
+          d3.zoomIdentity
+            .translate(width/2, height/2)
+            .scale(scale)
+            .translate(-dx-bounds.width/2, -dy-bounds.height/2));
+    }, 1000);
+
+    // Update status
+    $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
+    $('#downloadBtn').show();
   }
 
-  /**
-   * Build and render the BFS-based subgraph from the user's EINS and keywords.
-   */
-  function generateBFSGraph() {
-    // Build filtered dataset
+  // Helper functions for graph data preparation
+  function getCustomGraphData() {
+    const nodes = new Set();
+    customGraphEdges.forEach(e => {
+      if (charities[e.filer]) nodes.add(e.filer);
+      if (charities[e.grantee]) nodes.add(e.grantee);
+    });
+
+    return {
+      nodes: Array.from(nodes).map(id => ({ id })),
+      edges: customGraphEdges.map(e => ({
+        source: e.filer,
+        target: e.grantee,
+        amt: e.amt
+      }))
+    };
+  }
+
+  function getBFSGraphData() {
     const { filteredCharities, filteredEdges } = buildFilteredData();
-    const filteredEINs = Object.keys(filteredCharities);
-    if (filteredEINs.length === 0) {
-      $('#status').text('No charities match the filters.').css('color','black');
-      return;
-    }
-
-    // Build adjacency
-    const adjacencyFwd = {};
-    const adjacencyRev = {};
-    for (const [key, amt] of Object.entries(filteredEdges)) {
-      const [filer, grantee] = key.split('~');
-      if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
-      adjacencyFwd[filer].push(grantee);
-
-      if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
-      adjacencyRev[grantee].push(filer);
-    }
-
-    // Multi-root BFS
-    let visitedSet = multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev);
-
-    // Force user EINs
-    for (const e of activeEINs) {
-      if (filteredCharities[e]) {
-        visitedSet.add(e);
-      }
-    }
+    const visitedSet = multiRootBFS(filteredCharities, buildAdjacency(filteredEdges));
+    
+    // Force include user EINS
+    activeEINs.forEach(ein => {
+      if (filteredCharities[ein]) visitedSet.add(ein);
+    });
 
     // Build final edges
-    const finalEdges = [];
-    for (const [key, amt] of Object.entries(filteredEdges)) {
+    const edges = [];
+    Object.entries(filteredEdges).forEach(([key, amt]) => {
       const [filer, grantee] = key.split('~');
       if (visitedSet.has(filer) && visitedSet.has(grantee)) {
-        finalEdges.push({ filer, grantee, amt });
-      }
-    }
-
-    // Also forcibly include direct edges among user EINs
-    for (let i = 0; i < activeEINs.length; i++) {
-      for (let j = i + 1; j < activeEINs.length; j++) {
-        const e1 = activeEINs[i];
-        const e2 = activeEINs[j];
-        // fwd
-        if (filteredEdges[e1 + '~' + e2]) {
-          const amt = filteredEdges[e1 + '~' + e2];
-          if (!finalEdges.find(x => x.filer===e1 && x.grantee===e2)) {
-            finalEdges.push({ filer: e1, grantee: e2, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
-        }
-        // rev
-        if (filteredEdges[e2 + '~' + e1]) {
-          const amt = filteredEdges[e2 + '~' + e1];
-          if (!finalEdges.find(x => x.filer===e2 && x.grantee===e1)) {
-            finalEdges.push({ filer: e2, grantee: e1, amt });
-          }
-          visitedSet.add(e1);
-          visitedSet.add(e2);
-        }
-      }
-    }
-
-    // Summaries
-    const displayedNodesCount = visitedSet.size;
-    const excluded501 = totalCharitiesCount - displayedNodesCount;
-    const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
-    const displayedEdgesCount = finalEdges.length;
-    const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
-
-    // Sum taxpayer funds in subgraph
-    let taxpayerTotal = 0;
-    for (const ein of visitedSet) {
-      taxpayerTotal += (filteredCharities[ein].govt_amt || 0);
-    }
-
-    // Build & render
-    const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount, filteredCharities);
-  }
-
-  /**
-   * Build and render the *custom* graph from the custom_graph param.
-   * We skip BFS. We parse customGraphEdges, filter out unknown charities, then build final edges.
-   */
-  function generateCustomGraph() {
-    const validEdges = [];
-    const visitedSet = new Set();
-
-    // For each custom edge, keep only if src & dst exist in charities
-    customGraphEdges.forEach(e => {
-      if (charities[e.filer] && charities[e.grantee]) {
-        validEdges.push(e);
-        visitedSet.add(e.filer);
-        visitedSet.add(e.grantee);
+        edges.push({ source: filer, target: grantee, amt });
       }
     });
 
-    // Sum taxpayer total for the visited EINS
-    let taxpayerTotal = 0;
-    visitedSet.forEach(ein => {
-      taxpayerTotal += charities[ein].govt_amt || 0;
-    });
-
-    // Build DOT
-    const dot = buildDotSource(visitedSet, validEdges, charities, taxpayerTotal);
-
-    // For excluded501 / excludedGrants:
-    const excluded501 = totalCharitiesCount - visitedSet.size;
-    // There's no "filteredEdges" concept here. We just say # of edges in the custom param minus # that made it in
-    const totalCustomEdges = customGraphEdges.length;
-    const displayedEdgesCount = validEdges.length;
-    const excludedGrants = totalCustomEdges - displayedEdgesCount;
-
-    // Render
-    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size, charities);
+    return {
+      nodes: Array.from(visitedSet).map(id => ({ id })),
+      edges
+    };
   }
 
-  /**
-   * Renders a DOT string, updates excluded info, sets status and shows download button.
-   */
-  function renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedCount) {
-    const viz = new Viz();
-    viz.renderSVGElement(dot)
-      .then(svgEl => {
-        svgEl.setAttribute('width', '100%');
-        svgEl.setAttribute('height', '100%');
-        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-        svgEl.setAttribute('class', 'w-full h-full');
-        svgEl.setAttribute('style', 'min-height: 75vh;');
-
-        $('#graph-container').append(svgEl);
-        panZoomInstance = svgPanZoom(svgEl, {
-          zoomEnabled: true,
-          controlIconsEnabled: true,
-          fit: true,
-          center: true
-        });
-
-        // Show excluded info
-        $('#excluded501').text(excluded501.toLocaleString());
-        $('#excludedGrants').text(excludedGrants.toLocaleString());
-        $('#taxpayerTotal').html(
-          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
-        );
-        
-        // Check if we're in custom graph mode using the global customGraphEdges
-        if (!customGraphEdges) {
-          $('#excluded-info').show();
-        }
-
-        $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
-        $('#downloadBtn').show();
-      })
-      .then(ignore => {
-        $('text').filter(function () {
-          return $(this).text().trim().startsWith('EIN:');
-        }).each(function () {
-          const $text = $(this);
-          // Find the ancestor <g> with class="node" and grab its <title> content:
-          const nodeEIN = $text.closest('g.node').children('title').text().trim();
-          const c = charities[nodeEIN];
-          const grants = formatNumber(c.grant_amt);
-          const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
-          const irsFormLink = linkScheduleI
-            ? `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/IRS990ScheduleI`
-            : `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/full`;
-
-          // Strip off the 'EIN: ' part so we only hyperlink the remainder
-          const remainder = $text.text().replace(/^EIN:\s*/, '');
-
-          // Replace the text node content with a hyperlink
-          // In SVG, you'll typically use <a xlink:href="..."></a> for linking:
-          $text.html(`EIN: <a xlink:href="${irsFormLink}">${remainder}</a>`);
-        });
-
-
-      })
-      .catch(err => {
-        console.error(err);
-        $('#status').text('Error generating graph.').css('color', 'red');
-      });
+  // Force simulation helpers
+  function dragstarted(event, d) {
+    if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
   }
 
-  /**
-   * BFS multi-root approach
-   */
-  function multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev) {
-    const visited = new Set();
-    const allEINs = Object.keys(filteredCharities);
-
-    // Sort them by descending receipt_amt
-    let sortedByReceipt = allEINs.slice().sort((a,b) => {
-      return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
-    });
-
-    // If user EINs exist in the filtered set, BFS from the largest among them first
-    let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
-    if (hasUserEINsInFiltered.length > 0) {
-      let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
-        if (!best) return cur;
-        const bestAmt = filteredCharities[best].receipt_amt;
-        const curAmt = filteredCharities[cur].receipt_amt;
-        return (curAmt > bestAmt) ? cur : best;
-      }, null);
-
-      bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
-      sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
-    }
-
-    // If <5 visited, BFS from next-largest
-    let idx = 0;
-    while (visited.size < 5 && idx < sortedByReceipt.length) {
-      const candidate = sortedByReceipt[idx];
-      if (!visited.has(candidate)) {
-        bfsFromRoot(candidate, adjacencyFwd, adjacencyRev, visited);
-      }
-      idx++;
-    }
-
-    return visited;
+  function dragged(event, d) {
+    d.fx = event.x;
+    d.fy = event.y;
   }
 
-  function bfsFromRoot(root, adjacencyFwd, adjacencyRev, visited) {
-    if (!root) return;
-    // forward BFS
-    let queue = [root];
-    const localFwd = new Set();
-    while (queue.length > 0 && localFwd.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localFwd.has(curr)) {
-        localFwd.add(curr);
-        const neighs = adjacencyFwd[curr] || [];
-        for (let n of neighs) {
-          if (!localFwd.has(n) && localFwd.size < BFS_CAP) {
-            queue.push(n);
-          }
-        }
-      }
-    }
-    // reverse BFS
-    const localRev = new Set();
-    queue = [root];
-    while (queue.length > 0 && localRev.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localRev.has(curr)) {
-        localRev.add(curr);
-        const neighs = adjacencyRev[curr] || [];
-        for (let n of neighs) {
-          if (!localRev.has(n) && localRev.size < BFS_CAP) {
-            queue.push(n);
-          }
-        }
-      }
-    }
-    // union
-    for (let x of localFwd) visited.add(x);
-    for (let x of localRev) visited.add(x);
+  function dragended(event, d) {
+    if (!event.active && simulation) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
   }
 
   /**
@@ -940,5 +1158,164 @@ labelloc="t";\n`;
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  }
+
+  function buildAdjacency(edges) {
+    const fwd = {};
+    const rev = {};
+    
+    Object.entries(edges).forEach(([key, amt]) => {
+      const [filer, grantee] = key.split('~');
+      
+      // Forward adjacency
+      if (!fwd[filer]) fwd[filer] = [];
+      fwd[filer].push(grantee);
+      
+      // Reverse adjacency
+      if (!rev[grantee]) rev[grantee] = [];
+      rev[grantee].push(filer);
+    });
+    
+    return { fwd, rev };
+  }
+
+  function multiRootBFS(filteredCharities, adjacency) {
+    const visited = new Set();
+    const allEINs = Object.keys(filteredCharities);
+
+    // Sort them by descending receipt_amt
+    let sortedByReceipt = allEINs.slice().sort((a,b) => {
+      return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
+    });
+
+    // If user EINs exist in the filtered set, BFS from the largest among them first
+    let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
+    if (hasUserEINsInFiltered.length > 0) {
+      let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
+        if (!best) return cur;
+        const bestAmt = filteredCharities[best].receipt_amt;
+        const curAmt = filteredCharities[cur].receipt_amt;
+        return (curAmt > bestAmt) ? cur : best;
+      }, null);
+
+      bfsFromRoot(largestUserEIN, adjacency, visited);
+      sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
+    }
+
+    // If <5 visited, BFS from next-largest
+    let idx = 0;
+    while (visited.size < 5 && idx < sortedByReceipt.length) {
+      const candidate = sortedByReceipt[idx];
+      if (!visited.has(candidate)) {
+        bfsFromRoot(candidate, adjacency, visited);
+      }
+      idx++;
+    }
+
+    return visited;
+  }
+
+  function bfsFromRoot(root, adjacency, visited) {
+    if (!root) return;
+    
+    // Forward BFS
+    let queue = [root];
+    const localFwd = new Set();
+    while (queue.length > 0 && localFwd.size < BFS_CAP) {
+      const curr = queue.shift();
+      if (!localFwd.has(curr)) {
+        localFwd.add(curr);
+        const neighs = adjacency.fwd[curr] || [];
+        for (let n of neighs) {
+          if (!localFwd.has(n) && localFwd.size < BFS_CAP) {
+            queue.push(n);
+          }
+        }
+      }
+    }
+
+    // Reverse BFS
+    const localRev = new Set();
+    queue = [root];
+    while (queue.length > 0 && localRev.size < BFS_CAP) {
+      const curr = queue.shift();
+      if (!localRev.has(curr)) {
+        localRev.add(curr);
+        const neighs = adjacency.rev[curr] || [];
+        for (let n of neighs) {
+          if (!localRev.has(n) && localRev.size < BFS_CAP) {
+            queue.push(n);
+          }
+        }
+      }
+    }
+
+    // Union
+    for (let x of localFwd) visited.add(x);
+    for (let x of localRev) visited.add(x);
+  }
+
+  // Add these helper functions before generateGraph()
+
+  function getNodeWidth(d) {
+    const charity = charities[d.id];
+    // Base width that will fit the content
+    return 300; // Fixed width for now
+  }
+
+  function getNodeHeight(d) {
+    const charity = charities[d.id];
+    // Height based on content (name + EIN + 4 amounts)
+    return 140; // Fixed height for now
+  }
+
+  function getNodeColor(d) {
+    const charity = charities[d.id];
+    if (charity.govt_amt > 10000000) return '#FEE2E2'; // red-100
+    if (charity.govt_amt > 1000000) return '#FEF3C7';  // amber-100
+    return '#F3F4F6'; // gray-100
+  }
+
+  function getNodeStroke(d) {
+    const charity = charities[d.id];
+    if (charity.govt_amt > 10000000) return '#DC2626'; // red-600
+    if (charity.govt_amt > 1000000) return '#D97706';  // amber-600
+    return '#94A3B8'; // gray-400
+  }
+
+  function isUserEin(ein) {
+    return activeEINs.includes(ein);
+  }
+
+  function formatNumber(x) {
+    return (parseInt(x, 10) || 0).toLocaleString('en-US');
+  }
+
+  // Update the force simulation parameters to scale with node count
+  function getForceParameters(nodes, width, height) {
+    const nodeCount = nodes.length;
+    
+    // Scale up distances and forces based on node count
+    const baseDistance = 600;
+    const distanceScale = Math.min(2, 1 + (nodeCount / 20)); // Increase up to 2x for large graphs
+    
+    // Scale the viewport bounds based on node count
+    const boundaryScale = Math.min(3, 1 + (nodeCount / 15)); // Increase up to 3x for large graphs
+    
+    return {
+      linkDistance: baseDistance * distanceScale,
+      charge: -5000 * distanceScale,
+      collisionRadius: 250 * Math.sqrt(distanceScale),
+      bounds: {
+        left: -width * boundaryScale / 2,
+        right: width * boundaryScale,
+        top: -height * boundaryScale / 2,
+        bottom: height * boundaryScale
+      },
+      // Reduce force strengths for larger graphs to prevent excessive movement
+      centerStrength: 0.02 / Math.sqrt(distanceScale),
+      xStrength: 0.01 / Math.sqrt(distanceScale),
+      yStrength: 0.01 / Math.sqrt(distanceScale)
+    };
   }
 </script>

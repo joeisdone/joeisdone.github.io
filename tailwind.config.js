@@ -10,6 +10,7 @@ module.exports = {
     './*.{html,js}',
   ],
   safelist: [
+    'min-h-[75vh]',
     // '!hidden',
     // '-mb-4',
     // '-my-0.5',
