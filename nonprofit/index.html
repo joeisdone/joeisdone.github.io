@@ -313,7 +313,7 @@ title: Nonprofits
 
   // Applies the current filter and the current sort, then renders
   function applyFilterAndSort() {
-    const filterQuery = $('#filterInput').val().replace('-', '').trim();
+    const filterQuery = $('#filterInput').val().trim().replace(/[-\s]/g, '');
     let filtered = filterData(nonprofitData, filterQuery);
 
     if (currentSortField) {
