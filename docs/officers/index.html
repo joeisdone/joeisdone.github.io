@@ -360,6 +360,8 @@ $(document).ready(function() {
         <p>Each typed word is treated as an <strong>AND</strong> condition (i.e., all must match).</p>
         <p>
           By default, each typed word is matched exactly. If <strong>Prefix search</strong> is checked, typed words also match any larger strings that begin with them.
+          <br/>
+          (Short tokens under 4 characters remain exact-only.)
         </p>
         <p>For performance reasons, only the first 100 matching rows are displayed.</p>
       </div>
@@ -389,17 +391,16 @@ $(document).ready(function() {
                placeholder="E.g. 'mary sue'"/>
       </div>
 
-      <!-- New: prefix search checkbox -->
+      <!-- Checkbox to enable/disable prefix matching -->
       <div class="flex items-center gap-1 mt-2 md:mt-6">
         <input type="checkbox" id="prefixCheck" />
         <label for="prefixCheck" class="text-sm md:text-[15px]">Prefix search</label>
       </div>
 
       <span class="flex items-center gap-1 mt-2 md:mt-6">
-        <!-- We'll keep the same button but rename text to "Search"/"Stop" dynamically -->
+        <!-- The same button doubles as "Stop" during searching -->
         <button type="submit" id="searchButton" disabled>
           <span class="button-text">Search</span>
-          <!-- We won't show the spinner for this new design. You can remove it or leave it hidden. -->
           <img src="/assets/images/loading-white.svg" 
                class="loading-spinner size-6 mx-auto" 
                style="display: none;" 
@@ -433,9 +434,6 @@ $(document).ready(function() {
   $(document).ready(async function() {
     $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
     try {
-      // Force the button text to "Search" (just in case).
-      $('#searchButton .button-text').text('Search');
-
       // Spinner on
       $('#searchButton .button-text').hide();
       $('#searchButton .loading-spinner').show();
@@ -496,7 +494,7 @@ $(document).ready(function() {
 
     // If we're mid-search, let the user stop it.
     if (searchingInProgress) {
-      searchCanceled = true;  // triggers a stop in the logic
+      searchCanceled = true;
       return;
     }
 
@@ -507,7 +505,7 @@ $(document).ready(function() {
     $('#resultsContainer').empty();
     $('#resultsStatus').empty();
 
-    // Switch button to "Stop"
+    // Switch button text to "Stop"
     $('#searchButton .button-text').text('Stop');
     $('#nonprofitBox').prop('disabled', true);
     $('#officerBox').prop('disabled', true);
@@ -522,7 +520,7 @@ $(document).ready(function() {
       $('#resultsStatus').empty();
     }
 
-    // Clean up if the user stopped or if search ended
+    // Clean up whether the user stopped or the search ended
     searchingInProgress = false;
     $('#searchButton .button-text').text('Search');
     $('#nonprofitBox').prop('disabled', false);
@@ -530,7 +528,6 @@ $(document).ready(function() {
   });
 
   async function doSearch() {
-    // Gather user input
     const nonprofitInput = $('#nonprofitBox').val().trim();
     const officerInput   = $('#officerBox').val().trim();
 
@@ -546,7 +543,6 @@ $(document).ready(function() {
     } else {
       newUrl.searchParams.delete('officer_kw');
     }
-
     window.history.pushState({}, '', newUrl);
 
     // Tokenize
@@ -560,7 +556,7 @@ $(document).ready(function() {
       return;
     }
 
-    // Get batch sets from master index
+    // Get the sets of batches that matched
     let npBatches = null;
     if (npTokens.length) {
       npBatches = getFinalBatchIntersection(npTokens);
@@ -587,15 +583,11 @@ $(document).ready(function() {
       finalBatchIDs = new Set();
     }
 
-    // Process each batch up to 100 rows
     const sortedBatchIDs = Array.from(finalBatchIDs).sort((a,b)=>a-b);
     let totalRowsDisplayed = 0;
 
     for (let i = 0; i < sortedBatchIDs.length && totalRowsDisplayed < 100; i++) {
-      if (searchCanceled) {
-        // If user clicks "Stop", we break and keep partial results
-        break;
-      }
+      if (searchCanceled) break;
       const batchId = sortedBatchIDs[i];
       totalRowsDisplayed += await processBatch(
         batchId, 
@@ -605,12 +597,9 @@ $(document).ready(function() {
       );
     }
 
-    // Show results or none
     if (totalRowsDisplayed > 0) {
       let extra = searchCanceled ? ' (stopped)' : '';
-      if (totalRowsDisplayed === 100 && !searchCanceled) {
-        extra = ' (limit)';
-      }
+      if (totalRowsDisplayed === 100 && !searchCanceled) extra = ' (limit)';
       $('#resultsStatus').html(
         `<span class="text-sm whitespace-nowrap">Showing ${totalRowsDisplayed}${extra} results</span>`
       );
@@ -659,7 +648,7 @@ $(document).ready(function() {
   }
 
   // ===========================
-  // 2) TOKENIZE
+  // 2) TOKENIZE (OLD LOGIC RESTORED)
   // ===========================
   function tokenizeInput(input) {
     if (!input) return [];
@@ -670,38 +659,63 @@ $(document).ready(function() {
     txt = txt.replace(/[^a-z0-9]+/g, ' ');
     // split
     const rawTokens = txt.split(/\s+/).filter(Boolean);
-    return rawTokens;
+
+    // Only keep tokens that at least exist in KEYWORDS for prefix or exact
+    const valid = [];
+    for (const t of rawTokens) {
+      if (couldPrefixMatch(t)) {
+        valid.push(t);
+      }
+    }
+    return valid;
   }
 
-  // Helper: check if user wants prefix
+  function couldPrefixMatch(token) {
+    // This check ensures that there's at least one keyword in KEYWORDS that starts with "token"
+    // (or equals "token" if length <4).
+    const idx = findInsertionIndex(KEYWORDS, token);
+    if (idx >= KEYWORDS.length) return false;
+
+    // If token < 4, only consider it valid if there's an exact match
+    if (token.length < 4 && KEYWORDS[idx] !== token) {
+      return false;
+    }
+    return KEYWORDS[idx].startsWith(token);
+  }
+
+  // Helper to see if prefix searching is enabled by user
   function isPrefixEnabled() {
     return $('#prefixCheck').is(':checked');
   }
 
   // ===========================
-  // 3) BATCH INTERSECTION
+  // 3) BATCH INTERSECTION (OLD LOGIC + prefixCheck)
   // ===========================
   function getFinalBatchIntersection(tokens) {
     let runningSet = null;
     for (const t of tokens) {
       const matchSet = new Set();
-      // exact
+      // 1) exact
       const exIdx = exactMatchIndex(t);
       if (exIdx !== -1) {
-        for (let b of BATCHES[exIdx]) matchSet.add(b);
+        for (let b of BATCHES[exIdx]) {
+          matchSet.add(b);
+        }
       }
-      // optional prefix
+      // 2) prefix, only if user checked the box
       if (isPrefixEnabled()) {
         const pr = findPrefixRange(t);
         for (let i = pr.start; i < pr.end; i++) {
-          for (let b of BATCHES[i]) matchSet.add(b);
+          for (let b of BATCHES[i]) {
+            matchSet.add(b);
+          }
         }
       }
 
+      // Intersect with runningSet
       if (runningSet === null) {
         runningSet = matchSet;
       } else {
-        // intersect
         const temp = new Set();
         for (let x of runningSet) {
           if (matchSet.has(x)) temp.add(x);
@@ -724,9 +738,12 @@ $(document).ready(function() {
     return -1;
   }
 
+  // The old code: if prefix is <4 chars, start==end => no prefix matches.
   function findPrefixRange(prefix) {
     const start = findInsertionIndex(KEYWORDS, prefix);
-    // We'll gather all KEYWORDS that start with `prefix`
+    if (prefix.length < 4) {
+      return { start, end: start };
+    }
     let end = start;
     while (end < KEYWORDS.length && KEYWORDS[end].startsWith(prefix)) {
       end++;
@@ -772,7 +789,7 @@ $(document).ready(function() {
     const npRowSet = getBatchMatchesNonprofit(reverseIndexText, npTokens);
     const officerMap = getBatchMatchesOfficer(reverseIndexText, ofTokens);
 
-    // Construct final row => set of matched officer indexes
+    // Combine
     const finalRows = new Map();
     let allRows = new Set();
 
@@ -791,16 +808,9 @@ $(document).ready(function() {
     }
 
     for (let rowId of allRows) {
-      if (npRowSet && !npRowSet.has(rowId)) {
-        continue;
-      }
-      if (officerMap && !officerMap.has(rowId)) {
-        continue;
-      }
-      // If officerMap = null => no officer filter => matchedSet = empty
-      // else matchedSet is the set of matched indexes
-      const matchedSet = (officerMap && officerMap.get(rowId)) || new Set();
-      finalRows.set(rowId, matchedSet);
+      if (npRowSet && !npRowSet.has(rowId)) continue;
+      if (officerMap && !officerMap.has(rowId)) continue;
+      finalRows.set(rowId, officerMap ? officerMap.get(rowId) : new Set());
     }
 
     if (!finalRows.size) return 0;
@@ -834,7 +844,6 @@ $(document).ready(function() {
     for (let r of sortedRows) {
       if (searchCanceled) break;
       if (displayed >= maxNeeded) break;
-
       const idx = r - 1; // rowId is 1-based
       if (idx >= 0 && idx < parsed.data.length) {
         const rowObj = parsed.data[idx];
@@ -857,6 +866,7 @@ $(document).ready(function() {
     let finalOffsets = null;
 
     for (let tok of tokens) {
+      if (searchCanceled) break;
       const matchSet = new Set();
       // EXACT
       if (batchMap.has(tok)) {
@@ -878,7 +888,6 @@ $(document).ready(function() {
           }
         }
       }
-
       if (finalOffsets === null) {
         finalOffsets = matchSet;
       } else {
@@ -890,7 +899,6 @@ $(document).ready(function() {
       }
       if (!finalOffsets.size) break;
     }
-
     if (!finalOffsets) return new Set();
     // convert offsetIDs to rowId
     const rowIdSet = new Set();
@@ -911,6 +919,7 @@ $(document).ready(function() {
     const tokenCount = tokens.length;
 
     for (let tok of tokens) {
+      if (searchCanceled) break;
       const curTokenSet = new Set();
       // EXACT
       if (batchMap.has(tok)) {
@@ -933,6 +942,7 @@ $(document).ready(function() {
         }
       }
 
+      // For each offsetID in curTokenSet, increment its row/officer index count
       for (let offId of curTokenSet) {
         const rowId = offId >> 12;
         const i = (offId & 0xFFF) - 1; 
@@ -942,7 +952,7 @@ $(document).ready(function() {
       }
     }
 
-    // build final map
+    // build final map of rowId => set of matched officer indexes
     const finalMap = new Map();
     for (let [key, ct] of globalCountMap.entries()) {
       if (ct === tokenCount) {
@@ -1041,23 +1051,17 @@ $(document).ready(function() {
       matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officers)</div>`;
     }
 
-    const returnUrl = encodeURIComponent(window.location.href);
     let exposeLink = '';
     if (exposePath) {
       const encodedPath = encodeURIComponent(exposePath);
       const encodedName = encodeURIComponent(filerName);
+      const returnUrl = encodeURIComponent(window.location.href);
       exposeLink = `
         <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
           See USAID Grant Flow
         </a>
       `;
     }
-    const normalExpose = `
-        <a href="../expose?eins=${encodeURIComponent(filerEin)}&return_url=${returnUrl}">
-          See grant graph
-        </a>
-    `;
-
 
     return `
       <div class="bg-white border border-gray-200 rounded">
@@ -1078,7 +1082,6 @@ $(document).ready(function() {
             </div>
           </div>
           <div class="@xl:text-right text-sm pb-1 col-span-2 @xl:col-span-5">
-            ${normalExpose}<br/>
             ${exposeLink}
           </div>
         </div>
