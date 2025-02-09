@@ -1092,7 +1092,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       const bounds = g.node().getBBox();
       const dx = bounds.x;
       const dy = bounds.y;
-      const scale = 0.4 / Math.max( // Reduced initial scale for larger graphs
+      const scale = 0.8 / Math.max(
         bounds.width / width,
         bounds.height / height
       );
@@ -1111,7 +1111,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       const bounds = g.node().getBBox();
       const dx = bounds.x;
       const dy = bounds.y;
-      const scale = 0.4 / Math.max( // Reduced initial scale for larger graphs
+      const scale = 0.8 / Math.max( // Increased scale for better initial fit
         bounds.width / width,
         bounds.height / height
       );
