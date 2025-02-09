@@ -849,7 +849,8 @@ labelloc="t";\n`;
 
   function addEINFromInput() {
     let val = $('#einInput').val().trim();
-    val = val.replace(/[-\s]/g, '');
+    val = val.replace(/[-\s]/g, ''); // Remove hyphens and spaces first
+    
     if (!/^\d{9}$/.test(val)) {
       alert("EIN must be 9 digits after removing dashes/spaces.");
       return;
