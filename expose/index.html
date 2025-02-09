@@ -293,6 +293,13 @@ title: Charity graph - multi-root BFS & taxpayer totals
       newSearchInput.focus();
       handleSearch({ target: newSearchInput });
     });
+
+    // Add resize event listener
+    $(window).on('resize', function() {
+      if (dataReady) {
+        generateGraph();
+      }
+    });
   });
 
   /**

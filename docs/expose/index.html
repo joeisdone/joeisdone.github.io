@@ -652,6 +652,13 @@ $(document).ready(function() {
       newSearchInput.focus();
       handleSearch({ target: newSearchInput });
     });
+
+    // Add resize event listener
+    $(window).on('resize', function() {
+      if (dataReady) {
+        generateGraph();
+      }
+    });
   });
 
   /**
