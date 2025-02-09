@@ -949,6 +949,20 @@ title: Charity graph - multi-root BFS & taxpayer totals
             d3.select(this).select('.link')
               .attr('stroke', '#2563EB')
               .attr('stroke-width', 3);
+
+            // Highlight the label
+            labelGroup.selectAll('.link-label-group')
+              .filter(lg => lg === l)
+              .each(function() {
+                d3.select(this).select('.label-bg')
+                  .attr('fill', '#2563EB')
+                  .attr('stroke', '#2563EB');
+                d3.select(this).select('.link-label')
+                  .attr('fill', 'white');
+                // Bring label to front
+                this.parentNode.appendChild(this);
+              });
+
             // Also highlight connected node
             nodeElements
               .filter(n => n.id === (l.source.id === d.id ? l.target.id : l.source.id))
@@ -974,6 +988,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
           .attr('stroke-width', 2);
+        // Reset label highlights
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#94A3B8');
       });
 
     // Update positions on simulation tick
