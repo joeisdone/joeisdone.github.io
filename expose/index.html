@@ -558,15 +558,15 @@ title: Charity graph - multi-root BFS & taxpayer totals
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
       })
-      .on('mouseout', function(event, d) {
-        // Reset link style
-        d3.select(this.parentNode).select('.link')
-          .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
-        // Reset node styles
+      .on('mouseout', function() {
+        // Reset all node highlights
         nodeElements.select('rect')
           .attr('stroke', n => getNodeStroke(n))
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+        // Reset all link highlights
+        linkElements.selectAll('.link')
+          .attr('stroke', '#94A3B8')
+          .attr('stroke-width', 2);
       });
 
     // Move link labels to a separate group that's rendered on top of everything
@@ -716,16 +716,32 @@ title: Charity graph - multi-root BFS & taxpayer totals
     // Node hover effects
     nodeElements
       .on('mouseover', function(event, d) {
-        // Highlight connected links
+        // Highlight this node
+        d3.select(this).select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
+
+        // Highlight connected links and nodes
         linkElements.each(function(l) {
           if (l.source.id === d.id || l.target.id === d.id) {
             d3.select(this).select('.link')
+              .attr('stroke', '#2563EB')
+              .attr('stroke-width', 3);
+            // Also highlight connected node
+            nodeElements
+              .filter(n => n.id === (l.source.id === d.id ? l.target.id : l.source.id))
+              .select('rect')
               .attr('stroke', '#2563EB')
               .attr('stroke-width', 3);
           }
         });
       })
       .on('mouseout', function() {
+        // Reset all node highlights
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+        // Reset all link highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
           .attr('stroke-width', 2);
@@ -754,53 +770,58 @@ title: Charity graph - multi-root BFS & taxpayer totals
         
         if (!sourceNode || !targetNode) return '';
         
-        const sourceBox = sourceNode.getBBox();
-        const targetBox = targetNode.getBBox();
+        // Get node dimensions
+        const sourceWidth = getNodeWidth(d.source);
+        const sourceHeight = getNodeHeight(d.source);
+        const targetWidth = getNodeWidth(d.target);
+        const targetHeight = getNodeHeight(d.target);
         
         const sourceX = d.source.x || 0;
         const sourceY = d.source.y || 0;
         const targetX = d.target.x || 0;
         const targetY = d.target.y || 0;
         
-        // Determine connection points based on relative positions
-        const dx = targetX - sourceX;
-        const dy = targetY - sourceY;
+        // Calculate center points of nodes
+        const sourceCenterX = sourceX;
+        const sourceCenterY = sourceY;
+        const targetCenterX = targetX;
+        const targetCenterY = targetY;
+        
+        // Calculate angle between centers
+        const dx = targetCenterX - sourceCenterX;
+        const dy = targetCenterY - sourceCenterY;
         const angle = Math.atan2(dy, dx);
         
-        // Connection points will be middle of sides
+        // Determine connection points
         let sourcePoint, targetPoint;
         
         // Source connection point
         if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
           // Connect to right/left side
-          const side = dx > 0 ? 'right' : 'left';
           sourcePoint = {
-            x: sourceX + (side === 'right' ? sourceBox.width : 0),
-            y: sourceY + sourceBox.height/2
+            x: sourceCenterX + (dx > 0 ? sourceWidth/2 : -sourceWidth/2),
+            y: sourceCenterY
           };
         } else {
           // Connect to top/bottom
-          const side = dy > 0 ? 'bottom' : 'top';
           sourcePoint = {
-            x: sourceX + sourceBox.width/2,
-            y: sourceY + (side === 'bottom' ? sourceBox.height : 0)
+            x: sourceCenterX,
+            y: sourceCenterY + (dy > 0 ? sourceHeight/2 : -sourceHeight/2)
           };
         }
         
         // Target connection point
         if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
           // Connect to right/left side
-          const side = dx > 0 ? 'left' : 'right';
           targetPoint = {
-            x: targetX + (side === 'right' ? targetBox.width : 0),
-            y: targetY + targetBox.height/2
+            x: targetCenterX + (dx > 0 ? -targetWidth/2 : targetWidth/2),
+            y: targetCenterY
           };
         } else {
           // Connect to top/bottom
-          const side = dy > 0 ? 'top' : 'bottom';
           targetPoint = {
-            x: targetX + targetBox.width/2,
-            y: targetY + (side === 'bottom' ? targetBox.height : 0)
+            x: targetCenterX,
+            y: targetCenterY + (dy > 0 ? -targetHeight/2 : targetHeight/2)
           };
         }
         
