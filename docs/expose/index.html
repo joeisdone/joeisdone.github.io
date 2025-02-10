@@ -343,6 +343,9 @@ $(document).ready(function() {
       <!-- jQuery for convenience -->
 <script src="jquery.min.js"></script>
 
+<!-- D3.js -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
 <!-- Viz.js (core + full render) -->
 <script src="viz.js"></script>
 <script src="full.render.js"></script>
@@ -477,6 +480,73 @@ $(document).ready(function() {
 <script>
   const BFS_CAP = 20;
 
+  // Helper functions
+  function getNodeWidth(d) {
+    // Fixed width with reduced horizontal padding
+    return 400; // Back to original width
+  }
+
+  function getNodeHeight(d) {
+    const charity = charities[d.id];
+    // Base height is 160px, plus alert height (30px) if needed, plus bottom padding
+    const baseHeight = 160;
+    const alertHeight = charity.govt_amt > 10000000 ? 30 : 0;
+    const alertMargin = charity.govt_amt > 10000000 ? 15 : 0; // Add margin if there's an alert
+    const bottomPadding = 15;
+    return baseHeight + alertHeight + alertMargin + bottomPadding;
+  }
+
+  function getNodeColor(d) {
+    const charity = charities[d.id];
+    if (charity.govt_amt > 10000000) return '#FEE2E2'; // red-100
+    if (charity.govt_amt > 1000000) return '#FEF3C7';  // amber-100
+    return '#F3F4F6'; // gray-100
+  }
+
+  function getNodeStroke(d) {
+    const charity = charities[d.id];
+    if (charity.govt_amt > 10000000) return '#DC2626'; // red-600
+    if (charity.govt_amt > 1000000) return '#D97706';  // amber-600
+    return '#94A3B8'; // gray-400
+  }
+
+  function isUserEin(ein) {
+    return activeEINs.includes(ein);
+  }
+
+  function formatNumber(x) {
+    return (parseInt(x, 10) || 0).toLocaleString('en-US');
+  }
+
+  // Update the force simulation parameters to scale with node count
+  function getForceParameters(nodes, width, height) {
+    const nodeCount = nodes.length;
+    const isMobile = width < 768; // Check if we're on mobile
+    
+    // Scale up distances and forces based on node count
+    const baseDistance = isMobile ? 800 : 600; // Increase base distance on mobile
+    const distanceScale = Math.min(2, 1 + (nodeCount / 20)); // Increase up to 2x for large graphs
+    
+    // Scale the viewport bounds based on node count
+    const boundaryScale = Math.min(isMobile ? 4 : 3, 1 + (nodeCount / (isMobile ? 10 : 15))); // Larger bounds on mobile
+    
+    return {
+      linkDistance: baseDistance * distanceScale,
+      charge: isMobile ? -7000 * distanceScale : -5000 * distanceScale, // Stronger repulsion on mobile
+      collisionRadius: (isMobile ? 300 : 250) * Math.sqrt(distanceScale), // Larger collision radius on mobile
+      bounds: {
+        left: -width * boundaryScale / 2,
+        right: width * boundaryScale,
+        top: -height * boundaryScale / 2,
+        bottom: height * boundaryScale
+      },
+      // Reduce force strengths for larger graphs to prevent excessive movement
+      centerStrength: (isMobile ? 0.01 : 0.02) / Math.sqrt(distanceScale),
+      xStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale),
+      yStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale)
+    };
+  }
+
   // Full data from CSV
   let charities = {};             // EIN -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
   let edgeAccumulator = {};       // "filer~grantee" -> totalGrant
@@ -598,7 +668,7 @@ $(document).ready(function() {
       if (customTitle) {
         const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
 
-<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it’s more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
+<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it's more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
 
         $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
@@ -1949,11 +2019,6 @@ labelloc="t";\n`;
 
     dot += `}\n`;
     return dot;
-  }
-
-  function formatNumber(x) {
-    const n = parseInt(x, 10) || 0;
-    return n.toLocaleString('en-US');
   }
 
   function addEINFromInput() {
