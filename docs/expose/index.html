@@ -409,8 +409,8 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-1 rounded text-sm border border-gray-300" />
-    <button id="addEinBtn">Add EIN</button>
+    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-2 md:py-1 rounded text-sm border border-gray-300 flex-1 md:flex-none" />
+    <button id="addEinBtn" class="whitespace-nowrap">Add EIN</button>
   </div>
 </div>
 
@@ -427,8 +427,8 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-1 rounded text-sm border border-gray-300" />
-    <button id="addFilterBtn">Add</button>
+    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-2 md:py-1 rounded text-sm border border-gray-300 flex-1 md:flex-none" />
+    <button id="addFilterBtn" class="whitespace-nowrap">Add</button>
   </div>
 </div>
 
@@ -470,12 +470,12 @@ $(document).ready(function() {
 <div class="relative flex-1 -mx-4 md:mx-0 min-h-[75vh]">
 
   <!-- Search -->
-  <div class="absolute top-4 right-4 z-10">
+  <div class="absolute top-4 left-4 md:left-[initial] right-4 z-10">
     <div class="relative">
       <input 
         type="text" 
         id="searchInput"
-        class="w-64 px-2 py-1 text-sm border border-gray-300 rounded-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        class="w-full md:w-64 px-2 py-2 md:py-1 text-sm border border-gray-300 rounded-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="Search graph..."
         autocomplete="off"
       >
@@ -1108,12 +1108,33 @@ $(document).ready(function() {
     nodeElements = nodeGroup.selectAll('g')
       .data(nodes)
       .join('g')
-      .attr('data-id', d => d.id)
       .attr('class', 'node')
+      .attr('data-id', d => d.id)
+      // Only add drag behavior on non-touch devices
       .call(d3.drag()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended));
+        .filter(event => {
+          // Completely ignore touch events, only allow mouse events
+          if (event.sourceEvent.type.startsWith('touch')) {
+            return false;
+          }
+          // Only allow left mouse button
+          return event.button === 0;
+        })
+        .on('start', event => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          event.subject.fx = event.subject.x;
+          event.subject.fy = event.subject.y;
+        })
+        .on('drag', event => {
+          event.subject.fx = event.x;
+          event.subject.fy = event.y;
+        })
+        .on('end', event => {
+          if (!event.active) simulation.alphaTarget(0);
+          event.subject.fx = null;
+          event.subject.fy = null;
+        })
+      );
 
     // Node rectangles
     nodeElements.append('rect')
@@ -2039,18 +2060,19 @@ labelloc="t";\n`;
   // Update the force simulation parameters to scale with node count
   function getForceParameters(nodes, width, height) {
     const nodeCount = nodes.length;
+    const isMobile = width < 768; // Check if we're on mobile
     
     // Scale up distances and forces based on node count
-    const baseDistance = 600;
+    const baseDistance = isMobile ? 800 : 600; // Increase base distance on mobile
     const distanceScale = Math.min(2, 1 + (nodeCount / 20)); // Increase up to 2x for large graphs
     
     // Scale the viewport bounds based on node count
-    const boundaryScale = Math.min(3, 1 + (nodeCount / 15)); // Increase up to 3x for large graphs
+    const boundaryScale = Math.min(isMobile ? 4 : 3, 1 + (nodeCount / (isMobile ? 10 : 15))); // Larger bounds on mobile
     
     return {
       linkDistance: baseDistance * distanceScale,
-      charge: -5000 * distanceScale,
-      collisionRadius: 250 * Math.sqrt(distanceScale),
+      charge: isMobile ? -7000 * distanceScale : -5000 * distanceScale, // Stronger repulsion on mobile
+      collisionRadius: (isMobile ? 300 : 250) * Math.sqrt(distanceScale), // Larger collision radius on mobile
       bounds: {
         left: -width * boundaryScale / 2,
         right: width * boundaryScale,
@@ -2058,9 +2080,9 @@ labelloc="t";\n`;
         bottom: height * boundaryScale
       },
       // Reduce force strengths for larger graphs to prevent excessive movement
-      centerStrength: 0.02 / Math.sqrt(distanceScale),
-      xStrength: 0.01 / Math.sqrt(distanceScale),
-      yStrength: 0.01 / Math.sqrt(distanceScale)
+      centerStrength: (isMobile ? 0.01 : 0.02) / Math.sqrt(distanceScale),
+      xStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale),
+      yStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale)
     };
   }
 

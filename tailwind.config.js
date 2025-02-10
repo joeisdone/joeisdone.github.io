@@ -11,6 +11,7 @@ module.exports = {
   ],
   safelist: [
     'min-h-[75vh]',
+    'left-[initial]'
     // '!hidden',
     // '-mb-4',
     // '-my-0.5',
