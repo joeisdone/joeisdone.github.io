@@ -468,6 +468,7 @@ $(document).ready(function() {
 </div>
 
 <div class="relative flex-1 -mx-4 md:mx-0 min-h-[75vh]">
+
   <!-- Search -->
   <div class="absolute top-4 right-4 z-10">
     <div class="relative">
@@ -530,13 +531,15 @@ $(document).ready(function() {
 
   <!-- Graph Container -->
   <div id="graph-container" class="absolute inset-0 border-y md:border-x border-gray-200 md:rounded bg-white">
-    <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-20">
-      <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-      </svg>
-    </div>
     <svg id="graph"></svg>
+  </div>
+  
+  <!-- Loading spinner -->
+  <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-30">
+    <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
   </div>
 </div>
 
@@ -849,6 +852,7 @@ $(document).ready(function() {
    * - Else, we do BFS logic based on activeEINs & keywords.
    */
   function generateGraph() {
+    console.log('1. Starting graph generation');
     if (!dataReady) {
       alert("Data not loaded yet. Please wait.");
       return;
@@ -856,22 +860,24 @@ $(document).ready(function() {
 
     // Show loading icon
     $('#loading').show();
+    console.log('2. Loading icon shown');
 
     // Clear old graph
     $('#graph-container svg').empty();
-
-    $('#status').text('Generating...').css('color', 'red');
+    console.log('3. Old graph cleared');
 
     // Get container dimensions
     const container = document.getElementById('graph-container');
     const width = container.offsetWidth;
     const height = container.offsetHeight || window.innerHeight * 0.7;
+    console.log('4. Container dimensions calculated');
 
     // Create SVG
     const svg = d3.select('#graph')
       .attr('width', '100%')
       .attr('height', '100%')
       .style('display', 'block');
+    console.log('5. SVG created');
 
     // Add zoom behavior
     zoom = d3.zoom()
@@ -879,9 +885,9 @@ $(document).ready(function() {
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
       });
-
+    
     svg.call(zoom);
-
+    
     // Main group for zoom/pan
     const g = svg.append('g');
 
@@ -889,68 +895,30 @@ $(document).ready(function() {
     let { nodes, edges } = customGraphEdges 
       ? getCustomGraphData() 
       : getBFSGraphData();
+    console.log('6. Node and edge data prepared', { nodeCount: nodes.length, edgeCount: edges.length });
 
-    // Add initial positions before starting the simulation
+    // Calculate force parameters first
+    const forceParams = getForceParameters(nodes, width, height);
+    console.log('7. Force parameters calculated');
+
+    // Create all visual elements first
+    console.log('8. Starting to create visual elements');
+    
+    // Set initial positions before creating elements
     nodes.forEach((node, i) => {
       if (i === 0) {
-        // Position first node at the top-center
         node.x = width/2;
-        node.y = 100; // Fixed distance from top
-        node.fy = 100; // Pin Y position
+        node.y = 100;
       } else {
-        // Position other nodes in a grid below
         const cols = Math.ceil(Math.sqrt(nodes.length - 1));
         const col = (i - 1) % cols;
         const row = Math.floor((i - 1) / cols);
         node.x = (width * 0.2) + (col * width * 0.6 / (cols - 1));
-        node.y = 300 + (row * 200); // Start below the first node
+        node.y = 300 + (row * 200);
       }
     });
 
-    // Update force simulation parameters
-    const forceParams = getForceParameters(nodes, width, height);
-    
-    simulation = d3.forceSimulation(nodes)
-      .force('link', d3.forceLink(edges)
-        .id(d => d.id)
-        .distance(forceParams.linkDistance))
-      .force('charge', d3.forceManyBody()
-        .strength(forceParams.charge)
-        .distanceMin(200)
-        .distanceMax(forceParams.linkDistance * 2))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('y', d3.forceY(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the top
-        const yPos = height * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return yPos;
-      }).strength(0.5)) // Increased strength for more influence
-      .force('x', d3.forceX(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the left
-        const xPos = width * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return xPos;
-      }).strength(0.5)) // Increased strength for more influence
-      .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
-      .alpha(0.3) // Start with less energy
-      .alphaDecay(0.05) // Faster decay
-      .velocityDecay(0.5) // More damping
-      .on('end', () => {
-        // Hide loading icon when simulation ends
-        $('#loading').hide();
-        // Update status
-        $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
-        $('#downloadBtn').show();
-      })
-      .restart();
-
-    // Add arrow marker definition
+    // Create arrow marker definition
     svg.append('defs').selectAll('marker')
       .data(['arrow'])
       .join('marker')
@@ -965,13 +933,14 @@ $(document).ready(function() {
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#94A3B8');
 
-    // Create curved links with labels
+    // Create link group
     const linkGroup = g.append('g').attr('class', 'links');
     const linkElements = linkGroup.selectAll('g')
       .data(edges)
       .join('g')
       .attr('class', 'link-group');
 
+    // Create links
     const links = linkElements.append('path')
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
@@ -979,7 +948,7 @@ $(document).ready(function() {
       .attr('fill', 'none')
       .attr('marker-end', 'url(#arrow)');
 
-    // Add invisible wider path for easier hovering
+    // Create hover paths
     linkElements.append('path')
       .attr('class', 'link-hover')
       .attr('stroke', 'transparent')
@@ -1027,7 +996,7 @@ $(document).ready(function() {
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
       });
 
-    // Move link labels to a separate group that's rendered on top of everything
+    // Create label group
     const labelGroup = g.append('g').attr('class', 'label-group');
     const linkLabels = labelGroup.selectAll('g')
       .data(edges)
@@ -1356,157 +1325,6 @@ $(document).ready(function() {
           .attr('fill', '#94A3B8');
       });
 
-    // Update positions on simulation tick
-    simulation.on('tick', () => {
-      // On first tick, show the graph and hide loading
-      if (simulation.alpha() > 0.99) {
-        $('#loading').hide();
-        $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
-        $('#downloadBtn').show();
-      }
-
-      // Update node positions with boundary constraints
-      nodeElements.attr('transform', d => {
-        const nodeWidth = getNodeWidth(d);
-        const nodeHeight = getNodeHeight(d);
-        const padding = 100;
-        
-        d.x = Math.max(forceParams.bounds.left + nodeWidth/2, 
-          Math.min(forceParams.bounds.right - nodeWidth/2, d.x || 0));
-        d.y = Math.max(forceParams.bounds.top + nodeHeight/2, 
-          Math.min(forceParams.bounds.bottom - nodeHeight/2, d.y || 0));
-        
-        return `translate(${d.x - nodeWidth/2},${d.y - nodeHeight/2})`;
-      });
-
-      // Update link paths
-      links.attr('d', d => {
-        const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
-        const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
-        
-        if (!sourceNode || !targetNode) return '';
-        
-        // Get node dimensions
-        const sourceWidth = getNodeWidth(d.source);
-        const sourceHeight = getNodeHeight(d.source);
-        const targetWidth = getNodeWidth(d.target);
-        const targetHeight = getNodeHeight(d.target);
-        
-        const sourceX = d.source.x || 0;
-        const sourceY = d.source.y || 0;
-        const targetX = d.target.x || 0;
-        const targetY = d.target.y || 0;
-        
-        // Calculate center points of nodes
-        const sourceCenterX = sourceX;
-        const sourceCenterY = sourceY;
-        const targetCenterX = targetX;
-        const targetCenterY = targetY;
-        
-        // Calculate angle between centers
-        const dx = targetCenterX - sourceCenterX;
-        const dy = targetCenterY - sourceCenterY;
-        const angle = Math.atan2(dy, dx);
-        
-        // Determine connection points
-        let sourcePoint, targetPoint;
-        
-        // Source connection point
-        if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-          // Connect to right/left side
-          sourcePoint = {
-            x: sourceCenterX + (dx > 0 ? sourceWidth/2 : -sourceWidth/2),
-            y: sourceCenterY
-          };
-        } else {
-          // Connect to top/bottom
-          sourcePoint = {
-            x: sourceCenterX,
-            y: sourceCenterY + (dy > 0 ? sourceHeight/2 : -sourceHeight/2)
-          };
-        }
-        
-        // Target connection point
-        if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-          // Connect to right/left side
-          targetPoint = {
-            x: targetCenterX + (dx > 0 ? -targetWidth/2 : targetWidth/2),
-            y: targetCenterY
-          };
-        } else {
-          // Connect to top/bottom
-          targetPoint = {
-            x: targetCenterX,
-            y: targetCenterY + (dy > 0 ? -targetHeight/2 : targetHeight/2)
-          };
-        }
-        
-        // Create curved path
-        const distance = Math.sqrt(
-          Math.pow(targetPoint.x - sourcePoint.x, 2) + 
-          Math.pow(targetPoint.y - sourcePoint.y, 2)
-        );
-        
-        // Control point for the curve
-        const midX = (sourcePoint.x + targetPoint.x) / 2;
-        const midY = (sourcePoint.y + targetPoint.y) / 2;
-        const curvature = Math.min(distance / 3, 100);
-        
-        // Perpendicular vector for control point
-        const perpX = -(targetPoint.y - sourcePoint.y) / distance;
-        const perpY = (targetPoint.x - sourcePoint.x) / distance;
-        
-        const ctrlX = midX + perpX * curvature;
-        const ctrlY = midY + perpY * curvature;
-        
-        return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
-      });
-
-      // Update hover paths
-      linkElements.select('.link-hover')
-        .attr('d', function() {
-          return d3.select(this.parentNode).select('.link').attr('d');
-        });
-
-      // Update link labels with background
-      linkLabels.attr('transform', function(d) {
-        const sourceX = d.source.x || 0;
-        const sourceY = d.source.y || 0;
-        const targetX = d.target.x || 0;
-        const targetY = d.target.y || 0;
-        
-        // Get the corresponding path for this label's link
-        const path = linkElements
-          .filter(l => l.source === d.source && l.target === d.target)
-          .select('.link')
-          .node();
-        
-        if (!path) return '';
-        
-        // Get the point halfway along the curved path
-        const pathLength = path.getTotalLength();
-        const midPoint = path.getPointAtLength(pathLength / 2);
-        
-        // Add a slight vertical offset to position above the line
-        const mx = midPoint.x;
-        const my = midPoint.y - 15;
-        
-        // Get the text width to size the background
-        const text = d3.select(this).select('text');
-        const textNode = text.node();
-        const textWidth = textNode.getComputedTextLength();
-        
-        // Update background size
-        d3.select(this).select('.label-bg')
-          .attr('x', -textWidth/2 - 8) // Add padding
-          .attr('y', -22) // Position above text
-          .attr('width', textWidth + 16) // Add padding
-          .attr('height', 24); // Fixed height
-        
-        return `translate(${mx},${my})`;
-      });
-    });
-
     // Handle zoom controls
     document.getElementById('zoomIn').onclick = () => {
       svg.transition().duration(300).call(zoom.scaleBy, 1.3);
@@ -1556,6 +1374,201 @@ $(document).ready(function() {
     // Update status
     $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
     $('#downloadBtn').show();
+
+    // Now start the simulation
+    simulation = d3.forceSimulation(nodes)
+      .force('link', d3.forceLink(edges)
+        .id(d => d.id)
+        .distance(forceParams.linkDistance))
+      .force('charge', d3.forceManyBody()
+        .strength(forceParams.charge)
+        .distanceMin(200)
+        .distanceMax(forceParams.linkDistance * 2))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('y', d3.forceY(d => {
+        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
+        const maxConnections = Math.max(...nodes.map(n => 
+          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
+        ));
+        // Pull more connected nodes to the top
+        const yPos = height * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
+        return yPos;
+      }).strength(0.5))
+      .force('x', d3.forceX(d => {
+        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
+        const maxConnections = Math.max(...nodes.map(n => 
+          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
+        ));
+        // Pull more connected nodes to the left
+        const xPos = width * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
+        return xPos;
+      }).strength(0.5))
+      .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
+      .alpha(0.3)
+      .alphaDecay(0.05)
+      .velocityDecay(0.5)
+      .on('tick', function() {
+        console.log('10. Simulation tick');
+        
+        // Update positions
+        nodeElements.attr('transform', d => {
+          const nodeWidth = getNodeWidth(d);
+          const nodeHeight = getNodeHeight(d);
+          const padding = 100;
+          
+          d.x = Math.max(forceParams.bounds.left + nodeWidth/2, 
+            Math.min(forceParams.bounds.right - nodeWidth/2, d.x || 0));
+          d.y = Math.max(forceParams.bounds.top + nodeHeight/2, 
+            Math.min(forceParams.bounds.bottom - nodeHeight/2, d.y || 0));
+          
+          return `translate(${d.x - nodeWidth/2},${d.y - nodeHeight/2})`;
+        });
+        
+        // Update link paths
+        links.attr('d', d => {
+          const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
+          const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
+          
+          if (!sourceNode || !targetNode) return '';
+          
+          // Get node dimensions
+          const sourceWidth = getNodeWidth(d.source);
+          const sourceHeight = getNodeHeight(d.source);
+          const targetWidth = getNodeWidth(d.target);
+          const targetHeight = getNodeHeight(d.target);
+          
+          const sourceX = d.source.x || 0;
+          const sourceY = d.source.y || 0;
+          const targetX = d.target.x || 0;
+          const targetY = d.target.y || 0;
+          
+          // Calculate center points of nodes
+          const sourceCenterX = sourceX;
+          const sourceCenterY = sourceY;
+          const targetCenterX = targetX;
+          const targetCenterY = targetY;
+          
+          // Calculate angle between centers
+          const dx = targetCenterX - sourceCenterX;
+          const dy = targetCenterY - sourceCenterY;
+          const angle = Math.atan2(dy, dx);
+          
+          // Determine connection points
+          let sourcePoint, targetPoint;
+          
+          // Source connection point
+          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
+            // Connect to right/left side
+            sourcePoint = {
+              x: sourceCenterX + (dx > 0 ? sourceWidth/2 : -sourceWidth/2),
+              y: sourceCenterY
+            };
+          } else {
+            // Connect to top/bottom
+            sourcePoint = {
+              x: sourceCenterX,
+              y: sourceCenterY + (dy > 0 ? sourceHeight/2 : -sourceHeight/2)
+            };
+          }
+          
+          // Target connection point
+          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
+            // Connect to right/left side
+            targetPoint = {
+              x: targetCenterX + (dx > 0 ? -targetWidth/2 : targetWidth/2),
+              y: targetCenterY
+            };
+          } else {
+            // Connect to top/bottom
+            targetPoint = {
+              x: targetCenterX,
+              y: targetCenterY + (dy > 0 ? -targetHeight/2 : targetHeight/2)
+            };
+          }
+          
+          // Create curved path
+          const distance = Math.sqrt(
+            Math.pow(targetPoint.x - sourcePoint.x, 2) + 
+            Math.pow(targetPoint.y - sourcePoint.y, 2)
+          );
+          
+          // Control point for the curve
+          const midX = (sourcePoint.x + targetPoint.x) / 2;
+          const midY = (sourcePoint.y + targetPoint.y) / 2;
+          const curvature = Math.min(distance / 3, 100);
+          
+          // Perpendicular vector for control point
+          const perpX = -(targetPoint.y - sourcePoint.y) / distance;
+          const perpY = (targetPoint.x - sourcePoint.x) / distance;
+          
+          const ctrlX = midX + perpX * curvature;
+          const ctrlY = midY + perpY * curvature;
+          
+          return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
+        });
+
+        // Update hover paths
+        linkElements.select('.link-hover')
+          .attr('d', function() {
+            return d3.select(this.parentNode).select('.link').attr('d');
+          });
+
+        // Update link labels with background
+        linkLabels.attr('transform', function(d) {
+          const sourceX = d.source.x || 0;
+          const sourceY = d.source.y || 0;
+          const targetX = d.target.x || 0;
+          const targetY = d.target.y || 0;
+          
+          // Get the corresponding path for this label's link
+          const path = linkElements
+            .filter(l => l.source === d.source && l.target === d.target)
+            .select('.link')
+            .node();
+          
+          if (!path) return '';
+          
+          // Get the point halfway along the curved path
+          const pathLength = path.getTotalLength();
+          const midPoint = path.getPointAtLength(pathLength / 2);
+          
+          // Add a slight vertical offset to position above the line
+          const mx = midPoint.x;
+          const my = midPoint.y - 15;
+          
+          // Get the text width to size the background
+          const text = d3.select(this).select('text');
+          const textNode = text.node();
+          const textWidth = textNode.getComputedTextLength();
+          
+          // Update background size
+          d3.select(this).select('.label-bg')
+            .attr('x', -textWidth/2 - 8) // Add padding
+            .attr('y', -22) // Position above text
+            .attr('width', textWidth + 16) // Add padding
+            .attr('height', 24); // Fixed height
+          
+          return `translate(${mx},${my})`;
+        });
+
+        // After first real update, hide loading
+        if (simulation.alpha() < 0.01) {
+          console.log('12. Simulation nearly settled');
+        }
+      })
+      .on('end', () => {
+        console.log('13. Force simulation ended');
+        // Hide loading after simulation is complete
+        const loadingEl = document.getElementById('loading');
+        loadingEl.style.opacity = '0';
+        setTimeout(() => {
+          loadingEl.style.display = 'none';
+        }, 200);
+        $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
+        $('#downloadBtn').show();
+        console.log('14. Loading complete, graph should be visible');
+      })
+      .restart();
   }
 
   // Helper functions for graph data preparation
