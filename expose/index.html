@@ -520,23 +520,38 @@ title: Charity graph - multi-root BFS & taxpayer totals
       .style('display', 'block');
     console.log('5. SVG created');
 
-    // Add zoom behavior
+    // Initialize zoom behavior
     zoom = d3.zoom()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
-        g.attr('transform', event.transform);
+        svg.select('g.nodes').attr('transform', event.transform);
+        svg.select('g.links').attr('transform', event.transform);
+        svg.select('g.label-group').attr('transform', event.transform);
       });
     
+    // Apply zoom behavior to SVG
     svg.call(zoom);
-    
-    // Main group for zoom/pan
-    const g = svg.append('g');
 
     // Get nodes and edges based on mode
     let { nodes, edges } = customGraphEdges 
       ? getCustomGraphData() 
       : getBFSGraphData();
     console.log('6. Node and edge data prepared', { nodeCount: nodes.length, edgeCount: edges.length });
+
+    // Filter out any edges that reference non-existent charities
+    if (customGraphEdges) {
+      edges = edges.filter(edge => {
+        return charities[edge.source] && charities[edge.target];
+      });
+      
+      // Rebuild nodes list from valid edges
+      const validEins = new Set();
+      edges.forEach(edge => {
+        validEins.add(edge.source);
+        validEins.add(edge.target);
+      });
+      nodes = Array.from(validEins).map(id => ({ id }));
+    }
 
     // Calculate force parameters first
     const forceParams = getForceParameters(nodes, width, height);
@@ -575,7 +590,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       .attr('fill', '#94A3B8');
 
     // Create link group
-    const linkGroup = g.append('g').attr('class', 'links');
+    const linkGroup = svg.append('g').attr('class', 'links');
     const linkElements = linkGroup.selectAll('g')
       .data(edges)
       .join('g')
@@ -638,7 +653,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       });
 
     // Create label group
-    const labelGroup = g.append('g').attr('class', 'label-group');
+    const labelGroup = svg.append('g').attr('class', 'label-group');
     const linkLabels = labelGroup.selectAll('g')
       .data(edges)
       .join('g')
@@ -745,7 +760,7 @@ title: Charity graph - multi-root BFS & taxpayer totals
       });
 
     // Create nodes
-    const nodeGroup = g.append('g').attr('class', 'nodes');
+    const nodeGroup = svg.append('g').attr('class', 'nodes');
     nodeElements = nodeGroup.selectAll('g')
       .data(nodes)
       .join('g')
@@ -754,12 +769,12 @@ title: Charity graph - multi-root BFS & taxpayer totals
       // Only add drag behavior on non-touch devices
       .call(d3.drag()
         .filter(event => {
-          // Completely ignore touch events, only allow mouse events
-          if (event.sourceEvent.type.startsWith('touch')) {
+          // Check if it's a touch event using sourceEvent
+          if (event.sourceEvent && event.sourceEvent.type && event.sourceEvent.type.startsWith('touch')) {
             return false;
           }
           // Only allow left mouse button
-          return event.button === 0;
+          return event.sourceEvent && event.sourceEvent.button === 0;
         })
         .on('start', event => {
           if (!event.active) simulation.alphaTarget(0.3).restart();
@@ -989,15 +1004,15 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
     // Handle zoom controls
     document.getElementById('zoomIn').onclick = () => {
-      svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+      zoom.scaleBy(svg.transition().duration(300), 1.3);
     };
 
     document.getElementById('zoomOut').onclick = () => {
-      svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+      zoom.scaleBy(svg.transition().duration(300), 0.7);
     };
 
     document.getElementById('zoomFit').onclick = () => {
-      const bounds = g.node().getBBox();
+      const bounds = svg.select('g.nodes').node().getBBox();
       const dx = bounds.x;
       const dy = bounds.y;
       const scale = 0.8 / Math.max(
@@ -1005,18 +1020,18 @@ title: Charity graph - multi-root BFS & taxpayer totals
         bounds.height / height
       );
 
-      svg.transition()
-        .duration(750)
-        .call(zoom.transform,
-          d3.zoomIdentity
-            .translate(width/2, height/2)
-            .scale(scale)
-            .translate(-dx-bounds.width/2, -dy-bounds.height/2));
+      zoom.transform(
+        svg.transition().duration(750),
+        d3.zoomIdentity
+          .translate(width/2, height/2)
+          .scale(scale)
+          .translate(-dx-bounds.width/2, -dy-bounds.height/2)
+      );
     };
 
     // Also update the initial zoom to account for the larger bounds
     setTimeout(() => {
-      const bounds = g.node().getBBox();
+      const bounds = svg.select('g.nodes').node().getBBox();
       const dx = bounds.x;
       const dy = bounds.y;
       const scale = 0.8 / Math.max( // Increased scale for better initial fit
@@ -1024,13 +1039,13 @@ title: Charity graph - multi-root BFS & taxpayer totals
         bounds.height / height
       );
 
-      svg.transition()
-        .duration(750)
-        .call(zoom.transform,
-          d3.zoomIdentity
-            .translate(width/2, height/2)
-            .scale(scale)
-            .translate(-dx-bounds.width/2, -dy-bounds.height/2));
+      zoom.transform(
+        svg.transition().duration(750),
+        d3.zoomIdentity
+          .translate(width/2, height/2)
+          .scale(scale)
+          .translate(-dx-bounds.width/2, -dy-bounds.height/2)
+      );
     }, 1000);
 
     // Update status
@@ -1235,19 +1250,29 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
   // Helper functions for graph data preparation
   function getCustomGraphData() {
-    const nodes = new Set();
+    if (!customGraphEdges || !customGraphEdges.length) {
+      return { nodes: [], edges: [] };
+    }
+
+    // First collect all unique EINs
+    const uniqueEins = new Set();
     customGraphEdges.forEach(e => {
-      if (charities[e.filer]) nodes.add(e.filer);
-      if (charities[e.grantee]) nodes.add(e.grantee);
+      if (charities[e.filer]) uniqueEins.add(e.filer);
+      if (charities[e.grantee]) uniqueEins.add(e.grantee);
     });
 
-    return {
-      nodes: Array.from(nodes).map(id => ({ id })),
-      edges: customGraphEdges.map(e => ({
+    // Create edges only for EINs that exist in our data
+    const edges = customGraphEdges
+      .filter(e => charities[e.filer] && charities[e.grantee])
+      .map(e => ({
         source: e.filer,
         target: e.grantee,
-        amt: e.amt
-      }))
+        amt: e.amt // Change value to amt to match the expected property name
+      }));
+
+    return {
+      nodes: Array.from(uniqueEins).map(id => ({ id })),
+      edges
     };
   }
 
