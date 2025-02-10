@@ -536,6 +536,22 @@ title: Charity graph - multi-root BFS & taxpayer totals
     let { nodes, edges } = customGraphEdges 
       ? getCustomGraphData() 
       : getBFSGraphData();
+
+    // Filter out any edges that reference non-existent charities
+    if (customGraphEdges) {
+      edges = edges.filter(edge => {
+        return charities[edge.source] && charities[edge.target];
+      });
+      
+      // Rebuild nodes list from valid edges
+      const validEins = new Set();
+      edges.forEach(edge => {
+        validEins.add(edge.source);
+        validEins.add(edge.target);
+      });
+      nodes = Array.from(validEins).map(id => ({ id }));
+    }
+
     console.log('6. Node and edge data prepared', { nodeCount: nodes.length, edgeCount: edges.length });
 
     // Calculate force parameters first
@@ -1235,19 +1251,29 @@ title: Charity graph - multi-root BFS & taxpayer totals
 
   // Helper functions for graph data preparation
   function getCustomGraphData() {
-    const nodes = new Set();
+    if (!customGraphEdges || !customGraphEdges.length) {
+      return { nodes: [], edges: [] };
+    }
+
+    // First collect all unique EINs
+    const uniqueEins = new Set();
     customGraphEdges.forEach(e => {
-      if (charities[e.filer]) nodes.add(e.filer);
-      if (charities[e.grantee]) nodes.add(e.grantee);
+      if (charities[e.filer]) uniqueEins.add(e.filer);
+      if (charities[e.grantee]) uniqueEins.add(e.grantee);
     });
 
-    return {
-      nodes: Array.from(nodes).map(id => ({ id })),
-      edges: customGraphEdges.map(e => ({
+    // Create edges only for EINs that exist in our data
+    const edges = customGraphEdges
+      .filter(e => charities[e.filer] && charities[e.grantee])
+      .map(e => ({
         source: e.filer,
         target: e.grantee,
-        amt: e.amt
-      }))
+        value: e.amt
+      }));
+
+    return {
+      nodes: Array.from(uniqueEins).map(id => ({ id })),
+      edges
     };
   }
 
