@@ -28,7 +28,7 @@
   }
 
   button {
-    @apply bg-slate-900 py-2 md:py-1 px-2 text-sm font-medium text-white rounded md:mr-2 min-w-[65px];
+    @apply bg-slate-900 py-1 px-2 text-sm font-medium text-white rounded md:mr-2 min-w-[65px];
 
     &.active {
       @apply font-bold;
