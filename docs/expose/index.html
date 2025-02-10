@@ -128,11 +128,11 @@ $(document).ready(function() {
 </a> 
     <button 
       id="election-results-dropdown-button"
-      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 mr-0 border-transparent hover:border-white/75 hover:bg-white/10 relative group justify-start items-start"
+      class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 mr-0 border-transparent hover:border-white/75 hover:bg-white/10 relative group"
       
     >
-      <strong class="text-base md:text-sm w-full md:w-auto text-left">Voter turnout analysis</strong>
-      <span class="opacity-70 text-sm md:text-[13px] w-full md:w-auto text-left">2024 vs. previous elections</span>
+      <strong class="text-base md:text-sm">Voter turnout analysis</strong>
+      <span class="opacity-70 text-sm md:text-[13px]">2024 vs. previous elections</span>
       <span class="absolute top-[calc(50%-.625rem)] right-2 size-5 opacity-50 group-hover:opacity-100 transition-transform rotate-90">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
       </span>
@@ -409,8 +409,8 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-2 md:py-1 rounded text-sm border border-gray-300 flex-1 md:flex-none" />
-    <button id="addEinBtn" class="whitespace-nowrap">Add EIN</button>
+    <input type="text" id="einInput" placeholder="XX-XXXXXXX or 9 digits" class="px-2 py-1 rounded text-sm border border-gray-300" />
+    <button id="addEinBtn">Add EIN</button>
   </div>
 </div>
 
@@ -427,8 +427,8 @@ $(document).ready(function() {
     
   </div>
   <div class="flex items-center gap-1.5">
-    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-2 md:py-1 rounded text-sm border border-gray-300 flex-1 md:flex-none" />
-    <button id="addFilterBtn" class="whitespace-nowrap">Add</button>
+    <input type="text" id="keywordInput" placeholder="Keyword or phrase..." class="px-2 py-1 rounded text-sm border border-gray-300" />
+    <button id="addFilterBtn">Add</button>
   </div>
 </div>
 
@@ -467,84 +467,12 @@ $(document).ready(function() {
 </div>
 </div>
 
-<div class="relative flex-1 -mx-4 md:mx-0 min-h-[75vh]">
-
-  <!-- Search -->
-  <div class="absolute top-4 left-4 md:left-[initial] right-4 z-10">
-    <div class="relative">
-      <input 
-        type="text" 
-        id="searchInput"
-        class="w-full md:w-64 px-2 py-2 md:py-1 text-sm border border-gray-300 rounded-sm shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        placeholder="Search graph..."
-        autocomplete="off"
-      >
-      <button 
-        id="clearSearch" 
-        class="absolute right-2 top-1/2 -translate-y-1/2 min-w-0 p-1 aspect-square items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 hidden"
-        aria-label="Clear search"
-      >
-        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
-      <div id="searchResults" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg hidden">
-        <!-- Results will be populated here -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Legend -->
-  <div class="absolute bottom-4 left-4 z-10 bg-white p-3 rounded-md shadow-md border border-gray-200 flex flex-col md:flex-row gap-2 md:gap-4">
-    <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#FEE2E2] rounded-sm border-2 border-[#DC2626]"></div>
-      <span class="text-[13px]">🚨 High taxpayer funds (>$10M)</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#FEF3C7] rounded-sm border-2 border-[#D97706]"></div>
-      <span class="text-[13px]">Medium taxpayer funds ($1M-$10M)</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="w-4 h-4 bg-[#F3F4F6] rounded-sm border-2 border-[#94A3B8]"></div>
-      <span class="text-[13px]">Low/No taxpayer funds</span>
-    </div>
-  </div>
-
-  <!-- Zoom Controls -->
-  <div class="absolute bottom-4 right-4 z-10 flex flex-col gap-1">
-    <button id="zoomIn" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-      </svg>
-    </button>
-    <button id="zoomOut" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-      </svg>
-    </button>
-    <button id="zoomFit" class="p-2 rounded min-w-0 mr-0 bg-black/60 hover:bg-black">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"/>
-      </svg>
-    </button>
-  </div>
-
-  <!-- Graph Container -->
-  <div id="graph-container" class="absolute inset-0 border-y md:border-x border-gray-200 md:rounded bg-white">
-    <svg id="graph"></svg>
-  </div>
-  
-  <!-- Loading spinner -->
-  <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-30">
-    <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-    </svg>
+<div id="graph-container" class="-mx-4 md:mx-0 flex-1 border-y md:border-x border-gray-200 md:rounded bg-white md:min-h-[50vh] flex items-center justify-center">
+  <div class="">
+    <img src="/assets/images/loading.svg" class="size-12" alt="Loading...">
   </div>
 </div>
 
-<!-- Add D3.js -->
-<script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
   const BFS_CAP = 20;
@@ -566,12 +494,6 @@ $(document).ready(function() {
   // Custom graph state
   let customGraphEdges = null;  // array of objects { filer, grantee, amt }
   let customTitle = null;       // optional custom title from the query param
-
-  // Add this with other global variables at the top
-  let simulation = null;
-  let nodeElements = null;
-  let zoom = null;
-  let selectedSearchIndex = 0; // Track selected search result
 
   $(document).ready(function() {
 
@@ -634,40 +556,6 @@ $(document).ready(function() {
         $btn.text('How it works');
       }
     });
-
-    // Add search handlers after graph is generated
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResults');
-    const clearButton = document.getElementById('clearSearch');
-
-    // Remove any existing listeners
-    const newSearchInput = searchInput.cloneNode(true);
-    const newSearchResults = searchResults.cloneNode(true);
-    const newClearButton = clearButton.cloneNode(true);
-    
-    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
-    searchResults.parentNode.replaceChild(newSearchResults, searchResults);
-    clearButton.parentNode.replaceChild(newClearButton, clearButton);
-
-    // Add new listeners
-    newSearchInput.addEventListener('input', handleSearch);
-    newSearchInput.addEventListener('blur', handleSearchBlur);
-    newSearchResults.addEventListener('click', handleSearchClick);
-    newSearchInput.addEventListener('keydown', handleSearchKeydown);
-
-    // Add clear button handler
-    newClearButton.addEventListener('click', () => {
-      newSearchInput.value = '';
-      newSearchInput.focus();
-      handleSearch({ target: newSearchInput });
-    });
-
-    // Add resize event listener
-    $(window).on('resize', function() {
-      if (dataReady) {
-        generateGraph();
-      }
-    });
   });
 
   /**
@@ -710,7 +598,7 @@ $(document).ready(function() {
       if (customTitle) {
         const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
 
-<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it's more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
+<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it’s more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
 
         $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
@@ -852,25 +740,20 @@ $(document).ready(function() {
    * - Else, we do BFS logic based on activeEINs & keywords.
    */
   function generateGraph() {
-    console.log('1. Starting graph generation');
     if (!dataReady) {
       alert("Data not loaded yet. Please wait.");
       return;
     }
 
-    // Show loading icon
-    $('#loading').show();
-    console.log('2. Loading icon shown');
-
     // Clear old graph
-    $('#graph-container svg').empty();
-    console.log('3. Old graph cleared');
+    $('#graph-container').empty();
+    $('#excluded-info').hide();
+    if (panZoomInstance) {
+      panZoomInstance.destroy();
+      panZoomInstance = null;
+    }
 
-    // Get container dimensions
-    const container = document.getElementById('graph-container');
-    const width = container.offsetWidth;
-    const height = container.offsetHeight || window.innerHeight * 0.7;
-    console.log('4. Container dimensions calculated');
+    $('#status').text('Generating...').css('color', 'red');
 
     // Create SVG
     const svg = d3.select('#graph')
@@ -1637,44 +1520,264 @@ $(document).ready(function() {
 
   function getBFSGraphData() {
     const { filteredCharities, filteredEdges } = buildFilteredData();
-    const visitedSet = multiRootBFS(filteredCharities, buildAdjacency(filteredEdges));
-    
-    // Force include user EINS
-    activeEINs.forEach(ein => {
-      if (filteredCharities[ein]) visitedSet.add(ein);
-    });
+    const filteredEINs = Object.keys(filteredCharities);
+    if (filteredEINs.length === 0) {
+      $('#status').text('No charities match the filters.').css('color','black');
+      return;
+    }
+
+    // Build adjacency
+    const adjacencyFwd = {};
+    const adjacencyRev = {};
+    for (const [key, amt] of Object.entries(filteredEdges)) {
+      const [filer, grantee] = key.split('~');
+      if (!adjacencyFwd[filer]) adjacencyFwd[filer] = [];
+      adjacencyFwd[filer].push(grantee);
+
+      if (!adjacencyRev[grantee]) adjacencyRev[grantee] = [];
+      adjacencyRev[grantee].push(filer);
+    }
+
+    // Multi-root BFS
+    let visitedSet = multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev);
+
+    // Force user EINs
+    for (const e of activeEINs) {
+      if (filteredCharities[e]) {
+        visitedSet.add(e);
+      }
+    }
 
     // Build final edges
-    const edges = [];
-    Object.entries(filteredEdges).forEach(([key, amt]) => {
+    const finalEdges = [];
+    for (const [key, amt] of Object.entries(filteredEdges)) {
       const [filer, grantee] = key.split('~');
       if (visitedSet.has(filer) && visitedSet.has(grantee)) {
-        edges.push({ source: filer, target: grantee, amt });
+        finalEdges.push({ filer, grantee, amt });
+      }
+    }
+
+    // Also forcibly include direct edges among user EINs
+    for (let i = 0; i < activeEINs.length; i++) {
+      for (let j = i + 1; j < activeEINs.length; j++) {
+        const e1 = activeEINs[i];
+        const e2 = activeEINs[j];
+        // fwd
+        if (filteredEdges[e1 + '~' + e2]) {
+          const amt = filteredEdges[e1 + '~' + e2];
+          if (!finalEdges.find(x => x.filer===e1 && x.grantee===e2)) {
+            finalEdges.push({ filer: e1, grantee: e2, amt });
+          }
+          visitedSet.add(e1);
+          visitedSet.add(e2);
+        }
+        // rev
+        if (filteredEdges[e2 + '~' + e1]) {
+          const amt = filteredEdges[e2 + '~' + e1];
+          if (!finalEdges.find(x => x.filer===e2 && x.grantee===e1)) {
+            finalEdges.push({ filer: e2, grantee: e1, amt });
+          }
+          visitedSet.add(e1);
+          visitedSet.add(e2);
+        }
+      }
+    }
+
+    // Summaries
+    const displayedNodesCount = visitedSet.size;
+    const excluded501 = totalCharitiesCount - displayedNodesCount;
+    const totalFilteredEdgesCount = Object.keys(filteredEdges).length;
+    const displayedEdgesCount = finalEdges.length;
+    const excludedGrants = totalFilteredEdgesCount - displayedEdgesCount;
+
+    // Sum taxpayer funds in subgraph
+    let taxpayerTotal = 0;
+    for (const ein of visitedSet) {
+      taxpayerTotal += (filteredCharities[ein].govt_amt || 0);
+    }
+
+    // Build & render
+    const dot = buildDotSource(visitedSet, finalEdges, filteredCharities, taxpayerTotal);
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedNodesCount, filteredCharities);
+  }
+
+  /**
+   * Build and render the *custom* graph from the custom_graph param.
+   * We skip BFS. We parse customGraphEdges, filter out unknown charities, then build final edges.
+   */
+  function generateCustomGraph() {
+    const validEdges = [];
+    const visitedSet = new Set();
+
+    // For each custom edge, keep only if src & dst exist in charities
+    customGraphEdges.forEach(e => {
+      if (charities[e.filer] && charities[e.grantee]) {
+        validEdges.push(e);
+        visitedSet.add(e.filer);
+        visitedSet.add(e.grantee);
       }
     });
 
-    return {
-      nodes: Array.from(visitedSet).map(id => ({ id })),
-      edges
-    };
+    // Sum taxpayer total for the visited EINS
+    let taxpayerTotal = 0;
+    visitedSet.forEach(ein => {
+      taxpayerTotal += charities[ein].govt_amt || 0;
+    });
+
+    // Build DOT
+    const dot = buildDotSource(visitedSet, validEdges, charities, taxpayerTotal);
+
+    // For excluded501 / excludedGrants:
+    const excluded501 = totalCharitiesCount - visitedSet.size;
+    // There's no "filteredEdges" concept here. We just say # of edges in the custom param minus # that made it in
+    const totalCustomEdges = customGraphEdges.length;
+    const displayedEdgesCount = validEdges.length;
+    const excludedGrants = totalCustomEdges - displayedEdgesCount;
+
+    // Render
+    renderDot(dot, excluded501, excludedGrants, taxpayerTotal, visitedSet.size, charities);
   }
 
-  // Force simulation helpers
-  function dragstarted(event, d) {
-    if (!event.active && simulation) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
+  /**
+   * Renders a DOT string, updates excluded info, sets status and shows download button.
+   */
+  function renderDot(dot, excluded501, excludedGrants, taxpayerTotal, displayedCount) {
+    const viz = new Viz();
+    viz.renderSVGElement(dot)
+      .then(svgEl => {
+        svgEl.setAttribute('width', '100%');
+        svgEl.setAttribute('height', '100%');
+        svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        svgEl.setAttribute('class', 'w-full h-full');
+        svgEl.setAttribute('style', 'min-height: 75vh;');
+
+        $('#graph-container').append(svgEl);
+        panZoomInstance = svgPanZoom(svgEl, {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+          center: true
+        });
+
+        // Show excluded info
+        $('#excluded501').text(excluded501.toLocaleString());
+        $('#excludedGrants').text(excludedGrants.toLocaleString());
+        $('#taxpayerTotal').html(
+          `<span class="md:text-lg text-red">$${formatNumber(taxpayerTotal)}</span>`
+        );
+        
+        // Check if we're in custom graph mode using the global customGraphEdges
+        if (!customGraphEdges) {
+          $('#excluded-info').show();
+        }
+
+        $('#status').html(`<span class="text-sm text-green font-semibold">${displayedCount} charities displayed</span>`);
+        $('#downloadBtn').show();
+      })
+      .then(ignore => {
+        $('text').filter(function () {
+          return $(this).text().trim().startsWith('EIN:');
+        }).each(function () {
+          const $text = $(this);
+          // Find the ancestor <g> with class="node" and grab its <title> content:
+          const nodeEIN = $text.closest('g.node').children('title').text().trim();
+          const c = charities[nodeEIN];
+          const grants = formatNumber(c.grant_amt);
+          const linkScheduleI = !(grants === null || grants === 0 || grants === '0' || grants === '');
+          const irsFormLink = linkScheduleI
+            ? `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/IRS990ScheduleI`
+            : `https://projects.propublica.org/nonprofits/organizations/${nodeEIN}/${c.xml_name}/full`;
+
+          // Strip off the 'EIN: ' part so we only hyperlink the remainder
+          const remainder = $text.text().replace(/^EIN:\s*/, '');
+
+          // Replace the text node content with a hyperlink
+          // In SVG, you'll typically use <a xlink:href="..."></a> for linking:
+          $text.html(`EIN: <a xlink:href="${irsFormLink}">${remainder}</a>`);
+        });
+
+
+      })
+      .catch(err => {
+        console.error(err);
+        $('#status').text('Error generating graph.').css('color', 'red');
+      });
   }
 
-  function dragged(event, d) {
-    d.fx = event.x;
-    d.fy = event.y;
+  /**
+   * BFS multi-root approach
+   */
+  function multiRootBFS(filteredCharities, adjacencyFwd, adjacencyRev) {
+    const visited = new Set();
+    const allEINs = Object.keys(filteredCharities);
+
+    // Sort them by descending receipt_amt
+    let sortedByReceipt = allEINs.slice().sort((a,b) => {
+      return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
+    });
+
+    // If user EINs exist in the filtered set, BFS from the largest among them first
+    let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
+    if (hasUserEINsInFiltered.length > 0) {
+      let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
+        if (!best) return cur;
+        const bestAmt = filteredCharities[best].receipt_amt;
+        const curAmt = filteredCharities[cur].receipt_amt;
+        return (curAmt > bestAmt) ? cur : best;
+      }, null);
+
+      bfsFromRoot(largestUserEIN, adjacencyFwd, adjacencyRev, visited);
+      sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
+    }
+
+    // If <5 visited, BFS from next-largest
+    let idx = 0;
+    while (visited.size < 5 && idx < sortedByReceipt.length) {
+      const candidate = sortedByReceipt[idx];
+      if (!visited.has(candidate)) {
+        bfsFromRoot(candidate, adjacencyFwd, adjacencyRev, visited);
+      }
+      idx++;
+    }
+
+    return visited;
   }
 
-  function dragended(event, d) {
-    if (!event.active && simulation) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
+  function bfsFromRoot(root, adjacencyFwd, adjacencyRev, visited) {
+    if (!root) return;
+    // forward BFS
+    let queue = [root];
+    const localFwd = new Set();
+    while (queue.length > 0 && localFwd.size < BFS_CAP) {
+      const curr = queue.shift();
+      if (!localFwd.has(curr)) {
+        localFwd.add(curr);
+        const neighs = adjacencyFwd[curr] || [];
+        for (let n of neighs) {
+          if (!localFwd.has(n) && localFwd.size < BFS_CAP) {
+            queue.push(n);
+          }
+        }
+      }
+    }
+    // reverse BFS
+    const localRev = new Set();
+    queue = [root];
+    while (queue.length > 0 && localRev.size < BFS_CAP) {
+      const curr = queue.shift();
+      if (!localRev.has(curr)) {
+        localRev.add(curr);
+        const neighs = adjacencyRev[curr] || [];
+        for (let n of neighs) {
+          if (!localRev.has(n) && localRev.size < BFS_CAP) {
+            queue.push(n);
+          }
+        }
+      }
+    }
+    // union
+    for (let x of localFwd) visited.add(x);
+    for (let x of localRev) visited.add(x);
   }
 
   /**
@@ -1946,405 +2049,6 @@ labelloc="t";\n`;
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }
-
-  function buildAdjacency(edges) {
-    const fwd = {};
-    const rev = {};
-    
-    Object.entries(edges).forEach(([key, amt]) => {
-      const [filer, grantee] = key.split('~');
-      
-      // Forward adjacency
-      if (!fwd[filer]) fwd[filer] = [];
-      fwd[filer].push(grantee);
-      
-      // Reverse adjacency
-      if (!rev[grantee]) rev[grantee] = [];
-      rev[grantee].push(filer);
-    });
-    
-    return { fwd, rev };
-  }
-
-  function multiRootBFS(filteredCharities, adjacency) {
-    const visited = new Set();
-    const allEINs = Object.keys(filteredCharities);
-
-    // Sort them by descending receipt_amt
-    let sortedByReceipt = allEINs.slice().sort((a,b) => {
-      return filteredCharities[b].receipt_amt - filteredCharities[a].receipt_amt;
-    });
-
-    // If user EINS exist in the filtered set, BFS from the largest among them first
-    let hasUserEINsInFiltered = activeEINs.filter(x => allEINs.includes(x));
-    if (hasUserEINsInFiltered.length > 0) {
-      let largestUserEIN = hasUserEINsInFiltered.reduce((best, cur) => {
-        if (!best) return cur;
-        const bestAmt = filteredCharities[best].receipt_amt;
-        const curAmt = filteredCharities[cur].receipt_amt;
-        return (curAmt > bestAmt) ? cur : best;
-      }, null);
-
-      bfsFromRoot(largestUserEIN, adjacency, visited);
-      sortedByReceipt = sortedByReceipt.filter(x => x !== largestUserEIN);
-    }
-
-    // If <5 visited, BFS from next-largest
-    let idx = 0;
-    while (visited.size < 5 && idx < sortedByReceipt.length) {
-      const candidate = sortedByReceipt[idx];
-      if (!visited.has(candidate)) {
-        bfsFromRoot(candidate, adjacency, visited);
-      }
-      idx++;
-    }
-
-    return visited;
-  }
-
-  function bfsFromRoot(root, adjacency, visited) {
-    if (!root) return;
-    
-    // Forward BFS
-    let queue = [root];
-    const localFwd = new Set();
-    while (queue.length > 0 && localFwd.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localFwd.has(curr)) {
-        localFwd.add(curr);
-        const neighs = adjacency.fwd[curr] || [];
-        for (let n of neighs) {
-          if (!localFwd.has(n) && localFwd.size < BFS_CAP) {
-            queue.push(n);
-          }
-        }
-      }
-    }
-
-    // Reverse BFS
-    const localRev = new Set();
-    queue = [root];
-    while (queue.length > 0 && localRev.size < BFS_CAP) {
-      const curr = queue.shift();
-      if (!localRev.has(curr)) {
-        localRev.add(curr);
-        const neighs = adjacency.rev[curr] || [];
-        for (let n of neighs) {
-          if (!localRev.has(n) && localRev.size < BFS_CAP) {
-            queue.push(n);
-          }
-        }
-      }
-    }
-
-    // Union
-    for (let x of localFwd) visited.add(x);
-    for (let x of localRev) visited.add(x);
-  }
-
-  // Add these helper functions before generateGraph()
-
-  function getNodeWidth(d) {
-    // Fixed width with reduced horizontal padding
-    return 400; // Back to original width
-  }
-
-  function getNodeHeight(d) {
-    const charity = charities[d.id];
-    // Base height is 160px, plus alert height (30px) if needed, plus bottom padding
-    const baseHeight = 160;
-    const alertHeight = charity.govt_amt > 10000000 ? 30 : 0;
-    const alertMargin = charity.govt_amt > 10000000 ? 15 : 0; // Add margin if there's an alert
-    const bottomPadding = 15;
-    return baseHeight + alertHeight + alertMargin + bottomPadding;
-  }
-
-  function getNodeColor(d) {
-    const charity = charities[d.id];
-    if (charity.govt_amt > 10000000) return '#FEE2E2'; // red-100
-    if (charity.govt_amt > 1000000) return '#FEF3C7';  // amber-100
-    return '#F3F4F6'; // gray-100
-  }
-
-  function getNodeStroke(d) {
-    const charity = charities[d.id];
-    if (charity.govt_amt > 10000000) return '#DC2626'; // red-600
-    if (charity.govt_amt > 1000000) return '#D97706';  // amber-600
-    return '#94A3B8'; // gray-400
-  }
-
-  function isUserEin(ein) {
-    return activeEINs.includes(ein);
-  }
-
-  function formatNumber(x) {
-    return (parseInt(x, 10) || 0).toLocaleString('en-US');
-  }
-
-  // Update the force simulation parameters to scale with node count
-  function getForceParameters(nodes, width, height) {
-    const nodeCount = nodes.length;
-    const isMobile = width < 768; // Check if we're on mobile
-    
-    // Scale up distances and forces based on node count
-    const baseDistance = isMobile ? 800 : 600; // Increase base distance on mobile
-    const distanceScale = Math.min(2, 1 + (nodeCount / 20)); // Increase up to 2x for large graphs
-    
-    // Scale the viewport bounds based on node count
-    const boundaryScale = Math.min(isMobile ? 4 : 3, 1 + (nodeCount / (isMobile ? 10 : 15))); // Larger bounds on mobile
-    
-    return {
-      linkDistance: baseDistance * distanceScale,
-      charge: isMobile ? -7000 * distanceScale : -5000 * distanceScale, // Stronger repulsion on mobile
-      collisionRadius: (isMobile ? 300 : 250) * Math.sqrt(distanceScale), // Larger collision radius on mobile
-      bounds: {
-        left: -width * boundaryScale / 2,
-        right: width * boundaryScale,
-        top: -height * boundaryScale / 2,
-        bottom: height * boundaryScale
-      },
-      // Reduce force strengths for larger graphs to prevent excessive movement
-      centerStrength: (isMobile ? 0.01 : 0.02) / Math.sqrt(distanceScale),
-      xStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale),
-      yStrength: (isMobile ? 0.005 : 0.01) / Math.sqrt(distanceScale)
-    };
-  }
-
-  // Helper function to measure text width
-  function getTextWidth(text, font) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    context.font = font;
-    return context.measureText(text).width;
-  }
-
-  // Define search handler functions
-  function handleSearch(e) {
-    const value = e.target.value.toLowerCase();
-    const searchResults = document.getElementById('searchResults');
-    const clearButton = document.getElementById('clearSearch');
-    
-    if (!value) {
-      searchResults.classList.add('hidden');
-      clearButton.classList.add('hidden');
-      return;
-    }
-
-    // Show clear button when there's text
-    clearButton.classList.remove('hidden');
-
-    // Find matching nodes
-    const matches = Array.from(nodeElements.data())
-      .filter(d => {
-        const charity = charities[d.id];
-        return charity.name.toLowerCase().includes(value) ||
-               d.id.includes(value);
-      })
-      .slice(0, 5);
-
-    if (matches.length > 0) {
-      // Get combined bounds of all matching nodes
-      const nodeBounds = matches.map(d => {
-        const node = d3.select(`g[data-id="${d.id}"]`).node();
-        const bounds = node.getBBox();
-        const transform = node.getAttribute('transform');
-        const translate = transform.match(/translate\(([^)]+)\)/)[1].split(',').map(Number);
-        return {
-          x: translate[0],
-          y: translate[1],
-          width: bounds.width,
-          height: bounds.height
-        };
-      });
-
-      // Calculate combined bounds
-      const xMin = Math.min(...nodeBounds.map(b => b.x));
-      const yMin = Math.min(...nodeBounds.map(b => b.y));
-      const xMax = Math.max(...nodeBounds.map(b => b.x + b.width));
-      const yMax = Math.max(...nodeBounds.map(b => b.y + b.height));
-
-      // Add padding
-      const padding = 50;
-      const width = document.getElementById('graph-container').offsetWidth;
-      const height = document.getElementById('graph-container').offsetHeight;
-
-      // Calculate scale to fit all matches
-      const scale = 0.8 * Math.min(
-        width / (xMax - xMin + 2 * padding),
-        height / (yMax - yMin + 2 * padding)
-      );
-
-      // Highlight matching nodes
-      nodeElements.select('rect')
-        .attr('stroke', d => {
-          const isMatch = matches.some(m => m.id === d.id);
-          if (isMatch) return '#2563EB';
-          return getNodeStroke(d);
-        })
-        .attr('stroke-width', d => {
-          const isMatch = matches.some(m => m.id === d.id);
-          if (isMatch) return 3;
-          return isUserEin(d.id) ? 3 : 1;
-        });
-
-      // Zoom to show all matches
-      d3.select('#graph').transition()
-        .duration(750)
-        .call(zoom.transform,
-          d3.zoomIdentity
-            .translate(width/2, height/2)
-            .scale(scale)
-            .translate(-(xMin + xMax)/2, -(yMin + yMax)/2));
-
-      // Update search results list
-      searchResults.innerHTML = matches
-        .map((d, index) => `
-          <div 
-            class="p-2 cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
-            data-ein="${d.id}"
-            data-index="${index}"
-            onmouseenter="handleSearchResultHover(${index})"
-          >
-            ${charities[d.id].name}
-          </div>
-        `)
-        .join('');
-      searchResults.classList.remove('hidden');
-      selectedSearchIndex = 0; // Reset selection to first item
-      
-      // Ensure first result is highlighted
-      const firstResult = searchResults.querySelector('[data-index="0"]');
-      if (firstResult) {
-        firstResult.classList.add('bg-blue/10');
-        firstResult.classList.remove('hover:bg-gray-100');
-      }
-    } else {
-      searchResults.classList.add('hidden');
-      selectedSearchIndex = -1;
-      // Reset node highlighting if no matches
-      nodeElements.select('rect')
-        .attr('stroke', n => getNodeStroke(n))
-        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
-    }
-  }
-
-  function handleSearchBlur() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput.value) {
-      nodeElements.select('rect')
-        .attr('stroke', n => getNodeStroke(n))
-        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
-    }
-  }
-
-  function handleSearchClick(e) {
-    const ein = e.target.dataset.ein;
-    if (!ein) return;
-
-    const searchInput = document.getElementById('searchInput');
-    searchInput.value = charities[ein].name;
-    document.getElementById('searchResults').classList.add('hidden');
-
-    // Find the clicked node and zoom to it
-    const node = d3.select(`g[data-id="${ein}"]`).node();
-    if (node) {
-      const bounds = node.getBBox();
-      const transform = node.getAttribute('transform');
-      const translate = transform.match(/translate\(([^)]+)\)/)[1].split(',').map(Number);
-      
-      const x = translate[0];
-      const y = translate[1];
-      const width = bounds.width;
-      const height = bounds.height;
-      
-      const containerWidth = document.getElementById('graph-container').offsetWidth;
-      const containerHeight = document.getElementById('graph-container').offsetHeight;
-      
-      // Calculate scale to show the node at about 1/3 of the container
-      const scale = 0.3 * Math.min(
-        containerWidth / width,
-        containerHeight / height
-      );
-      
-      // Zoom to the node with padding
-      d3.select('#graph').transition()
-        .duration(750)
-        .call(zoom.transform,
-          d3.zoomIdentity
-            .translate(containerWidth/2, containerHeight/2)
-            .scale(scale)
-            .translate(-(x + width/2), -(y + height/2))
-        );
-      
-      // Highlight the selected node
-      nodeElements.select('rect')
-        .attr('stroke', n => n.id === ein ? '#2563EB' : getNodeStroke(n))
-        .attr('stroke-width', n => n.id === ein ? 3 : (isUserEin(n.id) ? 3 : 1));
-    }
-  }
-
-  function handleSearchKeydown(e) {
-    const searchResults = document.getElementById('searchResults');
-    if (searchResults.classList.contains('hidden')) return;
-    
-    const results = searchResults.querySelectorAll('[data-index]');
-    const maxIndex = results.length - 1;
-
-    if (maxIndex < 0) {
-      selectedSearchIndex = -1;
-      return;
-    }
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        selectedSearchIndex = Math.min(selectedSearchIndex + 1, maxIndex);
-        updateSearchSelection(results);
-        break;
-
-      case 'ArrowUp':
-        e.preventDefault();
-        selectedSearchIndex = Math.max(selectedSearchIndex - 1, 0);
-        updateSearchSelection(results);
-        break;
-
-      case 'Enter':
-        e.preventDefault();
-        if (selectedSearchIndex >= 0) {
-          const selectedResult = results[selectedSearchIndex];
-          if (selectedResult) {
-            const ein = selectedResult.dataset.ein;
-            handleSearchClick({ target: selectedResult });
-          }
-        }
-        break;
-
-      case 'Escape':
-        e.preventDefault();
-        searchResults.classList.add('hidden');
-        e.target.blur();
-        break;
-    }
-  }
-
-  function updateSearchSelection(results) {
-    results.forEach((result, index) => {
-      if (index === selectedSearchIndex) {
-        result.classList.add('bg-blue/10');
-        result.classList.remove('hover:bg-gray-100');
-        // Ensure selected item is visible with smooth scrolling
-        result.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      } else {
-        result.classList.remove('bg-blue/10');
-        result.classList.add('hover:bg-gray-100');
-      }
-    });
-  }
-
-  function handleSearchResultHover(index) {
-    selectedSearchIndex = index;
-    updateSearchSelection(document.querySelectorAll('[data-index]'));
   }
 </script>
 
