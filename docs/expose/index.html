@@ -36,7 +36,7 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Charity graph - multi-root BFS &amp; taxpayer totals | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.9.5" />
+<meta name="generator" content="Jekyll v3.10.0" />
 <meta property="og:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
@@ -706,12 +706,40 @@ $(document).ready(function() {
       // Taxpayer controls are hidden
       $('#excluded-info').hide();
 
+const addendum = `
+      <br/><br/>
+      <p style="font-weight: bold; color: red; background: yellow; text-align: center; padding: 20px; border: 5px solid black;">
+          🚨🚨🚨 <strong>WARNING! DISCLAIMER! PAY ATTENTION! HAVE SOME READING COMPREHENSION! 📢📢📢</strong> 🚨🚨🚨
+      </p>
+
+      <p style="color: white; background: black; padding: 15px; text-align: center; border: 3px dashed red;">
+          <strong>FUNDING IS FUNGIBLE!!!</strong> That means <span style="color: yellow; text-transform: uppercase;">USAID DOLLARS DO NOT LITERALLY FLOW INTO THESE NGOS!!!</span> 
+      </p>
+
+      <p style="color: black; background: lime; padding: 10px; border: 5px dotted blue; text-align: center;">
+          💰💰 Instead, the money <strong>MOVES</strong> through MULTIPLE LAYERS! 💰💰 <br/>
+          Various entities handle it, shuffle it around, and redistribute it! 
+      </p>
+
+      <p style="color: purple; background: orange; font-weight: bold; text-align: center; padding: 20px; border: 5px solid pink;">
+          So instead of obsessing over individual grants and NGOs, OPEN YOUR EYES 👀 to the 
+          <span style="text-decoration: underline;">BROADER PATTERN of FUNDING DISTRIBUTION and INFLUENCE!</span> <br/>
+          🚨🚨 And YES—layers of <strong style="color: red;">UNACCOUNTABILITY</strong> exist! 🚨🚨
+      </p>
+
+      <p style="color: black; background: cyan; text-align: center; padding: 15px; border: 5px double red;">
+          🤔🤔 <strong>WHO'S TRULY DEPENDENT ON FROM USAID?!</strong> 🤔🤔 <br/>
+          <span style="color: red;">The ones who DON’T want it to be shut down! 🔥🔥🔥</span> <br/>
+          <strong style="color: blue; text-transform: uppercase;">THIS IS COMMON SENSE!!!</strong> 🚨🚨🚨
+      </p>
+
+
+      <p style="font-weight: bold; text-align: center; color: white; background: red; padding: 25px; border: 10px solid black; text-transform: uppercase;">
+          YOU HAVE BEEN WARNED! 🔥🔥🔥
+      </p>
+`;
       // Show instructions
       if (customTitle) {
-        const addendum = `<br/><br/><p><strong>NOTE:</strong> Funding is fungible, meaning USAID dollars do not directly flow into these NGOs in a literal sense. Instead, the money moves through multiple layers, with various entities handling and redistributing it.</p>
-
-<p>Rather than focusing solely on individual grants or making definitive statements for how NGOs benefit from USAID, it's more important recognize the broader pattern of funding distribution and influence, and getting rid of the layers of inaccountability.</p>`
-
         $('#instructions').html('Displaying <strong>' + customTitle + `</strong>${addendum}`);
       } else {
         $('#instructions').text(`Displaying exact graph.${addendum}`);
