@@ -41,16 +41,16 @@ $(document).ready(function() {
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="https://datarepublican.com/officers/bulk.html" />
-<meta property="og:url" content="https://datarepublican.com/officers/bulk.html" />
+<link rel="canonical" href="http://localhost:4000/officers/bulk/" />
+<meta property="og:url" content="http://localhost:4000/officers/bulk/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="twitter:title" content="Bulk Officer Search" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Bulk Officer Search","image":"https://datarepublican.com/assets/images/og.png","url":"https://datarepublican.com/officers/bulk.html"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Bulk Officer Search","image":"http://localhost:4000/assets/images/og.png","url":"http://localhost:4000/officers/bulk/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -398,9 +398,9 @@ $(document).ready(function() {
 
   <div class="md:ml-[275px] flex-1">
     <main class="@container p-4 xl:p-6 min-h-[calc(100vh-200px)]">
-      <script src="jquery.min.js"></script>
-<script src="jszip.min.js"></script>
-<script src="papaparse.min.js"></script>
+      <script src="../jquery.min.js"></script>
+<script src="../jszip.min.js"></script>
+<script src="../papaparse.min.js"></script>
 
 <h1 class="mb-1">Bulk Officer Search</h1>
 <p class="opacity-80 mb-0 text-[15px]">
@@ -1061,7 +1061,7 @@ Kagan"></textarea>
     if (searchCanceled) return Promise.resolve(''); // Optional guard
 
     return new Promise((resolve, reject) => {
-      const worker = new Worker('unzipWorker.js');
+      const worker = new Worker('../unzipWorker.js');
       
       // Listen for messages (success or error) from the worker
       worker.onmessage = (event) => {

@@ -3,9 +3,9 @@ layout: default
 title: Bulk Officer Search
 ---
 
-<script src="jquery.min.js"></script>
-<script src="jszip.min.js"></script>
-<script src="papaparse.min.js"></script>
+<script src="../jquery.min.js"></script>
+<script src="../jszip.min.js"></script>
+<script src="../papaparse.min.js"></script>
 
 <h1 class="mb-1">Bulk Officer Search</h1>
 <p class="opacity-80 mb-0 text-[15px]">
@@ -666,7 +666,7 @@ Kagan"></textarea>
     if (searchCanceled) return Promise.resolve(''); // Optional guard
 
     return new Promise((resolve, reject) => {
-      const worker = new Worker('unzipWorker.js');
+      const worker = new Worker('../unzipWorker.js');
       
       // Listen for messages (success or error) from the worker
       worker.onmessage = (event) => {

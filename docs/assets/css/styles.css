@@ -849,6 +849,9 @@ select {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.\!mt-4 {
+  margin-top: 1rem !important;
+}
 .\!mt-8 {
   margin-top: 2rem !important;
 }
@@ -911,9 +914,6 @@ select {
 }
 .mt-8 {
   margin-top: 2rem;
-}
-.\!mt-4 {
-  margin-top: 1rem !important;
 }
 .block {
   display: block;
@@ -1379,6 +1379,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
+.bg-green {
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 178 112 / var(--tw-bg-opacity));
+}
 .bg-green-light\/20 {
   background-color: rgb(52 226 151 / 0.2);
 }
@@ -1402,10 +1406,6 @@ select {
 }
 .bg-yellow\/20 {
   background-color: rgb(226 209 52 / 0.2);
-}
-.bg-green {
-  --tw-bg-opacity: 1;
-  background-color: rgb(25 178 112 / var(--tw-bg-opacity));
 }
 .bg-none {
   background-image: none;
@@ -1434,6 +1434,10 @@ select {
 .p-8 {
   padding: 2rem;
 }
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -1449,6 +1453,10 @@ select {
 .px-8 {
   padding-left: 2rem;
   padding-right: 2rem;
+}
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
 }
 .py-1 {
   padding-top: 0.25rem;
@@ -1469,14 +1477,6 @@ select {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
-}
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-}
-.py-0\.5 {
-  padding-top: 0.125rem;
-  padding-bottom: 0.125rem;
 }
 .pb-1 {
   padding-bottom: 0.25rem;
@@ -2289,10 +2289,6 @@ table {
 
   .xl\:p-6 {
     padding: 1.5rem;
-  }
-
-  .xl\:p-10 {
-    padding: 2.5rem;
   }
 
   .xl\:px-6 {
