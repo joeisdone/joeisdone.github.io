@@ -1,0 +1,641 @@
+---
+layout: default
+title: Bulk Officer Search
+---
+
+<script src="jquery.min.js"></script>
+<script src="jszip.min.js"></script>
+<script src="papaparse.min.js"></script>
+
+<h1 class="mb-1">Bulk Officer Search</h1>
+<p class="opacity-80 mb-0 text-[15px]">
+  Paste up to 100 officer names (one name per line). Each name will be searched independently.
+</p>
+
+<div class="mb-4">
+  <button class="frameless mb-2 text-base" id="howItWorksBtn">How it works</button>
+  <div class="h-[0px] overflow-hidden transition-all duration-200" id="howItWorksList">
+    <div class="p-4 border border-gray-200 rounded-md bg-white">
+      <div class="text-sm space-y-2">
+        <p>Paste lines in the text area below. Each non-empty line is considered a separate officer search. Any extra lines beyond 100 are ignored.</p>
+        <p>
+          For each line, all non-alphabetic characters are replaced with spaces. Then we remove single-letter tokens (like <em>J</em> or <em>K</em>) and normalize the remaining words to lower-case.
+        </p>
+        <p>
+          Each line is searched as an exact match (no prefix or partial matching). 
+          We return up to 100 results per line.
+        </p>
+        <p>
+          This is an asynchronous "streaming" search. You can press "Stop" at any time to abort processing. 
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="searchContainer" class="mb-2">
+  <div class="flex flex-col md:flex-row md:items-end gap-2 justify-between">
+    <form id="searchForm" class="flex flex-col md:flex-row gap-2 w-full">
+      
+      <div class="flex flex-col gap-1 w-full">
+        <label for="officerBulkBox" class="text-sm md:text-[15px] font-bold">
+          Officer Names (one per line)
+        </label>
+        <textarea id="officerBulkBox"
+                  rows="8"
+                  class="w-full px-2 py-1 rounded text-sm border border-gray-300"
+                  placeholder="E.g. 'Karl-Heinz J. Splitter\nAlice Bob\n...'"></textarea>
+      </div>
+
+      <span class="flex items-center gap-1 mt-2 md:mt-6">
+        <!-- The same button doubles as "Stop" during searching -->
+        <button type="submit" id="searchButton" disabled>
+          <span class="button-text">Search</span>
+          <img src="/assets/images/loading-white.svg" 
+               class="loading-spinner size-6 mx-auto" 
+               style="display: none;" 
+               alt="Loading..." />
+        </button>
+      </span>
+      <span id="statusMessage" class="mt-2"></span>
+    </form>
+
+    <div>
+      <div id="globalResultsStatus"></div>
+    </div>
+  </div>
+</div>
+
+<div id="resultsContainer" class="flex flex-col gap-2"></div>
+
+<script>
+  // Global arrays for the master index
+  let KEYWORDS = [];
+  let BATCHES  = [];
+
+  // For canceling a long-running search
+  let searchCanceled = false;
+  let searchingInProgress = false;
+
+  $(document).ready(async function() {
+    $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
+    try {
+      // Spinner on
+      $('#searchButton .button-text').hide();
+      $('#searchButton .loading-spinner').show();
+
+      // 1) Load master index
+      await loadMasterReverseIndex('officials_reverse_index.txt.zip');
+
+      // 2) Re-enable
+      $('#searchButton .loading-spinner').hide();
+      $('#searchButton .button-text').show();
+      $('#statusMessage').hide();
+      $('#officerBulkBox').prop('disabled', false);
+      $('#searchButton').prop('disabled', false);
+
+      // Add toggle functionality for "How it works"
+      $('#howItWorksBtn').on('click', function() {
+        const $list = $('#howItWorksList');
+        const $btn = $(this);
+        
+        if ($list.height() === 0) {
+          // Expand
+          $list.css('height', 'auto');
+          const autoHeight = $list.height();
+          $list.height(0);
+          $list.height(autoHeight);
+          $btn.text('Hide details');
+        } else {
+          // Collapse
+          $list.height(0);
+          $btn.text('How it works');
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      $('#statusMessage').text('Error loading index: ' + err);
+    }
+  });
+
+  // ===========================
+  // Search form submission
+  // ===========================
+  $('#searchForm').on('submit', async function(e) {
+    e.preventDefault();
+
+    // If we're mid-search, let the user stop it.
+    if (searchingInProgress) {
+      searchCanceled = true;
+      return;
+    }
+
+    // Otherwise, begin a new search
+    searchingInProgress = true;
+    searchCanceled = false;
+
+    // Clear old results
+    $('#resultsContainer').empty();
+    $('#globalResultsStatus').empty();
+
+    // Switch button text to "Stop"
+    $('#searchButton .button-text').text('Stop');
+    $('#officerBulkBox').prop('disabled', true);
+
+    try {
+      await doBulkSearch();
+    } catch (err) {
+      console.error(err);
+      $('#resultsContainer').html(
+        `<div class="p-4 text-center">Error during search: ${err}</div>`
+      );
+      $('#globalResultsStatus').empty();
+    }
+
+    // Clean up whether the user stopped or the search ended
+    searchingInProgress = false;
+    $('#searchButton .button-text').text('Search');
+    $('#officerBulkBox').prop('disabled', false);
+  });
+
+  // ===========================
+  // Bulk search logic
+  // ===========================
+  async function doBulkSearch() {
+    // 1) parse the textarea lines
+    let lines = $('#officerBulkBox').val().split(/\r?\n/).map(ln => ln.trim());
+    let cleanedNames = [];
+    for (let ln of lines) {
+      let name = cleanLine(ln);
+      if (name) {
+        cleanedNames.push(name);
+      }
+    }
+    // limit to 100
+    if (cleanedNames.length > 100) {
+      $('#resultsContainer').append(
+        `<div class="p-2 text-red-600 text-sm">
+           You provided ${cleanedNames.length} officer names. Only the first 100 will be used.
+         </div>`
+      );
+      cleanedNames = cleanedNames.slice(0,100);
+    }
+
+    // if none
+    if (!cleanedNames.length) {
+      $('#resultsContainer').html(
+        '<div class="p-4 text-center">No valid lines to search.</div>'
+      );
+      return;
+    }
+
+    // 2) For each name, asynchronously do the search for that name
+    for (let i = 0; i < cleanedNames.length; i++) {
+      if (searchCanceled) break;
+      let searchTerm = cleanedNames[i];
+      await searchOneOfficerTerm(searchTerm, i+1);
+    }
+
+    if (searchCanceled) {
+      $('#globalResultsStatus').html(
+        `<span class="text-sm">Search stopped.</span>`
+      );
+    }
+  }
+
+  // Cleans and normalizes a single line from the textarea.
+  // - Remove non-alpha characters (replace with space)
+  // - Replace multiple spaces with single
+  // - Remove single-letter tokens
+  // - Lowercase
+  function cleanLine(line) {
+    // remove everything non-alpha -> space
+    let txt = line.replace(/[^a-zA-Z]/g, ' ');
+    // collapse whitespace
+    txt = txt.replace(/\s+/g, ' ').trim();
+    if (!txt) return '';
+
+    // tokenize
+    let parts = txt.split(' ').map(p => p.trim()).filter(Boolean);
+    // remove single-letter tokens
+    let filtered = parts.filter(p => p.length > 1);
+    // rejoin
+    if (!filtered.length) return '';
+    return filtered.join(' ').toLowerCase();
+  }
+
+  // ===========================
+  // Searching a single officer term
+  // ===========================
+  async function searchOneOfficerTerm(term, indexNum) {
+    // Create a container for progress updates + result listing
+    const containerId = `searchTermContainer_${indexNum}`;
+    const container = $(`
+      <div id="${containerId}" class="border border-gray-300 rounded p-2">
+        <div class="cursor-pointer font-bold text-[14px] text-blue-700 search-term-header">
+          Searching "<span class="search-term-label"></span>" - <span class="search-term-progress">0</span> results received
+        </div>
+        <div class="search-term-results mt-2" style="display:none;"></div>
+      </div>
+    `);
+    container.find('.search-term-label').text(term);
+    $('#resultsContainer').append(container);
+
+    // Expand/collapse on click, but only if there are results
+    container.find('.search-term-header').on('click', function() {
+      const resultsDiv = container.find('.search-term-results');
+      if (!resultsDiv.children().length) return; // no results -> do nothing
+      resultsDiv.slideToggle(200);
+    });
+
+    // We'll gather up to 100 results for this name
+    let totalFound = 0;
+
+    // Convert into tokens for final-batch intersection
+    // (In this simplified version, we only have multi-word "term" => tokens.)
+    let tokens = term.split(' ');  // they should all be >=2 letters from cleanLine()
+
+    // For each token, get intersection of BATCH sets (EXACT match only)
+    // Intersection logic:
+    let finalSet = null;
+    for (let t of tokens) {
+      if (searchCanceled) break;
+      let matchedSet = new Set();
+
+      const exIdx = exactMatchIndex(t);
+      if (exIdx !== -1) {
+        for (let b of BATCHES[exIdx]) {
+          matchedSet.add(b);
+        }
+      }
+
+      if (finalSet === null) {
+        finalSet = matchedSet;
+      } else {
+        // intersect
+        let temp = new Set();
+        for (let x of finalSet) {
+          if (matchedSet.has(x)) temp.add(x);
+        }
+        finalSet = temp;
+      }
+      if (!finalSet.size) break;
+    }
+
+    // if no matches or we ended up with null
+    if (!finalSet || !finalSet.size) {
+      container.find('.search-term-header').text(`No results for "${term}"`);
+      return; 
+    }
+
+    // We have a set of relevant batchIDs. Let's fetch them in ascending order
+    const batchIDs = Array.from(finalSet).sort((a,b)=>a-b);
+
+    // We'll store row-level results here (rowId => matched officer indexes).
+    // But we need them on a batch-by-batch basis because we must fetch CSV from each batch.
+    for (let bID of batchIDs) {
+      if (searchCanceled) break;
+      if (totalFound >= 100) break;  // 100 results limit per name
+
+      // 1) Load batch-level reverse index 
+      const revFilename = `officials_batch_${String(bID).padStart(3,'0')}_reverse_index.txt.zip`;
+      let revText = null;
+      try {
+        revText = await fetchAndUnzipText(revFilename, `officials_batch_${String(bID).padStart(3,'0')}_reverse_index.txt`);
+      } catch(e) {
+        console.warn("Could not load batch reverse index: ", revFilename, e);
+        continue;
+      }
+      // parse
+      let batchMap = parseBatchIndex(revText);
+
+      // 2) For each token, gather row/officer offsets, then intersect
+      let globalCountMap = new Map(); 
+      let tokenCount = tokens.length;
+
+      for (let t of tokens) {
+        if (searchCanceled) break;
+        let offsetSet = new Set();
+
+        if (batchMap.has(t)) {
+          // officer offsets are those where (offId & 0xFFF) != 0
+          for (let offId of batchMap.get(t)) {
+            if ((offId & 0xFFF) !== 0) {
+              offsetSet.add(offId);
+            }
+          }
+        }
+
+        // now combine
+        for (let offId of offsetSet) {
+          let rowId = offId >> 12;
+          let i = (offId & 0xFFF) - 1;
+          let key = `${rowId}:${i}`;
+          let oldVal = globalCountMap.get(key) || 0;
+          globalCountMap.set(key, oldVal + 1);
+        }
+      }
+
+      // Build final row->setOfOfficers
+      let finalRowMap = new Map();
+      for (let [k, ct] of globalCountMap.entries()) {
+        if (ct === tokenCount) {
+          const [rStr, iStr] = k.split(':');
+          const r = parseInt(rStr, 10);
+          const i = parseInt(iStr, 10);
+          if (!finalRowMap.has(r)) {
+            finalRowMap.set(r, new Set());
+          }
+          finalRowMap.get(r).add(i);
+        }
+      }
+
+      // 3) If nothing, next batch
+      if (!finalRowMap.size) continue;
+
+      // 4) Load CSV from this batch
+      const csvFilename = `officials_batch_${String(bID).padStart(3,'0')}.csv.zip`;
+      let csvData = null;
+      try {
+        csvData = await fetchAndUnzipText(csvFilename, `officials_batch_${String(bID).padStart(3,'0')}.csv`);
+      } catch(e) {
+        console.warn("Could not load CSV batch: ", csvFilename, e);
+        continue;
+      }
+
+      const parsed = Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: false,
+        dynamicTyping: false
+      });
+
+      // 5) For each row in finalRowMap, build HTML
+      const rowIds = Array.from(finalRowMap.keys()).sort((a,b)=>a-b);
+      for (let rId of rowIds) {
+        if (searchCanceled) break;
+        if (totalFound >= 100) break;
+
+        let rowIndex = rId - 1;
+        if (rowIndex < 0 || rowIndex >= parsed.data.length) continue;
+        const rowObj = parsed.data[rowIndex];
+        const matchedIndices = finalRowMap.get(rId);
+        let itemHtml = buildResultItem(rowObj, matchedIndices);
+
+        // Append to container results
+        container.find('.search-term-results').append(itemHtml);
+        totalFound++;
+
+        // Update header progress
+        container.find('.search-term-progress').text(totalFound);
+      }
+    }
+
+    if (searchCanceled) {
+      container.find('.search-term-header').text(`Stopped at "${term}" - ${totalFound} results so far`);
+      return;
+    }
+
+    // done with all relevant batches
+    if (totalFound === 0) {
+      container.find('.search-term-header').text(`No results for "${term}"`);
+    } else {
+      container.find('.search-term-header').text(`Completed "${term}" - ${totalFound} results`);
+    }
+    // by default, if there's >0 results, keep them hidden until user clicks
+  }
+
+  // ===========================
+  // Utility to fetch & unzip text
+  // ===========================
+  async function fetchAndUnzipText(zipUrl, innerFilename) {
+    const resp = await fetch(zipUrl);
+    if (!resp.ok) throw new Error('Could not fetch ' + zipUrl);
+    const buffer = await resp.arrayBuffer();
+
+    const jsZip = new JSZip();
+    const loaded = await jsZip.loadAsync(buffer);
+
+    if (!loaded.file(innerFilename)) {
+      throw new Error('Missing ' + innerFilename + ' in ' + zipUrl);
+    }
+    return loaded.file(innerFilename).async('string');
+  }
+
+  // ===========================
+  // MASTER REVERSE INDEX (KEYWORDS, BATCHES)
+  // ===========================
+  async function loadMasterReverseIndex(zipUrl) {
+    const text = await fetchAndUnzipText(zipUrl, 'officials_reverse_index.txt');
+    parseMasterReverseIndex(text);
+  }
+
+  function parseMasterReverseIndex(fileData) {
+    // lines: key:batch1,batch2,...
+    const lines = fileData.split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      const parts = trimmed.split(':');
+      if (parts.length !== 2) continue;
+      const kw = parts[0];
+      const bStr = parts[1];
+      const bIds = bStr.split(',')
+        .map(x => parseInt(x,10))
+        .filter(n => !isNaN(n));
+      KEYWORDS.push(kw);
+      BATCHES.push(bIds);
+    }
+  }
+
+  // ===========================
+  // EXACT MATCH LOOKUP
+  // ===========================
+  function exactMatchIndex(word) {
+    // Binary search in KEYWORDS
+    let low = 0, high = KEYWORDS.length - 1;
+    while (low <= high) {
+      const mid = (low + high) >>> 1;
+      if (KEYWORDS[mid] === word) return mid;
+      if (KEYWORDS[mid] < word) low = mid + 1;
+      else high = mid - 1;
+    }
+    return -1;
+  }
+
+  // ===========================
+  // parseBatchIndex
+  // ===========================
+  function parseBatchIndex(txt) {
+    const map = new Map();
+    const lines = txt.split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      const parts = trimmed.split(':');
+      if (parts.length !== 2) continue;
+      const kw = parts[0];
+      const arr = parts[1].split(',')
+        .map(x => parseInt(x,10))
+        .filter(n => !isNaN(n));
+      map.set(kw, arr);
+    }
+    return map;
+  }
+
+  // ===========================
+  // Build a single result item
+  // (same look/feel as the original index.html)
+  // ===========================
+  function buildResultItem(row, matchedOfficerIndexes) {
+    const filerName = row.filer_name || '';
+    const filerEin  = row.filer_ein  || '';
+    const taxYear   = row.tax_year   || '';
+    const exposePath = row.serialized_graph || '';
+
+    let raw = row.officials_json || '[]';
+    let matchedHtml = '';
+    let otherHtml   = '';
+
+    try {
+      const officialArray = JSON.parse(raw);
+
+      const matchedItems = [];
+      const otherItems   = [];
+
+      for (let i = 0; i < officialArray.length; i++) {
+        const off = officialArray[i];
+        const title = off.t || '';
+        const name  = off.n || '';
+        const comp  = off.c || 0;
+
+        const blockHtml = `
+          <div class="grid grid-cols-3 @xl:grid-cols-12 gap-1 py-1 text-[13px]">
+            <div class="col-span-2 @xl:col-span-6">
+              <strong class="font-semibold">${escapeHtml(name)}</strong>
+              <div class="@xl:hidden text-[13px]">${escapeHtml(title)}</div>
+            </div>
+            <div class="hidden @xl:col-span-4 @xl:block">${escapeHtml(title)}</div>
+            <div class="@xl:col-span-2">$${Number(comp).toLocaleString()}</div>
+          </div>
+        `;
+        if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
+          matchedItems.push(blockHtml);
+        } else {
+          otherItems.push(blockHtml);
+        }
+      }
+
+      if (matchedItems.length) {
+        matchedHtml = `
+          <div class="bg-yellow/20 border-t border-gray-200 text-sm px-4 py-1">
+            <div class="divide-y divide-gray-200">${matchedItems.join('')}</div>
+          </div>
+        `;
+      }
+
+      if (otherItems.length) {
+        otherHtml = `
+          <div class="text-sm officialSection" style="display:none;">
+            <div class="bg-gray-100/50 border-y border-gray-200 grid grid-cols-3 @xl:grid-cols-12 gap-1 py-1 px-4">
+              <strong class="col-span-2 @xl:col-span-6">Principal officers</strong>
+              <strong class="hidden @xl:block col-span-4">Role</strong>
+              <strong class="@xl:col-span-2">Compensation</strong>
+            </div>
+            <div class="pt-2 px-4">${otherItems.join('')}</div>
+          </div>
+        `;
+      }
+    } catch(e) {
+      matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officers)</div>`;
+    }
+
+    let exposeLink = '';
+    if (exposePath) {
+      const encodedPath = encodeURIComponent(exposePath);
+      const encodedName = encodeURIComponent(filerName);
+      const returnUrl = encodeURIComponent(window.location.href);
+      exposeLink = `
+        <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
+          See USAID Grant Flow
+        </a>
+      `;
+    }
+
+    // The main block
+    const html = `
+      <div class="bg-white border border-gray-200 rounded mb-2">
+        <div class="grid grid-cols-2 @xl:grid-cols-12 gap-2 pt-4 px-4 pb-2">
+          <div class="flex flex-col col-span-2 @xl:col-span-7 text-[15px]">
+            <span class="font-bold">
+              ${escapeHtml(filerName)}
+            </span>
+            <div class="flex gap-3">
+              <div>
+                <span class="text-xs opacity-60">EIN</span>
+                <span class="text-sm">${escapeHtml(filerEin).replace(/^(\d{2})/, '$1-')}</span>
+              </div>
+              <div>
+                <span class="text-xs opacity-60">Tax year</span>
+                <span class="text-sm">${escapeHtml(taxYear)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="@xl:text-right text-sm pb-1 col-span-2 @xl:col-span-5">
+            ${exposeLink}
+          </div>
+        </div>
+        
+        ${
+          matchedHtml 
+            ? `<div class="mt-2">
+                 <div class="grid grid-cols-3 @xl:grid-cols-12 px-4 gap-1">
+                   <h4 class="mt-0 mb-1 text-sm col-span-2 @xl:col-span-6">Matches</h4>
+                   <strong class="hidden @xl:block @xl:col-span-4 text-sm">Role</strong>
+                   <strong class="@xl:block @xl:col-span-2 text-sm">Compensation</strong>
+                 </div>
+                 ${matchedHtml}
+               </div>` 
+            : ''
+        }
+        ${otherHtml}
+        ${
+          otherHtml
+            ? `
+              <div class="bg-gray-100/50 border-t border-gray-200">
+                <button class="toggleOfficials font-semibold text-blue text-[13px] bg-transparent border-0 py-2 px-4">
+                  Show ${matchedHtml ? 'other ' : ''}principal officers
+                </button>
+              </div>
+            `
+            : ''
+        }
+      </div>
+    `;
+
+    // jQuery object so we can attach the toggle
+    const $el = $(html);
+
+    $el.find('.toggleOfficials').on('click', function() {
+      const $btn = $(this);
+      const $section = $btn.closest('div').siblings('.officialSection');
+      if ($section.is(':visible')) {
+        $section.slideUp(200);
+        $btn.text('Show other principal officers');
+      } else {
+        $section.slideDown(200);
+        $btn.text('Hide principal officers');
+      }
+    });
+
+    return $el;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
