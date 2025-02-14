@@ -108,6 +108,10 @@ Kagan"></textarea>
   //   officerComp
   // }
 
+  // <<-- NEW: concurrency limit. Make this configurable as needed. -->>
+  const MAX_SEARCHES_IN_FLY = 5;
+
+
   $(document).ready(async function() {
     $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
     try {
@@ -240,7 +244,7 @@ Kagan"></textarea>
   }
 
   // ===========================
-  // Bulk search logic (parallel)
+  // Bulk search logic (limited concurrency)
   // ===========================
   async function doBulkSearch() {
     // 1) parse the textarea lines
@@ -270,38 +274,58 @@ Kagan"></textarea>
       return;
     }
 
-    // 2) For each name, create a container in #resultsContainer, then start the async search
     let totalCount = cleanedNames.length;
     let completedCount = 0;
-    if (totalCount > 0) {
-      $('#globalResultsStatus').text(`0 out of ${totalCount} completed; ${totalCount} in progress`);
-    }
 
-    let promises = [];
-    for (let i = 0; i < cleanedNames.length; i++) {
-      let searchTerm = cleanedNames[i];
-      let p = searchOneOfficerTerm(searchTerm, i+1)    
+    // Show initial progress
+    $('#globalResultsStatus').text(
+      `0 out of ${totalCount} completed; ${totalCount} in progress`
+    );
+
+    // We'll keep track of all Promises in an array and spawn them in limited fashion
+    let searchPromises = [];
+    let index = 0;            // points to the next name to search
+    let active = 0;           // how many searches are in flight
+
+    // spawnNext launches one search if any remain
+    function spawnNext() {
+      if (searchCanceled) return; 
+      if (index >= totalCount) return; // no more tasks
+
+      active++;
+      const nameIndex = index++;
+      const searchTerm = cleanedNames[nameIndex];
+
+      // Actually start the single-officer search
+      let p = searchOneOfficerTerm(searchTerm, nameIndex + 1)
         .finally(() => {
-          // Increment the completed counter
+          // Decrement active count
+          active--;
           completedCount++;
+
           // Update the status text
           const inProgress = totalCount - completedCount;
           $('#globalResultsStatus').text(
             `${completedCount} out of ${totalCount} completed; ${inProgress} in progress`
           );
+
+          // Once this finishes, spawn another if available
+          spawnNext();
         })
         .catch(err => {
           console.error(`Error searching term "${searchTerm}"`, err);
         });
-      // We catch errors so one search doesn't break the entire batch
-      p.catch(err => {
-        console.error(`Error searching term "${searchTerm}"`, err);
-      });
-      promises.push(p);
+
+      searchPromises.push(p);
     }
 
-    // Wait for all searches to finish (or fail)
-    await Promise.allSettled(promises);
+    // Kick off up to MAX_SEARCHES_IN_FLY initial tasks
+    for (let i = 0; i < MAX_SEARCHES_IN_FLY && i < totalCount; i++) {
+      spawnNext();
+    }
+
+    // Wait until all tasks are settled (either fulfilled or rejected).
+    await Promise.allSettled(searchPromises);
 
     // If the user canceled, notify
     if (searchCanceled) {
@@ -312,6 +336,12 @@ Kagan"></textarea>
       $('#globalResultsStatus').text(
         `All ${totalCount} searches completed.`
       );      
+    }
+
+    // If user didn't stop and we have results, render overlaps and show CSV
+    if (!searchCanceled && allSearchResults.length > 0) {
+      renderOverlapSection();
+      $('#downloadCsvBtn').show();
     }
   }
 
