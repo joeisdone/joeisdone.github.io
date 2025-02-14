@@ -947,13 +947,13 @@ Kagan"></textarea>
     let linkMap = new Map();
 
     for (let r of allSearchResults) {
-      let { filerEin, filerName, searchTerm, officerName, officerTitle, exposeLink, propublicaLink} = r;
+      let { filerEin, filerName, searchTerm, officerName, officerTitle, exposeLink, propublicaLink, govt_amt} = r;
       if (!einMap.has(filerEin)) {
         einMap.set(filerEin, {
           orgNames: new Set(),
           terms: new Map()
         });
-        linkMap.set(filerEin, [exposeLink, propublicaLink]);
+        linkMap.set(filerEin, [exposeLink, propublicaLink, govt_amt]);
       }
 
       const rec = einMap.get(filerEin);
@@ -980,11 +980,15 @@ Kagan"></textarea>
           }
         }
 
+        let govtAmtPrint = linkMap.get(ein)[2];
+        if (govtAmtPrint) {
+          govtAmtPrint = `<span class="text-xs">(Direct Taxpayer Dollars: ${govtAmtPrint})</span> `
+        }
         overlapItems.push({
           ein,
           orgName,
           // Only escape the orgName and ein, leave HTML tags unescaped
-          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a></span> <span class="text-xs opacity-70">${linkMap.get(ein)[0]}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a></span> ${govtAmtPrint}<span class="text-xs opacity-70">${linkMap.get(ein)[0]}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
         });
       }
     }
@@ -1101,6 +1105,20 @@ Kagan"></textarea>
     return map;
   }
 
+  function formatToDollar(value) {
+    // Convert to number
+    let num = parseFloat(value);
+    if (isNaN(num)) return ''; // Handle invalid input gracefully
+
+    // Round to nearest integer (if needed, you can modify to keep decimals)
+    num = Math.round(num);
+    // don't render non-nums
+    if (num <= 0) return '';
+
+    // Format with commas
+    return '$' + num.toLocaleString();
+  }
+
   // ===========================
   // Build a single result item
   // Also store the data for CSV/overlap
@@ -1110,6 +1128,9 @@ Kagan"></textarea>
     const filerEin  = row.filer_ein  || '';
     const taxYear   = row.tax_year   || '';
     const exposePath = row.serialized_graph || '';
+    const govtAmtStr = row.govt_amt || '0';
+    const govt_amt = formatToDollar(govtAmtStr);
+
     const propublicaLink = `https://projects.propublica.org/nonprofits/organizations/${filerEin}`
 
     let exposeLink = '';
@@ -1165,7 +1186,8 @@ Kagan"></textarea>
             officerTitle: title,
             officerComp: comp,
             exposeLink: exposeLink,
-            propublicaLink: propublicaLink
+            propublicaLink: propublicaLink,
+            govt_amt: govt_amt
           });
         } else {
           otherItems.push(blockHtml);
