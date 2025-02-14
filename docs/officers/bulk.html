@@ -381,7 +381,7 @@ $(document).ready(function() {
         <textarea id="officerBulkBox"
                   rows="8"
                   class="w-full px-2 py-1 rounded text-sm border border-gray-300"
-                  placeholder="E.g. 'Karl-Heinz J. Splitter\nAlice Bob\n...'"></textarea>
+                  placeholder="E.g. 'Jane Doe\nAlice Bob\n...'"></textarea>
       </div>
 
       <span class="flex items-center gap-1 mt-2 md:mt-6">
@@ -403,6 +403,15 @@ $(document).ready(function() {
   </div>
 </div>
 
+<!-- Overlap results will be inserted here, if applicable -->
+<div id="overlapContainer" class="mb-4"></div>
+
+<div class="mb-2">
+  <button id="downloadCsvBtn" style="display: none;" class="px-3 py-2 bg-blue-600 text-white text-sm rounded">
+    Download All Results as CSV
+  </button>
+</div>
+
 <div id="resultsContainer" class="flex flex-col gap-2"></div>
 
 <script>
@@ -413,6 +422,17 @@ $(document).ready(function() {
   // For canceling a long-running search
   let searchCanceled = false;
   let searchingInProgress = false;
+
+  // We'll store all matched rows for all search terms for the CSV and overlap logic
+  let allSearchResults = []; 
+  // Each entry: {
+  //   searchTerm, 
+  //   filerEin, 
+  //   filerName, 
+  //   officerName, 
+  //   officerTitle, 
+  //   officerComp
+  // }
 
   $(document).ready(async function() {
     $('#statusMessage').html('<span class="inline-flex text-[13px]">Loading data...</span>');
@@ -449,6 +469,18 @@ $(document).ready(function() {
           $btn.text('How it works');
         }
       });
+
+      // If we have ?officers=... in the URL, parse it, populate the textarea, auto-run search
+      const urlParams = new URLSearchParams(window.location.search);
+      const officersParam = urlParams.get('officers');
+      if (officersParam) {
+        let decodedLines = officersParam.split(';').map(x => x.replace(/\+/g, ' '));
+        // Join them with newlines
+        $('#officerBulkBox').val(decodedLines.join('\n'));
+        // Auto-submit
+        $('#searchForm').submit();
+      }
+
     } catch (err) {
       console.error(err);
       $('#statusMessage').text('Error loading index: ' + err);
@@ -470,16 +502,23 @@ $(document).ready(function() {
     // Otherwise, begin a new search
     searchingInProgress = true;
     searchCanceled = false;
+    allSearchResults = []; // clear from previous
 
-    // Clear old results
+    // Clear old results and overlap
     $('#resultsContainer').empty();
+    $('#overlapContainer').empty();
     $('#globalResultsStatus').empty();
+    $('#downloadCsvBtn').hide();
 
     // Switch button text to "Stop"
     $('#searchButton .button-text').text('Stop');
     $('#officerBulkBox').prop('disabled', true);
 
     try {
+      // Build the query string parameter for the current input
+      updateUrlQuery();
+
+      // Perform the bulk search
       await doBulkSearch();
     } catch (err) {
       console.error(err);
@@ -493,10 +532,41 @@ $(document).ready(function() {
     searchingInProgress = false;
     $('#searchButton .button-text').text('Search');
     $('#officerBulkBox').prop('disabled', false);
+
+    // If user didn't stop, show overlap results (if any) and the CSV button
+    if (!searchCanceled && allSearchResults.length > 0) {
+      renderOverlapSection();
+      $('#downloadCsvBtn').show();
+    }
   });
 
+  // Update the URL to include officers as a query param
+  function updateUrlQuery() {
+    // Collect lines from the textarea, 'clean' them, then produce a single officers=... query param
+    let lines = $('#officerBulkBox').val().split(/\r?\n/).map(ln => ln.trim());
+    let cleanedNames = [];
+    for (let ln of lines) {
+      let name = cleanLine(ln);
+      if (name) {
+        cleanedNames.push(name);
+      }
+    }
+    // Up to 100
+    if (cleanedNames.length > 100) {
+      cleanedNames = cleanedNames.slice(0,100);
+    }
+
+    // We want to store each line's internal spaces as '+', and separate lines by ';'
+    // e.g. "alice bob" -> "alice+bob" => so officers=alice+bob;jane+doe ...
+    let encodedSegments = cleanedNames.map(name => name.replace(/\s+/g, '+'));
+    let joined = encodedSegments.join(';');
+    let newQuery = '?officers=' + encodeURIComponent(joined);
+
+    window.history.replaceState({}, '', newQuery);
+  }
+
   // ===========================
-  // Bulk search logic
+  // Bulk search logic (parallel)
   // ===========================
   async function doBulkSearch() {
     // 1) parse the textarea lines
@@ -526,13 +596,22 @@ $(document).ready(function() {
       return;
     }
 
-    // 2) For each name, asynchronously do the search for that name
+    // 2) For each name, create a container in #resultsContainer, then start the async search
+    let promises = [];
     for (let i = 0; i < cleanedNames.length; i++) {
-      if (searchCanceled) break;
       let searchTerm = cleanedNames[i];
-      await searchOneOfficerTerm(searchTerm, i+1);
+      let p = searchOneOfficerTerm(searchTerm, i+1);
+      // We catch errors so one search doesn't break the entire batch
+      p.catch(err => {
+        console.error(`Error searching term "${searchTerm}"`, err);
+      });
+      promises.push(p);
     }
 
+    // Wait for all searches to finish (or fail)
+    await Promise.allSettled(promises);
+
+    // If the user canceled, notify
     if (searchCanceled) {
       $('#globalResultsStatus').html(
         `<span class="text-sm">Search stopped.</span>`
@@ -562,15 +641,15 @@ $(document).ready(function() {
   }
 
   // ===========================
-  // Searching a single officer term
+  // Searching a single officer term (async)
   // ===========================
   async function searchOneOfficerTerm(term, indexNum) {
-    // Create a container for progress updates + result listing
+    // Create a container for this term's results
     const containerId = `searchTermContainer_${indexNum}`;
     const container = $(`
       <div id="${containerId}" class="border border-gray-300 rounded p-2">
         <div class="cursor-pointer font-bold text-[14px] text-blue-700 search-term-header">
-          Searching "<span class="search-term-label"></span>" - <span class="search-term-progress">0</span> results received
+          Searching "<span class="search-term-label"></span>" <span class="search-term-progress">0</span> results received
         </div>
         <div class="search-term-results mt-2" style="display:none;"></div>
       </div>
@@ -589,14 +668,17 @@ $(document).ready(function() {
     let totalFound = 0;
 
     // Convert into tokens for final-batch intersection
-    // (In this simplified version, we only have multi-word "term" => tokens.)
-    let tokens = term.split(' ');  // they should all be >=2 letters from cleanLine()
+    let tokens = term.split(' ');  // each >=2 letters
+    if (!tokens.length) {
+      container.find('.search-term-header')
+               .text(`No valid tokens for "${term}"`);
+      return;
+    }
 
-    // For each token, get intersection of BATCH sets (EXACT match only)
-    // Intersection logic:
+    // 1) figure out which BATCHIDs are relevant for all tokens (intersection of sets)
     let finalSet = null;
     for (let t of tokens) {
-      if (searchCanceled) break;
+      if (searchCanceled) return;
       let matchedSet = new Set();
 
       const exIdx = exactMatchIndex(t);
@@ -619,22 +701,20 @@ $(document).ready(function() {
       if (!finalSet.size) break;
     }
 
-    // if no matches or we ended up with null
     if (!finalSet || !finalSet.size) {
       container.find('.search-term-header').text(`No results for "${term}"`);
-      return; 
+      return;
     }
 
-    // We have a set of relevant batchIDs. Let's fetch them in ascending order
+    // 2) We have a set of relevant batchIDs; fetch them in ascending order
     const batchIDs = Array.from(finalSet).sort((a,b)=>a-b);
 
-    // We'll store row-level results here (rowId => matched officer indexes).
-    // But we need them on a batch-by-batch basis because we must fetch CSV from each batch.
+    // 3) For each batch, do intersection at the row/officer offset level
     for (let bID of batchIDs) {
-      if (searchCanceled) break;
-      if (totalFound >= 100) break;  // 100 results limit per name
+      if (searchCanceled) return;
+      if (totalFound >= 100) break; // up to 100 per name
 
-      // 1) Load batch-level reverse index 
+      // 3a) Load batch-level reverse index
       const revFilename = `officials_batch_${String(bID).padStart(3,'0')}_reverse_index.txt.zip`;
       let revText = null;
       try {
@@ -643,15 +723,14 @@ $(document).ready(function() {
         console.warn("Could not load batch reverse index: ", revFilename, e);
         continue;
       }
-      // parse
       let batchMap = parseBatchIndex(revText);
 
-      // 2) For each token, gather row/officer offsets, then intersect
-      let globalCountMap = new Map(); 
+      // 3b) For each token, gather row/officer offsets, then intersect
+      let globalCountMap = new Map();
       let tokenCount = tokens.length;
 
       for (let t of tokens) {
-        if (searchCanceled) break;
+        if (searchCanceled) return;
         let offsetSet = new Set();
 
         if (batchMap.has(t)) {
@@ -673,7 +752,7 @@ $(document).ready(function() {
         }
       }
 
-      // Build final row->setOfOfficers
+      // Build final row->setOfOfficerIndexes
       let finalRowMap = new Map();
       for (let [k, ct] of globalCountMap.entries()) {
         if (ct === tokenCount) {
@@ -687,10 +766,11 @@ $(document).ready(function() {
         }
       }
 
-      // 3) If nothing, next batch
-      if (!finalRowMap.size) continue;
+      if (!finalRowMap.size) {
+        continue;
+      }
 
-      // 4) Load CSV from this batch
+      // 3c) Load CSV from this batch
       const csvFilename = `officials_batch_${String(bID).padStart(3,'0')}.csv.zip`;
       let csvData = null;
       try {
@@ -706,20 +786,20 @@ $(document).ready(function() {
         dynamicTyping: false
       });
 
-      // 5) For each row in finalRowMap, build HTML
+      // 3d) For each row in finalRowMap, build HTML items
       const rowIds = Array.from(finalRowMap.keys()).sort((a,b)=>a-b);
       for (let rId of rowIds) {
-        if (searchCanceled) break;
+        if (searchCanceled) return;
         if (totalFound >= 100) break;
 
         let rowIndex = rId - 1;
         if (rowIndex < 0 || rowIndex >= parsed.data.length) continue;
         const rowObj = parsed.data[rowIndex];
         const matchedIndices = finalRowMap.get(rId);
-        let itemHtml = buildResultItem(rowObj, matchedIndices);
 
-        // Append to container results
-        container.find('.search-term-results').append(itemHtml);
+        // Append to the DOM
+        let $item = buildResultItem(rowObj, matchedIndices, term);
+        container.find('.search-term-results').append($item);
         totalFound++;
 
         // Update header progress
@@ -727,24 +807,87 @@ $(document).ready(function() {
       }
     }
 
-    if (searchCanceled) {
-      container.find('.search-term-header').text(`Stopped at "${term}" - ${totalFound} results so far`);
-      return;
-    }
-
     // done with all relevant batches
     if (totalFound === 0) {
       container.find('.search-term-header').text(`No results for "${term}"`);
     } else {
-      container.find('.search-term-header').text(`Completed "${term}" - ${totalFound} results`);
+      container.find('.search-term-header').text(`Completed "${term}" ${totalFound} results`);
     }
-    // by default, if there's >0 results, keep them hidden until user clicks
+  }
+
+  // ===========================
+  // Overlap logic (run after all searches complete)
+  // ===========================
+  function renderOverlapSection() {
+    // Build a map: EIN => { orgNames: Set<string>, terms: Map<searchTerm, Array<{name, title}>> }
+    let einMap = new Map();
+
+    for (let r of allSearchResults) {
+      let { filerEin, filerName, searchTerm, officerName, officerTitle } = r;
+      if (!einMap.has(filerEin)) {
+        einMap.set(filerEin, {
+          orgNames: new Set(),
+          terms: new Map()
+        });
+      }
+      const rec = einMap.get(filerEin);
+      rec.orgNames.add(filerName);
+
+      if (!rec.terms.has(searchTerm)) {
+        rec.terms.set(searchTerm, []);
+      }
+      rec.terms.get(searchTerm).push({ name: officerName, title: officerTitle });
+    }
+
+    // Filter for those EINs that have at least 2 distinct search terms
+    let overlapItems = [];
+    for (let [ein, data] of einMap.entries()) {
+      if (data.terms.size > 1) {
+        // Build a short line: "Kennedy Center (EIN 530245017): mitch mcconnell (Director), nancy pelosi (chairwoman)"
+        // We'll pick an orgName from data.orgNames - just pick the first in the set
+        let orgName = Array.from(data.orgNames)[0] || 'Unnamed';
+        let segments = [];
+        for (let [term, arr] of data.terms.entries()) {
+          // Each term might have multiple matched officers
+          // The user’s example lumps them like "term (title)", so let's do the same
+          // We'll just pick the first matched officer from that term, or list them all.
+          for (let off of arr) {
+            segments.push(`${off.name} (${off.title})`);
+          }
+        }
+
+        overlapItems.push({
+          ein,
+          orgName,
+          line: `${orgName} (EIN ${ein.replace(/^(\d{2})/, '$1-')}): ${segments.join(', ')}`
+        });
+      }
+    }
+
+    if (!overlapItems.length) {
+      // no overlap, do nothing
+      return;
+    }
+
+    // Construct HTML
+    let html = `
+      <div class="border border-gray-300 rounded p-2 bg-white">
+        <h2 class="font-bold text-base mb-2">Overlapping Nonprofits</h2>
+        <div class="space-y-1">
+    `;
+    for (let item of overlapItems) {
+      html += `<div class="text-sm">${escapeHtml(item.line)}</div>`;
+    }
+    html += `</div></div>`;
+
+    $('#overlapContainer').html(html);
   }
 
   // ===========================
   // Utility to fetch & unzip text
   // ===========================
   async function fetchAndUnzipText(zipUrl, innerFilename) {
+    if (searchCanceled) return '';
     const resp = await fetch(zipUrl);
     if (!resp.ok) throw new Error('Could not fetch ' + zipUrl);
     const buffer = await resp.arrayBuffer();
@@ -821,9 +964,9 @@ $(document).ready(function() {
 
   // ===========================
   // Build a single result item
-  // (same look/feel as the original index.html)
+  // Also store the data for CSV/overlap
   // ===========================
-  function buildResultItem(row, matchedOfficerIndexes) {
+  function buildResultItem(row, matchedOfficerIndexes, searchTerm) {
     const filerName = row.filer_name || '';
     const filerEin  = row.filer_ein  || '';
     const taxYear   = row.tax_year   || '';
@@ -855,8 +998,19 @@ $(document).ready(function() {
             <div class="@xl:col-span-2">$${Number(comp).toLocaleString()}</div>
           </div>
         `;
+
         if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
           matchedItems.push(blockHtml);
+
+          // Also record for CSV + overlap
+          allSearchResults.push({
+            searchTerm,
+            filerEin,
+            filerName,
+            officerName: name,
+            officerTitle: title,
+            officerComp: comp
+          });
         } else {
           otherItems.push(blockHtml);
         }
@@ -898,7 +1052,6 @@ $(document).ready(function() {
       `;
     }
 
-    // The main block
     const html = `
       <div class="bg-white border border-gray-200 rounded mb-2">
         <div class="grid grid-cols-2 @xl:grid-cols-12 gap-2 pt-4 px-4 pb-2">
@@ -967,6 +1120,42 @@ $(document).ready(function() {
     return $el;
   }
 
+  // ===========================
+  // CSV Download
+  // ===========================
+  $('#downloadCsvBtn').on('click', function() {
+    // Build CSV rows
+    // columns: ein, nonprofit_name, search_term, principal_officer, title, compensation
+    let csvArray = [
+      ['ein', 'nonprofit_name', 'search_term', 'principal_officer', 'title', 'compensation']
+    ];
+
+    for (let r of allSearchResults) {
+      csvArray.push([
+        r.filerEin,
+        r.filerName,
+        r.searchTerm,
+        r.officerName,
+        r.officerTitle,
+        r.officerComp
+      ]);
+    }
+
+    // Convert to CSV
+    let csvContent = Papa.unparse(csvArray);
+    // Download
+    let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    let url = URL.createObjectURL(blob);
+    let link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bulk_officer_search_results.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // Simple HTML-escape
   function escapeHtml(str) {
     if (!str) return '';
     return str
