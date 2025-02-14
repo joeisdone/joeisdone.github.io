@@ -366,6 +366,24 @@ Kagan"></textarea>
     return filtered.join(' ').toLowerCase();
   }
 
+  async function parseCsvWithWorker(csvData) {
+    return new Promise((resolve, reject) => {
+      Papa.parse(csvData, {
+        header: true,
+        skipEmptyLines: false,
+        dynamicTyping: false,
+        worker: true,         // runs the parse in a worker
+        complete: (results) => {
+          resolve(results);
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
+    });
+  }
+
+
   // ===========================
   // Searching a single officer term (async)
   // ===========================
@@ -529,11 +547,7 @@ Kagan"></textarea>
         continue;
       }
 
-      const parsed = Papa.parse(csvData, {
-        header: true,
-        skipEmptyLines: false,
-        dynamicTyping: false
-      });
+      const parsed = await parseCsvWithWorker(csvData);
 
       // 3d) For each row in finalRowMap, build HTML items
       const rowIds = Array.from(finalRowMap.keys()).sort((a,b)=>a-b);
@@ -648,19 +662,32 @@ Kagan"></textarea>
   // ===========================
   // Utility to fetch & unzip text
   // ===========================
-  async function fetchAndUnzipText(zipUrl, innerFilename) {
-    if (searchCanceled) return '';
-    const resp = await fetch(zipUrl);
-    if (!resp.ok) throw new Error('Could not fetch ' + zipUrl);
-    const buffer = await resp.arrayBuffer();
+  function fetchAndUnzipText(zipUrl, innerFilename) {
+    if (searchCanceled) return Promise.resolve(''); // Optional guard
 
-    const jsZip = new JSZip();
-    const loaded = await jsZip.loadAsync(buffer);
+    return new Promise((resolve, reject) => {
+      const worker = new Worker('unzipWorker.js');
+      
+      // Listen for messages (success or error) from the worker
+      worker.onmessage = (event) => {
+        const data = event.data;
+        if (data.success) {
+          resolve(data.text);
+        } else {
+          reject(data.error);
+        }
+        worker.terminate(); // Clean up worker
+      };
 
-    if (!loaded.file(innerFilename)) {
-      throw new Error('Missing ' + innerFilename + ' in ' + zipUrl);
-    }
-    return loaded.file(innerFilename).async('string');
+      // You could also catch worker errors directly:
+      worker.onerror = (err) => {
+        reject('Worker error: ' + err.message);
+        worker.terminate();
+      };
+
+      // Kick off the worker
+      worker.postMessage({ zipUrl, innerFilename });
+    });
   }
 
   // ===========================
