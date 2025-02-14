@@ -891,23 +891,21 @@ Kagan"></textarea>
     let overlapItems = [];
     for (let [ein, data] of einMap.entries()) {
       if (data.terms.size > 1) {
-        // Build a short line: "Kennedy Center (EIN 530245017): mitch mcconnell (Director), nancy pelosi (chairwoman)"
-        // We'll pick an orgName from data.orgNames - just pick the first in the set
         let orgName = Array.from(data.orgNames)[0] || 'Unnamed';
         let segments = [];
         for (let [term, arr] of data.terms.entries()) {
           // Each term might have multiple matched officers
-          // The user's example lumps them like "term (title)", so let's do the same
-          // We'll just pick the first matched officer from that term, or list them all.
           for (let off of arr) {
-            segments.push(`${off.name} (${off.title})`);
+            // Wrap the term in a blue strong tag
+            segments.push(`<strong class="font-semibold">${escapeHtml(term)}</strong> <span class="text-xs opacity-80">(${escapeHtml(off.title)})</span>`);
           }
         }
 
         overlapItems.push({
           ein,
           orgName,
-          line: `${orgName} (EIN ${ein.replace(/^(\d{2})/, '$1-')}): ${segments.join(', ')}`
+          // Only escape the orgName and ein, leave HTML tags unescaped
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN ${ein.replace(/^(\d{2})/, '$1-')}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`
         });
       }
     }
@@ -919,14 +917,15 @@ Kagan"></textarea>
 
     // Construct HTML
     let html = `
-      <div class="border border-gray-300 rounded p-2 bg-white">
+      <div class="border border-gray-300 rounded p-4 bg-white">
         <h2 class="font-bold text-base mt-0 mb-2">Overlapping Nonprofits</h2>
-        <div class="space-y-1">
+        <ul class="space-y-2">
     `;
     for (let item of overlapItems) {
-      html += `<div class="text-sm">${escapeHtml(item.line)}</div>`;
+      // Don't escape the entire line since it contains HTML tags
+      html += `<li class="text-sm">${item.line}</li>`;
     }
-    html += `</div></div>`;
+    html += `</ul></div>`;
 
     $('#overlapContainer').html(html);
   }
