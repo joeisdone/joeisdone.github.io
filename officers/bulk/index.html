@@ -277,10 +277,15 @@ Kagan"></textarea>
     let totalCount = cleanedNames.length;
     let completedCount = 0;
 
-    // Show initial progress
-    $('#globalResultsStatus').text(
-      `0 out of ${totalCount} completed; ${totalCount} in progress`
-    );
+    // Initial setup - create the progress elements once
+    $('#globalResultsStatus').html(`
+      <div class="space-y-1">
+        <div class="text-[13px] progress-text">Starting search...</div>
+        <div class="bg-gray-300 w-full h-1 rounded-sm overflow-hidden">
+          <div class="bg-blue-600 h-full transition-all duration-200 progress-bar" style="width: 0%"></div>
+        </div>
+      </div>
+    `);
 
     // We'll keep track of all Promises in an array and spawn them in limited fashion
     let searchPromises = [];
@@ -305,9 +310,13 @@ Kagan"></textarea>
 
           // Update the status text
           const inProgress = totalCount - completedCount;
-          $('#globalResultsStatus').text(
-            `${completedCount} out of ${totalCount} completed; ${inProgress} in progress`
-          );
+          $('#globalResultsStatus .progress-text').html(`
+            <div class="flex justify-between items-center gap-2">
+              <span>Running ${totalCount} searches...</span>
+              <span>${completedCount} of ${totalCount}</span>
+            </div>
+          `);
+          $('#globalResultsStatus .progress-bar').css('width', `${(completedCount / totalCount) * 100}%`);
 
           // Once this finishes, spawn another if available
           spawnNext();
@@ -327,15 +336,11 @@ Kagan"></textarea>
     // Wait until all tasks are settled (either fulfilled or rejected).
     await Promise.allSettled(searchPromises);
 
-    // If the user canceled, notify
+    // For the final status:
     if (searchCanceled) {
-      $('#globalResultsStatus').html(
-        `<span class="text-sm">Search stopped.</span>`
-      );
+      $('#globalResultsStatus .progress-text').text('Search stopped.');
     } else {
-      $('#globalResultsStatus').text(
-        `All ${totalCount} searches completed.`
-      );      
+      $('#globalResultsStatus').empty();
     }
 
     // If user didn't stop and we have results, render overlaps and show CSV
