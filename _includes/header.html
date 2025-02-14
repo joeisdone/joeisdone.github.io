@@ -51,6 +51,13 @@
       url="/nonprofit"
       classes=""
     %}
+    {% include nav-link.html 
+      title="Nonprofit Financials"
+      subtitle="Analyze Expenses and Assets"
+      url="/nonprofit/assets"
+      classes=""
+      new="true"
+    %}
     <button 
       id="election-results-dropdown-button"
       class="flex flex-col text-white no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 bg-transparent mb-1 mr-0 {% if page.url contains '/florida' or page.url contains '/northcarolina' or page.url contains '/pennsylvania' %}is-active border-transparent{% else %}border-transparent hover:border-white/75 hover:bg-white/10{% endif %} relative group justify-start items-start"
