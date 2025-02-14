@@ -211,11 +211,6 @@ Kagan"></textarea>
     $('#searchButton .button-text').text('Search');
     $('#officerBulkBox').prop('disabled', false);
 
-    // If user didn't stop, show overlap results (if any) and the CSV button
-    if (!searchCanceled && allSearchResults.length > 0) {
-      renderOverlapSection();
-      $('#downloadCsvBtn').show();
-    }
   });
 
   // Update the URL to include officers as a query param
@@ -311,6 +306,23 @@ Kagan"></textarea>
 
           // Once this finishes, spawn another if available
           spawnNext();
+
+          // If the user canceled, notify
+          if (searchCanceled) {
+            $('#globalResultsStatus').html(
+              `<span class="text-sm">Search stopped.</span>`
+            );
+          } else if (completedCount == totalCount) {
+            $('#globalResultsStatus').text(
+              `All ${totalCount} searches completed.`
+            );      
+          }
+
+          // If user didn't stop and we have results, render overlaps and show CSV
+          if (!searchCanceled && (completedCount == totalCount)) {
+            renderOverlapSection();
+            $('#downloadCsvBtn').show();
+          }
         })
         .catch(err => {
           console.error(`Error searching term "${searchTerm}"`, err);
@@ -326,23 +338,6 @@ Kagan"></textarea>
 
     // Wait until all tasks are settled (either fulfilled or rejected).
     await Promise.allSettled(searchPromises);
-
-    // If the user canceled, notify
-    if (searchCanceled) {
-      $('#globalResultsStatus').html(
-        `<span class="text-sm">Search stopped.</span>`
-      );
-    } else {
-      $('#globalResultsStatus').text(
-        `All ${totalCount} searches completed.`
-      );      
-    }
-
-    // If user didn't stop and we have results, render overlaps and show CSV
-    if (!searchCanceled && allSearchResults.length > 0) {
-      renderOverlapSection();
-      $('#downloadCsvBtn').show();
-    }
   }
 
   // Cleans and normalizes a single line from the textarea.
@@ -596,6 +591,7 @@ Kagan"></textarea>
   // Overlap logic (run after all searches complete)
   // ===========================
   function renderOverlapSection() {
+    console.log("Overlap called");
     // Build a map: EIN => { orgNames: Set<string>, terms: Map<searchTerm, Array<{name, title}>> }
     let einMap = new Map();
 
@@ -607,6 +603,7 @@ Kagan"></textarea>
           terms: new Map()
         });
       }
+
       const rec = einMap.get(filerEin);
       rec.orgNames.add(filerName);
 
@@ -620,6 +617,8 @@ Kagan"></textarea>
     let overlapItems = [];
     for (let [ein, data] of einMap.entries()) {
       if (data.terms.size > 1) {
+        console.log("Got overlap: " + Array.from(data.orgNames)[0]);
+
         let orgName = Array.from(data.orgNames)[0] || 'Unnamed';
         let segments = [];
         for (let [term, arr] of data.terms.entries()) {
@@ -639,6 +638,7 @@ Kagan"></textarea>
       }
     }
 
+    console.log("Num overlap: " + overlapItems.length)
     if (!overlapItems.length) {
       // no overlap, do nothing
       return;
