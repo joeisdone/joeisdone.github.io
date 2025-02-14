@@ -912,6 +912,9 @@ select {
 .mt-8 {
   margin-top: 2rem;
 }
+.\!mt-4 {
+  margin-top: 1rem !important;
+}
 .block {
   display: block;
 }
@@ -2286,6 +2289,10 @@ table {
 
   .xl\:p-6 {
     padding: 1.5rem;
+  }
+
+  .xl\:p-10 {
+    padding: 2.5rem;
   }
 
   .xl\:px-6 {
