@@ -2,11 +2,17 @@
   href="{{ include.url }}" 
   class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 {% if page.url contains include.url %}border-blue bg-blue/20 !text-white{% else %}border-transparent hover:border-white/75 hover:bg-white/10{% endif %} {% if include.icon %}items-center gap-2 text-white/80 hover:text-white{% else %}flex-col text-white{% endif %} select-none {{ include.classes }}"
   {% if include.target %}target="{{ include.target }}"{% endif %}
+  title="{{ include.url }}"
 >
   {% if include.icon %}
     <span class="size-5 fill-current">{% include icon-{{ include.icon }}.html %}</span>
   {% endif %}
-  <strong class="md:text-sm{% if include.icon %} font-semibold{% endif %}">{{ include.title }}</strong>
+  <strong class="md:text-sm{% if include.icon %} font-semibold{% endif %}">
+    {{ include.title }}
+    {% if include.new %}
+      <span class="bg-green px-1 py-0.5 rounded-sm font-semibold uppercase text-xs ml-1">New</span>
+    {% endif %}
+  </strong>
   {% if include.subtitle %}
     <span class="opacity-70 text-sm md:text-[13px]">{{ include.subtitle }}</span>
   {% endif %}

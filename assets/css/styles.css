@@ -1400,6 +1400,10 @@ select {
 .bg-yellow\/20 {
   background-color: rgb(226 209 52 / 0.2);
 }
+.bg-green {
+  --tw-bg-opacity: 1;
+  background-color: rgb(25 178 112 / var(--tw-bg-opacity));
+}
 .bg-none {
   background-image: none;
 }
@@ -1462,6 +1466,14 @@ select {
 .py-8 {
   padding-top: 2rem;
   padding-bottom: 2rem;
+}
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
 }
 .pb-1 {
   padding-bottom: 0.25rem;
