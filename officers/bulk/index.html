@@ -659,13 +659,13 @@ Kagan"></textarea>
 
         let govtAmtPrint = linkMap.get(ein)[2];
         if (govtAmtPrint) {
-          govtAmtPrint = `<span class="text-xs">(Direct Taxpayer Dollars: ${govtAmtPrint})</span> `
+          govtAmtPrint = `<div class="text-sm">Direct taxpayer dollars: <strong>${govtAmtPrint}</strong></div> `
         }
         overlapItems.push({
           ein,
           orgName,
           // Only escape the orgName and ein, leave HTML tags unescaped
-          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a></span> ${govtAmtPrint}<span class="text-xs opacity-70">${linkMap.get(ein)[0]}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="group text-xs text-black/70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')} <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100">{% include icon-external.html %}</span></a> </span> | <span class="text-xs">${linkMap.get(ein)[0]} | <a href="/award_search/?keywords=${ein.replace(/-/g, '')}" target="_blank">Look up federal grants</a> <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100">{% include icon-external.html %}</span></span>${govtAmtPrint} <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
         });
       }
     }
@@ -679,7 +679,7 @@ Kagan"></textarea>
     let html = `
       <div class="border border-gray-300 rounded p-4 bg-white">
         <h2 class="font-bold text-base mt-0 mb-2">Overlapping non-profits</h2>
-        <ul class="space-y-2">
+        <ul class="space-y-4">
     `;
     for (let item of overlapItems) {
       // Don't escape the entire line since it contains HTML tags
@@ -816,8 +816,8 @@ Kagan"></textarea>
       const encodedName = encodeURIComponent(filerName);
       const returnUrl = encodeURIComponent(window.location.href);
       exposeLink = `
-        <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}" target="_blank">
-          See USAID Grant Flow
+        <a href="/expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}" target="_blank">
+          See USAID grant flow
         </a>
       `;
     }

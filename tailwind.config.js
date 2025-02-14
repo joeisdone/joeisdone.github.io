@@ -15,7 +15,7 @@ module.exports = {
     '-m-1',
     'list-disc',
     'list-inside',
-    'space-y-2',
+    'space-y-4',
     // '!hidden',
     // '-mb-4',
     // '-my-0.5',

@@ -606,11 +606,6 @@ Kagan"></textarea>
     $('#searchButton .button-text').text('Search');
     $('#officerBulkBox').prop('disabled', false);
 
-    // If user didn't stop, show overlap results (if any) and the CSV button
-    if (!searchCanceled && allSearchResults.length > 0) {
-      renderOverlapSection();
-      $('#downloadCsvBtn').show();
-    }
   });
 
   // Update the URL to include officers as a query param
@@ -715,6 +710,25 @@ Kagan"></textarea>
 
           // Once this finishes, spawn another if available
           spawnNext();
+
+          // If the user canceled, notify
+          if (searchCanceled) {
+            $('#globalResultsStatus').html(
+              `<span class="text-sm">Search stopped.</span>`
+            );
+            $('#downloadCsvBtn').show();
+
+          } else if (completedCount == totalCount) {
+            $('#globalResultsStatus').text(
+              `All ${totalCount} searches completed.`
+            );      
+          }
+
+          // If user didn't stop and we have results, render overlaps and show CSV
+          if (!searchCanceled && (completedCount == totalCount)) {
+            renderOverlapSection();
+            $('#downloadCsvBtn').show();
+          }
         })
         .catch(err => {
           console.error(`Error searching term "${searchTerm}"`, err);
@@ -1002,15 +1016,18 @@ Kagan"></textarea>
   function renderOverlapSection() {
     // Build a map: EIN => { orgNames: Set<string>, terms: Map<searchTerm, Array<{name, title}>> }
     let einMap = new Map();
+    let linkMap = new Map();
 
     for (let r of allSearchResults) {
-      let { filerEin, filerName, searchTerm, officerName, officerTitle } = r;
+      let { filerEin, filerName, searchTerm, officerName, officerTitle, exposeLink, propublicaLink, govt_amt} = r;
       if (!einMap.has(filerEin)) {
         einMap.set(filerEin, {
           orgNames: new Set(),
           terms: new Map()
         });
+        linkMap.set(filerEin, [exposeLink, propublicaLink, govt_amt]);
       }
+
       const rec = einMap.get(filerEin);
       rec.orgNames.add(filerName);
 
@@ -1024,6 +1041,7 @@ Kagan"></textarea>
     let overlapItems = [];
     for (let [ein, data] of einMap.entries()) {
       if (data.terms.size > 1) {
+
         let orgName = Array.from(data.orgNames)[0] || 'Unnamed';
         let segments = [];
         for (let [term, arr] of data.terms.entries()) {
@@ -1034,11 +1052,15 @@ Kagan"></textarea>
           }
         }
 
+        let govtAmtPrint = linkMap.get(ein)[2];
+        if (govtAmtPrint) {
+          govtAmtPrint = `<div class="text-sm">Direct taxpayer dollars: <strong>${govtAmtPrint}</strong></div> `
+        }
         overlapItems.push({
           ein,
           orgName,
           // Only escape the orgName and ein, leave HTML tags unescaped
-          line: `<strong>${escapeHtml(orgName)}</strong> <span class="group text-xs text-black/70">EIN <a href="/award_search/?keywords=${ein.replace(/-/g, '')}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a> <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M13 3.75a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-1.5 0V5.56l-7.97 7.97a.75.75 0 1 1-1.06-1.06l7.97-7.97h-4.69a.75.75 0 0 1-.75-.75ZM5.324 5H9.25a.75.75 0 1 1 0 1.5h-3.9c-.292 0-.467 0-.596.011a.628.628 0 0 0-.12.018.25.25 0 0 0-.105.104.626.626 0 0 0-.018.121c-.01.13-.011.304-.011.596v11.3c0 .292 0 .467.011.596a.625.625 0 0 0 .018.12.25.25 0 0 0 .104.105.638.638 0 0 0 .121.018c.13.01.304.011.596.011h11.3c.292 0 .467 0 .596-.011a.636.636 0 0 0 .12-.018.25.25 0 0 0 .105-.105.636.636 0 0 0 .018-.12c.01-.13.011-.304.011-.596V14a.75.75 0 0 1 1.5 0v4.676c0 .258 0 .494-.016.692a1.775 1.775 0 0 1-.175.677 1.75 1.75 0 0 1-.765.764c-.23.118-.463.157-.676.175-.198.016-.434.016-.692.016H5.324c-.258 0-.494 0-.692-.016a1.775 1.775 0 0 1-.676-.175 1.75 1.75 0 0 1-.765-.765 1.774 1.774 0 0 1-.175-.676A9.053 9.053 0 0 1 3 18.676V7.324c0-.258 0-.494.016-.692.018-.213.057-.446.175-.676a1.75 1.75 0 0 1 .765-.765c.23-.118.463-.157.676-.175C4.83 5 5.066 5 5.324 5ZM17.47 19.37v-.002Zm-.1.1h-.003Zm-12.74 0h.002Zm-.1-.102v.001Zm0-12.737v.001Zm.102-.102h-.001Z" clip-rule="evenodd"/></svg></span></span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="group text-xs text-black/70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')} <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M13 3.75a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-1.5 0V5.56l-7.97 7.97a.75.75 0 1 1-1.06-1.06l7.97-7.97h-4.69a.75.75 0 0 1-.75-.75ZM5.324 5H9.25a.75.75 0 1 1 0 1.5h-3.9c-.292 0-.467 0-.596.011a.628.628 0 0 0-.12.018.25.25 0 0 0-.105.104.626.626 0 0 0-.018.121c-.01.13-.011.304-.011.596v11.3c0 .292 0 .467.011.596a.625.625 0 0 0 .018.12.25.25 0 0 0 .104.105.638.638 0 0 0 .121.018c.13.01.304.011.596.011h11.3c.292 0 .467 0 .596-.011a.636.636 0 0 0 .12-.018.25.25 0 0 0 .105-.105.636.636 0 0 0 .018-.12c.01-.13.011-.304.011-.596V14a.75.75 0 0 1 1.5 0v4.676c0 .258 0 .494-.016.692a1.775 1.775 0 0 1-.175.677 1.75 1.75 0 0 1-.765.764c-.23.118-.463.157-.676.175-.198.016-.434.016-.692.016H5.324c-.258 0-.494 0-.692-.016a1.775 1.775 0 0 1-.676-.175 1.75 1.75 0 0 1-.765-.765 1.774 1.774 0 0 1-.175-.676A9.053 9.053 0 0 1 3 18.676V7.324c0-.258 0-.494.016-.692.018-.213.057-.446.175-.676a1.75 1.75 0 0 1 .765-.765c.23-.118.463-.157.676-.175C4.83 5 5.066 5 5.324 5ZM17.47 19.37v-.002Zm-.1.1h-.003Zm-12.74 0h.002Zm-.1-.102v.001Zm0-12.737v.001Zm.102-.102h-.001Z" clip-rule="evenodd"/></svg></span></a> </span> | <span class="text-xs">${linkMap.get(ein)[0]} | <a href="/award_search/?keywords=${ein.replace(/-/g, '')}" target="_blank">Look up federal grants</a> <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100"><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M13 3.75a.75.75 0 0 1 .75-.75h6.5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-1.5 0V5.56l-7.97 7.97a.75.75 0 1 1-1.06-1.06l7.97-7.97h-4.69a.75.75 0 0 1-.75-.75ZM5.324 5H9.25a.75.75 0 1 1 0 1.5h-3.9c-.292 0-.467 0-.596.011a.628.628 0 0 0-.12.018.25.25 0 0 0-.105.104.626.626 0 0 0-.018.121c-.01.13-.011.304-.011.596v11.3c0 .292 0 .467.011.596a.625.625 0 0 0 .018.12.25.25 0 0 0 .104.105.638.638 0 0 0 .121.018c.13.01.304.011.596.011h11.3c.292 0 .467 0 .596-.011a.636.636 0 0 0 .12-.018.25.25 0 0 0 .105-.105.636.636 0 0 0 .018-.12c.01-.13.011-.304.011-.596V14a.75.75 0 0 1 1.5 0v4.676c0 .258 0 .494-.016.692a1.775 1.775 0 0 1-.175.677 1.75 1.75 0 0 1-.765.764c-.23.118-.463.157-.676.175-.198.016-.434.016-.692.016H5.324c-.258 0-.494 0-.692-.016a1.775 1.775 0 0 1-.676-.175 1.75 1.75 0 0 1-.765-.765 1.774 1.774 0 0 1-.175-.676A9.053 9.053 0 0 1 3 18.676V7.324c0-.258 0-.494.016-.692.018-.213.057-.446.175-.676a1.75 1.75 0 0 1 .765-.765c.23-.118.463-.157.676-.175C4.83 5 5.066 5 5.324 5ZM17.47 19.37v-.002Zm-.1.1h-.003Zm-12.74 0h.002Zm-.1-.102v.001Zm0-12.737v.001Zm.102-.102h-.001Z" clip-rule="evenodd"/></svg></span></span>${govtAmtPrint} <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
         });
       }
     }
@@ -1052,7 +1074,7 @@ Kagan"></textarea>
     let html = `
       <div class="border border-gray-300 rounded p-4 bg-white">
         <h2 class="font-bold text-base mt-0 mb-2">Overlapping non-profits</h2>
-        <ul class="space-y-2">
+        <ul class="space-y-4">
     `;
     for (let item of overlapItems) {
       // Don't escape the entire line since it contains HTML tags
@@ -1155,6 +1177,20 @@ Kagan"></textarea>
     return map;
   }
 
+  function formatToDollar(value) {
+    // Convert to number
+    let num = parseFloat(value);
+    if (isNaN(num)) return ''; // Handle invalid input gracefully
+
+    // Round to nearest integer (if needed, you can modify to keep decimals)
+    num = Math.round(num);
+    // don't render non-nums
+    if (num <= 0) return '';
+
+    // Format with commas
+    return '$' + num.toLocaleString();
+  }
+
   // ===========================
   // Build a single result item
   // Also store the data for CSV/overlap
@@ -1164,6 +1200,23 @@ Kagan"></textarea>
     const filerEin  = row.filer_ein  || '';
     const taxYear   = row.tax_year   || '';
     const exposePath = row.serialized_graph || '';
+    const govtAmtStr = row.govt_amt || '0';
+    const govt_amt = formatToDollar(govtAmtStr);
+
+    const propublicaLink = `https://projects.propublica.org/nonprofits/organizations/${filerEin}`
+
+    let exposeLink = '';
+    if (exposePath) {
+      const encodedPath = encodeURIComponent(exposePath);
+      const encodedName = encodeURIComponent(filerName);
+      const returnUrl = encodeURIComponent(window.location.href);
+      exposeLink = `
+        <a href="/expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}" target="_blank">
+          See USAID grant flow
+        </a>
+      `;
+    }
+
 
     let raw = row.officials_json || '[]';
     let matchedHtml = '';
@@ -1195,6 +1248,7 @@ Kagan"></textarea>
         if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
           matchedItems.push(blockHtml);
 
+
           // Also record for CSV + overlap
           allSearchResults.push({
             searchTerm,
@@ -1202,7 +1256,10 @@ Kagan"></textarea>
             filerName,
             officerName: name,
             officerTitle: title,
-            officerComp: comp
+            officerComp: comp,
+            exposeLink: exposeLink,
+            propublicaLink: propublicaLink,
+            govt_amt: govt_amt
           });
         } else {
           otherItems.push(blockHtml);
@@ -1231,18 +1288,6 @@ Kagan"></textarea>
       }
     } catch(e) {
       matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officers)</div>`;
-    }
-
-    let exposeLink = '';
-    if (exposePath) {
-      const encodedPath = encodeURIComponent(exposePath);
-      const encodedName = encodeURIComponent(filerName);
-      const returnUrl = encodeURIComponent(window.location.href);
-      exposeLink = `
-        <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
-          See USAID Grant Flow
-        </a>
-      `;
     }
 
     const html = `
