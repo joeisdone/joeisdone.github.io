@@ -211,11 +211,6 @@ Kagan"></textarea>
     $('#searchButton .button-text').text('Search');
     $('#officerBulkBox').prop('disabled', false);
 
-    // If user didn't stop, show overlap results (if any) and the CSV button
-    if (!searchCanceled && allSearchResults.length > 0) {
-      renderOverlapSection();
-      $('#downloadCsvBtn').show();
-    }
   });
 
   // Update the URL to include officers as a query param
@@ -320,6 +315,25 @@ Kagan"></textarea>
 
           // Once this finishes, spawn another if available
           spawnNext();
+
+          // If the user canceled, notify
+          if (searchCanceled) {
+            $('#globalResultsStatus').html(
+              `<span class="text-sm">Search stopped.</span>`
+            );
+            $('#downloadCsvBtn').show();
+
+          } else if (completedCount == totalCount) {
+            $('#globalResultsStatus').text(
+              `All ${totalCount} searches completed.`
+            );      
+          }
+
+          // If user didn't stop and we have results, render overlaps and show CSV
+          if (!searchCanceled && (completedCount == totalCount)) {
+            renderOverlapSection();
+            $('#downloadCsvBtn').show();
+          }
         })
         .catch(err => {
           console.error(`Error searching term "${searchTerm}"`, err);
@@ -607,15 +621,18 @@ Kagan"></textarea>
   function renderOverlapSection() {
     // Build a map: EIN => { orgNames: Set<string>, terms: Map<searchTerm, Array<{name, title}>> }
     let einMap = new Map();
+    let linkMap = new Map();
 
     for (let r of allSearchResults) {
-      let { filerEin, filerName, searchTerm, officerName, officerTitle } = r;
+      let { filerEin, filerName, searchTerm, officerName, officerTitle, exposeLink, propublicaLink, govt_amt} = r;
       if (!einMap.has(filerEin)) {
         einMap.set(filerEin, {
           orgNames: new Set(),
           terms: new Map()
         });
+        linkMap.set(filerEin, [exposeLink, propublicaLink, govt_amt]);
       }
+
       const rec = einMap.get(filerEin);
       rec.orgNames.add(filerName);
 
@@ -629,6 +646,7 @@ Kagan"></textarea>
     let overlapItems = [];
     for (let [ein, data] of einMap.entries()) {
       if (data.terms.size > 1) {
+
         let orgName = Array.from(data.orgNames)[0] || 'Unnamed';
         let segments = [];
         for (let [term, arr] of data.terms.entries()) {
@@ -639,11 +657,15 @@ Kagan"></textarea>
           }
         }
 
+        let govtAmtPrint = linkMap.get(ein)[2];
+        if (govtAmtPrint) {
+          govtAmtPrint = `<span class="text-xs">(Direct Taxpayer Dollars: ${govtAmtPrint})</span> `
+        }
         overlapItems.push({
           ein,
           orgName,
           // Only escape the orgName and ein, leave HTML tags unescaped
-          line: `<strong>${escapeHtml(orgName)}</strong> <span class="group text-xs text-black/70">EIN <a href="/award_search/?keywords=${ein.replace(/-/g, '')}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a> <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100">{% include icon-external.html %}</span></span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN <a href="${linkMap.get(ein)[1]}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a></span> ${govtAmtPrint}<span class="text-xs opacity-70">${linkMap.get(ein)[0]}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`,
         });
       }
     }
@@ -760,6 +782,20 @@ Kagan"></textarea>
     return map;
   }
 
+  function formatToDollar(value) {
+    // Convert to number
+    let num = parseFloat(value);
+    if (isNaN(num)) return ''; // Handle invalid input gracefully
+
+    // Round to nearest integer (if needed, you can modify to keep decimals)
+    num = Math.round(num);
+    // don't render non-nums
+    if (num <= 0) return '';
+
+    // Format with commas
+    return '$' + num.toLocaleString();
+  }
+
   // ===========================
   // Build a single result item
   // Also store the data for CSV/overlap
@@ -769,6 +805,23 @@ Kagan"></textarea>
     const filerEin  = row.filer_ein  || '';
     const taxYear   = row.tax_year   || '';
     const exposePath = row.serialized_graph || '';
+    const govtAmtStr = row.govt_amt || '0';
+    const govt_amt = formatToDollar(govtAmtStr);
+
+    const propublicaLink = `https://projects.propublica.org/nonprofits/organizations/${filerEin}`
+
+    let exposeLink = '';
+    if (exposePath) {
+      const encodedPath = encodeURIComponent(exposePath);
+      const encodedName = encodeURIComponent(filerName);
+      const returnUrl = encodeURIComponent(window.location.href);
+      exposeLink = `
+        <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}" target="_blank">
+          See USAID Grant Flow
+        </a>
+      `;
+    }
+
 
     let raw = row.officials_json || '[]';
     let matchedHtml = '';
@@ -800,6 +853,7 @@ Kagan"></textarea>
         if (matchedOfficerIndexes && matchedOfficerIndexes.has(i)) {
           matchedItems.push(blockHtml);
 
+
           // Also record for CSV + overlap
           allSearchResults.push({
             searchTerm,
@@ -807,7 +861,10 @@ Kagan"></textarea>
             filerName,
             officerName: name,
             officerTitle: title,
-            officerComp: comp
+            officerComp: comp,
+            exposeLink: exposeLink,
+            propublicaLink: propublicaLink,
+            govt_amt: govt_amt
           });
         } else {
           otherItems.push(blockHtml);
@@ -836,18 +893,6 @@ Kagan"></textarea>
       }
     } catch(e) {
       matchedHtml = `<div class="text-sm text-red-500">(Could not parse principal officers)</div>`;
-    }
-
-    let exposeLink = '';
-    if (exposePath) {
-      const encodedPath = encodeURIComponent(exposePath);
-      const encodedName = encodeURIComponent(filerName);
-      const returnUrl = encodeURIComponent(window.location.href);
-      exposeLink = `
-        <a href="../expose?custom_graph=${encodedPath}&title=${encodedName}&return_url=${returnUrl}">
-          See USAID Grant Flow
-        </a>
-      `;
     }
 
     const html = `
