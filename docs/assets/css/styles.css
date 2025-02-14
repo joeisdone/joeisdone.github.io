@@ -813,6 +813,9 @@ select {
 .float-right {
   float: right;
 }
+.-m-1 {
+  margin: -0.25rem;
+}
 .m-0 {
   margin: 0px;
 }
@@ -1138,8 +1141,14 @@ select {
 .resize {
   resize: both;
 }
+.list-inside {
+  list-style-position: inside;
+}
 .\!list-decimal {
   list-style-type: decimal !important;
+}
+.list-disc {
+  list-style-type: disc;
 }
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -1394,6 +1403,9 @@ select {
 .bg-none {
   background-image: none;
 }
+.fill-black {
+  fill: #000;
+}
 .fill-current {
   fill: currentColor;
 }
@@ -1460,6 +1472,9 @@ select {
 .pb-4 {
   padding-bottom: 1rem;
 }
+.pl-2 {
+  padding-left: 0.5rem;
+}
 .pl-4 {
   padding-left: 1rem;
 }
@@ -1494,6 +1509,9 @@ select {
 .text-\[13px\] {
   font-size: 13px;
 }
+.text-\[14px\] {
+  font-size: 14px;
+}
 .text-\[15px\] {
   font-size: 15px;
 }
@@ -1519,6 +1537,9 @@ select {
 .font-medium {
   font-weight: 500;
 }
+.font-normal {
+  font-weight: 400;
+}
 .font-semibold {
   font-weight: 600;
 }
@@ -1541,6 +1562,9 @@ select {
 }
 .text-black\/75 {
   color: rgb(0 0 0 / 0.75);
+}
+.text-black\/80 {
+  color: rgb(0 0 0 / 0.8);
 }
 .text-blue {
   --tw-text-opacity: 1;
@@ -1584,8 +1608,14 @@ select {
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }
+.underline {
+  text-decoration-line: underline;
+}
 .no-underline {
   text-decoration-line: none;
+}
+.opacity-0 {
+  opacity: 0;
 }
 .opacity-100 {
   opacity: 1;
