@@ -103,6 +103,18 @@ $(document).ready(function() {
   
 </a> 
     <a 
+  href="/officers/bulk.html" 
+  class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-blue bg-blue/20 !text-white flex-col text-white select-none "
+  
+>
+  
+  <strong class="md:text-sm">🆕 Bulk NGO Officer search</strong>
+  
+    <span class="opacity-70 text-sm md:text-[13px]">Search and cross-reference many names</span>
+  
+  
+</a> 
+    <a 
   href="/award_search" 
   class="group flex no-underline py-1.5 px-3 rounded focus:outline focus:outline-2 focus:outline-blue focus:outline-offset-2 border-2 border-transparent hover:border-white/75 hover:bg-white/10 flex-col text-white select-none "
   
@@ -403,6 +415,8 @@ Kagan"></textarea>
       </div>
     </form>
 
+    <div>
+    </div>
   </div>
 </div>
 
@@ -605,32 +619,29 @@ Kagan"></textarea>
       return;
     }
 
+    // 2) For each name, create a container in #resultsContainer, then start the async search
     let totalCount = cleanedNames.length;
     let completedCount = 0;
-
     if (totalCount > 0) {
       $('#globalResultsStatus').text(`0 out of ${totalCount} completed; ${totalCount} in progress`);
     }
 
-
-    // 2) For each name, create a container in #resultsContainer, then start the async search
     let promises = [];
     for (let i = 0; i < cleanedNames.length; i++) {
       let searchTerm = cleanedNames[i];
-      let p = searchOneOfficerTerm(searchTerm, i+1)
-          .finally(() => {
-            // Increment the completed counter
-            completedCount++;
-            // Update the status text
-            const inProgress = totalCount - completedCount;
-            $('#globalResultsStatus').text(
-              `${completedCount} out of ${totalCount} completed; ${inProgress} in progress`
-            );
-          })
-          .catch(err => {
-            console.error(`Error searching term "${searchTerm}"`, err);
-          });
-
+      let p = searchOneOfficerTerm(searchTerm, i+1)    
+        .finally(() => {
+          // Increment the completed counter
+          completedCount++;
+          // Update the status text
+          const inProgress = totalCount - completedCount;
+          $('#globalResultsStatus').text(
+            `${completedCount} out of ${totalCount} completed; ${inProgress} in progress`
+          );
+        })
+        .catch(err => {
+          console.error(`Error searching term "${searchTerm}"`, err);
+        });
       // We catch errors so one search doesn't break the entire batch
       p.catch(err => {
         console.error(`Error searching term "${searchTerm}"`, err);
@@ -920,7 +931,7 @@ Kagan"></textarea>
           // Each term might have multiple matched officers
           for (let off of arr) {
             // Wrap the term in a blue strong tag
-            segments.push(`<strong class="font-semibold">${escapeHtml(term)}</strong> <span class="text-xs opacity-80">(${escapeHtml(off.title)})</span>`);
+            segments.push(`<span class="text-xs opacity-80"><i>query: ${escapeHtml(term)}</i></span> <strong class="font-semibold">${escapeHtml(off.name)}</strong> <span class="text-xs opacity-80">(${escapeHtml(off.title)})</span>`);
           }
         }
 

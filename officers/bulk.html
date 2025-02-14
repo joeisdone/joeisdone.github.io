@@ -67,7 +67,6 @@ Kagan"></textarea>
     </form>
 
     <div>
-      <div id="globalResultsStatus"></div>
     </div>
   </div>
 </div>
@@ -75,6 +74,7 @@ Kagan"></textarea>
 <!-- Overlap results will be inserted here, if applicable -->
 
 <div class="mb-2">
+  <div id="globalResultsStatus"></div>
 
   <button id="downloadCsvBtn" class="frameless" style="display: none;">
     <span class="flex items-center gap-1 text-sm text-gray-500 font-semibold">
@@ -271,10 +271,28 @@ Kagan"></textarea>
     }
 
     // 2) For each name, create a container in #resultsContainer, then start the async search
+    let totalCount = cleanedNames.length;
+    let completedCount = 0;
+    if (totalCount > 0) {
+      $('#globalResultsStatus').text(`0 out of ${totalCount} completed; ${totalCount} in progress`);
+    }
+
     let promises = [];
     for (let i = 0; i < cleanedNames.length; i++) {
       let searchTerm = cleanedNames[i];
-      let p = searchOneOfficerTerm(searchTerm, i+1);
+      let p = searchOneOfficerTerm(searchTerm, i+1)    
+        .finally(() => {
+          // Increment the completed counter
+          completedCount++;
+          // Update the status text
+          const inProgress = totalCount - completedCount;
+          $('#globalResultsStatus').text(
+            `${completedCount} out of ${totalCount} completed; ${inProgress} in progress`
+          );
+        })
+        .catch(err => {
+          console.error(`Error searching term "${searchTerm}"`, err);
+        });
       // We catch errors so one search doesn't break the entire batch
       p.catch(err => {
         console.error(`Error searching term "${searchTerm}"`, err);
@@ -290,6 +308,10 @@ Kagan"></textarea>
       $('#globalResultsStatus').html(
         `<span class="text-sm">Search stopped.</span>`
       );
+    } else {
+      $('#globalResultsStatus').text(
+        `All ${totalCount} searches completed.`
+      );      
     }
   }
 
@@ -560,7 +582,7 @@ Kagan"></textarea>
           // Each term might have multiple matched officers
           for (let off of arr) {
             // Wrap the term in a blue strong tag
-            segments.push(`<strong class="font-semibold">${escapeHtml(term)}</strong> <span class="text-xs opacity-80">(${escapeHtml(off.title)})</span>`);
+            segments.push(`<span class="text-xs opacity-80"><i>query: ${escapeHtml(term)}</i></span> <strong class="font-semibold">${escapeHtml(off.name)}</strong> <span class="text-xs opacity-80">(${escapeHtml(off.title)})</span>`);
           }
         }
 

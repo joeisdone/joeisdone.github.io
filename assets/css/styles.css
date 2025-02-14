@@ -1563,6 +1563,9 @@ select {
 .text-black\/75 {
   color: rgb(0 0 0 / 0.75);
 }
+.text-black\/80 {
+  color: rgb(0 0 0 / 0.8);
+}
 .text-blue {
   --tw-text-opacity: 1;
   color: rgb(52 156 226 / var(--tw-text-opacity));
@@ -1601,9 +1604,6 @@ select {
 }
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
-}
-.text-black\/80 {
-  color: rgb(0 0 0 / 0.8);
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
