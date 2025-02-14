@@ -849,6 +849,10 @@ select {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 .\!mt-4 {
   margin-top: 1rem !important;
 }
@@ -914,6 +918,9 @@ select {
 }
 .mt-8 {
   margin-top: 2rem;
+}
+.mr-1 {
+  margin-right: 0.25rem;
 }
 .block {
   display: block;
@@ -1343,6 +1350,14 @@ select {
 .border-white\/50 {
   border-color: rgb(255 255 255 / 0.5);
 }
+.border-navy {
+  --tw-border-opacity: 1;
+  border-color: rgb(37 39 57 / var(--tw-border-opacity));
+}
+.\!border-navy {
+  --tw-border-opacity: 1 !important;
+  border-color: rgb(37 39 57 / var(--tw-border-opacity)) !important;
+}
 .bg-\[\#F3F4F6\] {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1360,10 +1375,6 @@ select {
 }
 .bg-black\/60 {
   background-color: rgb(0 0 0 / 0.6);
-}
-.bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(52 156 226 / var(--tw-bg-opacity));
 }
 .bg-blue\/10 {
   background-color: rgb(52 156 226 / 0.1);
@@ -1582,6 +1593,9 @@ select {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
+.text-black\/70 {
+  color: rgb(0 0 0 / 0.7);
+}
 .text-black\/75 {
   color: rgb(0 0 0 / 0.75);
 }
@@ -1716,6 +1730,12 @@ select {
 .duration-300 {
   transition-duration: 300ms;
 }
+.duration-500 {
+  transition-duration: 500ms;
+}
+.duration-700 {
+  transition-duration: 700ms;
+}
 .ease-in {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
@@ -1734,12 +1754,40 @@ table {
   line-height: 1.25rem;
 }
 
+.tooltip {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-width: 200px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tooltip.visible {
+  opacity: 1;
+}
+
 .empty\:hidden:empty {
   display: none;
 }
 
 .hover\:border-white\/75:hover {
   border-color: rgb(255 255 255 / 0.75);
+}
+
+.hover\:border-black\/50:hover {
+  border-color: rgb(0 0 0 / 0.5);
+}
+
+.hover\:border-blue:hover {
+  --tw-border-opacity: 1;
+  border-color: rgb(52 156 226 / var(--tw-border-opacity));
 }
 
 .hover\:\!bg-green-light:hover {

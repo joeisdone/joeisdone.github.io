@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Bulk Officer Search
+title: Bulk officer search
 ---
 
 <script src="../jquery.min.js"></script>
 <script src="../jszip.min.js"></script>
 <script src="../papaparse.min.js"></script>
 
-<h1 class="mb-1">Bulk Officer Search</h1>
+<h1 class="mb-1">Bulk officer search</h1>
 <p class="opacity-80 mb-0 text-[15px]">
   Paste up to 100 officer names (one name per line). Each name will be searched independently.
 </p>
@@ -39,7 +39,7 @@ title: Bulk Officer Search
       
       <div class="flex flex-col gap-1 w-full">
         <label for="officerBulkBox" class="text-sm md:text-[15px] font-bold">
-          Officer Names (one per line)
+          Officer names (one per line)
         </label>
         <textarea id="officerBulkBox"
                   rows="8"
@@ -282,7 +282,7 @@ Kagan"></textarea>
       <div class="space-y-1">
         <div class="text-[13px] progress-text">Starting search...</div>
         <div class="bg-gray-300 w-full h-1 rounded-sm overflow-hidden">
-          <div class="bg-blue-600 h-full transition-all duration-200 progress-bar" style="width: 0%"></div>
+          <div class="bg-navy h-full transition-all duration-700 progress-bar" style="width: 0%"></div>
         </div>
       </div>
     `);
@@ -420,9 +420,11 @@ Kagan"></textarea>
       if (resultsDiv.is(':visible')) {
         resultsDiv.slideUp(200);
         chevron.css('transform', 'rotate(0deg)');
+        container.removeClass('!border-navy'); // Remove navy border when collapsed
       } else {
         resultsDiv.slideDown(200);
         chevron.css('transform', 'rotate(90deg)');
+        container.addClass('!border-navy'); // Add navy border when expanded
       }
     });
 
@@ -577,13 +579,15 @@ Kagan"></textarea>
 
     // done with all relevant batches
     if (totalFound === 0) {
-      container.find('.search-term-header').html(`
+      container.removeClass('hover:border-blue bg-white');  // Remove hover effect and bg-white if no results
+      container.find('.search-term-header').removeClass('cursor-pointer').html(`
         <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon opacity-0">
           {% include icon-chevron.html %}
         </span>
         <span>No results for "${term}"</span>
       `);
     } else {
+      container.addClass('hover:border-blue');  // Add hover effect if there are results
       container.find('.search-term-header').html(`
         <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon">
           {% include icon-chevron.html %}
@@ -639,7 +643,7 @@ Kagan"></textarea>
           ein,
           orgName,
           // Only escape the orgName and ein, leave HTML tags unescaped
-          line: `<strong>${escapeHtml(orgName)}</strong> <span class="text-xs opacity-70">EIN ${ein.replace(/^(\d{2})/, '$1-')}</span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`
+          line: `<strong>${escapeHtml(orgName)}</strong> <span class="group text-xs text-black/70">EIN <a href="/award_search/?keywords=${ein.replace(/-/g, '')}" target="_blank">${ein.replace(/^(\d{2})/, '$1-')}</a> <span class="inline-block size-3 text-black transition-transform duration-500 fill-black opacity-50 group-hover:opacity-100">{% include icon-external.html %}</span></span> <ul class="list-disc list-inside pl-2"><li>${segments.join('</li><li>')}</li></ul>`
         });
       }
     }
@@ -652,7 +656,7 @@ Kagan"></textarea>
     // Construct HTML
     let html = `
       <div class="border border-gray-300 rounded p-4 bg-white">
-        <h2 class="font-bold text-base mt-0 mb-2">Overlapping Nonprofits</h2>
+        <h2 class="font-bold text-base mt-0 mb-2">Overlapping non-profits</h2>
         <ul class="space-y-2">
     `;
     for (let item of overlapItems) {
@@ -958,4 +962,22 @@ Kagan"></textarea>
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   }
+
+  // Create tooltip container once
+  if (!$('#tooltip').length) {
+    $('<div id="tooltip" class="tooltip">Look up federal grants</div>').appendTo('body');
+  }
+
+  // Add tooltip behavior to EIN links
+  $(document).on('mouseenter', 'a[href^="/award_search"]', function(e) {
+    const $tooltip = $('#tooltip');
+    const rect = this.getBoundingClientRect();
+    
+    $tooltip.addClass('visible').css({
+      left: rect.left + (rect.width / 2) - ($tooltip.outerWidth() / 2) + 'px',
+      top: rect.top - $tooltip.outerHeight() - 8 + window.scrollY + 'px'
+    });
+  }).on('mouseleave', 'a[href^="/award_search"]', function() {
+    $('#tooltip').removeClass('visible');
+  });
 </script>
