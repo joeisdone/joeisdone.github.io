@@ -44,7 +44,11 @@ title: Bulk Officer Search
         <textarea id="officerBulkBox"
                   rows="8"
                   class="w-full px-2 py-1 rounded text-sm border border-gray-300"
-                  placeholder="E.g. 'Jane Doe\nAlice Bob\n...'"></textarea>
+                  placeholder="Bush
+Clinton
+Kennedy
+Nuland
+Kagan"></textarea>
       </div>
 
       <div class="flex items-center gap-1">
@@ -69,7 +73,6 @@ title: Bulk Officer Search
 </div>
 
 <!-- Overlap results will be inserted here, if applicable -->
-<div id="overlapContainer" class="mb-4"></div>
 
 <div class="mb-2">
 
@@ -80,6 +83,8 @@ title: Bulk Officer Search
     </span>
   </button>
 </div>
+
+<div id="overlapContainer" class="mb-4"></div>
 
 <div id="resultsContainer" class="flex flex-col gap-2"></div>
 
@@ -578,7 +583,7 @@ title: Bulk Officer Search
     // Construct HTML
     let html = `
       <div class="border border-gray-300 rounded p-2 bg-white">
-        <h2 class="font-bold text-base mb-2">Overlapping Nonprofits</h2>
+        <h2 class="font-bold text-base mt-0 mb-2">Overlapping Nonprofits</h2>
         <div class="space-y-1">
     `;
     for (let item of overlapItems) {
