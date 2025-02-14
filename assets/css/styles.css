@@ -813,6 +813,12 @@ select {
 .float-right {
   float: right;
 }
+.-m-1 {
+  margin: -0.25rem;
+}
+.-m-4 {
+  margin: -1rem;
+}
 .m-0 {
   margin: 0px;
 }
@@ -1346,6 +1352,10 @@ select {
 .bg-black\/60 {
   background-color: rgb(0 0 0 / 0.6);
 }
+.bg-blue-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 156 226 / var(--tw-bg-opacity));
+}
 .bg-blue\/10 {
   background-color: rgb(52 156 226 / 0.1);
 }
@@ -1393,6 +1403,9 @@ select {
 }
 .bg-none {
   background-image: none;
+}
+.fill-black {
+  fill: #000;
 }
 .fill-current {
   fill: currentColor;
@@ -1494,6 +1507,9 @@ select {
 .text-\[13px\] {
   font-size: 13px;
 }
+.text-\[14px\] {
+  font-size: 14px;
+}
 .text-\[15px\] {
   font-size: 15px;
 }
@@ -1518,6 +1534,9 @@ select {
 }
 .font-medium {
   font-weight: 500;
+}
+.font-normal {
+  font-weight: 400;
 }
 .font-semibold {
   font-weight: 600;
@@ -1584,8 +1603,14 @@ select {
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }
+.underline {
+  text-decoration-line: underline;
+}
 .no-underline {
   text-decoration-line: none;
+}
+.opacity-0 {
+  opacity: 0;
 }
 .opacity-100 {
   opacity: 1;

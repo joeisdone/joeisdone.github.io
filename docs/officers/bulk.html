@@ -36,21 +36,21 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Bulk Officer Search | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.10.0" />
+<meta name="generator" content="Jekyll v3.9.5" />
 <meta property="og:title" content="Bulk Officer Search" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="https://datarepublican.com/officers/bulk.html" />
-<meta property="og:url" content="https://datarepublican.com/officers/bulk.html" />
+<link rel="canonical" href="http://localhost:4000/officers/bulk.html" />
+<meta property="og:url" content="http://localhost:4000/officers/bulk.html" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="twitter:title" content="Bulk Officer Search" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Bulk Officer Search","image":"https://datarepublican.com/assets/images/og.png","url":"https://datarepublican.com/officers/bulk.html"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Bulk Officer Search","image":"http://localhost:4000/assets/images/og.png","url":"http://localhost:4000/officers/bulk.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -134,7 +134,7 @@ $(document).ready(function() {
       <strong class="text-base md:text-sm w-full md:w-auto text-left">Voter turnout analysis</strong>
       <span class="opacity-70 text-sm md:text-[13px] w-full md:w-auto text-left">2024 vs. previous elections</span>
       <span class="absolute top-[calc(50%-.625rem)] right-2 size-5 opacity-50 group-hover:opacity-100 transition-transform rotate-90">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
       </span>
     </button> 
 
@@ -372,7 +372,7 @@ $(document).ready(function() {
 
 <div id="searchContainer" class="mb-2">
   <div class="flex flex-col md:flex-row md:items-end gap-2 justify-between">
-    <form id="searchForm" class="flex flex-col md:flex-row gap-2 w-full">
+    <form id="searchForm" class="flex flex-col gap-1 w-full">
       
       <div class="flex flex-col gap-1 w-full">
         <label for="officerBulkBox" class="text-sm md:text-[15px] font-bold">
@@ -384,17 +384,19 @@ $(document).ready(function() {
                   placeholder="E.g. 'Jane Doe\nAlice Bob\n...'"></textarea>
       </div>
 
-      <span class="flex items-center gap-1 mt-2 md:mt-6">
-        <!-- The same button doubles as "Stop" during searching -->
-        <button type="submit" id="searchButton" disabled>
-          <span class="button-text">Search</span>
-          <img src="/assets/images/loading-white.svg" 
-               class="loading-spinner size-6 mx-auto" 
-               style="display: none;" 
-               alt="Loading..." />
-        </button>
-      </span>
-      <span id="statusMessage" class="mt-2"></span>
+      <div class="flex items-center gap-1">
+        <span class="flex items-center gap-1">
+          <!-- The same button doubles as "Stop" during searching -->
+          <button type="submit" id="searchButton" disabled>
+            <span class="button-text">Search</span>
+            <img src="/assets/images/loading-white.svg" 
+                class="loading-spinner size-6 mx-auto" 
+                style="display: none;" 
+                alt="Loading..." />
+          </button>
+        </span>
+        <span id="statusMessage"></span>
+      </div>
     </form>
 
     <div>
@@ -407,8 +409,12 @@ $(document).ready(function() {
 <div id="overlapContainer" class="mb-4"></div>
 
 <div class="mb-2">
-  <button id="downloadCsvBtn" style="display: none;" class="px-3 py-2 bg-blue-600 text-white text-sm rounded">
-    Download All Results as CSV
+
+  <button id="downloadCsvBtn" class="frameless" style="display: none;">
+    <span class="flex items-center gap-1 text-sm text-gray-500 font-semibold">
+      <img src="/assets/images/download.svg" class="size-5" alt="Download SVG">
+      Download results as CSV
+    </span>
   </button>
 </div>
 
@@ -647,9 +653,14 @@ $(document).ready(function() {
     // Create a container for this term's results
     const containerId = `searchTermContainer_${indexNum}`;
     const container = $(`
-      <div id="${containerId}" class="border border-gray-300 rounded p-2">
-        <div class="cursor-pointer font-bold text-[14px] text-blue-700 search-term-header">
-          Searching "<span class="search-term-label"></span>" <span class="search-term-progress">0</span> results received
+      <div id="${containerId}" class="border border-gray-300 rounded p-2 bg-white">
+        <div class="cursor-pointer font-bold text-[14px] search-term-header flex items-center gap-2">
+          <span class="inline-block size-6 text-black -m-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-rolling" style="background:none"><circle cx="50" cy="50" fill="none" stroke="#525252" stroke-width="6" r="24" stroke-dasharray="113.09733552923255 39.69911184307752" transform="rotate(132 50 50)"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 50;360 50 50" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"/></circle></svg>
+          </span>
+          <span>
+            Searching "<span class="search-term-label"></span>" <span class="search-term-progress font-normal opacity-75 text-[13px]">0 results found</span>
+          </span>
         </div>
         <div class="search-term-results mt-2" style="display:none;"></div>
       </div>
@@ -660,8 +671,16 @@ $(document).ready(function() {
     // Expand/collapse on click, but only if there are results
     container.find('.search-term-header').on('click', function() {
       const resultsDiv = container.find('.search-term-results');
+      const chevron = container.find('.chevron-icon');
       if (!resultsDiv.children().length) return; // no results -> do nothing
-      resultsDiv.slideToggle(200);
+      
+      if (resultsDiv.is(':visible')) {
+        resultsDiv.slideUp(200);
+        chevron.css('transform', 'rotate(0deg)');
+      } else {
+        resultsDiv.slideDown(200);
+        chevron.css('transform', 'rotate(90deg)');
+      }
     });
 
     // We'll gather up to 100 results for this name
@@ -671,7 +690,12 @@ $(document).ready(function() {
     let tokens = term.split(' ');  // each >=2 letters
     if (!tokens.length) {
       container.find('.search-term-header')
-               .text(`No valid tokens for "${term}"`);
+               .html(`
+                 <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon fill-black">
+                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
+                 </span>
+                 <span>No valid tokens for "${term}"</span>
+               `);
       return;
     }
 
@@ -702,7 +726,12 @@ $(document).ready(function() {
     }
 
     if (!finalSet || !finalSet.size) {
-      container.find('.search-term-header').text(`No results for "${term}"`);
+      container.find('.search-term-header').html(`
+        <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon fill-black">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
+        </span>
+        <span>No results for "${term}"</span>
+      `);
       return;
     }
 
@@ -803,15 +832,29 @@ $(document).ready(function() {
         totalFound++;
 
         // Update header progress
-        container.find('.search-term-progress').text(totalFound);
+        container.find('.search-term-progress').text(`${totalFound} results`);
       }
     }
 
     // done with all relevant batches
     if (totalFound === 0) {
-      container.find('.search-term-header').text(`No results for "${term}"`);
+      container.find('.search-term-header').html(`
+        <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon opacity-0">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
+        </span>
+        <span>No results for "${term}"</span>
+      `);
     } else {
-      container.find('.search-term-header').text(`Completed "${term}" ${totalFound} results`);
+      container.find('.search-term-header').html(`
+        <span class="inline-block size-4 text-black transition-transform duration-200 chevron-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 4 7.293 7.293a1 1 0 0 1 0 1.414L9 20"/></svg>
+        </span>
+        <span>Completed "${term}" <span class="font-normal opacity-75 text-[13px]">${totalFound} results</span></span>
+      `);
+      // Keep results hidden by default
+      container.find('.search-term-results').hide();
+      // Keep chevron in collapsed state
+      container.find('.chevron-icon').css('transform', 'rotate(0deg)');
     }
   }
 
@@ -849,7 +892,7 @@ $(document).ready(function() {
         let segments = [];
         for (let [term, arr] of data.terms.entries()) {
           // Each term might have multiple matched officers
-          // The user’s example lumps them like "term (title)", so let's do the same
+          // The user's example lumps them like "term (title)", so let's do the same
           // We'll just pick the first matched officer from that term, or list them all.
           for (let off of arr) {
             segments.push(`${off.name} (${off.title})`);
