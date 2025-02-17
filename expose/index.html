@@ -1168,16 +1168,20 @@ const addendum = `
           // Generate path with right angles and small curves
           const curveRadius = 20; // Radius for the curved corners
           
-          // Calculate control points for the path
-          const midY = sourcePoint.y + (targetPoint.y - sourcePoint.y) / 2;
+          // Calculate midpoint Y - adjust based on whether connection is to top or bottom
+          const isTopConnection = sourcePoint.y === sourceY; // True if connecting to top
+          const midY = isTopConnection ? 
+            Math.min(sourcePoint.y, targetPoint.y) - curveRadius : // For top connections, go above
+            Math.max(sourcePoint.y, targetPoint.y) + curveRadius;  // For bottom connections, go below
           
           // Build the path with curved corners
+          // Direction of curves changes based on whether it's a top or bottom connection
           return `
             M ${sourcePoint.x},${sourcePoint.y}
-            L ${sourcePoint.x},${midY - curveRadius}
+            L ${sourcePoint.x},${midY + (isTopConnection ? curveRadius : -curveRadius)}
             Q ${sourcePoint.x},${midY} ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -curveRadius : curveRadius)},${midY}
             L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? curveRadius : -curveRadius)},${midY}
-            Q ${targetPoint.x},${midY} ${targetPoint.x},${midY + (targetPoint.y > midY ? curveRadius : -curveRadius)}
+            Q ${targetPoint.x},${midY} ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -curveRadius : curveRadius)}
             L ${targetPoint.x},${targetPoint.y}
           `.trim();
         });
