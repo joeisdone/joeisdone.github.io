@@ -620,12 +620,41 @@ const addendum = `
       .join('g')
       .attr('class', 'link-group');
 
-    // Update the link creation to include both markers
+    // Add this after the linkGroup creation and before creating links
+    // Create arrow marker definitions
+    const defs = svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 5)
+      .attr('refY', 0)
+      .attr('markerWidth', 8)
+      .attr('markerHeight', 8)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#94A3B8');
+
+    // Create hover version
+    defs.append('marker')
+      .attr('id', 'arrow-hover')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 5)
+      .attr('refY', 0)
+      .attr('markerWidth', 8)
+      .attr('markerHeight', 8)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#2563EB');
+
+    // Update the link creation to use single marker at midpoint
     const links = linkElements.append('path')
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
       .attr('stroke-width', 2)
-      .attr('fill', 'none');
+      .attr('fill', 'none')
+      .attr('marker-mid', 'url(#arrow)');  // Use marker-mid for midpoint arrow
 
     // Update the hover effects
     linkElements.append('path')
@@ -635,10 +664,10 @@ const addendum = `
       .attr('fill', 'none')
       .style('cursor', 'pointer')
       .on('mouseover', function(event, d) {
-        // Highlight this link
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 3);
+          .attr('stroke-width', 3)
+          .attr('marker-mid', 'url(#arrow-hover)');
         
         // Highlight the label
         labelGroup.selectAll('.link-label-group')
@@ -661,10 +690,10 @@ const addendum = `
           .attr('stroke-width', 3);
       })
       .on('mouseout', function() {
-        // Reset all highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
+          .attr('stroke-width', 2)
+          .attr('marker-mid', 'url(#arrow)');
         
         labelGroup.selectAll('.label-bg')
           .attr('fill', '#F3F4F6')
@@ -1272,13 +1301,12 @@ const addendum = `
           // Direction of curves changes based on whether it's a top or bottom connection
           return `
             M ${sourcePoint.x},${sourcePoint.y}
-            L ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -20 : 20)}
-            C ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -40 : 40)}
+            L ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -40 : 40)}
+            C ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -60 : 60)}
               ${sourcePoint.x},${midY}
-              ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -40 : 40)},${midY}
-            L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? 40 : -40)},${midY}
-            C ${targetPoint.x + (targetPoint.x < sourcePoint.x ? 20 : -20)},${midY}
-              ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -40 : 40)}
+              ${targetPoint.x},${midY}
+            C ${targetPoint.x},${midY}
+              ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -60 : 60)}
               ${targetPoint.x},${targetPoint.y}
           `.trim();
         });
@@ -2115,29 +2143,29 @@ labelloc="t";\n`;
 
   // Add this helper function to calculate safe connection points
   function getSafeConnectionPoint(x, y, width, height, side) {
-    const cornerPadding = 30; // Increased padding from corners
-    const edgeInset = 40;    // How far to inset from the edges
+    const cornerPadding = 30;
+    const edgeInset = 40;
     
     switch(side) {
       case 'top':
         return {
-          x: x + width/2,  // Center point, will be adjusted by caller
-          y: y + edgeInset // Inset from top edge
+          x: x + width/2,
+          y: y  // Connect exactly at top edge
         };
       case 'bottom':
         return {
-          x: x + width/2,   // Center point, will be adjusted by caller
-          y: y + height - edgeInset // Inset from bottom edge
+          x: x + width/2,
+          y: y + height  // Connect exactly at bottom edge
         };
       case 'left':
         return {
-          x: x + edgeInset, // Inset from left edge
-          y: y + height/2   // Center point, will be adjusted by caller
+          x: x,  // Connect exactly at left edge
+          y: y + height/2
         };
       case 'right':
         return {
-          x: x + width - edgeInset, // Inset from right edge
-          y: y + height/2   // Center point, will be adjusted by caller
+          x: x + width,  // Connect exactly at right edge
+          y: y + height/2
         };
     }
   }
