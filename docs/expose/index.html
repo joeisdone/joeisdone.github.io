@@ -623,7 +623,9 @@ $(document).ready(function() {
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
+  // Add with other global variables at the top
   const BFS_CAP = 20;
+  const cornerPadding = 10; // Minimum distance from corners for line connections
 
   // Full data from CSV
   let charities = {};             // EIN -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
@@ -1046,20 +1048,25 @@ const addendum = `
       }
     });
 
-    // Create arrow marker definition
+    // First, update the arrow marker definitions to include both source and target markers
     svg.append('defs').selectAll('marker')
-      .data(['arrow'])
+      .data(['arrow-source', 'arrow-target', 'arrow-source-hover', 'arrow-target-hover'])
       .join('marker')
-      .attr('id', 'arrow')
+      .attr('id', d => d)
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 25) // Increased to ensure arrow doesn't overlap with node
+      .attr('refX', d => d.includes('source') ? -15 : 25) // Position arrows away from nodes
       .attr('refY', 0)
       .attr('markerWidth', 6)
       .attr('markerHeight', 6)
-      .attr('orient', 'auto')
+      .attr('orient', d => d.includes('source') ? 'auto-start-reverse' : 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#94A3B8');
+      .attr('fill', d => {
+        if (d.includes('hover')) {
+          return '#2563EB'; // Blue for hover state
+        }
+        return d.includes('source') ? '#DC2626' : '#94A3B8'; // Red for source, gray for target
+      });
 
     // Create link group
     const linkGroup = g.append('g').attr('class', 'links');
@@ -1068,15 +1075,16 @@ const addendum = `
       .join('g')
       .attr('class', 'link-group');
 
-    // Create links
+    // Update the link creation to include both markers
     const links = linkElements.append('path')
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
       .attr('stroke-width', 2)
       .attr('fill', 'none')
-      .attr('marker-end', 'url(#arrow)');
+      .attr('marker-start', 'url(#arrow-source)') // Add source arrow
+      .attr('marker-end', 'url(#arrow-target)');  // Add target arrow
 
-    // Create hover paths
+    // Update the hover effects
     linkElements.append('path')
       .attr('class', 'link-hover')
       .attr('stroke', 'transparent')
@@ -1087,7 +1095,9 @@ const addendum = `
         // Highlight this link
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 3);
+          .attr('stroke-width', 3)
+          .attr('marker-start', 'url(#arrow-source-hover)')
+          .attr('marker-end', 'url(#arrow-target-hover)');
         
         // Highlight the label
         labelGroup.selectAll('.link-label-group')
@@ -1113,7 +1123,10 @@ const addendum = `
         // Reset all highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
+          .attr('stroke-width', 2)
+          .attr('marker-start', 'url(#arrow-source)')
+          .attr('marker-end', 'url(#arrow-target)');
+        
         labelGroup.selectAll('.label-bg')
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
@@ -1592,7 +1605,7 @@ const addendum = `
           const targetX = d.target.x - targetWidth/2;
           const targetY = d.target.y - targetHeight/2;
 
-          // For source node (output) - use top/bottom with parallel spacing and position optimization
+          // For source node (output) - use top/bottom with parallel spacing and corner avoidance
           let sourcePoint;
           if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
             // Connect to top if target is above
@@ -1600,97 +1613,90 @@ const addendum = `
             
             // Sort connections based on target X position
             topConnections.sort((a, b) => {
-              const aTargetX = a.target.x - getNodeWidth(a.target)/2;
-              const bTargetX = b.target.x - getNodeWidth(b.target)/2;
-              return aTargetX - bTargetX; // Left to right ordering
+              const aTargetX = a.target.x;
+              const bTargetX = b.target.x;
+              return aTargetX - bTargetX;
             });
             
             const connectionIndex = topConnections.indexOf(d);
             const totalConnections = topConnections.length;
             
-            // Calculate position along the top edge
-            const spacing = 30; // Space between parallel lines
-            const totalWidth = Math.min((totalConnections - 1) * spacing, sourceWidth - 60); // Cap total width
-            const startX = sourceX + sourceWidth/2 - totalWidth/2;
-            const x = startX + (connectionIndex * spacing);
+            // Calculate spread from center
+            const spacing = 30;
+            const totalSpread = (totalConnections - 1) * spacing;
+            const safeWidth = sourceWidth - (cornerPadding * 2);
+            const actualSpread = Math.min(totalSpread, safeWidth);
+            const startX = sourceX + (sourceWidth/2) - (actualSpread/2);
             
-            sourcePoint = {
-              x: x,
-              y: sourceY
-            };
+            sourcePoint = getSafeConnectionPoint(sourceX, sourceY, sourceWidth, sourceHeight, 'top');
+            sourcePoint.x = startX + (connectionIndex * spacing);
           } else {
             // Connect to bottom if target is below
             const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom');
             
-            // Sort connections based on target X position
             bottomConnections.sort((a, b) => {
-              const aTargetX = a.target.x - getNodeWidth(a.target)/2;
-              const bTargetX = b.target.x - getNodeWidth(b.target)/2;
-              return aTargetX - bTargetX; // Left to right ordering
+              const aTargetX = a.target.x;
+              const bTargetX = b.target.x;
+              return aTargetX - bTargetX;
             });
             
             const connectionIndex = bottomConnections.indexOf(d);
             const totalConnections = bottomConnections.length;
             
             const spacing = 30;
-            const totalWidth = Math.min((totalConnections - 1) * spacing, sourceWidth - 60);
-            const startX = sourceX + sourceWidth/2 - totalWidth/2;
-            const x = startX + (connectionIndex * spacing);
+            const totalSpread = (totalConnections - 1) * spacing;
+            const safeWidth = sourceWidth - (cornerPadding * 2);
+            const actualSpread = Math.min(totalSpread, safeWidth);
+            const startX = sourceX + (sourceWidth/2) - (actualSpread/2);
             
-            sourcePoint = {
-              x: x,
-              y: sourceY + sourceHeight
-            };
+            sourcePoint = getSafeConnectionPoint(sourceX, sourceY, sourceWidth, sourceHeight, 'bottom');
+            sourcePoint.x = startX + (connectionIndex * spacing);
           }
 
-          // For target node (input) - use left/right with parallel spacing and position optimization
+          // For target node (input) - use left/right with parallel spacing and corner avoidance
           let targetPoint;
           if (targetX + targetWidth/2 < sourceX + sourceWidth/2) {
             // Connect to right side if target is to the left
             const rightConnections = getConnectionsToSide(edges, d.target.id, 'right');
             
-            // Sort connections based on source Y position
             rightConnections.sort((a, b) => {
-              const aSourceY = a.source.y - getNodeHeight(a.source)/2;
-              const bSourceY = b.source.y - getNodeHeight(b.source)/2;
-              return aSourceY - bSourceY; // Top to bottom ordering
+              const aSourceY = a.source.y;
+              const bSourceY = b.source.y;
+              return aSourceY - bSourceY;
             });
             
             const connectionIndex = rightConnections.indexOf(d);
             const totalConnections = rightConnections.length;
             
-            const spacing = 20; // Slightly smaller spacing for sides
-            const totalHeight = Math.min((totalConnections - 1) * spacing, targetHeight - 40);
-            const startY = targetY + targetHeight/2 - totalHeight/2;
-            const y = startY + (connectionIndex * spacing);
+            const spacing = 20;
+            const totalSpread = (totalConnections - 1) * spacing;
+            const safeHeight = targetHeight - (cornerPadding * 2);
+            const actualSpread = Math.min(totalSpread, safeHeight);
+            const startY = targetY + (targetHeight/2) - (actualSpread/2);
             
-            targetPoint = {
-              x: targetX + targetWidth,
-              y: y
-            };
+            targetPoint = getSafeConnectionPoint(targetX, targetY, targetWidth, targetHeight, 'right');
+            targetPoint.y = startY + (connectionIndex * spacing);
           } else {
             // Connect to left side if target is to the right
             const leftConnections = getConnectionsToSide(edges, d.target.id, 'left');
             
-            // Sort connections based on source Y position
             leftConnections.sort((a, b) => {
-              const aSourceY = a.source.y - getNodeHeight(a.source)/2;
-              const bSourceY = b.source.y - getNodeHeight(b.source)/2;
-              return aSourceY - bSourceY; // Top to bottom ordering
+              const aSourceY = a.source.y;
+              const bSourceY = b.source.y;
+              return aSourceY - bSourceY;
             });
             
             const connectionIndex = leftConnections.indexOf(d);
             const totalConnections = leftConnections.length;
             
             const spacing = 20;
-            const totalHeight = Math.min((totalConnections - 1) * spacing, targetHeight - 40);
-            const startY = targetY + targetHeight/2 - totalHeight/2;
-            const y = startY + (connectionIndex * spacing);
+            const totalSpread = (totalConnections - 1) * spacing;
+            const safeHeight = targetHeight - (cornerPadding * 2);
+            const actualSpread = Math.min(totalSpread, safeHeight);
+            const startY = targetY + (targetHeight/2) - (actualSpread/2);
             
-            targetPoint = {
-              x: targetX,
-              y: y
-            };
+            targetPoint = getSafeConnectionPoint(targetX, targetY, targetWidth, targetHeight, 'left');
+            targetPoint.y = startY + (connectionIndex * spacing);
           }
 
           // Generate path with right angles and small curves
@@ -2542,6 +2548,34 @@ labelloc="t";\n`;
   function handleSearchResultHover(index) {
     selectedSearchIndex = index;
     updateSearchSelection(document.querySelectorAll('[data-index]'));
+  }
+
+  // Add this helper function to calculate safe connection points
+  function getSafeConnectionPoint(x, y, width, height, side) {
+    const cornerPadding = 10; // Minimum distance from corners
+    
+    switch(side) {
+      case 'top':
+        return {
+          x: x + width/2, // Start from center, will be adjusted by caller
+          y: y
+        };
+      case 'bottom':
+        return {
+          x: x + width/2, // Start from center, will be adjusted by caller
+          y: y + height
+        };
+      case 'left':
+        return {
+          x: x,
+          y: y + height/2 // Start from center, will be adjusted by caller
+        };
+      case 'right':
+        return {
+          x: x + width,
+          y: y + height/2 // Start from center, will be adjusted by caller
+        };
+    }
   }
 </script>
 
