@@ -1686,13 +1686,14 @@ const addendum = `
           // Direction of curves changes based on whether it's a top or bottom connection
           return `
             M ${sourcePoint.x},${sourcePoint.y}
-            L ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -40 : 40)}
-            L ${sourcePoint.x},${midY + (isTopConnection ? curveRadius : -curveRadius)}
-            Q ${sourcePoint.x},${midY} ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -curveRadius : curveRadius)},${midY}
-            L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? curveRadius : -curveRadius)},${midY}
-            Q ${targetPoint.x},${midY} ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -curveRadius : curveRadius)}
-            L ${targetPoint.x},${targetPoint.y - 40}
-            L ${targetPoint.x},${targetPoint.y}
+            L ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -20 : 20)}
+            C ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -40 : 40)}
+              ${sourcePoint.x},${midY}
+              ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -40 : 40)},${midY}
+            L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? 40 : -40)},${midY}
+            C ${targetPoint.x + (targetPoint.x < sourcePoint.x ? 20 : -20)},${midY}
+              ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -40 : 40)}
+              ${targetPoint.x},${targetPoint.y}
           `.trim();
         });
 
@@ -2528,28 +2529,29 @@ labelloc="t";\n`;
 
   // Add this helper function to calculate safe connection points
   function getSafeConnectionPoint(x, y, width, height, side) {
-    const cornerPadding = 10; // Minimum distance from corners
+    const cornerPadding = 30; // Increased padding from corners
+    const edgeInset = 40;    // How far to inset from the edges
     
     switch(side) {
       case 'top':
         return {
-          x: x + width/2, // Start from center, will be adjusted by caller
-          y: y
+          x: x + width/2,  // Center point, will be adjusted by caller
+          y: y + edgeInset // Inset from top edge
         };
       case 'bottom':
         return {
-          x: x + width/2, // Start from center, will be adjusted by caller
-          y: y + height
+          x: x + width/2,   // Center point, will be adjusted by caller
+          y: y + height - edgeInset // Inset from bottom edge
         };
       case 'left':
         return {
-          x: x,
-          y: y + height/2 // Start from center, will be adjusted by caller
+          x: x + edgeInset, // Inset from left edge
+          y: y + height/2   // Center point, will be adjusted by caller
         };
       case 'right':
         return {
-          x: x + width,
-          y: y + height/2 // Start from center, will be adjusted by caller
+          x: x + width - edgeInset, // Inset from right edge
+          y: y + height/2   // Center point, will be adjusted by caller
         };
     }
   }
