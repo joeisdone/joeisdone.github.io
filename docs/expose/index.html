@@ -649,6 +649,30 @@ $(document).ready(function() {
   let zoom = null;
   let selectedSearchIndex = 0; // Track selected search result
 
+  // Add these helper functions at the top
+  function getConnectionsToSide(edges, nodeId, side) {
+    // side can be 'top', 'bottom', 'left', 'right'
+    return edges.filter(edge => {
+      if (side === 'top' || side === 'bottom') {
+        // For source node connections
+        if (edge.source.id !== nodeId) return false;
+        const sourceY = edge.source.y - getNodeHeight(edge.source)/2;
+        const targetY = edge.target.y - getNodeHeight(edge.target)/2;
+        return side === 'top' ? 
+          targetY + getNodeHeight(edge.target)/2 < sourceY + getNodeHeight(edge.source)/2 :
+          targetY + getNodeHeight(edge.target)/2 >= sourceY + getNodeHeight(edge.source)/2;
+      } else {
+        // For target node connections
+        if (edge.target.id !== nodeId) return false;
+        const sourceX = edge.source.x - getNodeWidth(edge.source)/2;
+        const targetX = edge.target.x - getNodeWidth(edge.target)/2;
+        return side === 'left' ?
+          sourceX + getNodeWidth(edge.source)/2 >= targetX + getNodeWidth(edge.target)/2 :
+          sourceX + getNodeWidth(edge.source)/2 < targetX + getNodeWidth(edge.target)/2;
+      }
+    });
+  }
+
   $(document).ready(function() {
 
     // Parse query params first
@@ -1568,35 +1592,72 @@ const addendum = `
           const targetX = d.target.x - targetWidth/2;
           const targetY = d.target.y - targetHeight/2;
 
-          // For source node (output) - use top/bottom
+          // For source node (output) - use top/bottom with parallel spacing
           let sourcePoint;
           if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
             // Connect to top if target is above
+            const topConnections = getConnectionsToSide(edges, d.source.id, 'top');
+            const connectionIndex = topConnections.indexOf(d);
+            const totalConnections = topConnections.length;
+            
+            // Calculate position along the top edge
+            const spacing = 30; // Space between parallel lines
+            const totalWidth = (totalConnections - 1) * spacing;
+            const startX = sourceX + sourceWidth/2 - totalWidth/2;
+            const x = startX + (connectionIndex * spacing);
+            
             sourcePoint = {
-              x: sourceX + sourceWidth/2, // Center of top edge
+              x: x,
               y: sourceY
             };
           } else {
             // Connect to bottom if target is below
+            const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom');
+            const connectionIndex = bottomConnections.indexOf(d);
+            const totalConnections = bottomConnections.length;
+            
+            const spacing = 30;
+            const totalWidth = (totalConnections - 1) * spacing;
+            const startX = sourceX + sourceWidth/2 - totalWidth/2;
+            const x = startX + (connectionIndex * spacing);
+            
             sourcePoint = {
-              x: sourceX + sourceWidth/2, // Center of bottom edge
+              x: x,
               y: sourceY + sourceHeight
             };
           }
 
-          // For target node (input) - use left/right sides
+          // For target node (input) - use left/right with parallel spacing
           let targetPoint;
           if (targetX + targetWidth/2 < sourceX + sourceWidth/2) {
             // Connect to right side if target is to the left
+            const rightConnections = getConnectionsToSide(edges, d.target.id, 'right');
+            const connectionIndex = rightConnections.indexOf(d);
+            const totalConnections = rightConnections.length;
+            
+            const spacing = 20; // Slightly smaller spacing for sides
+            const totalHeight = (totalConnections - 1) * spacing;
+            const startY = targetY + targetHeight/2 - totalHeight/2;
+            const y = startY + (connectionIndex * spacing);
+            
             targetPoint = {
               x: targetX + targetWidth,
-              y: targetY + targetHeight/2 // Middle of right edge
+              y: y
             };
           } else {
             // Connect to left side if target is to the right
+            const leftConnections = getConnectionsToSide(edges, d.target.id, 'left');
+            const connectionIndex = leftConnections.indexOf(d);
+            const totalConnections = leftConnections.length;
+            
+            const spacing = 20;
+            const totalHeight = (totalConnections - 1) * spacing;
+            const startY = targetY + targetHeight/2 - totalHeight/2;
+            const y = startY + (connectionIndex * spacing);
+            
             targetPoint = {
               x: targetX,
-              y: targetY + targetHeight/2 // Middle of left edge
+              y: y
             };
           }
 
