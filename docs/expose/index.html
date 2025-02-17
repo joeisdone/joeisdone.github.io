@@ -1592,17 +1592,25 @@ const addendum = `
           const targetX = d.target.x - targetWidth/2;
           const targetY = d.target.y - targetHeight/2;
 
-          // For source node (output) - use top/bottom with parallel spacing
+          // For source node (output) - use top/bottom with parallel spacing and position optimization
           let sourcePoint;
           if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
             // Connect to top if target is above
             const topConnections = getConnectionsToSide(edges, d.source.id, 'top');
+            
+            // Sort connections based on target X position
+            topConnections.sort((a, b) => {
+              const aTargetX = a.target.x - getNodeWidth(a.target)/2;
+              const bTargetX = b.target.x - getNodeWidth(b.target)/2;
+              return aTargetX - bTargetX; // Left to right ordering
+            });
+            
             const connectionIndex = topConnections.indexOf(d);
             const totalConnections = topConnections.length;
             
             // Calculate position along the top edge
             const spacing = 30; // Space between parallel lines
-            const totalWidth = (totalConnections - 1) * spacing;
+            const totalWidth = Math.min((totalConnections - 1) * spacing, sourceWidth - 60); // Cap total width
             const startX = sourceX + sourceWidth/2 - totalWidth/2;
             const x = startX + (connectionIndex * spacing);
             
@@ -1613,11 +1621,19 @@ const addendum = `
           } else {
             // Connect to bottom if target is below
             const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom');
+            
+            // Sort connections based on target X position
+            bottomConnections.sort((a, b) => {
+              const aTargetX = a.target.x - getNodeWidth(a.target)/2;
+              const bTargetX = b.target.x - getNodeWidth(b.target)/2;
+              return aTargetX - bTargetX; // Left to right ordering
+            });
+            
             const connectionIndex = bottomConnections.indexOf(d);
             const totalConnections = bottomConnections.length;
             
             const spacing = 30;
-            const totalWidth = (totalConnections - 1) * spacing;
+            const totalWidth = Math.min((totalConnections - 1) * spacing, sourceWidth - 60);
             const startX = sourceX + sourceWidth/2 - totalWidth/2;
             const x = startX + (connectionIndex * spacing);
             
@@ -1627,16 +1643,24 @@ const addendum = `
             };
           }
 
-          // For target node (input) - use left/right with parallel spacing
+          // For target node (input) - use left/right with parallel spacing and position optimization
           let targetPoint;
           if (targetX + targetWidth/2 < sourceX + sourceWidth/2) {
             // Connect to right side if target is to the left
             const rightConnections = getConnectionsToSide(edges, d.target.id, 'right');
+            
+            // Sort connections based on source Y position
+            rightConnections.sort((a, b) => {
+              const aSourceY = a.source.y - getNodeHeight(a.source)/2;
+              const bSourceY = b.source.y - getNodeHeight(b.source)/2;
+              return aSourceY - bSourceY; // Top to bottom ordering
+            });
+            
             const connectionIndex = rightConnections.indexOf(d);
             const totalConnections = rightConnections.length;
             
             const spacing = 20; // Slightly smaller spacing for sides
-            const totalHeight = (totalConnections - 1) * spacing;
+            const totalHeight = Math.min((totalConnections - 1) * spacing, targetHeight - 40);
             const startY = targetY + targetHeight/2 - totalHeight/2;
             const y = startY + (connectionIndex * spacing);
             
@@ -1647,11 +1671,19 @@ const addendum = `
           } else {
             // Connect to left side if target is to the right
             const leftConnections = getConnectionsToSide(edges, d.target.id, 'left');
+            
+            // Sort connections based on source Y position
+            leftConnections.sort((a, b) => {
+              const aSourceY = a.source.y - getNodeHeight(a.source)/2;
+              const bSourceY = b.source.y - getNodeHeight(b.source)/2;
+              return aSourceY - bSourceY; // Top to bottom ordering
+            });
+            
             const connectionIndex = leftConnections.indexOf(d);
             const totalConnections = leftConnections.length;
             
             const spacing = 20;
-            const totalHeight = (totalConnections - 1) * spacing;
+            const totalHeight = Math.min((totalConnections - 1) * spacing, targetHeight - 40);
             const startY = targetY + targetHeight/2 - totalHeight/2;
             const y = startY + (connectionIndex * spacing);
             
