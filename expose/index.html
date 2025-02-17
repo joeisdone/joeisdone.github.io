@@ -1144,13 +1144,12 @@ const addendum = `
           const targetX = d.target.x - targetWidth/2;
           const targetY = d.target.y - targetHeight/2;
 
-          // For source node (output) - use top/bottom with parallel spacing and corner avoidance
+          // For source node (output) - use top/bottom with parallel spacing
           let sourcePoint;
           if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
             // Connect to top if target is above
             const topConnections = getConnectionsToSide(edges, d.source.id, 'top');
             
-            // Sort connections based on target X position
             topConnections.sort((a, b) => {
               const aTargetX = a.target.x;
               const bTargetX = b.target.x;
@@ -1160,17 +1159,24 @@ const addendum = `
             const connectionIndex = topConnections.indexOf(d);
             const totalConnections = topConnections.length;
             
-            // Calculate spread from center
-            const spacing = 30;
-            const totalSpread = (totalConnections - 1) * spacing;
-            const safeWidth = sourceWidth - (cornerPadding * 2);
-            const actualSpread = Math.min(totalSpread, safeWidth);
-            const startX = sourceX + (sourceWidth/2) - (actualSpread/2);
+            // Increase spacing and use more of the node's width
+            const minSpacing = 40;  // Minimum space between lines (increased from 30)
+            const maxSpread = sourceWidth * 0.8;  // Use 80% of the node's width
+            
+            // Calculate actual spacing based on number of connections
+            const spacing = Math.min(
+              minSpacing,
+              maxSpread / (totalConnections + 1)  // +1 to leave some padding
+            );
+            
+            // Calculate starting point to center the spread
+            const totalWidth = spacing * (totalConnections - 1);
+            const startX = sourceX + (sourceWidth/2) - (totalWidth/2);
             
             sourcePoint = getSafeConnectionPoint(sourceX, sourceY, sourceWidth, sourceHeight, 'top');
             sourcePoint.x = startX + (connectionIndex * spacing);
           } else {
-            // Connect to bottom if target is below
+            // Similar changes for bottom connections
             const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom');
             
             bottomConnections.sort((a, b) => {
@@ -1182,17 +1188,22 @@ const addendum = `
             const connectionIndex = bottomConnections.indexOf(d);
             const totalConnections = bottomConnections.length;
             
-            const spacing = 30;
-            const totalSpread = (totalConnections - 1) * spacing;
-            const safeWidth = sourceWidth - (cornerPadding * 2);
-            const actualSpread = Math.min(totalSpread, safeWidth);
-            const startX = sourceX + (sourceWidth/2) - (actualSpread/2);
+            const minSpacing = 40;
+            const maxSpread = sourceWidth * 0.8;
+            
+            const spacing = Math.min(
+              minSpacing,
+              maxSpread / (totalConnections + 1)
+            );
+            
+            const totalWidth = spacing * (totalConnections - 1);
+            const startX = sourceX + (sourceWidth/2) - (totalWidth/2);
             
             sourcePoint = getSafeConnectionPoint(sourceX, sourceY, sourceWidth, sourceHeight, 'bottom');
             sourcePoint.x = startX + (connectionIndex * spacing);
           }
 
-          // For target node (input) - use left/right with parallel spacing and corner avoidance
+          // For target node (input) - use left/right with parallel spacing
           let targetPoint;
           if (targetX + targetWidth/2 < sourceX + sourceWidth/2) {
             // Connect to right side if target is to the left
@@ -1207,11 +1218,16 @@ const addendum = `
             const connectionIndex = rightConnections.indexOf(d);
             const totalConnections = rightConnections.length;
             
-            const spacing = 20;
-            const totalSpread = (totalConnections - 1) * spacing;
-            const safeHeight = targetHeight - (cornerPadding * 2);
-            const actualSpread = Math.min(totalSpread, safeHeight);
-            const startY = targetY + (targetHeight/2) - (actualSpread/2);
+            const minSpacing = 30;  // Slightly smaller spacing for vertical spread
+            const maxSpread = targetHeight * 0.8;
+            
+            const spacing = Math.min(
+              minSpacing,
+              maxSpread / (totalConnections + 1)
+            );
+            
+            const totalHeight = spacing * (totalConnections - 1);
+            const startY = targetY + (targetHeight/2) - (totalHeight/2);
             
             targetPoint = getSafeConnectionPoint(targetX, targetY, targetWidth, targetHeight, 'right');
             targetPoint.y = startY + (connectionIndex * spacing);
@@ -1228,11 +1244,16 @@ const addendum = `
             const connectionIndex = leftConnections.indexOf(d);
             const totalConnections = leftConnections.length;
             
-            const spacing = 20;
-            const totalSpread = (totalConnections - 1) * spacing;
-            const safeHeight = targetHeight - (cornerPadding * 2);
-            const actualSpread = Math.min(totalSpread, safeHeight);
-            const startY = targetY + (targetHeight/2) - (actualSpread/2);
+            const minSpacing = 30;  // Slightly smaller spacing for vertical spread
+            const maxSpread = targetHeight * 0.8;
+            
+            const spacing = Math.min(
+              minSpacing,
+              maxSpread / (totalConnections + 1)
+            );
+            
+            const totalHeight = spacing * (totalConnections - 1);
+            const startY = targetY + (targetHeight/2) - (totalHeight/2);
             
             targetPoint = getSafeConnectionPoint(targetX, targetY, targetWidth, targetHeight, 'left');
             targetPoint.y = startY + (connectionIndex * spacing);
