@@ -613,26 +613,6 @@ const addendum = `
       }
     });
 
-    // First, update the arrow marker definitions to include both source and target markers
-    svg.append('defs').selectAll('marker')
-      .data(['arrow-source', 'arrow-target', 'arrow-source-hover', 'arrow-target-hover'])
-      .join('marker')
-      .attr('id', d => d)
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', d => d.includes('source') ? -15 : 25) // Position arrows away from nodes
-      .attr('refY', 0)
-      .attr('markerWidth', 6)
-      .attr('markerHeight', 6)
-      .attr('orient', d => d.includes('source') ? 'auto-start-reverse' : 'auto')
-      .append('path')
-      .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', d => {
-        if (d.includes('hover')) {
-          return '#2563EB'; // Blue for hover state
-        }
-        return d.includes('source') ? '#DC2626' : '#94A3B8'; // Red for source, gray for target
-      });
-
     // Create link group
     const linkGroup = g.append('g').attr('class', 'links');
     const linkElements = linkGroup.selectAll('g')
@@ -645,9 +625,7 @@ const addendum = `
       .attr('class', 'link')
       .attr('stroke', '#94A3B8')
       .attr('stroke-width', 2)
-      .attr('fill', 'none')
-      .attr('marker-start', 'url(#arrow-source)') // Add source arrow
-      .attr('marker-end', 'url(#arrow-target)');  // Add target arrow
+      .attr('fill', 'none');
 
     // Update the hover effects
     linkElements.append('path')
@@ -660,9 +638,7 @@ const addendum = `
         // Highlight this link
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 3)
-          .attr('marker-start', 'url(#arrow-source-hover)')
-          .attr('marker-end', 'url(#arrow-target-hover)');
+          .attr('stroke-width', 3);
         
         // Highlight the label
         labelGroup.selectAll('.link-label-group')
@@ -688,9 +664,7 @@ const addendum = `
         // Reset all highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2)
-          .attr('marker-start', 'url(#arrow-source)')
-          .attr('marker-end', 'url(#arrow-target)');
+          .attr('stroke-width', 2);
         
         labelGroup.selectAll('.label-bg')
           .attr('fill', '#F3F4F6')
@@ -1277,10 +1251,12 @@ const addendum = `
           // Direction of curves changes based on whether it's a top or bottom connection
           return `
             M ${sourcePoint.x},${sourcePoint.y}
+            L ${sourcePoint.x},${sourcePoint.y + (isTopConnection ? -40 : 40)}
             L ${sourcePoint.x},${midY + (isTopConnection ? curveRadius : -curveRadius)}
             Q ${sourcePoint.x},${midY} ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -curveRadius : curveRadius)},${midY}
             L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? curveRadius : -curveRadius)},${midY}
             Q ${targetPoint.x},${midY} ${targetPoint.x},${targetPoint.y + (targetPoint.y > midY ? -curveRadius : curveRadius)}
+            L ${targetPoint.x},${targetPoint.y - 40}
             L ${targetPoint.x},${targetPoint.y}
           `.trim();
         });
