@@ -328,6 +328,71 @@ http://www.zlib.net/zlib_license.html
     return Viz;
   }();
 
+  // Function to perform topological sorting and identify source/sink nodes
+  function topologicalSortAndPosition(nodes, edges) {
+    const inDegree = {};
+    const outDegree = {};
+    const adjList = {};
+
+    nodes.forEach(node => {
+      inDegree[node.id] = 0;
+      outDegree[node.id] = 0;
+      adjList[node.id] = [];
+    });
+
+    edges.forEach(edge => {
+      inDegree[edge.target.id]++;
+      outDegree[edge.source.id]++;
+      adjList[edge.source.id].push(edge.target.id);
+    });
+
+    const queue = [];
+    nodes.forEach(node => {
+      if (inDegree[node.id] === 0) {
+        queue.push(node.id);
+      }
+    });
+
+    const sorted = [];
+    while (queue.length > 0) {
+      const nodeId = queue.shift();
+      sorted.push(nodeId);
+
+      adjList[nodeId].forEach(neighbor => {
+        inDegree[neighbor]--;
+        if (inDegree[neighbor] === 0) {
+          queue.push(neighbor);
+        }
+      });
+    }
+
+    // Position nodes
+    const sourceNodes = sorted.filter(id => outDegree[id] > 0 && inDegree[id] === 0);
+    const sinkNodes = sorted.filter(id => inDegree[id] > 0 && outDegree[id] === 0);
+    const intermediateNodes = sorted.filter(id => inDegree[id] > 0 && outDegree[id] > 0);
+
+    sourceNodes.forEach((id, index) => {
+      const node = nodes.find(n => n.id === id);
+      node.x = width * 0.1;
+      node.y = (height / (sourceNodes.length + 1)) * (index + 1);
+    });
+
+    sinkNodes.forEach((id, index) => {
+      const node = nodes.find(n => n.id === id);
+      node.x = width * 0.9;
+      node.y = (height / (sinkNodes.length + 1)) * (index + 1);
+    });
+
+    intermediateNodes.forEach((id, index) => {
+      const node = nodes.find(n => n.id === id);
+      node.x = width * 0.5;
+      node.y = (height / (intermediateNodes.length + 1)) * (index + 1);
+    });
+  }
+
+  // Call the function to position nodes
+  topologicalSortAndPosition(nodes, edges);
+
   return Viz;
 
 })));

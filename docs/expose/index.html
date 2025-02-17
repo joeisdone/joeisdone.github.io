@@ -36,21 +36,21 @@ $(document).ready(function() {
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>Charity graph - multi-root BFS &amp; taxpayer totals | DataRepublican</title>
-<meta name="generator" content="Jekyll v3.10.0" />
+<meta name="generator" content="Jekyll v3.9.5" />
 <meta property="og:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="https://datarepublican.com/expose/" />
-<meta property="og:url" content="https://datarepublican.com/expose/" />
+<link rel="canonical" href="http://localhost:4000/expose/" />
+<meta property="og:url" content="http://localhost:4000/expose/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://datarepublican.com/assets/images/og.png" />
+<meta property="twitter:image" content="http://localhost:4000/assets/images/og.png" />
 <meta property="twitter:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"https://datarepublican.com/assets/images/og.png","url":"https://datarepublican.com/expose/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"http://localhost:4000/assets/images/og.png","url":"http://localhost:4000/expose/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -805,7 +805,7 @@ const addendum = `
 
       <p style="color: black; background: cyan; text-align: center; padding: 15px; border: 5px double red;">
           🤔🤔 <strong>WHO'S TRULY <a href="https://www.dictionary.com/browse/dependent" title="Link to definition if you don't know the word." style="color: inherit; text-decoration: underline;">DEPENDENT</a> ON USAID?!</strong> 🤔🤔 <br/>
-          <span style="color: red;">The ones who DON’T want it to be shut down! 🔥🔥🔥</span> <br/>
+          <span style="color: red;">The ones who DON'T want it to be shut down! 🔥🔥🔥</span> <br/>
           <strong style="color: blue; text-transform: uppercase;">THIS IS COMMON SENSE!!!</strong> 🚨🚨🚨
       </p>
 
@@ -1028,7 +1028,7 @@ const addendum = `
       .join('marker')
       .attr('id', 'arrow')
       .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 20)
+      .attr('refX', 25) // Increased to ensure arrow doesn't overlap with node
       .attr('refY', 0)
       .attr('markerWidth', 6)
       .attr('markerHeight', 6)
@@ -1509,25 +1509,25 @@ const addendum = `
         .strength(forceParams.charge)
         .distanceMin(200)
         .distanceMax(forceParams.linkDistance * 2))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('y', d3.forceY(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the top
-        const yPos = height * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return yPos;
-      }).strength(0.5))
+      // Remove or modify the center force to allow horizontal layout
+      //.force('center', d3.forceCenter(width / 2, height / 2))
+      // Add horizontal positioning force based on node type
       .force('x', d3.forceX(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the left
-        const xPos = width * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return xPos;
-      }).strength(0.5))
+        // Check if node is source (no incoming edges)
+        const isSource = edges.every(e => e.target.id !== d.id);
+        // Check if node is sink (no outgoing edges)
+        const isSink = edges.every(e => e.source.id !== d.id);
+        
+        if (isSource) {
+          return width * 0.1; // Source nodes on the left
+        } else if (isSink) {
+          return width * 0.9; // Sink nodes on the right
+        } else {
+          return width * 0.5; // Intermediate nodes in the middle
+        }
+      }).strength(1))
+      // Vertical positioning to spread nodes
+      .force('y', d3.forceY(height / 2).strength(0.1))
       .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
       .alpha(0.3)
       .alphaDecay(0.05)
@@ -1562,72 +1562,66 @@ const addendum = `
           const targetWidth = getNodeWidth(d.target);
           const targetHeight = getNodeHeight(d.target);
           
-          const sourceX = d.source.x || 0;
-          const sourceY = d.source.y || 0;
-          const targetX = d.target.x || 0;
-          const targetY = d.target.y || 0;
-          
-          // Calculate center points of nodes
-          const sourceCenterX = sourceX;
-          const sourceCenterY = sourceY;
-          const targetCenterX = targetX;
-          const targetCenterY = targetY;
-          
-          // Calculate angle between centers
-          const dx = targetCenterX - sourceCenterX;
-          const dy = targetCenterY - sourceCenterY;
-          const angle = Math.atan2(dy, dx);
-          
-          // Determine connection points
-          let sourcePoint, targetPoint;
-          
-          // Source connection point
-          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-            // Connect to right/left side
+          // Calculate actual node positions (top-left corner)
+          const sourceX = d.source.x - sourceWidth/2;
+          const sourceY = d.source.y - sourceHeight/2;
+          const targetX = d.target.x - targetWidth/2;
+          const targetY = d.target.y - targetHeight/2;
+
+          // For source node (output) - use left/right sides
+          let sourcePoint;
+          if (targetX < sourceX) {
+            // Connect to left side if target is to the left
             sourcePoint = {
-              x: sourceCenterX + (dx > 0 ? sourceWidth/2 : -sourceWidth/2),
-              y: sourceCenterY
+              x: sourceX,
+              y: sourceY + sourceHeight/2 // Middle of left edge
             };
           } else {
-            // Connect to top/bottom
+            // Connect to right side if target is to the right
             sourcePoint = {
-              x: sourceCenterX,
-              y: sourceCenterY + (dy > 0 ? sourceHeight/2 : -sourceHeight/2)
+              x: sourceX + sourceWidth,
+              y: sourceY + sourceHeight/2 // Middle of right edge
+            };
+          }
+
+          // For target node (input) - use top/bottom
+          let targetPoint;
+          if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
+            // Connect to bottom if target is above
+            targetPoint = {
+              x: targetX + targetWidth/2, // Center of bottom edge
+              y: targetY + targetHeight
+            };
+          } else {
+            // Connect to top if target is below
+            targetPoint = {
+              x: targetX + targetWidth/2, // Center of top edge
+              y: targetY
             };
           }
           
-          // Target connection point
-          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-            // Connect to right/left side
-            targetPoint = {
-              x: targetCenterX + (dx > 0 ? -targetWidth/2 : targetWidth/2),
-              y: targetCenterY
-            };
-          } else {
-            // Connect to top/bottom
-            targetPoint = {
-              x: targetCenterX,
-              y: targetCenterY + (dy > 0 ? -targetHeight/2 : targetHeight/2)
-            };
-          }
-          
-          // Create curved path
+          // Rest of the curve generation code remains the same...
           const distance = Math.sqrt(
             Math.pow(targetPoint.x - sourcePoint.x, 2) + 
             Math.pow(targetPoint.y - sourcePoint.y, 2)
           );
           
-          // Control point for the curve
+          const baseCurvature = Math.max(distance * 0.5, 150);
+          const curvature = Math.min(baseCurvature, 300);
+          
           const midX = (sourcePoint.x + targetPoint.x) / 2;
           const midY = (sourcePoint.y + targetPoint.y) / 2;
-          const curvature = Math.min(distance / 3, 100);
           
-          // Perpendicular vector for control point
-          const perpX = -(targetPoint.y - sourcePoint.y) / distance;
-          const perpY = (targetPoint.x - sourcePoint.x) / distance;
+          const dx = targetPoint.x - sourcePoint.x;
+          const dy = targetPoint.y - sourcePoint.y;
+          const norm = Math.sqrt(dx * dx + dy * dy);
+          const perpX = -dy / norm;
+          const perpY = dx / norm;
           
-          const ctrlX = midX + perpX * curvature;
-          const ctrlY = midY + perpY * curvature;
+          const curveDirection = (targetPoint.x > sourcePoint.x) ? 1 : -1;
+          
+          const ctrlX = midX + perpX * curvature * curveDirection;
+          const ctrlY = midY + perpY * curvature * curveDirection;
           
           return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
         });
@@ -1694,6 +1688,36 @@ const addendum = `
         console.log('14. Loading complete, graph should be visible');
       })
       .restart();
+
+    // After nodes and edges are loaded, but before simulation starts:
+    console.log('Node connectivity analysis:');
+
+    // Create a map to count inputs and outputs
+    const inputCounts = {};
+    const outputCounts = {};
+
+    // Initialize counts
+    nodes.forEach(node => {
+      inputCounts[node.id] = 0;
+      outputCounts[node.id] = 0;
+    });
+
+    // Count inputs and outputs
+    edges.forEach(edge => {
+      outputCounts[edge.source.id] = (outputCounts[edge.source.id] || 0) + 1;
+      inputCounts[edge.target.id] = (inputCounts[edge.target.id] || 0) + 1;
+    });
+
+    // Log the counts for each node in order
+    nodes.forEach(node => {
+      const charity = charities[node.id];
+      console.log(`Node: ${charity.name}
+        EIN: ${node.id}
+        Inputs: ${inputCounts[node.id]}
+        Outputs: ${outputCounts[node.id]}
+        Type: ${inputCounts[node.id] === 0 ? 'SOURCE' : outputCounts[node.id] === 0 ? 'SINK' : 'INTERMEDIATE'}
+        ----------------------------------------`);
+    });
   }
 
   // Helper functions for graph data preparation

@@ -880,8 +880,14 @@ select {
 .mb-2 {
   margin-bottom: 0.5rem;
 }
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
 .mb-4 {
   margin-bottom: 1rem;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
 }
 .mb-8 {
   margin-bottom: 2rem;
@@ -1591,6 +1597,9 @@ select {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
+.text-black\/70 {
+  color: rgb(0 0 0 / 0.7);
+}
 .text-black\/75 {
   color: rgb(0 0 0 / 0.75);
 }
@@ -1635,9 +1644,6 @@ select {
 }
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
-}
-.text-black\/70 {
-  color: rgb(0 0 0 / 0.7);
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
@@ -1728,11 +1734,11 @@ select {
 .duration-300 {
   transition-duration: 300ms;
 }
-.duration-700 {
-  transition-duration: 700ms;
-}
 .duration-500 {
   transition-duration: 500ms;
+}
+.duration-700 {
+  transition-duration: 700ms;
 }
 .ease-in {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
@@ -1958,6 +1964,14 @@ table {
 }
 
 @media (min-width: 640px) {
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:items-center {
+    align-items: center;
+  }
 
   .sm\:gap-2 {
     gap: 0.5rem;
