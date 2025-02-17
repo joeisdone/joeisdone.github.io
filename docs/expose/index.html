@@ -1568,65 +1568,56 @@ const addendum = `
           const targetX = d.target.x - targetWidth/2;
           const targetY = d.target.y - targetHeight/2;
 
-          // For source node (output) - use left/right sides
+          // For source node (output) - use top/bottom
           let sourcePoint;
-          if (targetX < sourceX) {
-            // Connect to left side if target is to the left
+          if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
+            // Connect to top if target is above
             sourcePoint = {
-              x: sourceX,
-              y: sourceY + sourceHeight/2 // Middle of left edge
+              x: sourceX + sourceWidth/2, // Center of top edge
+              y: sourceY
             };
           } else {
-            // Connect to right side if target is to the right
+            // Connect to bottom if target is below
             sourcePoint = {
-              x: sourceX + sourceWidth,
-              y: sourceY + sourceHeight/2 // Middle of right edge
+              x: sourceX + sourceWidth/2, // Center of bottom edge
+              y: sourceY + sourceHeight
             };
           }
 
-          // For target node (input) - use top/bottom
+          // For target node (input) - use left/right sides
           let targetPoint;
-          if (targetY + targetHeight/2 < sourceY + sourceHeight/2) {
-            // Connect to bottom if target is above
+          if (targetX + targetWidth/2 < sourceX + sourceWidth/2) {
+            // Connect to right side if target is to the left
             targetPoint = {
-              x: targetX + targetWidth/2, // Center of bottom edge
-              y: targetY + targetHeight
+              x: targetX + targetWidth,
+              y: targetY + targetHeight/2 // Middle of right edge
             };
           } else {
-            // Connect to top if target is below
+            // Connect to left side if target is to the right
             targetPoint = {
-              x: targetX + targetWidth/2, // Center of top edge
-              y: targetY
+              x: targetX,
+              y: targetY + targetHeight/2 // Middle of left edge
             };
           }
+
+          // Generate path with right angles and small curves
+          const curveRadius = 20; // Radius for the curved corners
           
-          // Rest of the curve generation code remains the same...
-          const distance = Math.sqrt(
-            Math.pow(targetPoint.x - sourcePoint.x, 2) + 
-            Math.pow(targetPoint.y - sourcePoint.y, 2)
-          );
+          // Calculate control points for the path
+          const midY = sourcePoint.y + (targetPoint.y - sourcePoint.y) / 2;
           
-          const baseCurvature = Math.max(distance * 0.5, 150);
-          const curvature = Math.min(baseCurvature, 300);
-          
-          const midX = (sourcePoint.x + targetPoint.x) / 2;
-          const midY = (sourcePoint.y + targetPoint.y) / 2;
-          
-          const dx = targetPoint.x - sourcePoint.x;
-          const dy = targetPoint.y - sourcePoint.y;
-          const norm = Math.sqrt(dx * dx + dy * dy);
-          const perpX = -dy / norm;
-          const perpY = dx / norm;
-          
-          const curveDirection = (targetPoint.x > sourcePoint.x) ? 1 : -1;
-          
-          const ctrlX = midX + perpX * curvature * curveDirection;
-          const ctrlY = midY + perpY * curvature * curveDirection;
-          
-          return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
+          // Build the path with curved corners
+          return `
+            M ${sourcePoint.x},${sourcePoint.y}
+            L ${sourcePoint.x},${midY - curveRadius}
+            Q ${sourcePoint.x},${midY} ${sourcePoint.x + (targetPoint.x < sourcePoint.x ? -curveRadius : curveRadius)},${midY}
+            L ${targetPoint.x + (targetPoint.x < sourcePoint.x ? curveRadius : -curveRadius)},${midY}
+            Q ${targetPoint.x},${midY} ${targetPoint.x},${midY + (targetPoint.y > midY ? curveRadius : -curveRadius)}
+            L ${targetPoint.x},${targetPoint.y}
+          `.trim();
         });
 
-        // Update hover paths
+        // Update hover paths to match the new path style
         linkElements.select('.link-hover')
           .attr('d', function() {
             return d3.select(this.parentNode).select('.link').attr('d');
