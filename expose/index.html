@@ -1174,20 +1174,67 @@ const addendum = `
         });
 
         // Update link paths with validation
-        links.attr('d', d => generatePath(d.source, d.target, d.target.y < d.source.y));
+        links.attr('d', d => {
+          if (!d.source || !d.target) return '';
 
-        // Add this to create short segments for arrows at the true midpoint
+          // Get all connections for this source/target to calculate spacing
+          const topConnections = getConnectionsToSide(edges, d.source.id, 'top')
+            .sort((a, b) => a.target.x - b.target.x);
+          const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom')
+            .sort((a, b) => a.target.x - b.target.x);
+
+          // Determine if this should be a top or bottom connection
+          const isTopConnection = d.target.y < d.source.y;
+          const connections = isTopConnection ? topConnections : bottomConnections;
+          const connectionIndex = connections.indexOf(d);
+
+          // Get distributed connection points
+          const sourcePoint = getSpacedConnectionPoint(
+            d.source,
+            connections,
+            connectionIndex,
+            isTopConnection ? 'top' : 'bottom',
+            getNodeWidth(d.source)
+          );
+
+          const targetPoint = {
+            x: d.target.x,
+            y: d.target.y
+          };
+
+          return generatePath(sourcePoint, targetPoint, isTopConnection);
+        });
+
+        // Update the arrow paths similarly
         arrowPaths.attr('d', d => {
-          const mainPath = generatePath(d.source, d.target, d.target.y < d.source.y);
+          // Use the same connection point calculation as above
+          const isTopConnection = d.target.y < d.source.y;
+          const connections = isTopConnection ? 
+            getConnectionsToSide(edges, d.source.id, 'top') :
+            getConnectionsToSide(edges, d.source.id, 'bottom');
+          const connectionIndex = connections.indexOf(d);
+
+          const sourcePoint = getSpacedConnectionPoint(
+            d.source,
+            connections,
+            connectionIndex,
+            isTopConnection ? 'top' : 'bottom',
+            getNodeWidth(d.source)
+          );
+
+          const targetPoint = {
+            x: d.target.x,
+            y: d.target.y
+          };
+
+          // Get the path for this connection
           const pathNode = d3.select(this.parentNode).select('.link').node();
           if (!pathNode) return '';
           
-          // Get the midpoint of the entire path
           const totalLength = pathNode.getTotalLength();
           const midPoint = pathNode.getPointAtLength(totalLength / 2);
           const beforeMid = pathNode.getPointAtLength((totalLength / 2) - 1);
           
-          // Create a short segment just for the arrow
           return `M ${beforeMid.x},${beforeMid.y} L ${midPoint.x},${midPoint.y}`;
         });
 
@@ -2044,21 +2091,21 @@ labelloc="t";\n`;
 
   // Update the path generation with better routing and minimal curves
   function generatePath(sourcePoint, targetPoint, isTopConnection) {
-    const nodeLength = 100;      // Length for segments connecting to nodes
-    const radius = 40;          // Increased radius for more rounded corners (4x from 10)
+    const nodeLength = 60;      // Reduced from 100 to create less extreme paths
+    const radius = 40;          // Keep the rounded corners
     
-    // Better calculation of whether to route up or down
+    // Calculate distances
     const verticalDistance = targetPoint.y - sourcePoint.y;
     const horizontalDistance = targetPoint.x - sourcePoint.x;
     const shouldRouteUp = verticalDistance < 0;
     
-    // Calculate a better midpoint Y that creates a smooth curve
-    // Use proportional distance to create smoother paths
+    // Calculate a proportional midpoint that's not as extreme
+    const verticalSpacing = Math.min(Math.abs(horizontalDistance/6), 100); // Cap the vertical spread
     const midY = shouldRouteUp ?
-      Math.min(sourcePoint.y, targetPoint.y) - Math.abs(horizontalDistance/4) :
-      Math.max(sourcePoint.y, targetPoint.y) + Math.abs(horizontalDistance/4);
+      Math.min(sourcePoint.y, targetPoint.y) - verticalSpacing :
+      Math.max(sourcePoint.y, targetPoint.y) + verticalSpacing;
     
-    // Generate path with smoother curves
+    // Generate path with smoother curves and less extreme heights
     return `
       M ${sourcePoint.x},${sourcePoint.y}
       L ${sourcePoint.x},${shouldRouteUp ? midY + radius : midY - radius}
@@ -2069,15 +2116,35 @@ labelloc="t";\n`;
     `.trim();
   }
 
-  // Update the connection point spacing logic
+  // Update the connection point spacing logic to spread points along node height
   function getSpacedConnectionPoint(node, connections, index, side, totalWidth) {
-    const spacing = Math.min(40, totalWidth / (connections.length + 1));
-    const totalSpread = spacing * (connections.length - 1);
-    const startX = node.x - totalSpread / 2;
+    const nodeWidth = getNodeWidth(node);
+    const nodeHeight = getNodeHeight(node);
+    const padding = 40; // Padding from edges
     
-    return {
-      x: startX + (index * spacing),
-      y: node.y + (side === 'top' ? -node.height/2 : node.height/2)
-    };
+    // Calculate usable width for connection points
+    const usableWidth = nodeWidth - (padding * 2);
+    
+    if (side === 'top' || side === 'bottom') {
+      // Spread points horizontally along top/bottom
+      const horizontalSpacing = usableWidth / (connections.length + 1);
+      const x = node.x - (nodeWidth/2) + padding + ((index + 1) * horizontalSpacing);
+      
+      return {
+        x: x,
+        y: node.y + (side === 'top' ? -nodeHeight/2 : nodeHeight/2)
+      };
+    } else {
+      // For left/right sides, spread vertically
+      const verticalPadding = 20;
+      const usableHeight = nodeHeight - (verticalPadding * 2);
+      const verticalSpacing = usableHeight / (connections.length + 1);
+      const y = node.y - (nodeHeight/2) + verticalPadding + ((index + 1) * verticalSpacing);
+      
+      return {
+        x: node.x + (side === 'left' ? -nodeWidth/2 : nodeWidth/2),
+        y: y
+      };
+    }
   }
 </script>
