@@ -867,9 +867,12 @@ const addendum = `
       .attr('text-anchor', 'middle')
       .attr('fill', '#475569')
       .attr('font-size', '14px')
+      // The source is giving money to the target, so arrow should point FROM source TO target
       .text(d => {
-        const flowsLeft = d.target.x < d.source.x;
-        return flowsLeft ? 
+        // If this node is the target (receiving money), arrow points towards it (←)
+        // If this node is the source (giving money), arrow points away from it (→)
+        const isTarget = d.id === d.target.id;
+        return isTarget ? 
           `← $${formatNumber(d.amt)}` : 
           `$${formatNumber(d.amt)} →`;
       })
