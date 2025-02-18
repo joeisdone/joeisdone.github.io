@@ -175,12 +175,18 @@ title: Charity graph - multi-root BFS & taxpayer totals
     <svg id="graph"></svg>
   </div>
   
-  <!-- Loading spinner -->
-  <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-30">
-    <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-    </svg>
+  <!-- Update the loading div structure -->
+  <div id="loading" class="absolute inset-0 flex flex-col pt-5 bg-white z-30">
+    <div class="text-center">
+      <svg class="animate-spin h-8 w-8 text-navy mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <div id="loading-text" class="text-lg font-semibold text-navy mb-4">Loading graph...</div>
+      <div id="loading-charities" class="text-gray-600 max-w-md mx-auto text-center max-h-[50vh] overflow-y-auto px-4">
+        <!-- Charity names will be added here -->
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1342,7 +1348,7 @@ const addendum = `
       })
       .on('end', () => {
         console.log('13. Force simulation ended');
-        // Hide loading after simulation is complete
+        // Fade out loading screen
         const loadingEl = document.getElementById('loading');
         loadingEl.style.opacity = '0';
         setTimeout(() => {
@@ -1429,6 +1435,49 @@ const addendum = `
         Type: ${inputCounts[node.id] === 0 ? 'SOURCE' : outputCounts[node.id] === 0 ? 'SINK' : 'INTERMEDIATE'}
         ----------------------------------------`);
     });
+
+    // Replace the existing loading name code with this:
+    // Add this after step 8:
+    const loadingText = document.getElementById('loading-text');
+    const loadingCharities = document.getElementById('loading-charities');
+    loadingText.textContent = 'Building visualization...';
+
+    // Start adding charity names
+    let currentCharityIndex = 0;
+    const charityNames = nodes.map(n => charities[n.id].name);
+
+    function addNextCharity() {
+      if (!document.getElementById('loading').offsetParent) {
+        // Stop if loading div is hidden
+        return;
+      }
+
+      if (currentCharityIndex < charityNames.length) {
+        // Create new element for this charity
+        const div = document.createElement('div');
+        div.className = 'opacity-0 transition-opacity duration-300 py-1';
+        div.textContent = charityNames[currentCharityIndex];
+        
+        // Add to container
+        loadingCharities.appendChild(div);
+        
+        // Trigger fade in
+        setTimeout(() => {
+          div.style.opacity = '1';
+          // Scroll to bottom
+          loadingCharities.scrollTop = loadingCharities.scrollHeight;
+        }, 50);
+
+        // Setup next charity
+        currentCharityIndex++;
+        
+        // Queue next addition
+        setTimeout(addNextCharity, 750);
+      }
+    }
+
+    // Start adding charities
+    addNextCharity();
   }
 
   // Helper functions for graph data preparation

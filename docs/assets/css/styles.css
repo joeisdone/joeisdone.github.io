@@ -1012,6 +1012,9 @@ select {
 .h-full {
   height: 100%;
 }
+.max-h-\[50vh\] {
+  max-height: 50vh;
+}
 .min-h-40 {
   min-height: 10rem;
 }
@@ -1089,6 +1092,9 @@ select {
 }
 .max-w-sm {
   max-width: 24rem;
+}
+.max-w-md {
+  max-width: 28rem;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -1268,6 +1274,9 @@ select {
 }
 .overflow-x-auto {
   overflow-x: auto;
+}
+.overflow-y-auto {
+  overflow-y: auto;
 }
 .truncate {
   overflow: hidden;
@@ -1530,6 +1539,12 @@ select {
 .pt-8 {
   padding-top: 2rem;
 }
+.pt-\[20vh\] {
+  padding-top: 20vh;
+}
+.pt-5 {
+  padding-top: 1.25rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1645,6 +1660,10 @@ select {
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
 }
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }
@@ -1725,6 +1744,11 @@ select {
 }
 .transition-transform {
   transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+.transition-opacity {
+  transition-property: opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
