@@ -2477,16 +2477,21 @@ labelloc="t";\n`;
     if (matches.length > 0) {
       // Update search results list
       searchResults.innerHTML = matches
-        .map((d, index) => `
-          <div 
-            class="px-2 py-1 text-sm cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
-            data-ein="${d.id}"
-            data-index="${index}"
-            onmouseenter="handleSearchResultHover(${index})"
-          >
-            ${charities[d.id].name}
-          </div>
-        `)
+        .map((d, index) => {
+          const charity = charities[d.id];
+          // Add siren emoji if govt_amt > 10M
+          const warningEmoji = charity.govt_amt > 10000000 ? ' 🚨' : '';
+          return `
+            <div 
+              class="px-2 py-1 text-sm cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
+              data-ein="${d.id}"
+              data-index="${index}"
+              onmouseenter="handleSearchResultHover(${index})"
+            >
+              ${charity.name}${warningEmoji}
+            </div>
+          `;
+        })
         .join('');
       searchResults.classList.remove('hidden');
       selectedSearchIndex = 0;
