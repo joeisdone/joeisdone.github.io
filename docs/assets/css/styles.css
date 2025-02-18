@@ -1661,6 +1661,10 @@ select {
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
 }
+.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
 }
