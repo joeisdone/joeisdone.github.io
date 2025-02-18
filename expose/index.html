@@ -216,6 +216,31 @@ title: Charity graph - multi-root BFS & taxpayer totals
   let zoom = null;
   let selectedSearchIndex = 0; // Track selected search result
 
+  // Add near the top of the script, before any functions
+  let width, height;
+
+  // Then update these when creating the SVG (around line 100)
+  const container = document.getElementById('graph-container');
+  const svg = d3.select('#graph')
+    .attr('width', '100%')
+    .attr('height', '100%');
+
+  // Get actual dimensions from container
+  width = container.clientWidth;
+  height = container.clientHeight;
+
+  // Create zoom behavior
+  zoom = d3.zoom()
+    .scaleExtent([0.1, 2])
+    .on('zoom', (event) => {
+      g.attr('transform', event.transform);
+    });
+
+  svg.call(zoom);
+
+  // Create the main group that will be transformed
+  const g = svg.append('g');
+
   // Add these helper functions at the top
   function getConnectionsToSide(edges, nodeId, side) {
     // side can be 'top', 'bottom', 'left', 'right'
@@ -670,6 +695,10 @@ const addendum = `
       .attr('stroke-width', 20)
       .attr('fill', 'none')
       .style('cursor', 'pointer')
+      .on('click', function(event, d) {  // Add click handler here
+        event.stopPropagation(); // Prevent event bubbling
+        zoomToFitNodes(d.source, d.target);
+      })
       .on('mouseover', function(event, d) {
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
@@ -734,6 +763,10 @@ const addendum = `
       .attr('stroke-width', 2) // Thick enough to create padding
       .attr('class', 'label-bg')
       .style('cursor', 'pointer')
+      .on('click', function(event, d) {  // Add click handler here
+        event.stopPropagation(); // Prevent event bubbling
+        zoomToFitNodes(d.source, d.target);
+      })
       // Add hover effects to label background
       .on('mouseover', function(event, d) {
         const labelGroup = d3.select(this.parentNode);
@@ -785,6 +818,10 @@ const addendum = `
       .text(d => `$${formatNumber(d.amt)}`)
       .style('cursor', 'pointer')
       // Add same hover effects to text
+      .on('click', function(event, d) {
+        event.stopPropagation(); // Prevent event bubbling
+        zoomToFitNodes(d.source, d.target);
+      })
       .on('mouseover', function(event, d) {
         const labelGroup = d3.select(this.parentNode);
         // Highlight this label
@@ -2147,4 +2184,68 @@ labelloc="t";\n`;
       };
     }
   }
+
+  // Add this helper function
+  function zoomToFitNodes(node1, node2) {
+    // Get the bounding boxes of both nodes
+    const node1El = nodeElements.filter(n => n.id === node1.id).node();
+    const node2El = nodeElements.filter(n => n.id === node2.id).node();
+    
+    if (!node1El || !node2El) return;
+    
+    const box1 = node1El.getBBox();
+    const box2 = node2El.getBBox();
+    
+    // Calculate the combined bounds
+    const x1 = Math.min(node1.x - box1.width/2, node2.x - box2.width/2);
+    const y1 = Math.min(node1.y - box1.height/2, node2.y - box2.height/2);
+    const x2 = Math.max(node1.x + box1.width/2, node2.x + box2.width/2);
+    const y2 = Math.max(node1.y + box1.height/2, node2.y + box2.height/2);
+    
+    // Reduce padding from 100 to 50
+    const padding = 50;
+    const bounds = {
+      x: x1 - padding,
+      y: y1 - padding,
+      width: (x2 - x1) + (padding * 2),
+      height: (y2 - y1) + (padding * 2)
+    };
+    
+    // Calculate the scale to fit the bounds
+    const scale = 0.9 / Math.max(
+      bounds.width / width,
+      bounds.height / height
+    );
+    
+    // Transition to the new view
+    svg.transition()
+      .duration(750)
+      .call(zoom.transform,
+        d3.zoomIdentity
+          .translate(width/2, height/2)
+          .scale(scale)
+          .translate(
+            -(bounds.x + bounds.width/2),
+            -(bounds.y + bounds.height/2)
+          )
+      );
+  }
+
+  // Add click handlers to both the line and label
+  linkElements.select('.link-hover')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
+
+  // Add to the label background click handler
+  linkLabels.select('.label-bg')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
+
+  // Add to the label text click handler
+  linkLabels.select('.link-label')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
 </script>
