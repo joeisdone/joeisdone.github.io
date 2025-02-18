@@ -1351,6 +1351,52 @@ const addendum = `
         $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
         $('#downloadBtn').show();
         console.log('14. Loading complete, graph should be visible');
+
+        // Zoom to first node
+        if (nodes.length > 0) {
+          const firstNode = nodes[0];
+          const nodeEl = nodeElements.filter(n => n.id === firstNode.id).node();
+          if (nodeEl) {
+            const box = nodeEl.getBBox();
+            const padding = 50;
+            const bounds = {
+              x: firstNode.x - box.width/2 - padding,
+              y: firstNode.y - box.height/2 - padding,
+              width: box.width + (padding * 2),
+              height: box.height + (padding * 2)
+            };
+            
+            // Calculate final scale (closer zoom)
+            const finalScale = (0.9 / Math.max(
+              bounds.width / width,
+              bounds.height / height
+            )) / 4 * 1.875;  // Increased from 1.5 to 1.875 (25% more)
+            
+            // Start from a more zoomed out view
+            svg.call(zoom.transform,
+              d3.zoomIdentity
+                .translate(width/2, height/2)
+                .scale(finalScale / 2)  // Start at half the final scale
+                .translate(
+                  -(bounds.x + bounds.width/2),
+                  -(bounds.y + bounds.height/2)
+                )
+            );
+            
+            // Then transition to final zoom over longer duration
+            svg.transition()
+              .duration(1500)  // Keep the same duration
+              .call(zoom.transform,
+                d3.zoomIdentity
+                  .translate(width/2, height/2)
+                  .scale(finalScale)
+                  .translate(
+                    -(bounds.x + bounds.width/2),
+                    -(bounds.y + bounds.height/2)
+                  )
+              );
+          }
+        }
       })
       .restart();
 
