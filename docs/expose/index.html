@@ -1157,22 +1157,56 @@ const addendum = `
         zoomToFitNodes(d.source, d.target);
       })
       .on('mouseover', function(event, d) {
+        // Highlight the line
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 4);
+          .attr('stroke-width', 3);
         d3.select(this.parentNode).select('.arrow-path')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 4);
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow-hover)');
+        
+        // Highlight the label
+        labelGroup.selectAll('.link-label-group')
+          .filter(l => l === d)
+          .each(function() {
+            d3.select(this).select('.label-bg')
+              .attr('fill', '#2563EB')
+              .attr('stroke', '#2563EB');
+            d3.select(this).select('.link-label')
+              .attr('fill', 'white');
+            // Bring label to front
+            this.parentNode.appendChild(this);
+          });
+        
+        // Highlight connected nodes
+        nodeElements
+          .filter(n => n.id === d.source.id || n.id === d.target.id)
+          .select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
       })
       .on('mouseout', function() {
+        // Reset line highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#CBD5E1')
           .attr('stroke-width', 3);
         linkElements.selectAll('.arrow-path')
           .attr('stroke', '#CBD5E1')
-          .attr('stroke-width', 3);
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow)');
+        
+        // Reset label highlights
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#475569');  // Darker gray for text
+          .attr('fill', '#475569');
+        
+        // Reset node highlights
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
       });
 
     // Update the hover effects
