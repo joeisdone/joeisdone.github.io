@@ -880,8 +880,14 @@ select {
 .mb-2 {
   margin-bottom: 0.5rem;
 }
+.mb-3 {
+  margin-bottom: 0.75rem;
+}
 .mb-4 {
   margin-bottom: 1rem;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
 }
 .mb-8 {
   margin-bottom: 2rem;
@@ -1006,6 +1012,9 @@ select {
 .h-full {
   height: 100%;
 }
+.max-h-\[50vh\] {
+  max-height: 50vh;
+}
 .min-h-40 {
   min-height: 10rem;
 }
@@ -1083,6 +1092,9 @@ select {
 }
 .max-w-sm {
   max-width: 24rem;
+}
+.max-w-md {
+  max-width: 28rem;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -1262,6 +1274,9 @@ select {
 }
 .overflow-x-auto {
   overflow-x: auto;
+}
+.overflow-y-auto {
+  overflow-y: auto;
 }
 .truncate {
   overflow: hidden;
@@ -1524,6 +1539,12 @@ select {
 .pt-8 {
   padding-top: 2rem;
 }
+.pt-\[20vh\] {
+  padding-top: 20vh;
+}
+.pt-5 {
+  padding-top: 1.25rem;
+}
 .text-left {
   text-align: left;
 }
@@ -1591,6 +1612,9 @@ select {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
 }
+.text-black\/70 {
+  color: rgb(0 0 0 / 0.7);
+}
 .text-black\/75 {
   color: rgb(0 0 0 / 0.75);
 }
@@ -1636,8 +1660,9 @@ select {
 .text-white\/80 {
   color: rgb(255 255 255 / 0.8);
 }
-.text-black\/70 {
-  color: rgb(0 0 0 / 0.7);
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 .text-opacity-75 {
   --tw-text-opacity: 0.75;
@@ -1722,17 +1747,22 @@ select {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
 .duration-200 {
   transition-duration: 200ms;
 }
 .duration-300 {
   transition-duration: 300ms;
 }
-.duration-700 {
-  transition-duration: 700ms;
-}
 .duration-500 {
   transition-duration: 500ms;
+}
+.duration-700 {
+  transition-duration: 700ms;
 }
 .ease-in {
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
@@ -1958,6 +1988,14 @@ table {
 }
 
 @media (min-width: 640px) {
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:items-center {
+    align-items: center;
+  }
 
   .sm\:gap-2 {
     gap: 0.5rem;

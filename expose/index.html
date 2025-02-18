@@ -56,6 +56,14 @@ title: Charity graph - multi-root BFS & taxpayer totals
           <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
           <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
         </ol>
+        <h3 class="">How to use</h3>
+        <ol class="!list-decimal space-y-1 text-sm pl-4">
+          <li>By default, the graph will zoom into the starting point where the money flow begins</li>
+          <li>Search for organizations in the graph by typing a name in the search bar</li>
+          <li>Click a connecting line (or grant amount) to zoom to its source and destination</li>
+          <li>Click and drag to explore the connections on the canvas</li>
+          <li>Use your mouse's scroll function to zoom in and out</li>
+        </ol>
       </div>
     </div>
   </div>
@@ -175,12 +183,18 @@ title: Charity graph - multi-root BFS & taxpayer totals
     <svg id="graph"></svg>
   </div>
   
-  <!-- Loading spinner -->
-  <div id="loading" class="absolute inset-0 flex items-center justify-center bg-white z-30">
-    <svg class="animate-spin h-8 w-8 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-      <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-    </svg>
+  <!-- Update the loading div structure -->
+  <div id="loading" class="absolute inset-0 flex flex-col pt-5 bg-white z-30">
+    <div class="text-center">
+      <svg class="animate-spin h-8 w-8 text-navy mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <div id="loading-text" class="text-lg font-semibold text-navy mb-4">Loading graph...</div>
+      <div id="loading-charities" class="text-gray-600 max-w-md mx-auto text-center max-h-[50vh] overflow-y-auto px-4">
+        <!-- Charity names will be added here -->
+      </div>
+    </div>
   </div>
 </div>
 
@@ -188,7 +202,9 @@ title: Charity graph - multi-root BFS & taxpayer totals
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
 <script>
+  // Add with other global variables at the top
   const BFS_CAP = 20;
+  const cornerPadding = 10; // Minimum distance from corners for line connections
 
   // Full data from CSV
   let charities = {};             // EIN -> { name, receipt_amt, govt_amt, contrib_amt, grant_amt }
@@ -213,6 +229,55 @@ title: Charity graph - multi-root BFS & taxpayer totals
   let nodeElements = null;
   let zoom = null;
   let selectedSearchIndex = 0; // Track selected search result
+
+  // Add near the top of the script, before any functions
+  let width, height;
+
+  // Then update these when creating the SVG (around line 100)
+  const container = document.getElementById('graph-container');
+  const svg = d3.select('#graph')
+    .attr('width', '100%')
+    .attr('height', '100%');
+
+  // Get actual dimensions from container
+  width = container.clientWidth;
+  height = container.clientHeight;
+
+  // Create zoom behavior
+  zoom = d3.zoom()
+    .scaleExtent([0.1, 2])
+    .on('zoom', (event) => {
+      g.attr('transform', event.transform);
+    });
+
+  svg.call(zoom);
+
+  // Create the main group that will be transformed
+  const g = svg.append('g');
+
+  // Add these helper functions at the top
+  function getConnectionsToSide(edges, nodeId, side) {
+    // side can be 'top', 'bottom', 'left', 'right'
+    return edges.filter(edge => {
+      if (side === 'top' || side === 'bottom') {
+        // For source node connections
+        if (edge.source.id !== nodeId) return false;
+        const sourceY = edge.source.y - getNodeHeight(edge.source)/2;
+        const targetY = edge.target.y - getNodeHeight(edge.target)/2;
+        return side === 'top' ? 
+          targetY + getNodeHeight(edge.target)/2 < sourceY + getNodeHeight(edge.source)/2 :
+          targetY + getNodeHeight(edge.target)/2 >= sourceY + getNodeHeight(edge.source)/2;
+      } else {
+        // For target node connections
+        if (edge.target.id !== nodeId) return false;
+        const sourceX = edge.source.x - getNodeWidth(edge.source)/2;
+        const targetX = edge.target.x - getNodeWidth(edge.target)/2;
+        return side === 'left' ?
+          sourceX + getNodeWidth(edge.source)/2 >= targetX + getNodeWidth(edge.target)/2 :
+          sourceX + getNodeWidth(edge.source)/2 < targetX + getNodeWidth(edge.target)/2;
+      }
+    });
+  }
 
   $(document).ready(function() {
 
@@ -370,7 +435,7 @@ const addendum = `
 
       <p style="color: black; background: cyan; text-align: center; padding: 15px; border: 5px double red;">
           🤔🤔 <strong>WHO'S TRULY <a href="https://www.dictionary.com/browse/dependent" title="Link to definition if you don't know the word." style="color: inherit; text-decoration: underline;">DEPENDENT</a> ON USAID?!</strong> 🤔🤔 <br/>
-          <span style="color: red;">The ones who DON’T want it to be shut down! 🔥🔥🔥</span> <br/>
+          <span style="color: red;">The ones who DON'T want it to be shut down! 🔥🔥🔥</span> <br/>
           <strong style="color: blue; text-transform: uppercase;">THIS IS COMMON SENSE!!!</strong> 🚨🚨🚨
       </p>
 
@@ -587,21 +652,6 @@ const addendum = `
       }
     });
 
-    // Create arrow marker definition
-    svg.append('defs').selectAll('marker')
-      .data(['arrow'])
-      .join('marker')
-      .attr('id', 'arrow')
-      .attr('viewBox', '0 -5 10 10')
-      .attr('refX', 20)
-      .attr('refY', 0)
-      .attr('markerWidth', 6)
-      .attr('markerHeight', 6)
-      .attr('orient', 'auto')
-      .append('path')
-      .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#94A3B8');
-
     // Create link group
     const linkGroup = g.append('g').attr('class', 'links');
     const linkElements = linkGroup.selectAll('g')
@@ -609,26 +659,98 @@ const addendum = `
       .join('g')
       .attr('class', 'link-group');
 
-    // Create links
+    // Add this after the linkGroup creation and before creating links
+    // Create arrow marker definitions
+    const defs = svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrow')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 5)
+      .attr('refY', 0)
+      .attr('markerWidth', 8)
+      .attr('markerHeight', 8)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#CBD5E1');
+
+    // Create hover version
+    defs.append('marker')
+      .attr('id', 'arrow-hover')
+      .attr('viewBox', '0 -5 10 10')
+      .attr('refX', 5)
+      .attr('refY', 0)
+      .attr('markerWidth', 8)
+      .attr('markerHeight', 8)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,-5L10,0L0,5')
+      .attr('fill', '#2563EB');
+
+    // Update the link creation
     const links = linkElements.append('path')
       .attr('class', 'link')
-      .attr('stroke', '#94A3B8')
-      .attr('stroke-width', 2)
+      .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
+      .attr('stroke-width', 3)
+      .attr('fill', 'none');
+
+    // Update the arrow paths
+    const arrowPaths = linkElements.append('path')
+      .attr('class', 'arrow-path')
+      .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
+      .attr('stroke-width', 3)
       .attr('fill', 'none')
       .attr('marker-end', 'url(#arrow)');
 
-    // Create hover paths
+    // Update the hover effect stroke widths
     linkElements.append('path')
       .attr('class', 'link-hover')
       .attr('stroke', 'transparent')
       .attr('stroke-width', 20)
       .attr('fill', 'none')
       .style('cursor', 'pointer')
+      .on('click', function(event, d) {
+        event.stopPropagation();
+        zoomToFitNodes(d.source, d.target);
+      })
       .on('mouseover', function(event, d) {
-        // Highlight this link
+        d3.select(this.parentNode).select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 4);
+        d3.select(this.parentNode).select('.arrow-path')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 4);
+      })
+      .on('mouseout', function() {
+        linkElements.selectAll('.link')
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
+        linkElements.selectAll('.arrow-path')
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#475569');  // Darker gray for text
+      });
+
+    // Update the hover effects
+    linkElements.append('path')
+      .attr('class', 'link-hover')
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 20)
+      .attr('fill', 'none')
+      .style('cursor', 'pointer')
+      .on('click', function(event, d) {  // Add click handler here
+        event.stopPropagation(); // Prevent event bubbling
+        zoomToFitNodes(d.source, d.target);
+      })
+      .on('mouseover', function(event, d) {
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
+        d3.select(this.parentNode).select('.arrow-path')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow-hover)');
         
         // Highlight the label
         labelGroup.selectAll('.link-label-group')
@@ -651,10 +773,14 @@ const addendum = `
           .attr('stroke-width', 3);
       })
       .on('mouseout', function() {
-        // Reset all highlights
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
           .attr('stroke-width', 2);
+        linkElements.selectAll('.arrow-path')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
+          .attr('stroke-width', 2)
+          .attr('marker-end', 'url(#arrow)');
+        
         labelGroup.selectAll('.label-bg')
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
@@ -681,6 +807,10 @@ const addendum = `
       .attr('stroke-width', 2) // Thick enough to create padding
       .attr('class', 'label-bg')
       .style('cursor', 'pointer')
+      .on('click', function(event, d) {  // Add click handler here
+        event.stopPropagation(); // Prevent event bubbling
+        zoomToFitNodes(d.source, d.target);
+      })
       // Add hover effects to label background
       .on('mouseover', function(event, d) {
         const labelGroup = d3.select(this.parentNode);
@@ -713,10 +843,10 @@ const addendum = `
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#94A3B8');
+          .attr('fill', '#475569');  // Darker gray for text
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
         nodeElements.select('rect')
           .attr('stroke', n => getNodeStroke(n))
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
@@ -725,35 +855,30 @@ const addendum = `
     // Add text
     linkLabels.append('text')
       .attr('class', 'link-label')
-      .attr('dy', -6)
+      .attr('dy', '0.35em')  // Changed from -6 to 0.35em for vertical centering
       .attr('text-anchor', 'middle')
-      .attr('fill', '#94A3B8') // Match line color
-      .attr('font-size', '12px')
+      .attr('fill', '#475569')
+      .attr('font-size', '14px')
       .text(d => `$${formatNumber(d.amt)}`)
       .style('cursor', 'pointer')
-      // Add same hover effects to text
+      .style('pointer-events', 'all')  // Enable pointer events
+      .on('click', function(event, d) {
+        event.stopPropagation();
+        zoomToFitNodes(d.source, d.target);
+      })
       .on('mouseover', function(event, d) {
-        const labelGroup = d3.select(this.parentNode);
         // Highlight this label
+        const labelGroup = d3.select(this.parentNode);
         labelGroup.select('.label-bg')
           .attr('fill', '#2563EB')
           .attr('stroke', '#2563EB');
-        labelGroup.select('.link-label')
+        d3.select(this)
           .attr('fill', 'white');
-        // Bring label to front
-        this.parentNode.parentNode.appendChild(this.parentNode);
         
         // Highlight corresponding link
         linkElements
           .filter(l => l === d)
           .select('.link')
-          .attr('stroke', '#2563EB')
-          .attr('stroke-width', 3);
-          
-        // Highlight connected nodes
-        nodeElements
-          .filter(n => n.id === d.source.id || n.id === d.target.id)
-          .select('rect')
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
       })
@@ -763,13 +888,10 @@ const addendum = `
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#94A3B8');
+          .attr('fill', '#475569');
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
-        nodeElements.select('rect')
-          .attr('stroke', n => getNodeStroke(n))
-          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
       });
 
     // Create nodes
@@ -1005,7 +1127,7 @@ const addendum = `
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
         // Reset all link highlights
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
           .attr('stroke-width', 2);
         // Reset label highlights
         labelGroup.selectAll('.label-bg')
@@ -1074,181 +1196,167 @@ const addendum = `
         .strength(forceParams.charge)
         .distanceMin(200)
         .distanceMax(forceParams.linkDistance * 2))
-      .force('center', d3.forceCenter(width / 2, height / 2))
-      .force('y', d3.forceY(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the top
-        const yPos = height * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return yPos;
-      }).strength(0.5))
       .force('x', d3.forceX(d => {
-        const connectionCount = edges.filter(e => e.source.id === d.id || e.target.id === d.id).length;
-        const maxConnections = Math.max(...nodes.map(n => 
-          edges.filter(e => e.source.id === n.id || e.target.id === n.id).length
-        ));
-        // Pull more connected nodes to the left
-        const xPos = width * (0.1 + 0.8 * (1 - connectionCount / maxConnections));
-        return xPos;
-      }).strength(0.5))
+        const isSource = edges.every(e => e.target.id !== d.id);
+        const isSink = edges.every(e => e.source.id !== d.id);
+        
+        if (isSource) {
+          return width * 0.1;
+        } else if (isSink) {
+          return width * 0.9;
+        } else {
+          return width * 0.5;
+        }
+      }).strength(1))
+      .force('y', d3.forceY(height / 2).strength(0.1))
       .force('collision', d3.forceCollide().radius(forceParams.collisionRadius))
       .alpha(0.3)
       .alphaDecay(0.05)
       .velocityDecay(0.5)
-      .on('tick', function() {
-        console.log('10. Simulation tick');
-        
-        // Update positions
+      .on('tick', () => {
+        // Validate and fix node positions
+        nodes.forEach(node => {
+          if (isNaN(node.x) || isNaN(node.y)) {
+            // Reset to center if position becomes invalid
+            node.x = width/2;
+            node.y = height/2;
+          }
+          
+          // Get node dimensions
+          const nodeWidth = getNodeWidth(node);
+          const nodeHeight = getNodeHeight(node);
+          
+          // Constrain to bounds with validation
+          node.x = Math.max(forceParams.bounds.left + nodeWidth/2, 
+            Math.min(forceParams.bounds.right - nodeWidth/2, node.x || width/2));
+          node.y = Math.max(forceParams.bounds.top + nodeHeight/2, 
+            Math.min(forceParams.bounds.bottom - nodeHeight/2, node.y || height/2));
+        });
+
+        // Update node positions with validation
         nodeElements.attr('transform', d => {
           const nodeWidth = getNodeWidth(d);
           const nodeHeight = getNodeHeight(d);
-          const padding = 100;
-          
-          d.x = Math.max(forceParams.bounds.left + nodeWidth/2, 
-            Math.min(forceParams.bounds.right - nodeWidth/2, d.x || 0));
-          d.y = Math.max(forceParams.bounds.top + nodeHeight/2, 
-            Math.min(forceParams.bounds.bottom - nodeHeight/2, d.y || 0));
-          
-          return `translate(${d.x - nodeWidth/2},${d.y - nodeHeight/2})`;
-        });
-        
-        // Update link paths
-        links.attr('d', d => {
-          const sourceNode = d3.select(`g[data-id="${d.source.id}"]`).node();
-          const targetNode = d3.select(`g[data-id="${d.target.id}"]`).node();
-          
-          if (!sourceNode || !targetNode) return '';
-          
-          // Get node dimensions
-          const sourceWidth = getNodeWidth(d.source);
-          const sourceHeight = getNodeHeight(d.source);
-          const targetWidth = getNodeWidth(d.target);
-          const targetHeight = getNodeHeight(d.target);
-          
-          const sourceX = d.source.x || 0;
-          const sourceY = d.source.y || 0;
-          const targetX = d.target.x || 0;
-          const targetY = d.target.y || 0;
-          
-          // Calculate center points of nodes
-          const sourceCenterX = sourceX;
-          const sourceCenterY = sourceY;
-          const targetCenterX = targetX;
-          const targetCenterY = targetY;
-          
-          // Calculate angle between centers
-          const dx = targetCenterX - sourceCenterX;
-          const dy = targetCenterY - sourceCenterY;
-          const angle = Math.atan2(dy, dx);
-          
-          // Determine connection points
-          let sourcePoint, targetPoint;
-          
-          // Source connection point
-          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-            // Connect to right/left side
-            sourcePoint = {
-              x: sourceCenterX + (dx > 0 ? sourceWidth/2 : -sourceWidth/2),
-              y: sourceCenterY
-            };
-          } else {
-            // Connect to top/bottom
-            sourcePoint = {
-              x: sourceCenterX,
-              y: sourceCenterY + (dy > 0 ? sourceHeight/2 : -sourceHeight/2)
-            };
-          }
-          
-          // Target connection point
-          if (Math.abs(angle) < Math.PI/4 || Math.abs(angle) > 3*Math.PI/4) {
-            // Connect to right/left side
-            targetPoint = {
-              x: targetCenterX + (dx > 0 ? -targetWidth/2 : targetWidth/2),
-              y: targetCenterY
-            };
-          } else {
-            // Connect to top/bottom
-            targetPoint = {
-              x: targetCenterX,
-              y: targetCenterY + (dy > 0 ? -targetHeight/2 : targetHeight/2)
-            };
-          }
-          
-          // Create curved path
-          const distance = Math.sqrt(
-            Math.pow(targetPoint.x - sourcePoint.x, 2) + 
-            Math.pow(targetPoint.y - sourcePoint.y, 2)
-          );
-          
-          // Control point for the curve
-          const midX = (sourcePoint.x + targetPoint.x) / 2;
-          const midY = (sourcePoint.y + targetPoint.y) / 2;
-          const curvature = Math.min(distance / 3, 100);
-          
-          // Perpendicular vector for control point
-          const perpX = -(targetPoint.y - sourcePoint.y) / distance;
-          const perpY = (targetPoint.x - sourcePoint.x) / distance;
-          
-          const ctrlX = midX + perpX * curvature;
-          const ctrlY = midY + perpY * curvature;
-          
-          return `M${sourcePoint.x},${sourcePoint.y} Q${ctrlX},${ctrlY} ${targetPoint.x},${targetPoint.y}`;
+          const x = (isNaN(d.x) ? width/2 : d.x) - nodeWidth/2;
+          const y = (isNaN(d.y) ? height/2 : d.y) - nodeHeight/2;
+          return `translate(${x},${y})`;
         });
 
-        // Update hover paths
+        // Update link paths with validation
+        links.attr('d', d => {
+          if (!d.source || !d.target) return '';
+
+          // Get all connections for this source/target to calculate spacing
+          const topConnections = getConnectionsToSide(edges, d.source.id, 'top')
+            .sort((a, b) => a.target.x - b.target.x);
+          const bottomConnections = getConnectionsToSide(edges, d.source.id, 'bottom')
+            .sort((a, b) => a.target.x - b.target.x);
+
+          // Determine if this should be a top or bottom connection
+          const isTopConnection = d.target.y < d.source.y;
+          const connections = isTopConnection ? topConnections : bottomConnections;
+          const connectionIndex = connections.indexOf(d);
+
+          // Get distributed connection points
+          const sourcePoint = getSpacedConnectionPoint(
+            d.source,
+            connections,
+            connectionIndex,
+            isTopConnection ? 'top' : 'bottom',
+            getNodeWidth(d.source)
+          );
+
+          const targetPoint = {
+            x: d.target.x,
+            y: d.target.y
+          };
+
+          return generatePath(
+            sourcePoint, 
+            targetPoint, 
+            isTopConnection,
+            connectionIndex,    // Pass the connection index
+            connections.length  // Pass total number of connections
+          );
+        });
+
+        // Update the arrow paths similarly
+        arrowPaths.attr('d', d => {
+          // Use the same connection point calculation as above
+          const isTopConnection = d.target.y < d.source.y;
+          const connections = isTopConnection ? 
+            getConnectionsToSide(edges, d.source.id, 'top') :
+            getConnectionsToSide(edges, d.source.id, 'bottom');
+          const connectionIndex = connections.indexOf(d);
+
+          const sourcePoint = getSpacedConnectionPoint(
+            d.source,
+            connections,
+            connectionIndex,
+            isTopConnection ? 'top' : 'bottom',
+            getNodeWidth(d.source)
+          );
+
+          const targetPoint = {
+            x: d.target.x,
+            y: d.target.y
+          };
+
+          // Get the path for this connection
+          const pathNode = d3.select(this.parentNode).select('.link').node();
+          if (!pathNode) return '';
+          
+          const totalLength = pathNode.getTotalLength();
+          const midPoint = pathNode.getPointAtLength(totalLength / 2);
+          const beforeMid = pathNode.getPointAtLength((totalLength / 2) - 1);
+          
+          return `M ${beforeMid.x},${beforeMid.y} L ${midPoint.x},${midPoint.y}`;
+        });
+
+        // Update hover paths and labels with the same validation
         linkElements.select('.link-hover')
           .attr('d', function() {
-            return d3.select(this.parentNode).select('.link').attr('d');
+            const path = d3.select(this.parentNode).select('.link').attr('d');
+            return path || '';  // Return empty string if path is invalid
           });
 
+        // In the tick function, after updating the paths, add:
         // Update link labels with background
         linkLabels.attr('transform', function(d) {
-          const sourceX = d.source.x || 0;
-          const sourceY = d.source.y || 0;
-          const targetX = d.target.x || 0;
-          const targetY = d.target.y || 0;
-          
-          // Get the corresponding path for this label's link
-          const path = linkElements
+          // Find the corresponding link path using the data, not DOM selection
+          const pathNode = linkElements
             .filter(l => l.source === d.source && l.target === d.target)
             .select('.link')
             .node();
+            
+          if (!pathNode) return '';
           
-          if (!path) return '';
+          // Get the point halfway along the path
+          const pathLength = pathNode.getTotalLength();
+          const midPoint = pathNode.getPointAtLength(pathLength / 2);
           
-          // Get the point halfway along the curved path
-          const pathLength = path.getTotalLength();
-          const midPoint = path.getPointAtLength(pathLength / 2);
-          
-          // Add a slight vertical offset to position above the line
+          // Remove vertical offset to center on line
           const mx = midPoint.x;
-          const my = midPoint.y - 15;
+          const my = midPoint.y;  // Removed the -15 offset
           
           // Get the text width to size the background
           const text = d3.select(this).select('text');
           const textNode = text.node();
-          const textWidth = textNode.getComputedTextLength();
+          const textWidth = textNode ? textNode.getComputedTextLength() : 0;
           
-          // Update background size
+          // Update background size and position to center vertically
           d3.select(this).select('.label-bg')
-            .attr('x', -textWidth/2 - 8) // Add padding
-            .attr('y', -22) // Position above text
-            .attr('width', textWidth + 16) // Add padding
-            .attr('height', 24); // Fixed height
+            .attr('x', -textWidth/2 - 8)
+            .attr('y', -12)  // Changed from -22 to -12 to center vertically
+            .attr('width', textWidth + 16)
+            .attr('height', 24);
           
           return `translate(${mx},${my})`;
         });
-
-        // After first real update, hide loading
-        if (simulation.alpha() < 0.01) {
-          console.log('12. Simulation nearly settled');
-        }
       })
       .on('end', () => {
         console.log('13. Force simulation ended');
-        // Hide loading after simulation is complete
+        // Fade out loading screen
         const loadingEl = document.getElementById('loading');
         loadingEl.style.opacity = '0';
         setTimeout(() => {
@@ -1257,8 +1365,127 @@ const addendum = `
         $('#status').html(`<span class="text-sm text-green font-semibold">${nodes.length} charities displayed</span>`);
         $('#downloadBtn').show();
         console.log('14. Loading complete, graph should be visible');
+
+        // Zoom to first node
+        if (nodes.length > 0) {
+          const firstNode = nodes[0];
+          const nodeEl = nodeElements.filter(n => n.id === firstNode.id).node();
+          if (nodeEl) {
+            const box = nodeEl.getBBox();
+            const padding = 50;
+            const bounds = {
+              x: firstNode.x - box.width/2 - padding,
+              y: firstNode.y - box.height/2 - padding,
+              width: box.width + (padding * 2),
+              height: box.height + (padding * 2)
+            };
+            
+            // Calculate final scale (closer zoom)
+            const finalScale = (0.9 / Math.max(
+              bounds.width / width,
+              bounds.height / height
+            )) / 4 * 1.875;  // Increased from 1.5 to 1.875 (25% more)
+            
+            // Start from a more zoomed out view
+            svg.call(zoom.transform,
+              d3.zoomIdentity
+                .translate(width/2, height/2)
+                .scale(finalScale / 2)  // Start at half the final scale
+                .translate(
+                  -(bounds.x + bounds.width/2),
+                  -(bounds.y + bounds.height/2)
+                )
+            );
+            
+            // Then transition to final zoom over longer duration
+            svg.transition()
+              .duration(1500)  // Keep the same duration
+              .call(zoom.transform,
+                d3.zoomIdentity
+                  .translate(width/2, height/2)
+                  .scale(finalScale)
+                  .translate(
+                    -(bounds.x + bounds.width/2),
+                    -(bounds.y + bounds.height/2)
+                  )
+              );
+          }
+        }
       })
       .restart();
+
+    // After nodes and edges are loaded, but before simulation starts:
+    console.log('Node connectivity analysis:');
+
+    // Create a map to count inputs and outputs
+    const inputCounts = {};
+    const outputCounts = {};
+
+    // Initialize counts
+    nodes.forEach(node => {
+      inputCounts[node.id] = 0;
+      outputCounts[node.id] = 0;
+    });
+
+    // Count inputs and outputs
+    edges.forEach(edge => {
+      outputCounts[edge.source.id] = (outputCounts[edge.source.id] || 0) + 1;
+      inputCounts[edge.target.id] = (inputCounts[edge.target.id] || 0) + 1;
+    });
+
+    // Log the counts for each node in order
+    nodes.forEach(node => {
+      const charity = charities[node.id];
+      console.log(`Node: ${charity.name}
+        EIN: ${node.id}
+        Inputs: ${inputCounts[node.id]}
+        Outputs: ${outputCounts[node.id]}
+        Type: ${inputCounts[node.id] === 0 ? 'SOURCE' : outputCounts[node.id] === 0 ? 'SINK' : 'INTERMEDIATE'}
+        ----------------------------------------`);
+    });
+
+    // Replace the existing loading name code with this:
+    // Add this after step 8:
+    const loadingText = document.getElementById('loading-text');
+    const loadingCharities = document.getElementById('loading-charities');
+    loadingText.textContent = 'Building visualization...';
+
+    // Start adding charity names
+    let currentCharityIndex = 0;
+    const charityNames = nodes.map(n => charities[n.id].name);
+
+    function addNextCharity() {
+      if (!document.getElementById('loading').offsetParent) {
+        // Stop if loading div is hidden
+        return;
+      }
+
+      if (currentCharityIndex < charityNames.length) {
+        // Create new element for this charity
+        const div = document.createElement('div');
+        div.className = 'opacity-0 transition-opacity duration-300 py-1';
+        div.textContent = charityNames[currentCharityIndex];
+        
+        // Add to container
+        loadingCharities.appendChild(div);
+        
+        // Trigger fade in
+        setTimeout(() => {
+          div.style.opacity = '1';
+          // Scroll to bottom
+          loadingCharities.scrollTop = loadingCharities.scrollHeight;
+        }, 50);
+
+        // Setup next charity
+        currentCharityIndex++;
+        
+        // Queue next addition
+        setTimeout(addNextCharity, 750);
+      }
+    }
+
+    // Start adding charities
+    addNextCharity();
   }
 
   // Helper functions for graph data preparation
@@ -1996,4 +2223,160 @@ labelloc="t";\n`;
     selectedSearchIndex = index;
     updateSearchSelection(document.querySelectorAll('[data-index]'));
   }
+
+  // Add this helper function to calculate safe connection points
+  function getSafeConnectionPoint(x, y, width, height, side) {
+    const cornerPadding = 30;
+    const edgeInset = 40;
+    
+    switch(side) {
+      case 'top':
+        return {
+          x: x + width/2,
+          y: y  // Connect exactly at top edge
+        };
+      case 'bottom':
+        return {
+          x: x + width/2,
+          y: y + height  // Connect exactly at bottom edge
+        };
+      case 'left':
+        return {
+          x: x,  // Connect exactly at left edge
+          y: y + height/2
+        };
+      case 'right':
+        return {
+          x: x + width,  // Connect exactly at right edge
+          y: y + height/2
+        };
+    }
+  }
+
+  // Update the path generation with better routing and minimal curves
+  function generatePath(sourcePoint, targetPoint, isTopConnection, connectionIndex = 0, totalConnections = 1) {
+    const nodeLength = 60;      // Base length for segments
+    const radius = 40;          // Corner radius
+    
+    // Calculate distances
+    const verticalDistance = targetPoint.y - sourcePoint.y;
+    const horizontalDistance = targetPoint.x - sourcePoint.x;
+    const shouldRouteUp = verticalDistance < 0;
+    
+    // Calculate a proportional midpoint with variation based on connection index
+    const baseSpacing = Math.min(Math.abs(horizontalDistance/6), 100);
+    // Add variation - middle paths go further out than edge paths
+    const variation = totalConnections > 1 ? 
+      (connectionIndex - (totalConnections-1)/2) * 40 : 0;
+    
+    const midY = shouldRouteUp ?
+      Math.min(sourcePoint.y, targetPoint.y) - baseSpacing + variation :
+      Math.max(sourcePoint.y, targetPoint.y) + baseSpacing + variation;
+    
+    // Generate path with varied heights
+    return `
+      M ${sourcePoint.x},${sourcePoint.y}
+      L ${sourcePoint.x},${shouldRouteUp ? midY + radius : midY - radius}
+      Q ${sourcePoint.x},${midY} ${sourcePoint.x + Math.sign(horizontalDistance) * radius},${midY}
+      L ${targetPoint.x - Math.sign(horizontalDistance) * radius},${midY}
+      Q ${targetPoint.x},${midY} ${targetPoint.x},${shouldRouteUp ? midY + radius : midY - radius}
+      L ${targetPoint.x},${targetPoint.y}
+    `.trim();
+  }
+
+  // Update the connection point spacing logic to spread points along node height
+  function getSpacedConnectionPoint(node, connections, index, side, totalWidth) {
+    const nodeWidth = getNodeWidth(node);
+    const nodeHeight = getNodeHeight(node);
+    const padding = 40; // Padding from edges
+    
+    // Calculate usable width for connection points
+    const usableWidth = nodeWidth - (padding * 2);
+    
+    if (side === 'top' || side === 'bottom') {
+      // Spread points horizontally along top/bottom
+      const horizontalSpacing = usableWidth / (connections.length + 1);
+      const x = node.x - (nodeWidth/2) + padding + ((index + 1) * horizontalSpacing);
+      
+      return {
+        x: x,
+        y: node.y + (side === 'top' ? -nodeHeight/2 : nodeHeight/2)
+      };
+    } else {
+      // For left/right sides, spread vertically
+      const verticalPadding = 20;
+      const usableHeight = nodeHeight - (verticalPadding * 2);
+      const verticalSpacing = usableHeight / (connections.length + 1);
+      const y = node.y - (nodeHeight/2) + verticalPadding + ((index + 1) * verticalSpacing);
+      
+      return {
+        x: node.x + (side === 'left' ? -nodeWidth/2 : nodeWidth/2),
+        y: y
+      };
+    }
+  }
+
+  // Add this helper function
+  function zoomToFitNodes(node1, node2) {
+    // Get the bounding boxes of both nodes
+    const node1El = nodeElements.filter(n => n.id === node1.id).node();
+    const node2El = nodeElements.filter(n => n.id === node2.id).node();
+    
+    if (!node1El || !node2El) return;
+    
+    const box1 = node1El.getBBox();
+    const box2 = node2El.getBBox();
+    
+    // Calculate the combined bounds
+    const x1 = Math.min(node1.x - box1.width/2, node2.x - box2.width/2);
+    const y1 = Math.min(node1.y - box1.height/2, node2.y - box2.height/2);
+    const x2 = Math.max(node1.x + box1.width/2, node2.x + box2.width/2);
+    const y2 = Math.max(node1.y + box1.height/2, node2.y + box2.height/2);
+    
+    // Reduce padding from 100 to 50
+    const padding = 50;
+    const bounds = {
+      x: x1 - padding,
+      y: y1 - padding,
+      width: (x2 - x1) + (padding * 2),
+      height: (y2 - y1) + (padding * 2)
+    };
+    
+    // Calculate the scale to fit the bounds
+    const scale = 0.9 / Math.max(
+      bounds.width / width,
+      bounds.height / height
+    );
+    
+    // Transition to the new view
+    svg.transition()
+      .duration(750)
+      .call(zoom.transform,
+        d3.zoomIdentity
+          .translate(width/2, height/2)
+          .scale(scale)
+          .translate(
+            -(bounds.x + bounds.width/2),
+            -(bounds.y + bounds.height/2)
+          )
+      );
+  }
+
+  // Add click handlers to both the line and label
+  linkElements.select('.link-hover')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
+
+  // Add to the label background click handler
+  linkLabels.select('.label-bg')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
+
+  // Add to the label text click handler
+  linkLabels.select('.link-label')
+    .on('click', function(event, d) {
+      zoomToFitNodes(d.source, d.target);
+    });
 </script>
