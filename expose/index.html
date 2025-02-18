@@ -863,13 +863,18 @@ const addendum = `
     // Add text
     linkLabels.append('text')
       .attr('class', 'link-label')
-      .attr('dy', '0.35em')  // Changed from -6 to 0.35em for vertical centering
+      .attr('dy', '0.35em')
       .attr('text-anchor', 'middle')
       .attr('fill', '#475569')
       .attr('font-size', '14px')
-      .text(d => `$${formatNumber(d.amt)}`)
+      .text(d => {
+        const flowsLeft = d.target.x < d.source.x;
+        return flowsLeft ? 
+          `← $${formatNumber(d.amt)}` : 
+          `$${formatNumber(d.amt)} →`;
+      })
       .style('cursor', 'pointer')
-      .style('pointer-events', 'all')  // Enable pointer events
+      .style('pointer-events', 'all')
       .on('click', function(event, d) {
         event.stopPropagation();
         zoomToFitNodes(d.source, d.target);
