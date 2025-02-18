@@ -41,16 +41,16 @@ $(document).ready(function() {
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tracking where the money goes" />
 <meta property="og:description" content="Tracking where the money goes" />
-<link rel="canonical" href="http://localhost:4000/expose/" />
-<meta property="og:url" content="http://localhost:4000/expose/" />
+<link rel="canonical" href="https://datarepublican.com/expose/" />
+<meta property="og:url" content="https://datarepublican.com/expose/" />
 <meta property="og:site_name" content="DataRepublican" />
-<meta property="og:image" content="http://localhost:4000/assets/images/og.png" />
+<meta property="og:image" content="https://datarepublican.com/assets/images/og.png" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4000/assets/images/og.png" />
+<meta property="twitter:image" content="https://datarepublican.com/assets/images/og.png" />
 <meta property="twitter:title" content="Charity graph - multi-root BFS &amp; taxpayer totals" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"http://localhost:4000/assets/images/og.png","url":"http://localhost:4000/expose/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tracking where the money goes","headline":"Charity graph - multi-root BFS &amp; taxpayer totals","image":"https://datarepublican.com/assets/images/og.png","url":"https://datarepublican.com/expose/"}</script>
 <!-- End Jekyll SEO tag -->
 
 </head>
@@ -572,7 +572,7 @@ $(document).ready(function() {
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
-      <div id="searchResults" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg hidden">
+      <div id="searchResults" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg hidden max-h-[50vh] overflow-y-auto">
         <!-- Results will be populated here -->
       </div>
     </div>
@@ -780,7 +780,7 @@ $(document).ready(function() {
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
     const clearButton = document.getElementById('clearSearch');
-
+    
     // Remove any existing listeners
     const newSearchInput = searchInput.cloneNode(true);
     const newSearchResults = searchResults.cloneNode(true);
@@ -792,6 +792,7 @@ $(document).ready(function() {
 
     // Add new listeners
     newSearchInput.addEventListener('input', handleSearch);
+    newSearchInput.addEventListener('focus', handleSearchFocus); // New handler
     newSearchInput.addEventListener('blur', handleSearchBlur);
     newSearchResults.addEventListener('click', handleSearchClick);
     newSearchInput.addEventListener('keydown', handleSearchKeydown);
@@ -802,6 +803,13 @@ $(document).ready(function() {
       newSearchInput.focus();
       handleSearch({ target: newSearchInput });
     });
+
+    // Add new focus handler function
+    function handleSearchFocus() {
+      // Get all nodes in their original order
+      const allNodes = Array.from(nodeElements.data());
+      showSearchResults(allNodes);
+    }
 
     // Add resize event listener
     $(window).on('resize', function() {
@@ -1149,22 +1157,56 @@ const addendum = `
         zoomToFitNodes(d.source, d.target);
       })
       .on('mouseover', function(event, d) {
+        // Highlight the line
         d3.select(this.parentNode).select('.link')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 4);
+          .attr('stroke-width', 3);
         d3.select(this.parentNode).select('.arrow-path')
           .attr('stroke', '#2563EB')
-          .attr('stroke-width', 4);
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow-hover)');
+        
+        // Highlight the label
+        labelGroup.selectAll('.link-label-group')
+          .filter(l => l === d)
+          .each(function() {
+            d3.select(this).select('.label-bg')
+              .attr('fill', '#2563EB')
+              .attr('stroke', '#2563EB');
+            d3.select(this).select('.link-label')
+              .attr('fill', 'white');
+            // Bring label to front
+            this.parentNode.appendChild(this);
+          });
+        
+        // Highlight connected nodes
+        nodeElements
+          .filter(n => n.id === d.source.id || n.id === d.target.id)
+          .select('rect')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 3);
       })
       .on('mouseout', function() {
+        // Reset line highlights
         linkElements.selectAll('.link')
           .attr('stroke', '#CBD5E1')
           .attr('stroke-width', 3);
         linkElements.selectAll('.arrow-path')
           .attr('stroke', '#CBD5E1')
-          .attr('stroke-width', 3);
+          .attr('stroke-width', 3)
+          .attr('marker-end', 'url(#arrow)');
+        
+        // Reset label highlights
+        labelGroup.selectAll('.label-bg')
+          .attr('fill', '#F3F4F6')
+          .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#475569');  // Darker gray for text
+          .attr('fill', '#475569');
+        
+        // Reset node highlights
+        nodeElements.select('rect')
+          .attr('stroke', n => getNodeStroke(n))
+          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
       });
 
     // Update the hover effects
@@ -1290,13 +1332,21 @@ const addendum = `
     // Add text
     linkLabels.append('text')
       .attr('class', 'link-label')
-      .attr('dy', '0.35em')  // Changed from -6 to 0.35em for vertical centering
+      .attr('dy', '0.35em')
       .attr('text-anchor', 'middle')
       .attr('fill', '#475569')
       .attr('font-size', '14px')
-      .text(d => `$${formatNumber(d.amt)}`)
+      // The source is giving money to the target, so arrow should point FROM source TO target
+      .text(d => {
+        // If this node is the target (receiving money), arrow points towards it (←)
+        // If this node is the source (giving money), arrow points away from it (→)
+        const isTarget = d.id === d.target.id;
+        return isTarget ? 
+          `← $${formatNumber(d.amt)}` : 
+          `$${formatNumber(d.amt)} →`;
+      })
       .style('cursor', 'pointer')
-      .style('pointer-events', 'all')  // Enable pointer events
+      .style('pointer-events', 'all')
       .on('click', function(event, d) {
         event.stopPropagation();
         zoomToFitNodes(d.source, d.target);
@@ -2434,96 +2484,51 @@ labelloc="t";\n`;
   // Define search handler functions
   function handleSearch(e) {
     const value = e.target.value.toLowerCase();
-    const searchResults = document.getElementById('searchResults');
     const clearButton = document.getElementById('clearSearch');
     
+    // Show/hide clear button based on input value
     if (!value) {
-      searchResults.classList.add('hidden');
       clearButton.classList.add('hidden');
-      return;
+    } else {
+      clearButton.classList.remove('hidden');
     }
 
-    // Show clear button when there's text
-    clearButton.classList.remove('hidden');
+    // Get all nodes and filter them if there's a search value
+    const allNodes = Array.from(nodeElements.data());
+    const matches = value ? allNodes.filter(d => {
+      const charity = charities[d.id];
+      return charity.name.toLowerCase().includes(value) ||
+             d.id.includes(value);
+    }) : allNodes;
 
-    // Find matching nodes
-    const matches = Array.from(nodeElements.data())
-      .filter(d => {
-        const charity = charities[d.id];
-        return charity.name.toLowerCase().includes(value) ||
-               d.id.includes(value);
-      })
-      .slice(0, 5);
+    showSearchResults(matches);
+  }
 
+  // New helper function to show search results
+  function showSearchResults(matches) {
+    const searchResults = document.getElementById('searchResults');
+    
     if (matches.length > 0) {
-      // Get combined bounds of all matching nodes
-      const nodeBounds = matches.map(d => {
-        const node = d3.select(`g[data-id="${d.id}"]`).node();
-        const bounds = node.getBBox();
-        const transform = node.getAttribute('transform');
-        const translate = transform.match(/translate\(([^)]+)\)/)[1].split(',').map(Number);
-        return {
-          x: translate[0],
-          y: translate[1],
-          width: bounds.width,
-          height: bounds.height
-        };
-      });
-
-      // Calculate combined bounds
-      const xMin = Math.min(...nodeBounds.map(b => b.x));
-      const yMin = Math.min(...nodeBounds.map(b => b.y));
-      const xMax = Math.max(...nodeBounds.map(b => b.x + b.width));
-      const yMax = Math.max(...nodeBounds.map(b => b.y + b.height));
-
-      // Add padding
-      const padding = 50;
-      const width = document.getElementById('graph-container').offsetWidth;
-      const height = document.getElementById('graph-container').offsetHeight;
-
-      // Calculate scale to fit all matches
-      const scale = 0.8 * Math.min(
-        width / (xMax - xMin + 2 * padding),
-        height / (yMax - yMin + 2 * padding)
-      );
-
-      // Highlight matching nodes
-      nodeElements.select('rect')
-        .attr('stroke', d => {
-          const isMatch = matches.some(m => m.id === d.id);
-          if (isMatch) return '#2563EB';
-          return getNodeStroke(d);
-        })
-        .attr('stroke-width', d => {
-          const isMatch = matches.some(m => m.id === d.id);
-          if (isMatch) return 3;
-          return isUserEin(d.id) ? 3 : 1;
-        });
-
-      // Zoom to show all matches
-      d3.select('#graph').transition()
-        .duration(750)
-        .call(zoom.transform,
-          d3.zoomIdentity
-            .translate(width/2, height/2)
-            .scale(scale)
-            .translate(-(xMin + xMax)/2, -(yMin + yMax)/2));
-
       // Update search results list
       searchResults.innerHTML = matches
-        .map((d, index) => `
-          <div 
-            class="p-2 cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
-            data-ein="${d.id}"
-            data-index="${index}"
-            onmouseenter="handleSearchResultHover(${index})"
-          >
-            ${charities[d.id].name}
-          </div>
-        `)
+        .map((d, index) => {
+          const charity = charities[d.id];
+          // Add siren emoji if govt_amt > 10M
+          const warningEmoji = charity.govt_amt > 10000000 ? ' 🚨' : '';
+          return `
+            <div 
+              class="px-2 py-1 text-sm cursor-pointer ${index === 0 ? 'bg-blue/10' : ''} hover:bg-gray-100" 
+              data-ein="${d.id}"
+              data-index="${index}"
+              onmouseenter="handleSearchResultHover(${index})"
+            >
+              ${charity.name}${warningEmoji}
+            </div>
+          `;
+        })
         .join('');
       searchResults.classList.remove('hidden');
-      selectedSearchIndex = 0; // Reset selection to first item
+      selectedSearchIndex = 0;
       
       // Ensure first result is highlighted
       const firstResult = searchResults.querySelector('[data-index="0"]');
@@ -2534,20 +2539,28 @@ labelloc="t";\n`;
     } else {
       searchResults.classList.add('hidden');
       selectedSearchIndex = -1;
-      // Reset node highlighting if no matches
-      nodeElements.select('rect')
-        .attr('stroke', n => getNodeStroke(n))
-        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
     }
   }
 
-  function handleSearchBlur() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput.value) {
-      nodeElements.select('rect')
-        .attr('stroke', n => getNodeStroke(n))
-        .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
-    }
+  // Update handleSearchBlur to use a timeout
+  function handleSearchBlur(e) {
+    // Add a small delay to allow click events to fire first
+    setTimeout(() => {
+      const searchResults = document.getElementById('searchResults');
+      const searchInput = document.getElementById('searchInput');
+      
+      // Only hide results if we're not clicking inside the results
+      if (!searchResults.contains(document.activeElement)) {
+        searchResults.classList.add('hidden');
+        
+        // Reset node highlighting if search is empty
+        if (!searchInput.value) {
+          nodeElements.select('rect')
+            .attr('stroke', n => getNodeStroke(n))
+            .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+        }
+      }
+    }, 200);
   }
 
   function handleSearchClick(e) {
@@ -2573,8 +2586,8 @@ labelloc="t";\n`;
       const containerWidth = document.getElementById('graph-container').offsetWidth;
       const containerHeight = document.getElementById('graph-container').offsetHeight;
       
-      // Calculate scale to show the node at about 1/3 of the container
-      const scale = 0.3 * Math.min(
+      // Calculate scale to show the node at about 1/2 of the container (increased from 1/3)
+      const scale = 0.45 * Math.min(  // Increased from 0.3 to 0.45 (50% more zoom)
         containerWidth / width,
         containerHeight / height
       );
