@@ -658,7 +658,7 @@ const addendum = `
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#94A3B8');
+      .attr('fill', '#CBD5E1');
 
     // Create hover version
     defs.append('marker')
@@ -673,20 +673,50 @@ const addendum = `
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', '#2563EB');
 
-    // Update the link creation to use a single marker
+    // Update the link creation
     const links = linkElements.append('path')
       .attr('class', 'link')
-      .attr('stroke', '#94A3B8')
-      .attr('stroke-width', 2)
+      .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
+      .attr('stroke-width', 3)
       .attr('fill', 'none');
 
-    // Add a separate path just for the arrow at the true midpoint
+    // Update the arrow paths
     const arrowPaths = linkElements.append('path')
       .attr('class', 'arrow-path')
-      .attr('stroke', '#94A3B8')
-      .attr('stroke-width', 2)
+      .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
+      .attr('stroke-width', 3)
       .attr('fill', 'none')
-      .attr('marker-end', 'url(#arrow)');  // Use marker-end instead of marker-mid
+      .attr('marker-end', 'url(#arrow)');
+
+    // Update the hover effect stroke widths
+    linkElements.append('path')
+      .attr('class', 'link-hover')
+      .attr('stroke', 'transparent')
+      .attr('stroke-width', 20)
+      .attr('fill', 'none')
+      .style('cursor', 'pointer')
+      .on('click', function(event, d) {
+        event.stopPropagation();
+        zoomToFitNodes(d.source, d.target);
+      })
+      .on('mouseover', function(event, d) {
+        d3.select(this.parentNode).select('.link')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 4);
+        d3.select(this.parentNode).select('.arrow-path')
+          .attr('stroke', '#2563EB')
+          .attr('stroke-width', 4);
+      })
+      .on('mouseout', function() {
+        linkElements.selectAll('.link')
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
+        linkElements.selectAll('.arrow-path')
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
+        labelGroup.selectAll('.link-label')
+          .attr('fill', '#475569');  // Darker gray for text
+      });
 
     // Update the hover effects
     linkElements.append('path')
@@ -730,10 +760,10 @@ const addendum = `
       })
       .on('mouseout', function() {
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
           .attr('stroke-width', 2);
         linkElements.selectAll('.arrow-path')
-          .attr('stroke', '#94A3B8')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
           .attr('stroke-width', 2)
           .attr('marker-end', 'url(#arrow)');
         
@@ -799,10 +829,10 @@ const addendum = `
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#94A3B8');
+          .attr('fill', '#475569');  // Darker gray for text
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
         nodeElements.select('rect')
           .attr('stroke', n => getNodeStroke(n))
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
@@ -811,39 +841,30 @@ const addendum = `
     // Add text
     linkLabels.append('text')
       .attr('class', 'link-label')
-      .attr('dy', -6)
+      .attr('dy', '0.35em')  // Changed from -6 to 0.35em for vertical centering
       .attr('text-anchor', 'middle')
-      .attr('fill', '#94A3B8') // Match line color
-      .attr('font-size', '12px')
+      .attr('fill', '#475569')
+      .attr('font-size', '14px')
       .text(d => `$${formatNumber(d.amt)}`)
       .style('cursor', 'pointer')
-      // Add same hover effects to text
+      .style('pointer-events', 'all')  // Enable pointer events
       .on('click', function(event, d) {
-        event.stopPropagation(); // Prevent event bubbling
+        event.stopPropagation();
         zoomToFitNodes(d.source, d.target);
       })
       .on('mouseover', function(event, d) {
-        const labelGroup = d3.select(this.parentNode);
         // Highlight this label
+        const labelGroup = d3.select(this.parentNode);
         labelGroup.select('.label-bg')
           .attr('fill', '#2563EB')
           .attr('stroke', '#2563EB');
-        labelGroup.select('.link-label')
+        d3.select(this)
           .attr('fill', 'white');
-        // Bring label to front
-        this.parentNode.parentNode.appendChild(this.parentNode);
         
         // Highlight corresponding link
         linkElements
           .filter(l => l === d)
           .select('.link')
-          .attr('stroke', '#2563EB')
-          .attr('stroke-width', 3);
-          
-        // Highlight connected nodes
-        nodeElements
-          .filter(n => n.id === d.source.id || n.id === d.target.id)
-          .select('rect')
           .attr('stroke', '#2563EB')
           .attr('stroke-width', 3);
       })
@@ -853,13 +874,10 @@ const addendum = `
           .attr('fill', '#F3F4F6')
           .attr('stroke', 'white');
         labelGroup.selectAll('.link-label')
-          .attr('fill', '#94A3B8');
+          .attr('fill', '#475569');
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
-          .attr('stroke-width', 2);
-        nodeElements.select('rect')
-          .attr('stroke', n => getNodeStroke(n))
-          .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
+          .attr('stroke', '#CBD5E1')
+          .attr('stroke-width', 3);
       });
 
     // Create nodes
@@ -1095,7 +1113,7 @@ const addendum = `
           .attr('stroke-width', n => isUserEin(n.id) ? 3 : 1);
         // Reset all link highlights
         linkElements.selectAll('.link')
-          .attr('stroke', '#94A3B8')
+          .attr('stroke', '#CBD5E1')  // Changed from #94A3B8 to lighter gray
           .attr('stroke-width', 2);
         // Reset label highlights
         labelGroup.selectAll('.label-bg')
@@ -1239,7 +1257,13 @@ const addendum = `
             y: d.target.y
           };
 
-          return generatePath(sourcePoint, targetPoint, isTopConnection);
+          return generatePath(
+            sourcePoint, 
+            targetPoint, 
+            isTopConnection,
+            connectionIndex,    // Pass the connection index
+            connections.length  // Pass total number of connections
+          );
         });
 
         // Update the arrow paths similarly
@@ -1297,21 +1321,21 @@ const addendum = `
           const pathLength = pathNode.getTotalLength();
           const midPoint = pathNode.getPointAtLength(pathLength / 2);
           
-          // Add a slight vertical offset to position above the line
+          // Remove vertical offset to center on line
           const mx = midPoint.x;
-          const my = midPoint.y - 15;  // Offset above the line
+          const my = midPoint.y;  // Removed the -15 offset
           
           // Get the text width to size the background
           const text = d3.select(this).select('text');
           const textNode = text.node();
           const textWidth = textNode ? textNode.getComputedTextLength() : 0;
           
-          // Update background size
+          // Update background size and position to center vertically
           d3.select(this).select('.label-bg')
-            .attr('x', -textWidth/2 - 8)  // Add padding
-            .attr('y', -22)  // Position above text
-            .attr('width', textWidth + 16)  // Add padding
-            .attr('height', 24);  // Fixed height
+            .attr('x', -textWidth/2 - 8)
+            .attr('y', -12)  // Changed from -22 to -12 to center vertically
+            .attr('width', textWidth + 16)
+            .attr('height', 24);
           
           return `translate(${mx},${my})`;
         });
@@ -2127,22 +2151,26 @@ labelloc="t";\n`;
   }
 
   // Update the path generation with better routing and minimal curves
-  function generatePath(sourcePoint, targetPoint, isTopConnection) {
-    const nodeLength = 60;      // Reduced from 100 to create less extreme paths
-    const radius = 40;          // Keep the rounded corners
+  function generatePath(sourcePoint, targetPoint, isTopConnection, connectionIndex = 0, totalConnections = 1) {
+    const nodeLength = 60;      // Base length for segments
+    const radius = 40;          // Corner radius
     
     // Calculate distances
     const verticalDistance = targetPoint.y - sourcePoint.y;
     const horizontalDistance = targetPoint.x - sourcePoint.x;
     const shouldRouteUp = verticalDistance < 0;
     
-    // Calculate a proportional midpoint that's not as extreme
-    const verticalSpacing = Math.min(Math.abs(horizontalDistance/6), 100); // Cap the vertical spread
-    const midY = shouldRouteUp ?
-      Math.min(sourcePoint.y, targetPoint.y) - verticalSpacing :
-      Math.max(sourcePoint.y, targetPoint.y) + verticalSpacing;
+    // Calculate a proportional midpoint with variation based on connection index
+    const baseSpacing = Math.min(Math.abs(horizontalDistance/6), 100);
+    // Add variation - middle paths go further out than edge paths
+    const variation = totalConnections > 1 ? 
+      (connectionIndex - (totalConnections-1)/2) * 40 : 0;
     
-    // Generate path with smoother curves and less extreme heights
+    const midY = shouldRouteUp ?
+      Math.min(sourcePoint.y, targetPoint.y) - baseSpacing + variation :
+      Math.max(sourcePoint.y, targetPoint.y) + baseSpacing + variation;
+    
+    // Generate path with varied heights
     return `
       M ${sourcePoint.x},${sourcePoint.y}
       L ${sourcePoint.x},${shouldRouteUp ? midY + radius : midY - radius}
