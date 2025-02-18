@@ -56,6 +56,14 @@ title: Charity graph - multi-root BFS & taxpayer totals
           <li>We pick the BFS root from the largest-<code>receipt_amt</code> EIN (if any exist), otherwise the largest from the filtered set. If that BFS yields fewer than 5 nodes, we pick the next-largest unvisited charity in the filtered set, BFS again, and so on, until the subgraph has 5 or more nodes or we run out.</li>
           <li>We always include all user-specified EINs plus direct edges among them. Node labels highlight <strong>Taxpayer Funds Received</strong> from <code>govt_amt</code>, and we sum that for the final subgraph.</li>
         </ol>
+        <h3 class="">How to use</h3>
+        <ol class="!list-decimal space-y-1 text-sm pl-4">
+          <li>By default, the graph will zoom into the starting point where the money flow begins</li>
+          <li>Search for organizations in the graph by typing a name in the search bar</li>
+          <li>Click a connecting line (or grant amount) to zoom to its source and destination</li>
+          <li>Click and drag to explore the connections on the canvas</li>
+          <li>Use your mouse's scroll function to zoom in and out</li>
+        </ol>
       </div>
     </div>
   </div>
